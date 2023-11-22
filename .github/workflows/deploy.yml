@@ -1,0 +1,37 @@
+name: Build vue S3
+
+on:
+  push:
+    branches: [ "front" ]  #master브런치에 push가 이뤄질때 작동
+  pull_request:
+    branches: [ "front" ]
+  
+env:
+  S3_BUCKET_NAME: mapbegood #버킷명
+  
+# defaults:
+#   run:
+#     working-directory: ./ #작업 디렉토르 설정
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@front
+
+      - name: Install npm                # npm 설치
+        run: npm install
+
+      - name: Build                      # vue 프로젝트 빌드 파일 생성
+        run: npm run build
+      
+      - name: Deploy                     # vue 프로젝트 빌드 파일을 Aws S3에 등록 
+        env:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}             # Github Actions에 등록한 secrets
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Github Actions에 등록한 secrets
+          aws-region: ap-northeast-2
+          
+        run: |
+          aws s3 cp ./dist/ s3://$S3_BUCKET_NAME/ --recursive --exclude=".git*"
