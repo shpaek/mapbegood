@@ -27,11 +27,12 @@ jobs:
       - name: Build                      # vue 프로젝트 빌드 파일 생성
         run: npm run build
       
-      - name: Deploy                     # vue 프로젝트 빌드 파일을 Aws S3에 등록 
-        env:
+      - name: Configure AWS credentials                     # vue 프로젝트 빌드 파일을 Aws S3에 등록 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}             # Github Actions에 등록한 secrets
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Github Actions에 등록한 secrets
           aws-region: ap-northeast-2
-          
-        run: |
-          aws s3 cp ./dist/ s3://$S3_BUCKET_NAME/ --recursive --exclude=".git*"
+
+      - name: deploy
+        run: aws s3 cp ./dist/ s3://$S3_BUCKET_NAME/ --recursive --exclude=".git*"
