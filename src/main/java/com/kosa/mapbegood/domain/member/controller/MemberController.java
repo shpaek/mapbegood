@@ -9,13 +9,9 @@ import com.kosa.mapbegood.domain.member.service.MemberService;
 @RestController
 public class MemberController {
 	
-//	@Autowired
+	@Autowired
 	private MemberService service;
-	
-	public MemberController() {
-		this.service = new MemberService();
-	}
-	
+		
 	@GetMapping("/test")
 	public void get() {
 		service.test();
