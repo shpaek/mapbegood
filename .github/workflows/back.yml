@@ -1,4 +1,4 @@
-name: back
+name: Build spring EC2
 
 on:
   push:
