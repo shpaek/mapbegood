@@ -1,14 +1,37 @@
 package com.kosa.mapbegood.domain.myplaceFeed.entity;
 
-import java.sql.Date;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class MyplaceFeed {
+import com.kosa.mapbegood.domain.common.entity.AuditEntity;
+import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.myplace.entity.Myplace;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table
+public class MyplaceFeed extends AuditEntity {
 	
-//	private Myplace myplaceId;
+	@EmbeddedId
+	private MyplaceFeedEmbedded id = new MyplaceFeedEmbedded();
 	
-//	private Member memberId;
+	@OneToOne
+	@JoinColumn(name = "myplaceId")
+	@MapsId("myplaceId")
+	private Myplace myplaceId;
+	
+	@OneToOne
+	@JoinColumn(name = "nickname")
+	@MapsId("nickname")
+	private Member memberNickname;
 	
 	private String content;
-	
-	private Date createdAt;
 }
