@@ -4,10 +4,10 @@
             <!-- 로그인이 안된 경우 -->
             <!-- <template v-show="loginedId == ''"> -->
             <li>
-                <router-link to="signup" class="menubar">가입</router-link>
+                <router-link to="/signup" class="menubar">가입</router-link>
             </li>
             <li>
-                <router-link to="login" class="menubar">로그인</router-link>
+                <router-link to="/login" class="menubar">로그인</router-link>
             </li>
             <!-- </template> -->
 
@@ -49,7 +49,7 @@ export default {
         logoClickHandler() { //로고img객체 클릭이벤트
             location.href = '/'
         },
-        logoutClickHandler() {
+        logoutClickHandler() { //로그아웃 클릭이벤트
             const url = `${this.backURL}/logout`
             axios.get(url, { withCredentials: true })
                 .then(response => {

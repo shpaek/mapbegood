@@ -1,8 +1,7 @@
 <template>
-    <div>
+    <div class="main-container">
         <Menubar />
         <Section />
-        Main입니다
     </div>
 </template>
 <script>
@@ -14,11 +13,12 @@ export default {
 }
 </script>
 <style scoped>
-div.menubar{
-    display: inline-block;
+.main-container {
+  display: flex;
+  height: 100vh; /* 부모 요소를 화면의 100% 높이로 설정 */
 }
-div.section{
-    display: inline-block;
-    left: 150px;
+
+div.section {
+  flex: 1; /* Section이 남은 공간을 모두 차지하도록 설정 */
 }
 </style>

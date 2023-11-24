@@ -25,7 +25,7 @@ const router = createRouter({
     routes: [
         { path: '/', component: OthersThemeMap }, // /일때 뭘 보여줄지 고민, 로그인 전-추천리스트 로그인 후-대표지도
         { path: '/login', component: Login },
-        { path: '/singup', component: Signup },
+        { path: '/signup', component: Signup },
         { path: '/pwdfind', component: PasswordFind },
         { path: '/pwdchange', component: PasswordChange },
         { path: '/nickchange', component: NickChange },
