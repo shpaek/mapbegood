@@ -6,6 +6,10 @@ spring:
  
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@dbmapbegood_medium?TNS_ADMIN=/home/ubuntu/Wallet_DBMAPBEGOOD
+#    url: jdbc:oracle:thin:@dbmapbegood_medium?TNS_ADMIN=c:/opt/Wallet_DBMAPBEGOOD
+#    username: admin
+#    password: Mapbegood2023
     url: ${database.url}
     username: ${database.user}
     password: ${database.pass}
