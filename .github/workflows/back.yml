@@ -7,7 +7,7 @@ on:
     branches: [ "back" ]
     
 env:
-  S3_BUCKET_NAME: mapbegood-war
+  S3_BUCKET_NAME: mapbegood-jar
   APP_NAME: mapbegood
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
     - name: Code Deploy
       run: >
         aws deploy create-deployment
-        --application-name $S3_BUCKET_NAME
+        --application-name $APP_NAME
         --deployment-config-name CodeDeployDefault.AllAtOnce
-        --deployment-group-name $S3_BUCKET_NAME
+        --deployment-group-name $APP_NAME
         --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$APP_NAME.zip
