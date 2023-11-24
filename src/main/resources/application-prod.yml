@@ -1,7 +1,9 @@
 spring:
   config:
-    #import: 'aws-parameterstore:'
-    import: 'aws-paramstore:'
+    import: 'aws-parameterstore:'
+    
+    #java.lang.IllegalStateException: Unable to load config data from 'aws-paramstore:'
+#    import: 'aws-paramstore:' 
   
 #  cloud:
 #    aws:
