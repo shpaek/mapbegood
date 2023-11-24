@@ -69,11 +69,12 @@
             <artifactId>osdt_core</artifactId>
             <version>21.11.0.0</version>
         </dependency>
+        
         <!-- aws ec2 deploy -->
 		<dependency>
 		    <groupId>io.awspring.cloud</groupId>
 		    <artifactId>spring-cloud-starter-aws-parameter-store-config</artifactId>
-		    <version>2.4.1</version>
+		    <version>2.3.3</version>
 		</dependency>
                 
 	</dependencies>

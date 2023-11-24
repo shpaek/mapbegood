@@ -1,7 +1,14 @@
 spring:
   config:
-    import: 'aws-parameterstore:'
-    
+    #import: 'aws-parameterstore:'
+    import: 'aws-paramstore:'
+  
+#  cloud:
+#    aws:
+#      credentials:
+#        access-key: ${s3.access.key}
+#        secret-key: ${s3.secret.key}
+      
   aws:
     paramstore:
       enabled: true
