@@ -2,7 +2,7 @@ spring:
   config:
     activate:
       on-profile: prod
-#    import: 'aws-parameterstore:'
+    import: 'aws-parameterstore:'
  
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
@@ -27,12 +27,12 @@ spring:
           descriptor:
             sql: trace
 
-#aws:
-#  paramstore:
-#    enabled: true
-#    prefix: /mapbegood
-#    name: app
-#    profile-separator: _
+aws:
+  paramstore:
+    enabled: true
+    prefix: /mapbegood
+    name: app
+    profile-separator: _
     
 logging:
   level:
