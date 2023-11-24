@@ -1,23 +1,9 @@
 spring:
   config:
-    import: 'aws-parameterstore:'
-    
-    #java.lang.IllegalStateException: Unable to load config data from 'aws-paramstore:'
-#    import: 'aws-paramstore:' 
-  
-#  cloud:
-#    aws:
-#      credentials:
-#        access-key: ${s3.access.key}
-#        secret-key: ${s3.secret.key}
-      
-  aws:
-    paramstore:
-      enabled: true
-      prefix: /mapbegood
-      name: app
-      profile-separator: _
-      
+    activate:
+      on-profile: prod
+#    import: 'aws-parameterstore:'
+ 
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: ${database.url}
@@ -40,7 +26,14 @@ spring:
         type:
           descriptor:
             sql: trace
-  
+
+#aws:
+#  paramstore:
+#    enabled: true
+#    prefix: /mapbegood
+#    name: app
+#    profile-separator: _
+    
 logging:
   level:
     org:
