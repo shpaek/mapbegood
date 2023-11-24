@@ -6,6 +6,5 @@ import com.kosa.mapbegood.domain.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, String>{
 	
-//	Optional<Member> findMemberNickname(String nickname);
 }
 	
