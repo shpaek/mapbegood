@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        그룹 멤버입니다
     </div>
 </template>
 <script>

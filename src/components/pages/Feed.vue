@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        피드입니다
     </div>
 </template>
 <script>

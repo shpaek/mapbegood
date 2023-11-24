@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        Signup입니다
     </div>
 </template>
 <script>

@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        즐찾목록입니다
     </div>
 </template>
 <script>

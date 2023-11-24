@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        추천리스트입니다
     </div>
 </template>
 <script>

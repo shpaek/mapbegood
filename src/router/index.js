@@ -8,7 +8,9 @@ import NickChange from '../components/pages/NickChange.vue'
 import GroupView from '../components/pages/GroupView.vue'
 import GroupCreate from '../components/pages/GroupCreate.vue'
 import GroupThemeMapList from '../components/pages/GroupThemeMapList.vue'
+import GroupThemeMap from '../components/pages/GroupThemeMap.vue'
 import ThemeMapList from '../components/pages/ThemeMapList.vue'
+import ThemeMap from '../components/pages/ThemeMap.vue'
 import FavoriteList from '../components/pages/FavoriteList.vue'
 import Place from '../components/pages/Place.vue'
 import Feed from '../components/pages/Feed.vue'
@@ -29,8 +31,10 @@ const router = createRouter({
         { path: '/nickchange', component: NickChange },
         { path: '/group', component: GroupView },
         { path: '/groupcreate', component: GroupCreate },
-        { path: '/groupthememap', component: GroupThemeMapList },
-        { path: '/thememap', component: ThemeMapList },
+        { path: '/groupthememaplist', component: GroupThemeMapList },
+        { path: '/groupthememap', component: GroupThemeMap },
+        { path: '/thememaplist', component: ThemeMapList },
+        { path: '/thememap', component: ThemeMap },
         { path: '/favoritelist', component: FavoriteList },
         { path: '/map', component: Map }, 
         { path: '/place', component: Place },

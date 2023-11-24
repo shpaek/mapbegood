@@ -19,6 +19,6 @@ div.menubar{
 }
 div.section{
     display: inline-block;
-    left: 100px;
+    left: 150px;
 }
 </style>

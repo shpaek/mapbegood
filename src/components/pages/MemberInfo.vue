@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        사용자정보입니다
     </div>
 </template>
 <script>

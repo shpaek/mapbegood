@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        
+        장소입니다
     </div>
 </template>
 <script>
