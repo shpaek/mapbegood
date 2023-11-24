@@ -15,7 +15,7 @@ spring:
     paramstore:
       enabled: true
       prefix: /mapbegood
-      name: prod
+      name: app
       profile-separator: _
       
   datasource:
