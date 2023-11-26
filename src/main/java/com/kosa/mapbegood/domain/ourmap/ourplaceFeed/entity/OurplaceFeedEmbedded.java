@@ -1,12 +1,15 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity;
 
-import java.io.Serializable;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-import lombok.EqualsAndHashCode;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class OurplaceFeedEmbedded implements Serializable {
