@@ -47,7 +47,7 @@ public class OurplaceFeedController {
 
     //POST	/ourfeed/{ourplaceId}/{memberNickname}
     @PostMapping(value = "/{ourplaceId}/{memberNickname}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<?> create(@PathVariable Long ourplaceId, @PathVariable String memberNickname, @RequestBody OurplaceFeedDTO feedDto) throws AddException {
+    public ResponseEntity<?> create(@RequestBody OurplaceFeedDTO feedDto) throws AddException {
         try {
             service.createOurFeed(feedDto);
 
