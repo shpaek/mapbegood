@@ -6,11 +6,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 @SpringBootTest
@@ -19,8 +22,8 @@ public class MemberRepositoryTest {
 	@Autowired
 	private MemberRepository repository;
 
-//	@Autowired
-//	private PasswordEncoder pwEncoder;
+	@Autowired
+	private PasswordEncoder pwEncoder;
 
 	@Test
 	@DisplayName("회원 조회")
@@ -40,7 +43,7 @@ public class MemberRepositoryTest {
 		// then
 		assertNotNull(optMember);
 		assertEquals(email, m.getEmail());
-		assertEquals(pwd, m.getPassword());
+		assertEquals(pwEncoder.encode(pwd), m.getPassword());
 		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
 	}
 
@@ -55,8 +58,7 @@ public class MemberRepositoryTest {
 		Member m = Member.builder()
 				.nickname(nick)
 				.email(email)
-				.password(pwd)
-//				.password(pwEncoder.encode("test"))
+				.password(pwEncoder.encode(pwd))
 				.build();
 
 		// when
@@ -66,7 +68,7 @@ public class MemberRepositoryTest {
 		assertNotNull(savedMember);
 		assertEquals(nick, savedMember.getNickname());
 		assertEquals(email, savedMember.getEmail());
-		assertEquals(pwd, savedMember.getPassword());
+		assertEquals(pwEncoder.encode(pwd), savedMember.getPassword());
 	}
 
 	@Test
@@ -83,7 +85,7 @@ public class MemberRepositoryTest {
 		if (optMember.isPresent()) {
 			m = optMember.get();
 			m.setEmail(updateEmail);
-			m.setPassword(updatePwd);
+			m.setPassword(pwEncoder.encode(updatePwd));
 		}
 
 		// when
@@ -91,7 +93,7 @@ public class MemberRepositoryTest {
 
 		// then
 		assertEquals(updateEmail, updateMember.getEmail());
-		assertEquals(updatePwd, updateMember.getPassword());
+		assertEquals(pwEncoder.encode(updatePwd), updateMember.getPassword());
 	}
 
 	@Test
