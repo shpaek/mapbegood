@@ -31,12 +31,6 @@ public class MemberService implements MemberServiceInterface {
 		System.out.println(repository.save(member));
 	}
 
-	@Override
-	public void login() {
-
-	}
-
-	@Override
 	public void logout() {
 
 	}
@@ -64,14 +58,5 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public void deleteUser() {
 
-	}
-
-	@SneakyThrows
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Member> optionalMember = repository.findByEmail(username);
-		Member findMember = optionalMember.orElseThrow(() -> new FindException("회원을 찾을 수 없음"));
-//        Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-		return new User(findMember.getEmail(), findMember.getPassword(), AuthorityUtils.createAuthorityList("ROLE_USER"));
 	}
 }

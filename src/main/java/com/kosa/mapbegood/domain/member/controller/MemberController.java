@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.member.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
@@ -19,22 +20,18 @@ public class MemberController {
 	private MemberServiceInterface service;
 
 	@PostMapping("/signup")
-	public void signup(@Valid @RequestBody MemberDTO memberDTO) {
+	public void signup(@Valid @RequestBody MemberDTO.Post memberDTOPost) {
 		log.error("MemberController: signup()");
 
 		Member member = Member.builder()
-				.nickname(memberDTO.getNickname())
-				.email(memberDTO.getEmail())
-				.password(memberDTO.getPassword())
+				.nickname(memberDTOPost.getNickname())
+				.email(memberDTOPost.getEmail())
+				.password(memberDTOPost.getPassword())
 				.build();
 
 //		Member member = mapper.MemberDTOToMember(memberDTO);
+
 		service.signup(member);
-	}
-
-	@PostMapping("/login")
-	public void login() {
-
 	}
 
 	@GetMapping("/logout")

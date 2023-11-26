@@ -1,5 +1,7 @@
 package com.kosa.mapbegood.security.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -58,11 +60,14 @@ public class JwtTokenizer {
                 .compact();
     }
 
-    private Key getKeyFromBase64EncodedKey(String base64EncodedSecretKey) {
-        byte[] keyBytes = Decoders.BASE64.decode(base64EncodedSecretKey);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
+    public Jws<Claims> getClaims(String jws, String base64EncodedSecretKey) {
+        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
-        return key;
+        Jws<Claims> claims = Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jws);
+        return claims;
     }
 
     public void verifySignature(String jws, String base64EncodedSecretKey) {
@@ -73,4 +78,20 @@ public class JwtTokenizer {
                 .build()
                 .parseClaimsJws(jws);
     }
+
+    public Date getTokenExpiration(int expirationMinutes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, expirationMinutes);
+        Date expiration = calendar.getTime();
+
+        return expiration;
+    }
+
+    private Key getKeyFromBase64EncodedKey(String base64EncodedSecretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(base64EncodedSecretKey);
+        Key key = Keys.hmacShaKeyFor(keyBytes);
+
+        return key;
+    }
+
 }
