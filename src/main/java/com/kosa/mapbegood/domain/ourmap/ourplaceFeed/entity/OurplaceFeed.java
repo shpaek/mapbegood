@@ -1,21 +1,17 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import com.kosa.mapbegood.domain.common.entity.AuditEntity;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
+import lombok.*;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import javax.persistence.*;
 
-@Data
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table
