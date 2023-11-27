@@ -15,8 +15,8 @@ import lombok.Getter;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class AuditEntity {
-
+ 
 	@CreatedDate
     @Column(nullable = false, updatable = false)
-    protected Date createdAt;
+    protected java.util.Date createdAt;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class ThemeMap {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "nickname")
+	@JoinColumn(name = "member_nickname")
 	private Member memberNickname;
 	
 	private String name;

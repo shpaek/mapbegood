@@ -15,10 +15,11 @@ import lombok.EqualsAndHashCode;
 @Table
 public class Member extends AuditEntity {
 	
+	
 	@Id
 	private String nickname;
 			
 	private String email;
 	
-	private String passwrod;
+	private String password;
 }

@@ -24,12 +24,12 @@ public class Favorite extends AuditEntity {
 	private FavoriteEmbedded id = new FavoriteEmbedded();
 	
 	@ManyToOne
-	@JoinColumn(name = "ThemeMapId")
+	@JoinColumn(name = "thememap_id")
 	@MapsId("thememapId")
 	private ThemeMap thememapId;
 	
 	@ManyToOne
-	@JoinColumn(name = "nickname")
+	@JoinColumn(name = "member_nickname")
 	@MapsId("nickname")
 	private Member memberNickname;
 }
