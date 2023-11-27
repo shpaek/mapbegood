@@ -12,7 +12,7 @@ import lombok.ToString;
 
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor @Builder @ToString
 public class MemberGroupDTO {
-	private MemberDTO memberNickname; 
-	private GroupsDTO groupId;
+	private String memberNickname; 
+	private Long groupId;
 	private Boolean leader;
 }

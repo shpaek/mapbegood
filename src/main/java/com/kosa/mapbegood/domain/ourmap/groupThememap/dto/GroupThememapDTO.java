@@ -15,7 +15,7 @@ import lombok.ToString;
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor @Builder @ToString
 public class GroupThememapDTO {
 	private Long id;
-	private GroupsDTO groupId;
+	private Long groupId;
 	private String name;
 	private String color;
 	private String memo;

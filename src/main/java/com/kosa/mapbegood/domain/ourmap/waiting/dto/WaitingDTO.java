@@ -13,6 +13,6 @@ import lombok.ToString;
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor @Builder @ToString
 public class WaitingDTO {
 	private Long id;
-	private GroupsDTO groupId;
-	private MemberDTO memberNickname;
+	private Long groupId;
+	private String memberNickname;
 }

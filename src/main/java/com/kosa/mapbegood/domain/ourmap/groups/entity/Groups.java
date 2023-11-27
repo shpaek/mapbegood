@@ -38,4 +38,8 @@ public class Groups {
 	
 	@OneToMany(mappedBy = "groupId", cascade = CascadeType.REMOVE)
 	private List<GroupThememap> groupThememapList;
+	
+	public void modifyGroupName(String groupName) {
+		this.name = groupName;
+	}
 }
