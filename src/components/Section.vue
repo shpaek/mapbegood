@@ -1,12 +1,13 @@
 <template>
-    <div class="section">
-        <router-view></router-view>
-    </div>
+  <div class="section">
+    <router-view></router-view>
+  </div>
 </template>
+
 <script>
 export default {
-    name: "Section"
-}
+  name: "Section",
+};
 </script>
-<style scoped>
-</style>
+
+<style scoped></style>
