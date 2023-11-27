@@ -1,6 +1,5 @@
 package com.kosa.mapbegood.domain.member.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
@@ -36,31 +35,30 @@ public class MemberController {
 
 	@GetMapping("/logout")
 	public void logout() {
-
 	}
 
 	@PutMapping("/name")
 	public void putNickName() {
-
+		service.updateNickName();
 	}
 
 	@PutMapping("/pwd")
 	public void putPassword() {
-
+		service.updatePassword();
 	}
 
 	@GetMapping("/pwd")
 	public void findPassword() {
-
+		service.findPassword();
 	}
 
 	@GetMapping("/user")
 	public void searchUser() {
-
+		service.searchUser();
 	}
 
 	@DeleteMapping("/user")
 	public void deleteUser() {
-
+		service.deleteUser();
 	}
 }
