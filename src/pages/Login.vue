@@ -109,18 +109,27 @@ export default {
       }
 
       const url = `${this.backURL}/auth`;
-      let data = `email=${this.email}&password=${this.pwd}`;
+      let data = {
+        email: `${this.email}`,
+        password: `${this.pwd}`,
+      };
 
       axios
-        .post(url, data, { withCredentials: true })
+        .post(url, data, {
+          withCredentials: true,
+        })
         .then((response) => {
-          console.log(response.data);
+          console.log(response);
+          console.log(response.headers);
           if (response.data.status == 0) {
             alert(response.data.msg);
           } else if (response.data.status == 1) {
-            localStorage.setItem("loginedId", this.id);
+            localStorage.setItem("mapbegoodId", this.email);
             location.href = "/";
           }
+
+          // // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
+          // axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         })
         .catch((error) => {
           console.log(error);
