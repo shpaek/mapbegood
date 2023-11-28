@@ -27,9 +27,11 @@ public class Favorite extends AuditEntity {
 	@JoinColumn(name = "thememap_id")
 	@MapsId("thememapId")
 	private ThemeMap thememapId;
+//	private ThemeMap themeMap;
 	
 	@ManyToOne
 	@JoinColumn(name = "member_nickname")
 	@MapsId("nickname")
 	private Member memberNickname;
+//	private Member member;
 }

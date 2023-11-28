@@ -2,50 +2,55 @@ package com.kosa.mapbegood.domain.mymap.thememap.entity.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.service.MemberService;
+import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.service.ThemeMapService;
 
+ 
+ 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 @RestController
 @RequestMapping("/mymap")
 public class ThemeMapController {
 
-    private final ThemeMapService themeService;
-//    private final MemberService memberService;
     @Autowired
-    public ThemeMapController(ThemeMapService thememapService) {//,MemberService member
-        this.themeService = thememapService;
-//        this.memberService= memberService;
-        
+    private ThemeMapService themeMapService;
+
+    // 테마맵 생성
+    @PostMapping("/create")
+    public ThemeMapDto createThemeMap(@RequestBody ThemeMapDto themeMapDto) {
+        return themeMapService.createThemeMap(themeMapDto);
     }
 
-    @PostMapping
-    public ThemeMap createThemeMap(@RequestBody ThemeMap themeMap) {
-//    	String memberNickname =ThemeMap.getemberNickname();
-//    	Member member= memberService.getMemberByNickname(memberNickname);
-    	
-    	
-        return themeService.createThemeMap(themeMap);
-    }
-
-    @PutMapping("/{themeMapId}")
-    public ThemeMap updateThemeMap(@PathVariable Long themeMapId, @RequestBody ThemeMap updatedThemeMap) {
-        // 내테마지도 수정 엔드포인트
-        return themeService.updateThemeMap(themeMapId, updatedThemeMap);
-    }
-
-    @DeleteMapping("/{themeMapId}")
-    public void deleteThemeMap(@PathVariable Long themeMapId) {
-        // 내테마지도 삭제 엔드포인트
-        themeService.deleteThemeMap(themeMapId);
-    }
-
+    // 테마맵 조회 (ID로)
     @GetMapping("/{themeMapId}")
-    public List<ThemeMap> getAllThemeMaps() {
-        // 모든 내테마지도 조회 엔드포인트
-        return themeService.getAllThemeMaps();
+    public ThemeMapDto getThemeMapById(@PathVariable Long themeMapId) {
+        return themeMapService.getThemeMapById(themeMapId);
+    }
+
+    // 테마맵 삭제
+    @DeleteMapping("/delete/{themeMapId}")
+    public void deleteThemeMap(@PathVariable Long themeMapId) {
+        themeMapService.deleteThemeMap(themeMapId);
+    }
+
+    // 테마맵 수정
+    @PutMapping("/update/{themeMapId}")
+    public ThemeMapDto updateThemeMap(@RequestBody ThemeMapDto themeMapDto) {
+        return themeMapService.updateThemeMap(themeMapDto);
+    }
+
+    // 모든 테마맵 조회
+    @GetMapping("/list")
+    public List<ThemeMapDto> getAllThemeMaps() {
+        return themeMapService.getAllThemeMaps();
     }
 }

@@ -1,58 +1,75 @@
-package com.kosa.mapbegood.domain.mymap.thememap.entity.service;
+ package com.kosa.mapbegood.domain.mymap.thememap.entity.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
+import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
+
+import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
+import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
+import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ThemeMapService {
 
-    private final ThemeMapRepository tmr;
-
     @Autowired
-    public ThemeMapService(ThemeMapRepository thememapRepository) {
-        this.tmr = thememapRepository;
+    private ThemeMapRepository themeMapRepository;
+
+    // 테마맵 생성
+    public ThemeMapDto createThemeMap(ThemeMapDto themeMapDto) {
+        ThemeMap themeMap = ThemeMapMapper.toEntity(themeMapDto);
+        ThemeMap savedThemeMap = themeMapRepository.save(themeMap);
+        return ThemeMapMapper.toDto(savedThemeMap);
     }
 
-    public ThemeMap createThemeMap(ThemeMap themeMap) {
-    	
-    	System.out.println(themeMap.getMemberNickname());
-    	System.out.println(themeMap.getName());
-    	System.out.println(themeMap.getColor());
-    	System.out.println(themeMap.getMemo());
-    	System.out.println(themeMap.getShow());
-    	System.out.println(themeMap.getMainmap());
-    	
-    	// 내테마지도 생성 로직
-        return tmr.save(themeMap);
+    // 테마맵 조회 (ID로)
+    public ThemeMapDto getThemeMapById(Long themeMapId) {
+        Optional<ThemeMap> optionalThemeMap = themeMapRepository.findById(themeMapId);
+        return optionalThemeMap.map(ThemeMapMapper::toDto).orElse(null);
     }
 
-    public ThemeMap updateThemeMap(Long themeMapId, ThemeMap updatedThemeMap) {
-        // 내테마지도 수정 로직
-        ThemeMap existingThemeMap = tmr.findById(themeMapId)
-                .orElseThrow(() -> new RuntimeException("해당 ID의 테마지도를 찾을 수 없습니다."));
-        
-        // 수정할 내용 업데이트
-        existingThemeMap.setName(updatedThemeMap.getName());
-        existingThemeMap.setColor(updatedThemeMap.getColor());
-        existingThemeMap.setMemo(updatedThemeMap.getMemo());
-        existingThemeMap.setShow(updatedThemeMap.getShow());
-        existingThemeMap.setMainmap(updatedThemeMap.getMainmap());
-        
-        // 내테마지도 저장
-        return tmr.save(existingThemeMap);
-    }
-    
+    // 테마맵 삭제
     public void deleteThemeMap(Long themeMapId) {
-        // 내테마지도 삭제 로직
-        tmr.deleteById(themeMapId);
+        themeMapRepository.deleteById(themeMapId);
     }
 
-    public List<ThemeMap> getAllThemeMaps() {
-        // 모든 내테마지도 조회 로직
-        return tmr.findAll();
+    // 테마맵 수정
+    public ThemeMapDto updateThemeMap(ThemeMapDto themeMapDto) {
+        Optional<ThemeMap> optionalThemeMap = themeMapRepository.findById(themeMapDto.getId());
+        if (optionalThemeMap.isPresent()) {
+            ThemeMap existingThemeMap = optionalThemeMap.get();
+            // 업데이트할 필요 있는 필드들을 설정
+            existingThemeMap.setName(themeMapDto.getName());
+            existingThemeMap.setColor(themeMapDto.getColor());
+            existingThemeMap.setMemo(themeMapDto.getMemo());
+            existingThemeMap.setMainmap(themeMapDto.getShow());
+            existingThemeMap.setShow(themeMapDto.getShow());
+             
+
+            // 필요한 필드들을 업데이트
+            ThemeMap updatedThemeMap = themeMapRepository.save(existingThemeMap);
+            return ThemeMapMapper.toDto(updatedThemeMap);
+        }
+      
+    }
+
+    // 모든 테마맵 조회
+    public List<ThemeMapDto> getAllThemeMaps() {
+        List<ThemeMap> themeMapList = themeMapRepository.findAll();
+        return themeMapList.stream()
+                .map(ThemeMapMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

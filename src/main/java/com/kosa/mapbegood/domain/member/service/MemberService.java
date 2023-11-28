@@ -3,6 +3,7 @@ package com.kosa.mapbegood.domain.member.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 
 @Service
@@ -10,6 +11,11 @@ public class MemberService {
 	
 	@Autowired
 	private MemberRepository repository;
+	
+	 
+	//public String findByNickname(String nickname) {
+		
+	//} 
 	
 	public void test() {
 //		List<Member> opMem = repository.findAll();

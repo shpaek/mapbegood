@@ -21,12 +21,12 @@ public class MemberGroup {
 	private MemberGroupEmbedded id = new MemberGroupEmbedded();
 	
 	@ManyToOne
-	@JoinColumn(name = "nickname")
+	@JoinColumn(name = "member_nickname")
 	@MapsId("nickname")
 	private Member memberNickname;
 	
 	@ManyToOne
-	@JoinColumn(name = "groupsId")
+	@JoinColumn(name = "group_Id")
 	@MapsId("groupsId")
 	private Groups groupId;
 	

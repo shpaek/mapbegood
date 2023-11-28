@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 
 import lombok.Data;
@@ -45,4 +45,7 @@ public class ThemeMap {
 	
 	@OneToMany(mappedBy = "thememapId", cascade = CascadeType.REMOVE)
 	private List<Myplace> myplaceList;
+	
+	@OneToMany(mappedBy = "thememapId", cascade = CascadeType.REMOVE)
+	private List<Favorite> favoriteList;
 }

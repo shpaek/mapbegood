@@ -27,7 +27,7 @@ public class GroupThememap {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "GroupsId")
+	@JoinColumn(name = "GroupId")
 	private Groups groupId;
 	
 	private String name;
