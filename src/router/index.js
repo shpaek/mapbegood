@@ -48,6 +48,7 @@ const router = createRouter({
         // {path: '/members/2', component: MemberJasmin},
         // {path: '/members/3', component: MemberGenie}
         //멤버별로 개별설정하면 힘드니까 동적라우팅 이용
+        //그룹을 어케하지?
     ]
 })
 export default router;

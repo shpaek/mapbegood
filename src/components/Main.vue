@@ -2,6 +2,8 @@
     <div class="main-container">
         <Menubar />
         <Section />
+        <!-- Menubar-고정된 네비게이션 바 / Section-슬라이드바 -->
+        <!-- <Map /> 기각! -->
     </div>
 </template>
 <script>
