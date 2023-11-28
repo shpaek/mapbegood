@@ -32,7 +32,7 @@ public class GroupsService {
 		Groups entity = new Groups();
 		entity.setId(groupsDto.getId());
 		entity.setName(groupsDto.getName());
-		entity.setLeaderNickname(groupsDto.getLeaderNickname());
+		entity.setLeaderEmail(groupsDto.getLeaderEmail());
 		return entity;	
 	}
 	
@@ -54,7 +54,7 @@ public class GroupsService {
 			GroupsDTO groupsDto = GroupsDTO.builder()
 					.id(groupsEntity.getId())
 					.name(groupsEntity.getName())
-					.leaderNickname(groupsEntity.getLeaderNickname())
+					.leaderEmail(groupsEntity.getLeaderEmail())
 					.build();
 			groupsDtoList.add(groupsDto);			
 		}

@@ -1,5 +1,12 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.dto.OurplaceFeedDTO;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeedEmbedded;
@@ -8,12 +15,6 @@ import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OurplaceFeedService {
@@ -28,7 +29,7 @@ public class OurplaceFeedService {
     public OurplaceFeedEmbedded getOurFeedEmId(OurplaceFeedDTO feedDto) {
         OurplaceFeedEmbedded ofid = new OurplaceFeedEmbedded();
         ofid.setOurplaceId(feedDto.getOurplaceId());
-        ofid.setNickname(feedDto.getMemberNickname());
+//        ofid.setNickname(feedDto.getMemberNickname());
         return ofid;
     }
 
@@ -58,7 +59,7 @@ public class OurplaceFeedService {
         Optional<OurplaceFeed> feed = ofr.findById(feedId);
         OurplaceFeedDTO feedDto = new OurplaceFeedDTO();
         feedDto.setOurplaceId(feedId.getOurplaceId());
-        feedDto.setMemberNickname(feedId.getNickname());
+        feedDto.setMemberEmail(feedId.getEmail());
         feedDto.setContent(feed.get().getContent());
         feedDto.setCreatedAt(feed.get().getCreatedAt());
         return feedDto;

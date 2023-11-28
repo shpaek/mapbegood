@@ -27,7 +27,7 @@ public class MyplaceFeedService {
     public Member getMemberNickname(MyplaceFeedDTO feedDto){
         return Member
                 .builder()
-                .nickname(feedDto.getMemberNickname())
+//                .nickname(feedDto.getMemberNickname())
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class MyplaceFeedService {
         Optional<MyplaceFeed> feed = mfr.findById(myplaceId);
         MyplaceFeedDTO feedDto = new MyplaceFeedDTO();
         feedDto.setMyplaceId(myplaceId);
-        feedDto.setMemberNickname(String.valueOf(feed.get().getMemberNickname()));
+//        feedDto.setMemberNickname(String.valueOf(feed.get().getMemberNickname()));
         feedDto.setContent(feed.get().getContent());
         feedDto.setCreatedAt(feed.get().getCreatedAt());
         return feedDto;
@@ -56,7 +56,7 @@ public class MyplaceFeedService {
         MyplaceFeed mf = MyplaceFeed
                 .builder()
                 .id(feedDto.getMyplaceId())
-                .memberNickname(getMemberNickname(feedDto))
+//                .memberNickname(getMemberNickname(feedDto))
                 .content(feedDto.getContent())
                 .build();
         mfr.save(mf);
@@ -76,7 +76,7 @@ public class MyplaceFeedService {
         MyplaceFeed mf = MyplaceFeed
                 .builder()
                 .id(mfDto.getMyplaceId())
-                .memberNickname(getMemberNickname(mfDto))
+//                .memberNickname(getMemberNickname(mfDto))
                 .content(feedDto.getContent())
                 .build();
 

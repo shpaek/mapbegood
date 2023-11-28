@@ -28,8 +28,8 @@ public class MemberGroupService {
 //		em.setGroupsId(memberGroupDto.getGroupId());
 //		entity.setId(em);
 		Member memberEntity = new Member();
-		memberEntity.setNickname(memberGroupDto.getMemberNickname());
-		memberGroupEntity.setMemberNickname(memberEntity);
+		memberEntity.setEmail(memberGroupDto.getMemberEmail());
+		memberGroupEntity.setMemberEmail(memberEntity);
 		
 		Groups groupsEntity = new Groups();
 		groupsEntity.setId(memberGroupDto.getGroupId());
@@ -53,7 +53,7 @@ public class MemberGroupService {
 		//findById로 MemberGroupEmbedded의 id값을 찾아서 MemberGroup의 id와 맞는 것을 지움
 		MemberGroupEmbedded pk = new MemberGroupEmbedded();
 		pk.setGroupsId(memberGroupDto.getGroupId());
-		pk.setNickname(memberGroupDto.getMemberNickname());
+		pk.setEmail(memberGroupDto.getMemberEmail());
 		Optional<MemberGroup> optMg = mgr.findById(pk);
 		if(optMg.isPresent()) {
 			MemberGroup mg = optMg.get();

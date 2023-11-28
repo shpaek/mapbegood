@@ -10,6 +10,6 @@ public interface GroupsRepository extends JpaRepository<Groups, Long>{
 	@Query(nativeQuery=true,
 		   value="SELECT g.*\r\n"
 		   		+ "FROM groups g JOIN member_group mg ON (g.id=mg.group_id)\r\n"
-		   		+ "WHERE mg.member_nickname=:memberNickname")
-	public List<Groups> findMembersAllGroup(String memberNickname);
+		   		+ "WHERE mg.member_email=:memberEmail")
+	public List<Groups> findMembersAllGroup(String memberEmail);
 }

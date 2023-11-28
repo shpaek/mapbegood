@@ -17,7 +17,7 @@ import lombok.ToString;
 public class OurplaceDTO {
 	private Long id;
 	private Long groupThememapId;
-	private String memberNickname;
+	private String memberEmail;
 	private Long placeId;
 	private String placeName;
 	private Double x;

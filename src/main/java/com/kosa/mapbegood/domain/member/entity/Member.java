@@ -17,9 +17,11 @@ import lombok.*;
 public class Member extends AuditEntity {
 	
 	@Id
-	private String nickname;
-
 	private String email;
 
+	private String nickname;
+	
 	private String password;
+	
+	private int status;
 }

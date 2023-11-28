@@ -28,10 +28,10 @@ public class Waiting {
 	
 	private Long groupId;
 	
-	@Column(name="member_nickname")
-	private String memberNickname;
+	@Column(name="member_email")
+	private String memberEmail;
 	
-	@ManyToOne
-	@JoinColumn(name="member_nickname", insertable = false, updatable = false)
-	private Member member;
+//	@ManyToOne
+//	@JoinColumn(name="member_email", insertable = false, updatable = false)
+//	private Member membeEmailr;
 }
