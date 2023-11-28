@@ -22,10 +22,10 @@ public class OurplaceFeedController {
     @Autowired
     private OurplaceFeedService service;
 
-    public OurplaceFeedDTO setOurfeedEmId(Long ourplaceId, String memberNickname){
+    public OurplaceFeedDTO setOurfeedEmId(Long ourplaceId, String memberEmail){
         OurplaceFeedDTO feedDto = new OurplaceFeedDTO();
         feedDto.setOurplaceId(ourplaceId);
-        feedDto.setMemberNickname(memberNickname);
+        feedDto.setMemberEmail(memberEmail);
         return feedDto;
     }
 
@@ -64,9 +64,9 @@ public class OurplaceFeedController {
 
     //PUT	/ourfeed/{ourplaceId}/{memberNickname}
     @PutMapping(value = "/{ourplaceId}/{memberNickname}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<?> update(@PathVariable Long ourplaceId, @PathVariable String memberNickname, @RequestBody OurplaceFeedDTO feedDto) throws ModifyException, FindException {
+    public ResponseEntity<?> update(@PathVariable Long ourplaceId, @PathVariable String memberEmail, @RequestBody OurplaceFeedDTO feedDto) throws ModifyException, FindException {
         feedDto.setOurplaceId(ourplaceId);
-        feedDto.setMemberNickname(memberNickname);
+        feedDto.setMemberEmail(memberEmail);
         service.updateOurFeed(feedDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

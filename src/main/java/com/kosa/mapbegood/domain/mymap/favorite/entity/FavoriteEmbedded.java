@@ -25,6 +25,6 @@ public class FavoriteEmbedded implements Serializable {
 	@Column(name = "thememap_id")
 	private Long thememapId;
 	
-	@Column(name = "member_nickname")
-	private String nickname;
+	@Column(name = "member_email")
+	private String email;
 }

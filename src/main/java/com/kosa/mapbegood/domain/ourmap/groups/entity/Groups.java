@@ -30,7 +30,7 @@ public class Groups {
 	
 	private String name;
 	
-	private String leaderNickname;
+	private String leaderEmail;
 	
 //	@OneToMany(mappedBy = "", cascade = CascadeType.REMOVE)
 //	private List<MemberGroup> memberList;

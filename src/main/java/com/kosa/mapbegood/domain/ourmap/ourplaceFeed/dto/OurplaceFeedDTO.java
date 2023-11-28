@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 public class OurplaceFeedDTO {
 
     private Long ourplaceId;
-    private String memberNickname;
+    private String memberEmail;
     private String content;
     private LocalDateTime createdAt;
 
-    public OurplaceFeedDTO(Long ourplaceId, String memberNickname) {
+    public OurplaceFeedDTO(Long ourplaceId, String memberEmail) {
         this.ourplaceId = ourplaceId;
-        this.memberNickname = memberNickname;
+        this.memberEmail = memberEmail;
     }
 }

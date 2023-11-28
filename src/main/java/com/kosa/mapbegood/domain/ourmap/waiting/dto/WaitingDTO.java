@@ -14,5 +14,5 @@ import lombok.ToString;
 public class WaitingDTO {
 	private Long id;
 	private Long groupId;
-	private String memberNickname;
+	private String memberEmail;
 }

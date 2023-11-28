@@ -26,9 +26,9 @@ public class OurplaceFeed extends AuditEntity {
 	private Ourplace ourplaceId;
 	
 	@OneToOne
-	@JoinColumn(name = "nickname")
-	@MapsId("nickname")
-	private Member memberNickname;
+	@JoinColumn(name = "email")
+	@MapsId("email")
+	private Member memberEmail;
 	
 	private String content;
 }

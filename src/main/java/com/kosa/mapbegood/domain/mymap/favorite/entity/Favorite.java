@@ -30,8 +30,7 @@ public class Favorite extends AuditEntity {
 //	private ThemeMap themeMap;
 	
 	@ManyToOne
-	@JoinColumn(name = "member_nickname")
-	@MapsId("nickname")
-	private Member memberNickname;
-//	private Member member;
+	@JoinColumn(name = "nickname")
+	@MapsId("email")
+	private Member memberEmail;
 }
