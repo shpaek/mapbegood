@@ -26,7 +26,7 @@ public class MemberGroup {
 	private Member memberNickname;
 	
 	@ManyToOne
-	@JoinColumn(name = "group_Id")
+	@JoinColumn(name = "group_id")
 	@MapsId("groupsId")
 	private Groups groupId;
 	

@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.service.MemberService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class MemberController {
 	
@@ -15,6 +18,7 @@ public class MemberController {
 	@GetMapping("/test")
 	public void get() {
 		service.test();
+		log.error("MemberController: get()");
 	}
 
 }

@@ -6,19 +6,19 @@ import javax.persistence.Table;
 
 import com.kosa.mapbegood.domain.common.entity.AuditEntity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class Member extends AuditEntity {
 	
-	
 	@Id
 	private String nickname;
-			
+
 	private String email;
 	
 	private String password;

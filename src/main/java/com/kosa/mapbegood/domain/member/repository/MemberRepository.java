@@ -10,8 +10,5 @@ public interface MemberRepository extends JpaRepository<Member, String>{
 		 
 		return null;
 	}
-	
-	  
-//	Optional<Member> findMemberNickname(String nickname);
 }
 	

@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class MemberService {
 	
@@ -18,21 +21,9 @@ public class MemberService {
 	//} 
 	
 	public void test() {
-//		List<Member> opMem = repository.findAll();
 		long n = repository.count();
-		
-//		System.out.println(opMem.size());
 		System.out.println(n);
-		
-		
-//		Member m = opMem.get(0);
-//		if(opMem.isPresent()) {
-//			Member m = opMem.get();
-//			System.out.println(m.getEmail());
-//			System.out.println(m.getNickname());
-//		}
-		
-//		System.out.println("test");
+		log.error("MemberService: test()");
 	}
 
 }
