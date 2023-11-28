@@ -39,7 +39,7 @@ public class ThememapRepositoryTest {
 		Member member = new Member();
 		member.setNickname("test");
 		tmp.setMemberNickname(member);
-		tmp.setName("test");
+		tmp.setName("test3");
 		tmp.setColor("blue");
 		tmp.setMainmap(true);
 		tmp.setShow(true);
@@ -50,7 +50,7 @@ public class ThememapRepositoryTest {
 	
 	@Test
 	public void updateThememap() {
-		int themeMapId=1;
+		int themeMapId=2;
 		
 		//optional<ThemeMap>은 값이 null이 될수 있는 객체를 감싸는 래퍼클래스임.
 		
@@ -64,7 +64,7 @@ public class ThememapRepositoryTest {
 	}
 	@Test
 	public void deleteThememap() {
-		int themeMapId=1;
+		int themeMapId=102;
 		
 		Optional<ThemeMap> optionalThemeMap=repository.findById((long)themeMapId);
 	

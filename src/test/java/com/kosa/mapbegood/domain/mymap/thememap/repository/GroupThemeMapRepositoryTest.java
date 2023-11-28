@@ -21,7 +21,7 @@ import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThemeMapRe
 public class GroupThemeMapRepositoryTest {
 
     @Autowired
-    private GroupsRepository grepository;
+    private com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository grepository;
     
     @Autowired
     private GroupThemeMapRepository repository;

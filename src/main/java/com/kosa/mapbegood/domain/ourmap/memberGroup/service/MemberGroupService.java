@@ -40,7 +40,7 @@ public class MemberGroupService {
 	//1. 전체그룹 보기
 	//2. 선택그룹보기를 그룹서비스에서 해야되나 고민중
 
-	//멤버생성 (그룹장/일반=>컨트롤러에서 이거 셋팅값 바꿔주기)
+	//멤버 생성 (그룹장/일반=>컨트롤러에서 이거 셋팅값 바꿔주기)
 	public void createMemberGroup(MemberGroupDTO memberGroupDto) throws AddException{
 		MemberGroup entity = memberGroupDtoToEntity(memberGroupDto);
 		mgr.save(entity);

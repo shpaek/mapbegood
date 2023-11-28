@@ -1,25 +1,17 @@
  package com.kosa.mapbegood.domain.mymap.thememap.entity.service;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
-import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
-
-import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
-import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
-import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
+import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
+import com.kosa.mapbegood.exception.FindException;
 
 @Service
 public class ThemeMapService {
@@ -35,9 +27,17 @@ public class ThemeMapService {
     }
 
     // 테마맵 조회 (ID로)
-    public ThemeMapDto getThemeMapById(Long themeMapId) {
+    public ThemeMapDto getThemeMapById(Long themeMapId) throws FindException{
         Optional<ThemeMap> optionalThemeMap = themeMapRepository.findById(themeMapId);
-        return optionalThemeMap.map(ThemeMapMapper::toDto).orElse(null);
+        Optional<ThemeMapDto> optDto = optionalThemeMap.map(ThemeMapMapper::toDto);
+        if(optDto.isPresent()){
+        	ThemeMapDto dto = optDto.get();
+        	dto.getMemberNickname().setPassword(null);
+        	return dto;
+        }else{
+        	throw new FindException("테마지도가 없습니다");
+        }
+        //return optionalThemeMap.map(ThemeMapMapper::toDto).orElse(null);
     }
 
     // 테마맵 삭제
@@ -62,12 +62,13 @@ public class ThemeMapService {
             ThemeMap updatedThemeMap = themeMapRepository.save(existingThemeMap);
             return ThemeMapMapper.toDto(updatedThemeMap);
         }
+		return themeMapDto;
       
     }
 
     // 모든 테마맵 조회
-    public List<ThemeMapDto> getAllThemeMaps() {
-        List<ThemeMap> themeMapList = themeMapRepository.findAll();
+    public List<ThemeMapDto> getAllThemeMaps(Member m) {
+        List<ThemeMap> themeMapList = themeMapRepository.findByMemberNickname(m);
         return themeMapList.stream()
                 .map(ThemeMapMapper::toDto)
                 .collect(Collectors.toList());

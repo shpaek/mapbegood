@@ -17,6 +17,7 @@ public class ThemeMapMapper {
 		entity.setColor(dto.getColor());
 		return entity;
 	}
+	
 	public static ThemeMapDto toDto(ThemeMap entity) {
 		ThemeMapDto dto = new ThemeMapDto();
 		//TODO
