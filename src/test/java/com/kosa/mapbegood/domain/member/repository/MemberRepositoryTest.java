@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.format.DateTimeFormatter;
@@ -17,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 @SpringBootTest
-public class MemberRepositoryTest {
+class MemberRepositoryTest {
 
 	@Autowired
 	private MemberRepository repository;
+	
 
 	@Autowired
 	private PasswordEncoder pwEncoder;
@@ -106,5 +106,6 @@ public class MemberRepositoryTest {
 
 		// then
 	}
+	
 
 }

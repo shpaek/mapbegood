@@ -26,9 +26,7 @@ public class GroupThememap {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "GroupsId")
-	private Groups groupId;
+	private Long groupId;
 	
 	private String name;
 	

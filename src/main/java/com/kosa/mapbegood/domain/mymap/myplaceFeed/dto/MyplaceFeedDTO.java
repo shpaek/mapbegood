@@ -12,7 +12,7 @@ public class MyplaceFeedDTO {
 
 	private Long myplaceId;
 	
-	private String memberNickname;
+	private String memberEmail;
 	
 	private String content;
 	

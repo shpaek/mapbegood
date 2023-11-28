@@ -21,14 +21,14 @@ public class MemberGroup {
 	private MemberGroupEmbedded id = new MemberGroupEmbedded();
 	
 	@ManyToOne
-	@JoinColumn(name = "nickname")
-	@MapsId("nickname")
-	private Member memberNickname;
+	@JoinColumn(name = "member_email")
+	@MapsId("email")
+	private Member memberEmail;
 	
 	@ManyToOne
-	@JoinColumn(name = "groupsId")
+	@JoinColumn(name = "group_id")
 	@MapsId("groupsId")
 	private Groups groupId;
 	
-	private Boolean leader;
+	private int leader;
 }

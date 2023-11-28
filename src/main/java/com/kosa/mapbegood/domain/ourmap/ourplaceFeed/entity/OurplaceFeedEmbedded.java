@@ -19,6 +19,6 @@ public class OurplaceFeedEmbedded implements Serializable {
 	@Column(name = "ourplace_id")
 	private Long ourplaceId;
 	
-	@Column(name = "member_nickname")
-	private String nickname;
+	@Column(name = "member_email")
+	private String email;
 }
