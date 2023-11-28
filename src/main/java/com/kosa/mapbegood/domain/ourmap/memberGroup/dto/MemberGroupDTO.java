@@ -14,5 +14,5 @@ import lombok.ToString;
 public class MemberGroupDTO {
 	private String memberNickname; 
 	private Long groupId;
-	private Boolean leader;
+	private Long leader;
 }

@@ -30,5 +30,5 @@ public class MemberGroup {
 	@MapsId("groupsId")
 	private Groups groupId;
 	
-	private Boolean leader;
+	private Long leader;
 }
