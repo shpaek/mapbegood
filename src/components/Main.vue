@@ -1,21 +1,17 @@
 <template>
     <div class="main-container">
-        <Menubar/>
-        <Section/>
+        <Menubar />
+        <Section />
+        <!-- Menubar-고정된 네비게이션 바 / Section-슬라이드바 -->
+        <!-- <Map /> 기각! -->
     </div>
 </template>
 <script>
 import Menubar from './Menubar.vue';
 import Section from './Section.vue';
-import Search from './Search.vue';
-
 export default {
     name: "Main",
-    components: {
-    Menubar, 
-    Section,
-    Search,
-  }
+    components: {Menubar, Section}
 }
 </script>
 <style scoped>
