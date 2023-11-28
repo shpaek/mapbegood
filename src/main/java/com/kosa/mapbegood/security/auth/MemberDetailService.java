@@ -23,8 +23,11 @@ public class MemberDetailService implements UserDetailsService {
     @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Member> optionalMember = repository.findByEmail(email);
-        Member findMember = optionalMember.orElseThrow(() -> new FindException("회원을 찾을 수 없음"));
+        Optional<Member> optionalMember = repository.findById(email);
+        Member findMember = optionalMember.orElseThrow(() -> new UsernameNotFoundException("인증하려는 회원을 찾을 수 없습니다."));
+        if (findMember.getStatus() == 0) {
+            throw new UsernameNotFoundException("탈퇴된 회원입니다.");
+        }
         return new MemberDetails(findMember);
     }
 

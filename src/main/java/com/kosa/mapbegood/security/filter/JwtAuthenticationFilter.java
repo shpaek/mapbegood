@@ -1,10 +1,9 @@
 package com.kosa.mapbegood.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberLoginDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.security.jwt.JwtTokenizer;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         ObjectMapper objectMapper = new ObjectMapper();
-        MemberDTO.LoginDto loginDto = objectMapper.readValue(request.getInputStream(), MemberDTO.LoginDto.class);
+        MemberLoginDTO loginDto = objectMapper.readValue(request.getInputStream(), MemberLoginDTO.class);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
