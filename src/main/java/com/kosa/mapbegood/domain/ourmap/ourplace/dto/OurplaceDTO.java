@@ -1,17 +1,9 @@
 package com.kosa.mapbegood.domain.ourmap.ourplace.dto;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kosa.mapbegood.domain.member.dto.MemberDTO;
-import com.kosa.mapbegood.domain.ourmap.groupThememap.dto.GroupThememapDTO;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Date;
 
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor @Builder @ToString
 public class OurplaceDTO {
