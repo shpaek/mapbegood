@@ -25,7 +25,7 @@ public class WaitingService {
 		Waiting waitingEntity = new Waiting();
 		waitingEntity.setId(waitingDto.getId());
 		waitingEntity.setGroupId(waitingDto.getGroupId());
-		waitingEntity.setMemberNickname(waitingDto.getMemberNickname());
+		waitingEntity.setMemberEmail(waitingDto.getMemberEmail());
 		
 		//엔터티 연결을 양방향->단방향을 바꿨기 때문에 코드수정함
 		//위가 단방향일때 아래가 양방향일때

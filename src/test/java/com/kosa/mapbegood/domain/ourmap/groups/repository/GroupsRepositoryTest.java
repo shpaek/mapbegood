@@ -21,7 +21,7 @@ class GroupsRepositoryTest {
 		Groups entity = new Groups();
 		entity.setId(103L);
 		entity.setName("groupNameTest");
-		entity.setLeaderNickname("dlto");
+		entity.setLeaderEmail("dlto@gmail.com");
 
 		gr.save(entity);
 	}

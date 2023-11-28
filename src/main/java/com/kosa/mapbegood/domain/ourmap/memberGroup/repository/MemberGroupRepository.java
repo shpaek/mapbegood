@@ -7,8 +7,8 @@ import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroupEmbedded;
 
 public interface MemberGroupRepository  extends JpaRepository<MemberGroup, MemberGroupEmbedded>{
-	@Query(nativeQuery=true,
-		   value="DELETE member_group\r\n"
-		   		+ "WHERE member_nickname=:memberNickname and group_id=:groupId")
-	public int deleteMemberGroup(String memberNickname, Long groupId);
+//	@Query(nativeQuery=true,
+//		   value="DELETE member_group\r\n"
+//		   		+ "WHERE member_nickname=:memberNickname and group_id=:groupId")
+//	public int deleteMemberGroup(String memberNickname, Long groupId);
 }
