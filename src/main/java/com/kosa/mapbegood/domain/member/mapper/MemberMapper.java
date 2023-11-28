@@ -4,9 +4,15 @@ import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 
-//@Component
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface MemberMapper {
-    Member MemberDTOToMember(MemberDTO memberDTO);
+@Component
+public class MemberMapper {
+    public Member MemberDTOPostToMember(MemberDTO.Post memberDTOPost) {
+        return Member.builder()
+                .email(memberDTOPost.getEmail())
+                .nickname(memberDTOPost.getNickname())
+                .password(memberDTOPost.getPassword())
+                .build();
+    }
 }
