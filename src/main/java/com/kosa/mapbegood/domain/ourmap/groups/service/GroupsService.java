@@ -51,7 +51,7 @@ public class GroupsService {
 	 * @throws ModifyException
 	 */
 	public void updateGroup(GroupsDTO groupsDto) throws ModifyException{
-		Optional<Groups> optEntity = gr.findById(groupsDto.getId()); //내그룹찾기만들어야 엑박안뜸
+		Optional<Groups> optEntity = gr.findById(groupsDto.getId()); 
 		optEntity.orElseThrow(()->
 			new ModifyException("그룹이 없어 수정이 불가능합니다")
 		);
@@ -65,8 +65,8 @@ public class GroupsService {
 	 * @param groupId
 	 * @throws RemoveException
 	 */
-	public void deleteGroup(Long groupId) throws RemoveException{
-		gr.deleteById(groupId);
+	public void deleteGroup(Long id) throws RemoveException{
+		gr.deleteById(id);
 			//Long groupId, String leaderNickname) throws RemoveException{
 //		Optional<Groups> optEntity = gr.findById(groupId);
 //		optEntity.orElseThrow(()->

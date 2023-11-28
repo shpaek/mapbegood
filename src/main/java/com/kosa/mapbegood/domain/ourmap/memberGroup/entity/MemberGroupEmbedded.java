@@ -20,6 +20,6 @@ public class MemberGroupEmbedded implements Serializable {
 	@Column(name = "member_nickname")
 	private String nickname;
 	
-	@Column(name = "groups_id")
+	@Column(name = "group_id")
 	private Long groupsId;
 }

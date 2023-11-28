@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.ourmap.waiting.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,12 +26,12 @@ public class Waiting {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "GroupsId")
-	private Groups groupId;
+	private Long groupId;
+	
+	@Column(name="member_nickname")
+	private String memberNickname;
 	
 	@ManyToOne
-	@JoinColumn(name = "nickname")
-	private Member memberNickname;
-	
+	@JoinColumn(name="member_nickname", insertable = false, updatable = false)
+	private Member member;
 }
