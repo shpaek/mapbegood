@@ -1,16 +1,19 @@
 package com.kosa.mapbegood.domain.member.repository;
 
-import com.kosa.mapbegood.domain.member.entity.Member;
-import lombok.extern.slf4j.Slf4j;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import com.kosa.mapbegood.domain.member.entity.Member;
 
-import static org.junit.jupiter.api.Assertions.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
@@ -18,6 +21,7 @@ public class MemberRepositoryTest {
 
 	@Autowired
 	private MemberRepository repository;
+	
 
 //	@Autowired
 //	private PasswordEncoder pwEncoder;
@@ -104,5 +108,6 @@ public class MemberRepositoryTest {
 
 		// then
 	}
+	
 
 }
