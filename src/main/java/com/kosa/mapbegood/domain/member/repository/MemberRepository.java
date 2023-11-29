@@ -1,14 +1,15 @@
 package com.kosa.mapbegood.domain.member.repository;
 
+import com.kosa.mapbegood.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.kosa.mapbegood.domain.member.entity.Member;
-
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, String>{
 
-    Optional<Member> findByEmail(String email);
+    Optional<Member> findByNickname(String nickName);
 
+    List<Member> findAllByNickname(String nickName);
 }
 	

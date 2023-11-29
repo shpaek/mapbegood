@@ -29,11 +29,11 @@ class MemberRepositoryTest {
 	@DisplayName("회원 조회")
 	public void selectMember() {
 		// given + when
-		String nick = "test";
 		String email = "test@mail.com";
+		String nick = "test";
 		String pwd = "test";
 
-		Optional<Member> optMember = repository.findById(nick);
+		Optional<Member> optMember = repository.findById(email);
 		Member m = null;
 
 		if (optMember.isPresent()) {
@@ -42,7 +42,7 @@ class MemberRepositoryTest {
 
 		// then
 		assertNotNull(optMember);
-		assertEquals(email, m.getEmail());
+		assertEquals(nick, m.getNickname());
 		assertEquals(pwEncoder.encode(pwd), m.getPassword());
 		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
 	}
@@ -56,8 +56,8 @@ class MemberRepositoryTest {
 		String pwd = "test";
 
 		Member m = Member.builder()
-				.nickname(nick)
 				.email(email)
+				.nickname(nick)
 				.password(pwEncoder.encode(pwd))
 				.build();
 
@@ -66,8 +66,8 @@ class MemberRepositoryTest {
 
 		// then
 		assertNotNull(savedMember);
-		assertEquals(nick, savedMember.getNickname());
 		assertEquals(email, savedMember.getEmail());
+		assertEquals(nick, savedMember.getNickname());
 		assertEquals(pwEncoder.encode(pwd), savedMember.getPassword());
 	}
 
@@ -75,16 +75,16 @@ class MemberRepositoryTest {
 	@DisplayName("회원 정보 수정")
 	public void updateMember() {
 		// given
-		String nick = "test";
-		String updateEmail = "updateEmail";
+		String email = "test@mail.com";
+		String updateNick = "updateTest";
 		String updatePwd = "updatePwd";
 
-		Optional<Member> optMember = repository.findById(nick);
+		Optional<Member> optMember = repository.findById(email);
 		Member m = null;
 
 		if (optMember.isPresent()) {
 			m = optMember.get();
-			m.setEmail(updateEmail);
+			m.setNickname(updateNick);
 			m.setPassword(pwEncoder.encode(updatePwd));
 		}
 
@@ -92,7 +92,7 @@ class MemberRepositoryTest {
 		Member updateMember = repository.save(m);
 
 		// then
-		assertEquals(updateEmail, updateMember.getEmail());
+		assertEquals(updateNick, updateMember.getNickname());
 		assertEquals(pwEncoder.encode(updatePwd), updateMember.getPassword());
 	}
 
@@ -100,9 +100,9 @@ class MemberRepositoryTest {
 	@DisplayName("회원 삭제")
 	public void deleteMember() {
 		// given + when
-		String nick = "test";
+		String email = "test@mail.com";
 
-		repository.deleteById(nick);
+		repository.deleteById(email);
 
 		// then
 	}

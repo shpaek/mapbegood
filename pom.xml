@@ -117,17 +117,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-<!--					<annotationProcessorPaths>-->
-<!--						<path>-->
-<!--							<groupId>org.mapstruct</groupId>-->
-<!--							<artifactId>mapstruct-processor</artifactId>-->
-<!--							<version>1.5.5.Final</version>-->
-<!--						</path>-->
-<!--						&lt;!&ndash;						<path>&ndash;&gt;-->
-<!--						&lt;!&ndash;							<groupId>org.projectlombok</groupI d>&ndash;&gt;-->
-<!--						&lt;!&ndash;							<artifactId>lombok</artifactId>&ndash;&gt;-->
-<!--						&lt;!&ndash;						</path>&ndash;&gt;-->
-<!--					</annotationProcessorPaths>-->
 				</configuration>
 			</plugin>
 		</plugins>
