@@ -44,10 +44,10 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .cors(withDefaults())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
-                .accessDeniedHandler(new MemberAccessDeniedHandler())
+//                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new MemberAuthenticationEntryPoint()) // 계정 인증 실패 시
+//                .accessDeniedHandler(new MemberAccessDeniedHandler()) // 계정 인가 실패 시
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()

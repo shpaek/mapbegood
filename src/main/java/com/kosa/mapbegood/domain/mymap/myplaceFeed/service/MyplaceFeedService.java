@@ -43,7 +43,7 @@ public class MyplaceFeedService {
         feedDto.setMyplaceId(myplaceId);
 //        feedDto.setMemberNickname(String.valueOf(feed.get().getMemberNickname()));
         feedDto.setContent(feed.get().getContent());
-        feedDto.setCreatedAt(feed.get().getCreatedAt());
+//        feedDto.setCreatedAt(feed.get().getCreatedAt());
         return feedDto;
     }
 

@@ -7,6 +7,7 @@ import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
+import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.util.AuthenticationUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -34,19 +35,16 @@ public class MemberController {
 		try {
 			Member member = mapper.MemberDTOPostToMember(signUpDto);
 			service.createMember(member);
+		} catch (AddException ae) {
+			return new ResponseEntity<>(new Response(0, "이미 가입된 계정이 있습니다."), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Response(0, "회원가입에 실패했습니다."), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(new Response(1, "회원가입이 완료되었습니다."), HttpStatus.OK);
-	}
-
-	// TODO: 2023-11-29
-	@GetMapping("/logout")
-	public void logout() {
+		return new ResponseEntity<>(new Response(1, "회원가입이 완료되었습니다."), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/name")
-	public ResponseEntity duplicationNickName(@Valid MemberNickNameDTO nickNameDto) {
+	public ResponseEntity duplicationNickName(@Valid @RequestBody MemberNickNameDTO nickNameDto) {
 		try {
 			service.duplicationNickName(nickNameDto.getNickname());
 		} catch (Exception e) {
@@ -56,7 +54,8 @@ public class MemberController {
 	}
 
 	@PutMapping("/name")
-	public ResponseEntity updateNickName(Authentication authentication, @Valid MemberNickNameDTO nickNameDto) {
+	public ResponseEntity updateNickName(Authentication authentication,
+										 @Valid @RequestBody MemberNickNameDTO nickNameDto) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.updateNickName(email, nickNameDto.getNickname());
@@ -67,7 +66,8 @@ public class MemberController {
 	}
 
 	@PutMapping("/pwd")
-	public ResponseEntity updatePassword(Authentication authentication, @Valid MemberPassDTO passwordDto) {
+	public ResponseEntity updatePassword(Authentication authentication,
+										 @Valid @RequestBody MemberPassDTO passwordDto) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.updatePassword(email, passwordDto.getPassword());

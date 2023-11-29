@@ -11,8 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -43,7 +42,7 @@ class MemberRepositoryTest {
 		// then
 		assertNotNull(optMember);
 		assertEquals(nick, m.getNickname());
-		assertEquals(pwEncoder.encode(pwd), m.getPassword());
+		assertTrue(pwEncoder.matches(pwd, m.getPassword()));
 		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
 	}
 
@@ -51,14 +50,16 @@ class MemberRepositoryTest {
 	@DisplayName("회원 가입")
 	public void insertMember() {
 		// given
-		String nick = "test";
-		String email = "test@mail.com";
-		String pwd = "test";
+		String nick = "test1";
+		String email = "test1@mail.com";
+		String pwd = "test1";
+		int status = 1;
 
 		Member m = Member.builder()
 				.email(email)
 				.nickname(nick)
 				.password(pwEncoder.encode(pwd))
+				.status(status)
 				.build();
 
 		// when
@@ -68,7 +69,7 @@ class MemberRepositoryTest {
 		assertNotNull(savedMember);
 		assertEquals(email, savedMember.getEmail());
 		assertEquals(nick, savedMember.getNickname());
-		assertEquals(pwEncoder.encode(pwd), savedMember.getPassword());
+		assertTrue(pwEncoder.matches(pwd, savedMember.getPassword()));
 	}
 
 	@Test
@@ -93,7 +94,7 @@ class MemberRepositoryTest {
 
 		// then
 		assertEquals(updateNick, updateMember.getNickname());
-		assertEquals(pwEncoder.encode(updatePwd), updateMember.getPassword());
+		assertTrue(pwEncoder.matches(updatePwd, updateMember.getPassword()));
 	}
 
 	@Test

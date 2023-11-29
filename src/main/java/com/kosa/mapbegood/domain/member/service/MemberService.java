@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -38,16 +39,19 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public void createMember(Member member) throws AddException {
 		try {
-			member.setPassword(pwEncoder.encode(member.getPassword()));
-			repository.save(member);
+			Optional<Member> optMember = repository.findById(member.getEmail());
+			if (!optMember.isPresent()) {
+				member.setPassword(pwEncoder.encode(member.getPassword()));
+				repository.save(member);
+			} else {
+				throw new AddException();
+			}
+		} catch (AddException ae) {
+			throw new AddException();
 		} catch (Exception e) {
 			log.error("회원가입 실패: " + e.getMessage());
 			throw new AddException();
 		}
-	}
-
-	// TODO: 2023-11-29  
-	public void logout() {
 	}
 
 	@Override
