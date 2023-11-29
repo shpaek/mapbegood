@@ -1,4 +1,4 @@
-package com.kosa.mapbegood.domain.mymap.thememap.entity.repository;
+package com.kosa.mapbegood.domain.mymap.thememap.repository;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
 public interface ThemeMapRepository extends JpaRepository<ThemeMap, Long> {
 
-   public List<ThemeMap> findByMemberNickname(Member m);
+   public List<ThemeMap> findByMemberEmail(Member m);
 
     
 }

@@ -55,12 +55,11 @@ public class GroupThemeMapRepositoryTest {
         grepository.save(group);
 
         // GroupThememap 엔티티 생성
-        groupThemeMap.setGroupId(group);
+         
         groupThemeMap.setId(1L);
         groupThemeMap.setMemo("dd");
         groupThemeMap.setColor("black"); 
         groupThemeMap.setName("Test Group ThemeMap");
-        groupThemeMap.setGroupId(group);
 
         // GroupThememap 저장
         repository.save(groupThemeMap);
@@ -95,6 +94,7 @@ public class GroupThemeMapRepositoryTest {
 
         if (optionalGroupThemeMap.isPresent()) {
             GroupThememap deleteGroupThemeMap = optionalGroupThemeMap.get();
+            
             // 그룹 테마 맵 삭제
             repository.delete(deleteGroupThemeMap);
             log.info("그룹 테마 맵이 삭제되었습니다. - {}", deleteGroupThemeMap);

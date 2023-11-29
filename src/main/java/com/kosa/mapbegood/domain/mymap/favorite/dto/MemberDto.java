@@ -1,9 +1,6 @@
-package com.kosa.mapbegood.domain.mymap.favorite.entity.dto;
+package com.kosa.mapbegood.domain.mymap.favorite.dto;
 
-import java.sql.Date;
 import java.time.LocalDate;
-
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,10 +11,10 @@ import lombok.Setter;
 public class MemberDto {
 	private String nickname;
 	
-	private String email;
+	private String Memberemail;
 	
 	private String password;
 	
-	private LocalDate createdAt;
+	private int status;
     
 }

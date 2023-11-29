@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
 
 @SpringBootTest
 public class ThememapRepositoryTest {
@@ -38,7 +37,7 @@ public class ThememapRepositoryTest {
 		ThemeMap tmp = new ThemeMap();	
 		Member member = new Member();
 		member.setNickname("test");
-		tmp.setMemberNickname(member);
+		tmp.setMemberEmail(member);
 		tmp.setName("test3");
 		tmp.setColor("blue");
 		tmp.setMainmap(true);

@@ -16,7 +16,7 @@ import lombok.ToString;
 public class GroupsDTO {
 	private Long id;
 	private String name;
-	private String leaderEmail;
+	private String leaderNickname;
 	private List<WaitingDTO> waitingList;
 	private List<GroupThememapDTO> groupThememapList;
 }

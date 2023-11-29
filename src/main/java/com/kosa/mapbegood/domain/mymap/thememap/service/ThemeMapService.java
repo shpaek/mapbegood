@@ -1,4 +1,5 @@
- package com.kosa.mapbegood.domain.mymap.thememap.entity.service;
+package com.kosa.mapbegood.domain.mymap.thememap.service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
-import com.kosa.mapbegood.domain.mymap.favorite.entity.dto.ThemeMapDto;
+import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
+import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
 import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
 import com.kosa.mapbegood.exception.FindException;
 
@@ -18,10 +20,18 @@ public class ThemeMapService {
 
     @Autowired
     private ThemeMapRepository themeMapRepository;
+    
+    @Autowired
+    private MemberRepository memberRepository;
 
     // 테마맵 생성
-    public ThemeMapDto createThemeMap(ThemeMapDto themeMapDto) {
-        ThemeMap themeMap = ThemeMapMapper.toEntity(themeMapDto);
+    public ThemeMapDto createThemeMap(String email, ThemeMapDto themeMapDto) throws FindException {
+    	Optional<Member> optMember = memberRepository.findById(email);
+    	Member findMember = optMember.orElseThrow(() -> new FindException());
+    	
+    	ThemeMap themeMap = ThemeMapMapper.toEntity(themeMapDto);
+    	themeMap.setMemberEmail(findMember);
+    	
         ThemeMap savedThemeMap = themeMapRepository.save(themeMap);
         return ThemeMapMapper.toDto(savedThemeMap);
     }
@@ -32,7 +42,7 @@ public class ThemeMapService {
         Optional<ThemeMapDto> optDto = optionalThemeMap.map(ThemeMapMapper::toDto);
         if(optDto.isPresent()){
         	ThemeMapDto dto = optDto.get();
-        	dto.getMemberNickname().setPassword(null);
+        	dto.getMemberEmail().setPassword(null);
         	return dto;
         }else{
         	throw new FindException("테마지도가 없습니다");
@@ -68,7 +78,7 @@ public class ThemeMapService {
 
     // 모든 테마맵 조회
     public List<ThemeMapDto> getAllThemeMaps(Member m) {
-        List<ThemeMap> themeMapList = themeMapRepository.findByMemberNickname(m);
+        List<ThemeMap> themeMapList = themeMapRepository.findByMemberEmail(m);
         return themeMapList.stream()
                 .map(ThemeMapMapper::toDto)
                 .collect(Collectors.toList());

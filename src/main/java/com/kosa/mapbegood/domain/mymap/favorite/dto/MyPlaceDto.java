@@ -1,4 +1,4 @@
-package com.kosa.mapbegood.domain.mymap.favorite.entity.dto;
+package com.kosa.mapbegood.domain.mymap.favorite.dto;
 
 import java.sql.Date;
 

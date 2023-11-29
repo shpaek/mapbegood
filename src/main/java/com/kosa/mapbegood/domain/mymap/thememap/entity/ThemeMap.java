@@ -30,7 +30,7 @@ public class ThemeMap {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "email")
+	@JoinColumn(name = "Member_email")
 	private Member memberEmail;
 	
 	private String name;
