@@ -80,12 +80,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String cookieName = "mapbegoodRefreshToken";
         String cookieValue = delegateRefreshToken(member);
         Cookie cookie = new Cookie(cookieName, cookieValue);
-
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(60 * 60 * 24);
-        cookie.set
 
         return cookie;
     }

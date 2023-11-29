@@ -45,7 +45,6 @@ public class RefreshController {
                 if (optionalMember.isPresent()) {
                     Member member = optionalMember.get();
 //                    String accessToken = tokenService.delegateAccessToken(member);
-
 //                    return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken).body("Access token refreshed");
                 } else {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid member email");
