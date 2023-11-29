@@ -1,14 +1,22 @@
 package com.kosa.mapbegood.domain.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter @Getter @NoArgsConstructor @AllArgsConstructor 
 public class MemberDTO {
+	//MemberDTO 멤버변수
+	private String email;
+	private String nickname;
+	private String password;
+	private int status;
+	
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
