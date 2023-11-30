@@ -68,15 +68,7 @@ public class RefreshTokenService {
 
     public void logout(String refreshTokenBearer) throws Exception {
         String refreshToken = refreshTokenBearer.substring(7);
-
         RefreshToken refreshTokenObj = new RefreshToken(refreshToken, "logout");
         repository.save(refreshTokenObj);
-
-//        Optional<RefreshToken> optRefreshToken = repository.findById(refreshToken);
-//        if (optRefreshToken.isPresent()) {
-//            repository.deleteById(refreshToken);
-//        } else {
-//            throw new FindException("발급된 토큰을 확인할 수 없습니다.");
-//        }
     }
 }

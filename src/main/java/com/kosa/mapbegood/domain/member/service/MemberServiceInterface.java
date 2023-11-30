@@ -15,7 +15,14 @@ public interface MemberServiceInterface {
      * @param email
      * @throws FindException
      */
-    Member findMember(String email) throws FindException;
+    Member findMember(String email) throws Exception;
+
+    /**
+     * 닉네임 중복 확인
+     * @param nickName
+     * @throws AddException
+     */
+    void duplicationNickName(String nickName) throws Exception;
 
     /**
      * 회원 가입
@@ -25,11 +32,12 @@ public interface MemberServiceInterface {
     void createMember(Member member) throws Exception;
 
     /**
-     * 닉네임 중복 확인
-     * @param nickName
-     * @throws AddException
+     * 패스워드 검증
+     * @param email
+     * @param password
+     * @throws Exception
      */
-    void duplicationNickName(String nickName) throws AddException;
+    void verifyPassword(String email, String password) throws Exception;
 
     /**
      * 닉네임 수정
@@ -37,7 +45,7 @@ public interface MemberServiceInterface {
      * @param nickName
      * @throws ModifyException
      */
-    void updateNickName(String email, String nickName) throws ModifyException;
+    void updateNickName(String email, String nickName) throws Exception;
 
     /**
      * 패스워드 수정
@@ -45,22 +53,27 @@ public interface MemberServiceInterface {
      * @param password
      * @throws ModifyException
      */
-    void updatePassword(String email, String password) throws ModifyException;
+    void updatePassword(String email, String password) throws Exception;
 
+    // TODO: 2023-11-30
     /**
-     * 패스워드 찾기
+     * 비밀번호 찾기(이메일 전송)
      */
-    void findPassword();
+    void sendCodeToEmail(String email) throws Exception;
 
+    // TODO: 2023-11-30
+    void verifiedCode(String email, String code);
+
+    // TODO: 2023-11-30
     /**
      * 사용자 nickname 검색
      */
-    List<String> searchMember(String email, String nickName) throws FindException;
+    List<String> searchMember(String email, String nickName) throws Exception;
 
     /**
      * 회원 탈퇴
      * @param email
      * @throws RemoveException
      */
-    void deleteMember(String email) throws RemoveException;
+    void deleteMember(String email) throws Exception;
 }

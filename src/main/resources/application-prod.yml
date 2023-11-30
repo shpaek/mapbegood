@@ -10,6 +10,10 @@ spring:
     username: ${database.user}
     password: ${database.pass}
 
+  redis:
+    host: 172.31.1.201
+    port: 6379
+
   servlet:
     multipart:
       max-file-size: 10MB
@@ -19,10 +23,19 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        format_sql: true
+        highlight_sql: true
         color-codes: true
         type:
           descriptor:
             sql: trace
+        default_batch_fetch_size: 100
+      open-in-view: false
+
+jwt:
+  key: 20231120try241map1315be316good9612161catch20231222
+  access-token-expiration-minutes: 5
+  refresh-token-expiration-minutes: 360
 
 aws:
   paramstore:

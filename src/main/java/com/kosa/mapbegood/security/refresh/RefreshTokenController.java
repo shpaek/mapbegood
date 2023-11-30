@@ -24,10 +24,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class RefreshTokenController {
-    private final JwtTokenizer jwtTokenizer;
-    private final MemberRepository memberRepository;
     private final RefreshTokenService service;
-    private final RefreshTokenRepository repository;
 
     @PostMapping
     public ResponseEntity<String> refreshAccessToken(HttpServletRequest request) {
