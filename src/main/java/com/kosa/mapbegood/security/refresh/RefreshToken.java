@@ -1,25 +1,26 @@
 package com.kosa.mapbegood.security.refresh;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.Id;
+import java.io.Serializable;
 
-@RedisHash(value = "refreshToken", timeToLive = 25200)
-public class RefreshToken {
+@RedisHash(timeToLive = 21600)
+public class RefreshToken implements Serializable {
     @Id
-    private String refreshToken;
-    private String logOut;
+    private String rtk;
+    private String logout;
 
-    public RefreshToken(String refreshToken, String logOut) {
-        this.refreshToken = refreshToken;
-        this.logOut = logOut;
+    public RefreshToken(String rtk, String logout) {
+        this.rtk = rtk;
+        this.logout = logout;
     }
 
     public String getRefreshToken() {
-        return this.refreshToken;
+        return this.rtk;
     }
 
-    public String isLogOut() {
-        return this.logOut;
+    public String getLogout() {
+        return this.logout;
     }
 }

@@ -22,7 +22,7 @@ public interface MemberServiceInterface {
      * @param member
      * @throws AddException
      */
-    void createMember(Member member) throws AddException;
+    void createMember(Member member) throws Exception;
 
     /**
      * 닉네임 중복 확인

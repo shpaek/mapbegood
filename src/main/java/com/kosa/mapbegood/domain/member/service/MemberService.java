@@ -8,6 +8,7 @@ import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +38,12 @@ public class MemberService implements MemberServiceInterface {
 	}
 
 	@Override
-	public void createMember(Member member) throws AddException {
+	public void createMember(Member member) throws Exception {
 		try {
 			Optional<Member> optMember = repository.findById(member.getEmail());
 			if (!optMember.isPresent()) {
 				member.setPassword(pwEncoder.encode(member.getPassword()));
+				member.setStatus(1);
 				repository.save(member);
 			} else {
 				throw new AddException();
@@ -50,7 +52,7 @@ public class MemberService implements MemberServiceInterface {
 			throw new AddException();
 		} catch (Exception e) {
 			log.error("회원가입 실패: " + e.getMessage());
-			throw new AddException();
+			throw new Exception();
 		}
 	}
 
