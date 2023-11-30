@@ -46,17 +46,21 @@ export default {
         })
         .then((response) => {
           if (response.status == 200) {
-            console.log(response);
+            const accessToken = response.headers.authorization;
+            const refreshToke = response.headers.refresh;
+
+            axios.defaults.headers.common["Authorization"] = accessToken;
+            localStorage.setItem("mapbegoodToken", accessToken);
+            localStorage.setItem("refresh", refreshToke);
 
             alert("로그인 성공");
-            // location.href = "/";
+            location.href = "/";
+
+            console.log(axios.defaults.headers.common);
           }
-          // // API 요청하는 콜마다 헤더에 accessToken 담아 보내도록 설정
-          // axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         })
         .catch((error) => {
-          console.log(error);
-          alert("로그인 실패");
+          alert(error.response.data.message);
         });
     },
   },
