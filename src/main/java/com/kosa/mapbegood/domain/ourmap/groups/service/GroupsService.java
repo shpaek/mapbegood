@@ -98,16 +98,28 @@ public class GroupsService {
 	 * @param groupsDto
 	 * @throws AddException
 	 */
-	public void createGroup(GroupsDTO groupsDto) throws AddException{
-		Groups entity = groupsDtoToEntity(groupsDto);
+//	public void createGroup(GroupsDTO groupsDto) throws AddException{
+//		Groups entity = groupsDtoToEntity(groupsDto);
+//		gr.save(entity); //사용자가 그룹을 생성하면 그룹을 생성한 사용자가 자동으로 그룹멤버의 그룹장으로 추가되어야함
+//		MemberGroup mgEntity = new MemberGroup();
+//		mgEntity.setGroupId(entity);
+//		Member mEntity = new Member();
+//		mEntity.setEmail(entity.getMemberGroupList().get(0).getMemberEmail().getEmail());
+//		mgEntity.setMemberEmail(mEntity);
+//		mgr.save(mgEntity);
+//	}
+	public void createGroup(MemberGroupDTO memberGroupDto) throws AddException{
+		GroupsDTO groupDto = memberGroupDto.getGroups();
+		Groups entity = groupsDtoToEntity(groupDto);
+//		log.error("memberGroupDto.getGroups().getName()={}", memberGroupDto.getGroups().getName() );
 		gr.save(entity); //사용자가 그룹을 생성하면 그룹을 생성한 사용자가 자동으로 그룹멤버의 그룹장으로 추가되어야함
 		MemberGroup mgEntity = new MemberGroup();
 		mgEntity.setGroupId(entity);
 		Member mEntity = new Member();
-		mEntity.setEmail(entity.getMemberGroupList().get(0).getMemberEmail().getEmail());
+		mEntity.setEmail(memberGroupDto.getMember().getEmail());
 		mgEntity.setMemberEmail(mEntity);
+		mgEntity.setLeader(1);
 		mgr.save(mgEntity);
-		
 	}
 	
 	/**

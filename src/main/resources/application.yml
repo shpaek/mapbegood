@@ -25,7 +25,11 @@ server:
   port: 8080
   servlet:
     context-path: /mapbegood
-  
+
+jwt:
+  key: 20231120try241map1315be316good9612161catch20231222
+  access-token-expiration-minutes: 1440 #5
+  refresh-token-expiration-minutes: 360
 
 logging:
   level:
