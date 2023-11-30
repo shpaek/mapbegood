@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.service.GroupsService;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
@@ -41,9 +42,9 @@ public class GroupsController {
 	}
 	
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> createGroup(@RequestBody GroupsDTO groupsDto) throws AddException{
+	public ResponseEntity<?> createGroup(@RequestBody MemberGroupDTO memberGroupDto) throws AddException{
 		try{
-			gs.createGroup(groupsDto);
+			gs.createGroup(memberGroupDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(AddException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
