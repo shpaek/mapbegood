@@ -19,7 +19,6 @@ public class MailService {
                           String title,
                           String text) throws Exception {
         SimpleMailMessage emailForm = createEmailForm(toEmail, title, text);
-        log.error("MailService: sendEmail()");
         try {
             emailSender.send(emailForm);
         } catch (RuntimeException e) {

@@ -6,15 +6,16 @@ import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
 import com.kosa.mapbegood.exception.AddException;
-import com.kosa.mapbegood.exception.FindException;
+import com.kosa.mapbegood.security.refresh.RefreshTokenService;
 import com.kosa.mapbegood.util.AuthenticationUtil;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,17 +28,7 @@ public class MemberController {
 	private final MemberServiceInterface service;
 	private final AuthenticationUtil authenticationUtil;
 	private final MemberMapper mapper;
-
-	// 닉네임 중복 확인
-	@GetMapping("/name")
-	public ResponseEntity duplicationNickName(@Valid @RequestBody MemberNickNameDTO nickNameDto) {
-		try {
-			service.duplicationNickName(nickNameDto.getNickname());
-		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "중복된 닉네임 입니다."), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(new Response(1, "사용 가능한 닉네임 입니다."), HttpStatus.OK);
-	}
+	private final RefreshTokenService refreshTokenService;
 
 	// 회원 가입
 	@PostMapping("/signup")
@@ -51,6 +42,17 @@ public class MemberController {
 			return new ResponseEntity<>(new Response(0, "회원가입에 실패했습니다."), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new Response(1, "회원가입이 완료되었습니다."), HttpStatus.CREATED);
+	}
+
+	// 닉네임 중복 확인
+	@GetMapping("/name")
+	public ResponseEntity duplicationNickName(@Valid @RequestBody MemberNickNameDTO nickNameDto) {
+		try {
+			service.duplicationNickName(nickNameDto.getNickname());
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "중복된 닉네임 입니다."), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(1, "사용 가능한 닉네임 입니다."), HttpStatus.OK);
 	}
 
 	// 비밀번호 인증
@@ -93,7 +95,7 @@ public class MemberController {
 	}
 
 	// 비밀번호 찾기(이메일 전송)
-	@PostMapping("/email/verification-requests")
+	@PostMapping("/auth-email")
 	public ResponseEntity sendMessage(@Valid @RequestBody MemberEmailDTO emailDto) {
 		try {
 			service.sendCodeToEmail(emailDto.getEmail());
@@ -104,11 +106,12 @@ public class MemberController {
 	}
 
 	// 비밀번호 찾기(문자일 인증)
-	@GetMapping("/email/verifications")
+	@PostMapping("/auth-code")
 	public ResponseEntity verificationEmail(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
 		try {
 			if (service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode())) {
-				return new ResponseEntity<>(new Response(1, "인증번호가 일치합니다."), HttpStatus.OK);
+				MultiValueMap<String, String> headers = this.addHeaderTempAccessToken(emailVerifyDto.getEmail());
+				return new ResponseEntity<>(new Response(1, "인증번호가 일치합니다."), headers, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.OK);
 			}
@@ -141,5 +144,15 @@ public class MemberController {
 			return new ResponseEntity<>(new Response(0, "회원탈퇴에 실패했습니다."), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new Response(1, "탈퇴 되었습니다."), HttpStatus.OK);
+	}
+
+	private MultiValueMap<String, String> addHeaderTempAccessToken(String email) throws Exception {
+		Member findMember = service.findMember(email);
+		String tempAccessToken = refreshTokenService.delegateAccessToken(findMember);
+
+		MultiValueMap<String, String> tempAccessTokenHeader = new LinkedMultiValueMap<>();
+		tempAccessTokenHeader.add("Authorization", tempAccessToken);
+
+		return tempAccessTokenHeader;
 	}
 }

@@ -18,13 +18,6 @@ public interface MemberServiceInterface {
     Member findMember(String email) throws Exception;
 
     /**
-     * 닉네임 중복 확인
-     * @param nickName
-     * @throws AddException
-     */
-    void duplicationNickName(String nickName) throws Exception;
-
-    /**
      * 회원 가입
      * @param member
      * @throws AddException
@@ -32,7 +25,14 @@ public interface MemberServiceInterface {
     void createMember(Member member) throws Exception;
 
     /**
-     * 패스워드 검증
+     * 닉네임 중복 확인
+     * @param nickName
+     * @throws AddException
+     */
+    void duplicationNickName(String nickName) throws Exception;
+
+    /**
+     * 패스워드 재인증
      * @param email
      * @param password
      * @throws Exception
