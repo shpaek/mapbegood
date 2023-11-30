@@ -8,8 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor 
+@Setter @Getter @NoArgsConstructor @AllArgsConstructor @ToString
 public class MemberDTO {
 	//MemberDTO 멤버변수
 	private String email;

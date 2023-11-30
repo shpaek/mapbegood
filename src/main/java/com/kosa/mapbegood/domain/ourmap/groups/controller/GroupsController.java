@@ -37,7 +37,7 @@ public class GroupsController {
 		//ㄴRequestBody로 보내야 응답결과를 json으로 반환이 가능함
 		//ㄴㄴRequestBody -> "memberEmail":"사용자의 이메일값"이라는 객체가 받아지기 때문에 Map<>으로 받음
 		//ㄴㄴㄴ따라서 메서드에 변수를 넣어줄 때 아래와 같이 넣어줘야함
-		return gs.findAllGroupByMemberEmail(map.get("memberEmail"));
+		return gs.findAllGroupsByMemberEmail(map.get("memberEmail"));
 	}
 	
 	@PostMapping(value="", produces="application/json;charset=UTF-8")

@@ -52,39 +52,44 @@ public class GroupsService {
 	 * @return 이메일 사용자가 속한 모든 그룹의 그룹명과 그룹장의 닉네임
 	 * @throws FindException
 	 */
-	public List<GroupsDTO> findAllGroupByMemberEmail(String memberEmail) throws FindException{
-		Member m = new Member();		
-		m.setEmail(memberEmail);
-		List<MemberGroup> mgs = mgr.findByMemberEmail(m);//이메일 사용자가 속해있는 멤버그룹들
-		List<GroupsDTO> resultGroupDTO = new ArrayList<>();
-		for(int i=0; i<mgs.size(); i++) {
-			MemberGroup mg = mgs.get(i); //이메일 사용자가 속해있는 그룹1개
-			Groups g = mg.getGroupId();
-			
-			GroupsDTO groupDTO = new GroupsDTO();
-			groupDTO.setId(g.getId());
-			groupDTO.setName(g.getName());
-			
-			List<MemberGroup>members = g.getMemberGroupList(); //각 그룹의 멤버들
-			for(MemberGroup mg1: members) {
-				if(mg1.getLeader() == 1) { //리더인 경우
-					//String leaderNickName = members.get(0).getMemberEmail().getNickname();
-					MemberDTO leaderMemberDTO = new MemberDTO();
-					leaderMemberDTO.setNickname( members.get(0).getMemberEmail().getNickname());
-	
-					MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
-					memberGroupDTO.setMember(leaderMemberDTO);
-					
-					List<MemberGroupDTO> listGroupMemberDTO = new ArrayList<>();
-					listGroupMemberDTO.add(memberGroupDTO);
-					groupDTO.setMemberGroupList(listGroupMemberDTO);
-				}			
+	public List<GroupsDTO> findAllGroupsByMemberEmail(String memberEmail) throws FindException{
+		Member member = new Member();		
+		member.setEmail(memberEmail);
+		try {
+			List<MemberGroup> memberGroups = mgr.findByMemberEmail(member);//이메일 사용자가 속해있는 멤버그룹들
+			List<GroupsDTO> resultGroupDTO = new ArrayList<>();//이메일 사용자가 속한 그룹들
+			for(int i=0; i<memberGroups.size(); i++) {
+				//그룹정보 셋팅
+				MemberGroup membergroup = memberGroups.get(i); //이메일 사용자가 속해있는 그룹1개
+				Groups group = membergroup.getGroupId();
+				GroupsDTO groupDTO = new GroupsDTO();
+				groupDTO.setId(group.getId());
+				groupDTO.setName(group.getName());
+				
+				List<MemberGroup>members = group.getMemberGroupList(); //각 그룹의 멤버들
+				for(MemberGroup mg: members) {
+					if(mg.getLeader() == 1) { //리더인 경우
+						//String leaderNickName = members.get(0).getMemberEmail().getNickname();
+						MemberDTO leaderMemberDTO = new MemberDTO();
+						leaderMemberDTO.setNickname( members.get(0).getMemberEmail().getNickname());
+		
+						MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
+						memberGroupDTO.setMember(leaderMemberDTO);
+						
+						List<MemberGroupDTO> listGroupMemberDTO = new ArrayList<>();
+						listGroupMemberDTO.add(memberGroupDTO);
+						groupDTO.setMemberGroupList(listGroupMemberDTO);
+					}			
+				}
+				
+				log.error("groupDTO.getId={}, groupDTO.getName={},leaderNickname={} ", groupDTO.getId(), groupDTO.getName(), groupDTO.getMemberGroupList().get(0).getMember().getNickname());
+				resultGroupDTO.add(groupDTO);
 			}
-			
-			log.error("groupDTO.getId={}, groupDTO.getName={},leaderNickname={} ", groupDTO.getId(), groupDTO.getName(), groupDTO.getMemberGroupList().get(0).getMember().getNickname());
-			resultGroupDTO.add(groupDTO);
+			return resultGroupDTO;
+		}catch(Exception e) {
+			new FindException(e.getMessage());
+			return null;
 		}
-		return resultGroupDTO;
 	}
 	
 	
@@ -95,7 +100,14 @@ public class GroupsService {
 	 */
 	public void createGroup(GroupsDTO groupsDto) throws AddException{
 		Groups entity = groupsDtoToEntity(groupsDto);
-		gr.save(entity);
+		gr.save(entity); //사용자가 그룹을 생성하면 그룹을 생성한 사용자가 자동으로 그룹멤버의 그룹장으로 추가되어야함
+		MemberGroup mgEntity = new MemberGroup();
+		mgEntity.setGroupId(entity);
+		Member mEntity = new Member();
+		mEntity.setEmail(entity.getMemberGroupList().get(0).getMemberEmail().getEmail());
+		mgEntity.setMemberEmail(mEntity);
+		mgr.save(mgEntity);
+		
 	}
 	
 	/**
@@ -131,16 +143,5 @@ public class GroupsService {
 		}else {
 			new RemoveException("그룹이 없어 삭제가 불가능합니다");
 		}
-			//Long groupId, String leaderNickname) throws RemoveException{
-//		Optional<Groups> optEntity = gr.findById(groupId);
-//		optEntity.orElseThrow(()->
-//			new RemoveException("그룹이 없어 삭제가 불가능합니다")
-//	    );
-//		Groups entity = optEntity.get();
-//		if(entity.getLeaderNickname() == leaderNickname) {
-//			gr.deleteById(groupId);			
-//		}else {
-//			new RemoveException("그룹장만 그룹을 삭제할 수 있습니다");
-//		}
 	}
 }
