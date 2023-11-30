@@ -92,7 +92,6 @@ public class MemberController {
 		return new ResponseEntity<>(new Response(1, "패스워드가 변경되었습니다."), HttpStatus.OK);
 	}
 
-	// TODO: 2023-11-30  
 	// 비밀번호 찾기(이메일 전송)
 	@PostMapping("/email/verification-requests")
 	public ResponseEntity sendMessage(@Valid @RequestBody MemberEmailDTO emailDto) {
@@ -104,13 +103,18 @@ public class MemberController {
 		return new ResponseEntity<>(new Response(1, "인증번호가 이메일로 전송되었습니다."), HttpStatus.OK);
 	}
 
-	// TODO: 2023-11-30  
 	// 비밀번호 찾기(문자일 인증)
 	@GetMapping("/email/verifications")
-	public void verificationEmail(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
-
-//		EmailVerificationResult response = service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode());
-//		return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+	public ResponseEntity verificationEmail(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
+		try {
+			if (service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode())) {
+				return new ResponseEntity<>(new Response(1, "인증번호가 일치합니다."), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.OK);
+		}
 	}
 
 	// TODO: 2023-11-30

@@ -55,14 +55,21 @@ public interface MemberServiceInterface {
      */
     void updatePassword(String email, String password) throws Exception;
 
-    // TODO: 2023-11-30
     /**
      * 비밀번호 찾기(이메일 전송)
+     * @param email
+     * @throws Exception
      */
     void sendCodeToEmail(String email) throws Exception;
 
-    // TODO: 2023-11-30
-    void verifiedCode(String email, String code);
+    /**
+     * 비밀번호 찾기(문자일 인증)
+     * @param email
+     * @param code
+     * @return
+     * @throws Exception
+     */
+    boolean verifiedCode(String email, String code) throws Exception;;
 
     // TODO: 2023-11-30
     /**

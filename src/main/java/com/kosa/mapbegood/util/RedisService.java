@@ -24,7 +24,6 @@ public class RedisService {
     }
 
     public void setValues(String key, String data, Duration duration) {
-        log.error("RedisService: setValues()");
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
         values.set(key, data, duration);
     }

@@ -46,7 +46,7 @@ public class MemberService implements MemberServiceInterface {
 			log.error("[ " + email + " ] 해당 이메일로 가입된 회원이 없습니다.: " + fe.getMessage());
 			throw new FindException(fe.getMessage());
 		} catch (Exception e) {
-			log.error("회원 조회 error: " + e.getMessage());
+			log.error("회원 조회 Error: " + e.getMessage());
 			throw new FindException();
 		}
 	}
@@ -61,7 +61,7 @@ public class MemberService implements MemberServiceInterface {
 		} catch (AddException ae) {
 			throw new AddException();
 		} catch (Exception e) {
-			log.error("닉네임 중복 확인 error: " + e.getMessage());
+			log.error("닉네임 중복 확인 Error: " + e.getMessage());
 			throw new AddException();
 		}
 	}
@@ -80,7 +80,7 @@ public class MemberService implements MemberServiceInterface {
 		} catch (AddException ae) {
 			throw new AddException();
 		} catch (Exception e) {
-			log.error("회원가입 error: " + e.getMessage());
+			log.error("회원가입 Error: " + e.getMessage());
 			throw new Exception();
 		}
 	}
@@ -93,7 +93,7 @@ public class MemberService implements MemberServiceInterface {
 				throw new Exception();
 			};
 		} catch (Exception e) {
-			log.error("패스워드 검증 error: " + e.getMessage());
+			log.error("패스워드 검증 Error: " + e.getMessage());
 			throw new Exception();
 		}
 	}
@@ -108,7 +108,7 @@ public class MemberService implements MemberServiceInterface {
 			log.error(fe.getMessage());
 			throw new ModifyException();
 		} catch (Exception e) {
-			log.error("닉네임 수정 error: " + e.getMessage());
+			log.error("닉네임 수정 Error: " + e.getMessage());
 			throw new ModifyException();
 		}
 	}
@@ -123,14 +123,13 @@ public class MemberService implements MemberServiceInterface {
 			log.error(fe.getMessage());
 			throw new ModifyException();
 		} catch (Exception e) {
-			log.error("패스워드 수정 error: " + e.getMessage());
+			log.error("패스워드 수정 Error: " + e.getMessage());
 			throw new ModifyException();
 		}
 	}
 
-	// TODO: 2023-11-29
+	@Override
 	public void sendCodeToEmail(String email) throws Exception {
-		log.error("MemberService: sendCodeToEmail()");
 		findMember(email);
 		String title = "[MapBeGood] Email Verification String";
 		String authCode = RandomStringUtils.randomAlphanumeric(8);;
@@ -143,11 +142,10 @@ public class MemberService implements MemberServiceInterface {
 		);
 	}
 
-	// TODO: 2023-11-30
-	public void verifiedCode(String email, String code) {
-
+	public boolean verifiedCode(String email, String authCode) throws Exception {
+		String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
+		return redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
 	}
-
 
 	// TODO: 2023-11-29  
 	@Override
@@ -166,10 +164,9 @@ public class MemberService implements MemberServiceInterface {
 			log.error(fe.getMessage());
 			throw new RemoveException();
 		} catch (Exception e) {
-			log.error("회원탈퇴 error: " + e.getMessage());
+			log.error("회원탈퇴 Error: " + e.getMessage());
 			throw new RemoveException();
 		}
 	}
-
 
 }
