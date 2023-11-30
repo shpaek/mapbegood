@@ -1,12 +1,13 @@
 package com.kosa.mapbegood.domain.member.controller;
 
-import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.common.response.Response;
+import com.kosa.mapbegood.domain.member.dto.MemberNickNameDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberPassDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
-import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
-import com.kosa.mapbegood.security.response.ErrorResponse;
 import com.kosa.mapbegood.util.AuthenticationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
 public class MemberController {
-//	@Autowired
-//	private MemberMapper mapper;
 	@Autowired
 	private MemberServiceInterface service;
 	@Autowired
@@ -30,59 +30,79 @@ public class MemberController {
 	private MemberMapper mapper;
 
 	@PostMapping("/signup")
-	public void createMember(@Valid @RequestBody MemberDTO.Post memberDTOPost) {
-		log.error("MemberController: createMember()");
-		Member member = mapper.MemberDTOPostToMember(memberDTOPost);
-		service.createMember(member);
+	public ResponseEntity createMember(@Valid @RequestBody MemberSignUpDTO signUpDto) {
+		try {
+			Member member = mapper.MemberDTOPostToMember(signUpDto);
+			service.createMember(member);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "회원가입에 실패했습니다."), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(1, "회원가입이 완료되었습니다."), HttpStatus.OK);
 	}
 
+	// TODO: 2023-11-29
 	@GetMapping("/logout")
 	public void logout() {
 	}
 
 	@GetMapping("/name")
-	public void findNickName(MemberDTO.Nickname nickNameDTO) {
+	public ResponseEntity duplicationNickName(@Valid MemberNickNameDTO nickNameDto) {
 		try {
-			service.findNickName(nickNameDTO.getNickname());
+			service.duplicationNickName(nickNameDto.getNickname());
 		} catch (Exception e) {
-			log.error("MemberController: findNickName()" + e.getMessage());
-//			return new ResponseEntity<>(, HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "중복된 닉네임 입니다."), HttpStatus.OK);
 		}
-//		return new ResponseEntity<>(, HttpStatus.OK);
+		return new ResponseEntity<>(new Response(1, "사용 가능한 닉네임 입니다."), HttpStatus.OK);
 	}
 
 	@PutMapping("/name")
-	public void updateNickName(Authentication authentication, MemberDTO.Nickname nickNameDTO) {
-		log.error("MemberController: updateNickName()");
-		String email = authenticationUtil.getUserEmail(authentication);
-
+	public ResponseEntity updateNickName(Authentication authentication, @Valid MemberNickNameDTO nickNameDto) {
 		try {
-			service.updateNickName(email, nickNameDTO.getNickname());
+			String email = authenticationUtil.getUserEmail(authentication);
+			service.updateNickName(email, nickNameDto.getNickname());
 		} catch (Exception e) {
-			log.error("MemberController: updateNickName()" + e.getMessage());
+			return new ResponseEntity<>(new Response(0, "닉네임 수정이 실패했습니다."), HttpStatus.OK);
 		}
+		return new ResponseEntity<>(new Response(1, "닉네임이 수정되었습니다."), HttpStatus.OK);
 	}
 
 	@PutMapping("/pwd")
-	public void updatePassword(Authentication authentication) {
-		log.error("MemberController: updateNickName()");
-		String email = authenticationUtil.getUserEmail(authentication);
-
-		service.updatePassword();
+	public ResponseEntity updatePassword(Authentication authentication, @Valid MemberPassDTO passwordDto) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			service.updatePassword(email, passwordDto.getPassword());
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "패스워드 변경이 실패했습니다."), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(1, "패스워드가 변경되었습니다."), HttpStatus.OK);
 	}
 
+	// TODO: 2023-11-29
 	@GetMapping("/pwd")
 	public void findPassword() {
 		service.findPassword();
 	}
 
+	// TODO: 2023-11-29
 	@GetMapping("/user")
-	public void searchMember(Authentication authentication) {
-		service.searchUser();
+	public ResponseEntity searchMember(Authentication authentication, @Valid MemberNickNameDTO nicknameDto) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			List<String> nickNameList = service.searchMember(email, nicknameDto.getNickname());
+		} catch (FindException e) {
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/user")
-	public void deleteMember(Authentication authentication) {
-		service.deleteUser();
+	public ResponseEntity deleteMember(Authentication authentication) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			service.deleteMember(email);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "회원탈퇴에 실패했습니다."), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(1, "탈퇴 되었습니다."), HttpStatus.OK);
 	}
 }
