@@ -12,4 +12,4 @@ public class MapbegoodApplication {
 		SpringApplication.run(MapbegoodApplication.class, args);
 	}
     
-}
+}   
