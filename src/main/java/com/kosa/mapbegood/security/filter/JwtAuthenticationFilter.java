@@ -3,15 +3,10 @@ package com.kosa.mapbegood.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.member.dto.MemberLoginDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
-import com.kosa.mapbegood.security.jwt.JwtTokenizer;
-import com.kosa.mapbegood.security.refresh.RefreshToken;
-import com.kosa.mapbegood.security.refresh.RefreshTokenRepository;
 import com.kosa.mapbegood.security.refresh.RefreshTokenService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,9 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -31,7 +31,7 @@ public class Myplace {
 	
 	private Date visitedAt;
 	
-	private Long palceId;
+	private Long placeId;
 	
 	private String placeName;
 	

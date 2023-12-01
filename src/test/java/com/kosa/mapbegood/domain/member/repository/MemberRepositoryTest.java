@@ -43,7 +43,8 @@ class MemberRepositoryTest {
 		assertNotNull(optMember);
 		assertEquals(nick, m.getNickname());
 		assertTrue(pwEncoder.matches(pwd, m.getPassword()));
-		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+//		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+		log.error(m.getCreatedAt().toString());
 	}
 
 	@Test
