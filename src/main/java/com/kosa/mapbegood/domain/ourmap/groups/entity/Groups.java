@@ -24,7 +24,7 @@ import lombok.Data;
 @Table
 @SequenceGenerator(name = "groups_seq_gener", sequenceName = "groups_seq", initialValue = 1, allocationSize = 1)
 public class Groups {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "groups_seq_gener")	
 	private Long id;

@@ -24,9 +24,9 @@ public class MemberDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Member> optMember = repository.findById(email);
-        Member findMember = optMember.orElseThrow(() -> new UsernameNotFoundException("인증하려는 회원을 찾을 수 없습니다."));
+        Member findMember = optMember.orElseThrow(() -> new FindException("가입된 회원이 아닙니다."));
         if (findMember.getStatus() == 0) {
-            throw new UsernameNotFoundException("탈퇴된 회원입니다.");
+            throw new FindException("탈퇴된 회원입니다.");
         }
         return new MemberDetails(findMember);
     }
