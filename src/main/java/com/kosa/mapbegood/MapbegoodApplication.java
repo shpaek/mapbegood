@@ -10,6 +10,7 @@ public class MapbegoodApplication {
  
 	public static void main(String[] args) {
 		SpringApplication.run(MapbegoodApplication.class, args);
-	}
+	}    
+                      
+}
     
-}   

@@ -51,7 +51,7 @@ public class MemberGroupService {
 		return memberGroupEntity;
 	}
 	
-	
+
 	/**
 	 * List<MemberGroupDTO>를 반환한다
 	 * @param groupId

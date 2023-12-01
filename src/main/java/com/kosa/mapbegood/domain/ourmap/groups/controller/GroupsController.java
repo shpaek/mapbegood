@@ -1,3 +1,4 @@
+
 package com.kosa.mapbegood.domain.ourmap.groups.controller;
 
 import java.util.List;
@@ -71,4 +72,5 @@ public class GroupsController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
 }
