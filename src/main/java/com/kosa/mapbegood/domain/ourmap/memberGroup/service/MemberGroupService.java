@@ -63,6 +63,9 @@ public class MemberGroupService {
 		group.setId(groupId);
 		try {
 			List<MemberGroup> memberGroups = mgr.findByGroupId(group); //groupId에 해당하는 그룹멤버목록
+			if(memberGroups==null) {
+				throw new FindException("그룹의 멤버가 없습니다");
+			}
 			List<MemberGroupDTO> resultMemberGroupDTO = new ArrayList<>();
 			for(int i=0; i<memberGroups.size(); i++) {
 				//그룹멤버의 memberEmail의 맞는 멤버의 nickname찾아 맵핑
@@ -87,8 +90,7 @@ public class MemberGroupService {
 			}
 			return resultMemberGroupDTO;
 		}catch(Exception e) {
-			new FindException(e.getMessage());
-			return null;
+			throw new FindException(e.getMessage());
 		}
 	}
 	
@@ -157,11 +159,13 @@ public class MemberGroupService {
 				try {
 					mgr.delete(mg);
 				}catch(Exception e) {
-					new RemoveException(e.getMessage());
+					throw new RemoveException("그룹에서 제외될 수 없습니다");
 				}
 			}else {
-				new RemoveException("그룹의 멤버 삭제 실패");
+				throw new RemoveException("그룹원이 아닌 사용자는 그룹에서 제외될 수 없습니다");
 			}
+		}else {
+			throw new RemoveException("그룹장은 그룹에서 나갈 수 없습니다");
 		}
 	}
 

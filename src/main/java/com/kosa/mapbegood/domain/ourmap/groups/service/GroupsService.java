@@ -58,6 +58,9 @@ public class GroupsService {
 		member.setEmail(memberEmail);
 		try {
 			List<MemberGroup> memberGroups = mgr.findByMemberEmail(member);//이메일 사용자가 속해있는 멤버그룹들
+			if(memberGroups==null) {
+				throw new FindException("소속된 그룹이 없습니다");
+			}
 			List<GroupsDTO> resultGroupDTO = new ArrayList<>();//이메일 사용자가 속한 그룹들
 			for(int i=0; i<memberGroups.size(); i++) {
 				//그룹정보 셋팅

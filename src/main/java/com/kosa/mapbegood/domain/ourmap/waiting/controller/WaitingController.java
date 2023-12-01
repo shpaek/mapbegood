@@ -29,7 +29,7 @@ public class WaitingController {
 	@Autowired
 	private WaitingService ws;
 	
-	@GetMapping(value="", produces="application/json;charset=UTF-8")
+	@GetMapping(value="{groupId}", produces="application/json;charset=UTF-8")
 	public List<MemberDTO> findAllWaitingsByGroupId(@PathVariable Long groupId) throws FindException{
 		return ws.findAllWaitingsByGroupId(groupId);
 	}
