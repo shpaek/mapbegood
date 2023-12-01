@@ -1,16 +1,15 @@
 package com.kosa.mapbegood.domain.mymap.thememap.repository;
 
-import java.util.Optional;
-
+import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThememapRepository;
+import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
-import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThemeMapRepository;
-import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
+import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Slf4j
 public class GroupThemeMapRepositoryTest {
@@ -19,7 +18,7 @@ public class GroupThemeMapRepositoryTest {
     private com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository grepository;
     
     @Autowired
-    private GroupThemeMapRepository repository;
+    private GroupThememapRepository repository;
 
     @Test
     public void testSelectGroupThemeMapById() {
