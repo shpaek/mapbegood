@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
@@ -29,8 +30,7 @@ public class Groups {
 	private Long id;
 	
 	private String name;
-	
-	private String leaderEmail;
+
 	
 //	@OneToMany(mappedBy = "", cascade = CascadeType.REMOVE)
 //	private List<MemberGroup> memberList;
