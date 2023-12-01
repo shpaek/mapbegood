@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +62,6 @@ public class OurplaceFeedService {
         feedDto.setOurplaceId(feedId.getOurplaceId());
         feedDto.setMemberEmail(feedId.getEmail());
         feedDto.setContent(feed.get().getContent());
-        feedDto.setCreatedAt(feed.get().getCreatedAt());
         return feedDto;
     }
 

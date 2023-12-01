@@ -1,6 +1,6 @@
 package com.kosa.mapbegood.domain.common.entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -18,5 +18,5 @@ public class AuditEntity {
  
 	@CreatedDate
     @Column(nullable = false, updatable = false)
-    protected LocalDateTime createdAt;
+    protected Date createdAt;
 }

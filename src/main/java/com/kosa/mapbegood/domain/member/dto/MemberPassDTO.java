@@ -2,11 +2,13 @@ package com.kosa.mapbegood.domain.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class MemberPassDTO {
     @NotBlank(message = "비밀번호는 공백이 아니어야 합니다.")

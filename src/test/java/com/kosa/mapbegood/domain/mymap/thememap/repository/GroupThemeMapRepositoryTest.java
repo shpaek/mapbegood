@@ -6,16 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.kosa.mapbegood.domain.member.entity.Member;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.repository.ThemeMapRepository;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThemeMapRepository;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
-import com.kosa.mapbegood.domain.ourmap.groups.entity.repository.GroupsRepository;
 
 import lombok.extern.slf4j.Slf4j;
-import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThemeMapRepository;
 @SpringBootTest
 @Slf4j
 public class GroupThemeMapRepositoryTest {
@@ -51,7 +46,7 @@ public class GroupThemeMapRepositoryTest {
         // Groups 엔티티 생성 및 저장
         group.setId(1L);
         group.setName("jt");
-        group.setLeaderNickname("test");
+//        group.setLeaderNickname("test");
         grepository.save(group);
 
         // GroupThememap 엔티티 생성
