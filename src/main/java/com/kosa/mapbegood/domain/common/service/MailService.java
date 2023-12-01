@@ -1,4 +1,4 @@
-package com.kosa.mapbegood.util;
+package com.kosa.mapbegood.domain.common.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
