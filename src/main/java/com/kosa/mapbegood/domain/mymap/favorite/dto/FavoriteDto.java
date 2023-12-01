@@ -1,9 +1,7 @@
 package com.kosa.mapbegood.domain.mymap.favorite.dto;
 
-import java.util.Date;
-
-import com.kosa.mapbegood.domain.mymap.favorite.dto.MemberDto;
-import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
+import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,11 +12,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+	
 public class FavoriteDto {
-
-    private Long thememapId;
-    private String memberEmail;
-    private Long createAt;
+	
+    private ThemeMap thememapId;
+    private Member Memberemail;
+//    private date createAt;
     
 }

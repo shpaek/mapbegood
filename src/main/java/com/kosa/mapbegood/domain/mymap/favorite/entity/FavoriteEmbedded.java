@@ -21,10 +21,11 @@ import lombok.Setter;
 public class FavoriteEmbedded implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-
+	
 	@Column(name = "thememap_id")
 	private Long thememapId;
 	
 	@Column(name = "member_email")
 	private String email;
+	 
 }

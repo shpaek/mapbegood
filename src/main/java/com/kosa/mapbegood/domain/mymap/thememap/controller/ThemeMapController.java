@@ -30,10 +30,7 @@ public class ThemeMapController {
 
     @Autowired
     private AuthenticationUtil authenticationUtil;
-    
-    
-    
-    
+
     //토큰으로 받아와서 setnickname 교체해주기
     // 테마맵 생성
     @PostMapping("/create")
@@ -55,35 +52,45 @@ public class ThemeMapController {
 
     // 테마맵 조회 (ID로)
     @GetMapping("/{themeMapId}")
-    public ResponseEntity<ThemeMapDto> getThemeMapById(@PathVariable Long themeMapId) {
+    public ResponseEntity<ThemeMapDto> getThemeMapById(Authentication authentication,
+    													@PathVariable Long themeMapId)
+    //throws FindException
+    {
+    	//String email = authenticationUtil.getUserEmail(authentication);
     	try {
-    		return ResponseEntity.ok( themeMapService.getThemeMapById(themeMapId));
-    	}catch(FindException e) {
-    		return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST );
-    	}
+			themeMapService.getThemeMapById(themeMapId);
+			return ResponseEntity.ok(null);
+		} catch (FindException e) {
+			// TODO/ Auto-generated catch block
+			//e.printStackTrace();
+			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}    	///
     }
 
+    
     // 테마맵 삭제
     @DeleteMapping("/delete/{themeMapId}")
-    public void deleteThemeMap(@PathVariable Long themeMapId) {
-    	Member m = new Member();
-    	m.setEmail("test@mail.com");
-    	//-----------------------------
-    	ThemeMapDto themeMapDto = getThemeMapDtoById(themeMapId);
-    	m.setEmail("test@mail.com");
-    	themeMapDto.setMemberEmail(m);
-    	themeMapService.deleteThemeMap(themeMapId);
+    public ResponseEntity<String> deleteThemeMap(Authentication authentication,
+    						@PathVariable Long themeMapId) throws FindException {
+    	
+    	String email = authenticationUtil.getUserEmail(authentication);
+		themeMapService.deleteThemeMap(email, themeMapId);
+		
+		return ResponseEntity.ok("삭제 성공");
     }
-
+   
     // 테마맵 수정
     @PutMapping("/update/{themeMapId}")
-    public ThemeMapDto updateThemeMap(@RequestBody ThemeMapDto themeMapDto) {
+    public ThemeMapDto updateThemeMap(Authentication authentication,
+    								@PathVariable Long themeMapId,
+    								@RequestBody ThemeMapDto themeMapDto) {
+    	String email = "test@mail.com";
     	Member m = new Member();
-    	m.setEmail("test@mail.com");
+    	m.setEmail(email);
     	//-----------------------------
     	themeMapDto.setMemberEmail(m);
     	
-    	return themeMapService.updateThemeMap(themeMapDto);
+    	return themeMapService.updateThemeMap(email, themeMapDto);
     }
 
     // 모든 테마맵 조회

@@ -11,5 +11,9 @@ public interface ThemeMapRepository extends JpaRepository<ThemeMap, Long> {
 
    public List<ThemeMap> findByMemberEmail(Member m);
 
+   //이름 설정과 show가 true라고 설정될때 
+   List<ThemeMap>findByNameContainingAndShowTrue(String name); 
+//   public List<ThemeMap>findByShowTrue(ThemeMap t); 
     
+   
 }
