@@ -73,7 +73,7 @@ public class MemberService implements MemberServiceInterface {
 	public void duplicationNickName(String nickName) throws Exception {
 		try {
 			Optional<Member> findMember = repository.findByNickname(nickName);
-			if (findMember.isPresent()) {
+			if (nickName.isEmpty() || findMember.isPresent()) {
 				throw new AddException("해당 닉네임은 이미 사용중입니다.");
 			}
 		} catch (AddException ae) {

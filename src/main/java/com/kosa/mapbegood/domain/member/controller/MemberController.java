@@ -46,9 +46,9 @@ public class MemberController {
 
 	// 닉네임 중복 확인
 	@GetMapping("/name")
-	public ResponseEntity duplicationNickName(@Valid @RequestBody MemberNickNameDTO nickNameDto) {
+	public ResponseEntity duplicationNickName(@Valid @RequestParam("nickName") String nickName) {
 		try {
-			service.duplicationNickName(nickNameDto.getNickname());
+			service.duplicationNickName(nickName);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Response(0, "중복된 닉네임 입니다."), HttpStatus.OK);
 		}
@@ -124,10 +124,10 @@ public class MemberController {
 	// 사용자 검색
 	@GetMapping("/user")
 	public ResponseEntity searchMember(Authentication authentication,
-									   @Valid MemberNickNameDTO nicknameDto) {
+									   @Valid @RequestParam("nickName") String nickName) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
-			List<String> nickNameList = service.searchMember(email, nicknameDto.getNickname());
+			List<String> nickNameList = service.searchMember(email, nickName);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
