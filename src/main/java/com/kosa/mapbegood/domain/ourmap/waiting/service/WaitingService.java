@@ -1,5 +1,7 @@
 package com.kosa.mapbegood.domain.ourmap.waiting.service;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,9 @@ import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.RemoveException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class WaitingService {
 	@Autowired
@@ -96,26 +101,29 @@ public class WaitingService {
 	 * @return Waiting(id값)
 	 * @throws FindException
 	 */
-	public Waiting findIdByGroupIdAndMemberEmail(WaitingDTO waitingDto) throws FindException{
-		Waiting waiting = new Waiting();
-		waiting = waitingDtoToEntity(waitingDto);
-		try {			
-			waiting = wr.findByGroupIdAndMemberEmail(waiting.getGroupId(), waiting.getMemberEmail()); //waiting id받아옴
-			return waiting;
-		}catch(Exception e) {
-			new FindException(e.getMessage());
-			return null;
-		}
-	}
-	
+//	public Waiting findIdByGroupIdAndMemberEmail(WaitingDTO waitingDto) throws FindException{
+//		Waiting waiting = new Waiting();
+//		waiting = waitingDtoToEntity(waitingDto);
+//		try {			
+//			waiting = wr.findByGroupIdAndMemberEmail(waiting.getGroupId(), waiting.getMemberEmail()); //waiting id받아옴
+//			return waiting;
+//		}catch(Exception e) {
+//			new FindException(e.getMessage());
+//			return null;
+//		}
+//	}
+
 	/**
 	 * 사용자가 그룹초대를 수락 또는 거절하면 수락대기 테이블에서 사용자를 제거한다
 	 * @param waitingId
 	 * @throws RemoveException
 	 */
 	public void deleteWaiting(WaitingDTO waitingDto) throws RemoveException{
-		try {
-			Waiting waiting = findIdByGroupIdAndMemberEmail(waitingDto);
+		Waiting waiting = new Waiting();
+		waiting = waitingDtoToEntity(waitingDto);
+		try {			
+			waiting = wr.findByGroupIdAndMemberEmail(waiting.getGroupId(), waiting.getMemberEmail()); //waiting id받아옴
+			log.error("waiting.getId()={}", waiting.getId());
 			wr.deleteById(waiting.getId());
 		} catch (Exception e) {
 			new RemoveException("수락대기 삭제 실패");

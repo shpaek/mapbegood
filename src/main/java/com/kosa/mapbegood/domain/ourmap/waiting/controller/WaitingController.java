@@ -20,6 +20,9 @@ import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.RemoveException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/waiting")
 public class WaitingController {
@@ -48,6 +51,7 @@ public class WaitingController {
 			ws.deleteWaiting(waitingDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(RemoveException e) {
+			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

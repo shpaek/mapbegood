@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.service.GroupsService;
@@ -43,9 +44,18 @@ public class GroupsController {
 	}
 	
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> createGroup(@RequestBody MemberGroupDTO memberGroupDto) throws AddException{
+	public ResponseEntity<?> createGroup(String name, MultipartFile file) throws AddException{ //그룹이미지도 받아야 해서 formdata로 받음
+		//파일은 요청요청바디로만 보낼 수 있어서 GET방식을 못 쓰고 POST방식으로만 보낼 수 있다
+		//프론트에서 파일테이터를 back으로 보내면 formdata형태로 보내게 된다
+		//formdata를 받을때는 @RequestBody를 못쓰고(아니니까) 위의 메서드처럼 데이터를 하나씩 받아야 한다
+		MemberGroupDTO memberGroupDto = new MemberGroupDTO();
+		GroupsDTO groupDto = new GroupsDTO();
+		groupDto.setName(name);
+		memberGroupDto.setGroups(groupDto);
 		try{
 			gs.createGroup(memberGroupDto);
+			//file업로드
+			
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(AddException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
