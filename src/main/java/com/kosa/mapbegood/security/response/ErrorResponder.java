@@ -6,13 +6,20 @@ import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ErrorResponder {
-    public static void sendErrorResponse(HttpServletResponse response, HttpStatus status) throws IOException {
+    public static void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
         Gson gson = new Gson();
-        ErrorResponse errorResponse = ErrorResponse.of(status);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(status.value());
-        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+
+        if (Objects.isNull(message)) {
+            ErrorResponse errorResponse = ErrorResponse.of(status);
+            response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        } else {
+            ErrorResponse errorResponse = ErrorResponse.of(status, message);
+            response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+        }
     }
 }

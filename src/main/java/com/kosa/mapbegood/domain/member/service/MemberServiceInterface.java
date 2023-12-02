@@ -5,6 +5,7 @@ import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -54,6 +55,14 @@ public interface MemberServiceInterface {
      * @throws ModifyException
      */
     void updatePassword(String email, String password) throws Exception;
+
+    /**
+     * 프로필 이미지 수정
+     * @param email
+     * @param profileImage
+     * @throws Exception
+     */
+    void updateProfileImage(String email, MultipartFile profileImage) throws Exception;
 
     /**
      * 비밀번호 찾기(이메일 전송)

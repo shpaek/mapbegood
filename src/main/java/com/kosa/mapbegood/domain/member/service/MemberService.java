@@ -1,7 +1,12 @@
 package com.kosa.mapbegood.domain.member.service;
 
+import com.kosa.mapbegood.domain.common.service.AwsS3Service;
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
+import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
@@ -14,6 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.util.List;
@@ -26,8 +32,11 @@ public class MemberService implements MemberServiceInterface {
 	private static final String AUTH_CODE_PREFIX = "AuthCode ";
 	private final PasswordEncoder pwEncoder;
 	private final MemberRepository repository;
+//	private final ThemeMapService themeMapService;
 	private final MailService mailService;
 	private final RedisService redisService;
+	private final AwsS3Service awsS3Service;
+
 	@Value("${spring.mail.auth-code-expiration-millis}")
 	private long authCodeExpirationMillis;
 
@@ -123,6 +132,19 @@ public class MemberService implements MemberServiceInterface {
 	}
 
 	@Override
+	public void updateProfileImage(String email, MultipartFile profileImage) throws Exception{
+		try {
+			String imageUrl = awsS3Service.uploadImage(profileImage);
+			Member member = findMember(email);
+			member.setProfileImage(imageUrl);
+			repository.save(member);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new ModifyException();
+		}
+	}
+
+	@Override
 	public void sendCodeToEmail(String email) throws Exception {
 		findMember(email);
 		String title = "[MapBeGood] Email Verification String";
@@ -159,7 +181,9 @@ public class MemberService implements MemberServiceInterface {
 	// TODO: 2023-11-29  
 	@Override
 	public List<String> searchMember(String email, String nickName) throws Exception {
-		repository.findAllByNickname(nickName);
+		List<Member> memberList = repository.findAllByNickname(nickName);
+//		List<ThemeMapDTO> themeMap = themeMapService.tsdf;
+//		List<MemberSearchResponseDTO>  = mapper(themeMap);
 		return null;
 	}
 
