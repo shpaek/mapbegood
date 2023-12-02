@@ -1,6 +1,7 @@
 package com.kosa.mapbegood.domain.member.repository;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.member.entity.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -130,17 +131,17 @@ class MemberRepositoryTest {
 		em.flush();
 		em.clear();
 
-//		QMember qm = new QMember("test");
-//		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+		QMember qm = new QMember("test");
+		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
 		// when
-//		Member findMember = queryFactory
-//				.selectFrom(qm)
-//				.where(qm.nickname.eq(nickName))
-//				.fetchOne();
+		Member findMember = queryFactory
+				.selectFrom(qm)
+				.where(qm.nickname.eq(nickName))
+				.fetchOne();
 
 		// then
-//		assertNotNull(findMember);
-//		assertThat(findMember.getEmail()).isEqualTo(email);
+		assertNotNull(findMember);
+		assertThat(findMember.getEmail()).isEqualTo(email);
 	}
 }

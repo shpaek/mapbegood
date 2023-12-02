@@ -181,6 +181,8 @@ public class MemberService implements MemberServiceInterface {
 	// TODO: 2023-11-29  
 	@Override
 	public List<String> searchMember(String email, String nickName) throws Exception {
+		findMember(email);
+
 		List<Member> memberList = repository.findAllByNickname(nickName);
 //		List<ThemeMapDTO> themeMap = themeMapService.tsdf;
 //		List<MemberSearchResponseDTO>  = mapper(themeMap);
