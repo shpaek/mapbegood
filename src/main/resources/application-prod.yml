@@ -37,6 +37,19 @@ jwt:
   access-token-expiration-minutes: 5
   refresh-token-expiration-minutes: 360
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${s3.access.key}
+      secret-key: ${s3.secret.key}
+    s3:
+      bucket: mapbegood-image
+      bucket-path: profile-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 aws:
   paramstore:
     enabled: true

@@ -34,9 +34,8 @@ public class RefreshTokenService {
 
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, email, expiration, base64EncodedSecretKey);
 
-        return "Bearer " + accessToken;
+        return jwtTokenizer.generateAccessToken(claims, email, expiration, base64EncodedSecretKey);
     }
 
     public String delegateRefreshToken(Member member) {

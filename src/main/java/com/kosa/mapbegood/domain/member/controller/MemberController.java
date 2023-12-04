@@ -1,6 +1,7 @@
 package com.kosa.mapbegood.domain.member.controller;
 
 import com.kosa.mapbegood.domain.common.response.Response;
+import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.*;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
@@ -10,13 +11,13 @@ import com.kosa.mapbegood.security.refresh.RefreshTokenService;
 import com.kosa.mapbegood.util.AuthenticationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -46,9 +47,9 @@ public class MemberController {
 
 	// 닉네임 중복 확인
 	@GetMapping("/name")
-	public ResponseEntity duplicationNickName(@Valid @RequestBody MemberNickNameDTO nickNameDto) {
+	public ResponseEntity duplicationNickName(@Valid @RequestParam("nickName") String nickName) {
 		try {
-			service.duplicationNickName(nickNameDto.getNickname());
+			service.duplicationNickName(nickName);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Response(0, "중복된 닉네임 입니다."), HttpStatus.OK);
 		}
@@ -80,8 +81,8 @@ public class MemberController {
 		}
 		return new ResponseEntity<>(new Response(1, "닉네임이 수정되었습니다."), HttpStatus.OK);
 	}
-
 	// 비밀번호 변경
+
 	@PutMapping("/pwd")
 	public ResponseEntity updatePassword(Authentication authentication,
 										 @Valid @RequestBody MemberPassDTO passwordDto) {
@@ -92,6 +93,19 @@ public class MemberController {
 			return new ResponseEntity<>(new Response(0, "패스워드 변경이 실패했습니다."), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(new Response(1, "패스워드가 변경되었습니다."), HttpStatus.OK);
+	}
+
+	// 프로필 이미지 수정
+	@PutMapping("/profile-image")
+	public ResponseEntity updateProfileImage(Authentication authentication,
+											 @RequestPart(value="profileImage") MultipartFile profileImage) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			service.updateProfileImage(email, profileImage);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "프로필 사진 변경이 실패했습니다."), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new Response(1, "프로필 사진이 변경되었습니다."), HttpStatus.OK);
 	}
 
 	// 비밀번호 찾기(이메일 전송)
@@ -124,10 +138,10 @@ public class MemberController {
 	// 사용자 검색
 	@GetMapping("/user")
 	public ResponseEntity searchMember(Authentication authentication,
-									   @Valid MemberNickNameDTO nicknameDto) {
+									   @Valid @RequestParam("nickName") String nickName) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
-			List<String> nickNameList = service.searchMember(email, nicknameDto.getNickname());
+			List<String> nickNameList = service.searchMember(email, nickName);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
