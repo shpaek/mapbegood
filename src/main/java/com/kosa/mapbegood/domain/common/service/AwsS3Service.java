@@ -21,10 +21,8 @@ public class AwsS3Service {
     private final AmazonS3 amazonS3;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-    @Value("${cloud.aws.s3.bucket-path}")
-    private String bucketPath;
 
-    public String uploadImage(MultipartFile file) throws Exception {
+    public String uploadImage(MultipartFile file, String filePath) throws Exception {
         String fileName = createFileName(file.getOriginalFilename());
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -32,12 +30,12 @@ public class AwsS3Service {
         objectMetadata.setContentType(file.getContentType());
 
         try (InputStream inputStream = file.getInputStream()) {
-            uploadFile(inputStream, objectMetadata, fileName, bucket.concat(bucketPath));
+            uploadFile(inputStream, objectMetadata, fileName, bucket.concat(filePath));
         } catch (IOException e) {
             log.error("AWS S3 Image Upload Error: " + e.getMessage());
             throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다 (%s)", file.getOriginalFilename()));
         }
-        return getFileUrl(fileName, bucket.concat(bucketPath));
+        return getFileUrl(fileName, bucket.concat(filePath));
     }
 
     private String createFileName(String originalFileName) throws Exception {

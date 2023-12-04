@@ -81,8 +81,8 @@ public class MemberController {
 		}
 		return new ResponseEntity<>(new Response(1, "닉네임이 수정되었습니다."), HttpStatus.OK);
 	}
-	// 비밀번호 변경
 
+	// 비밀번호 변경
 	@PutMapping("/pwd")
 	public ResponseEntity updatePassword(Authentication authentication,
 										 @Valid @RequestBody MemberPassDTO passwordDto) {
