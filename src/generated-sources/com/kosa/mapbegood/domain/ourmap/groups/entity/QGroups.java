@@ -20,8 +20,6 @@ public class QGroups extends EntityPathBase<Groups> {
 
     public static final QGroups groups = new QGroups("groups");
 
-    public final StringPath groupImage = createString("groupImage");
-
     public final ListPath<com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap, com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap> groupThememapList = this.<com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap, com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap>createList("groupThememapList", com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap.class, com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

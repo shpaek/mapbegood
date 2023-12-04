@@ -17,7 +17,6 @@ import lombok.Setter;
 public class GroupsDTO {
 	private Long id;
 	private String name;
-	private String profileImage;
 
 	private List<WaitingDTO> waitingList;
 	private List<GroupThememapDTO> groupThememapList;

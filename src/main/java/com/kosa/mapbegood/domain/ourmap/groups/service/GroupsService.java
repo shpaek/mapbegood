@@ -1,13 +1,26 @@
 
 package com.kosa.mapbegood.domain.ourmap.groups.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
@@ -22,10 +35,14 @@ import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
 
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Slf4j
 @Service
 public class GroupsService {
+	private final String groupImageUploadPath = "/group-image";
+	@Autowired
+	private AwsS3Service awsS3Service;
 	@Autowired
 	private GroupsRepository gr;
 	@Autowired
@@ -69,6 +86,7 @@ public class GroupsService {
 				GroupsDTO groupDTO = new GroupsDTO();
 				groupDTO.setId(group.getId());
 				groupDTO.setName(group.getName());
+//				groupDTO.setGroupImage(group.getGroupImage()); //그룹이미지
 				
 				List<MemberGroup>members = group.getMemberGroupList(); //각 그룹의 멤버들
 				for(MemberGroup mg: members) {
@@ -97,16 +115,20 @@ public class GroupsService {
 	}
 	
 	
+	
 	/**
 	 * 사용자가 그룹을 생성한다
 	 * @param groupsDto
 	 * @throws AddException
 	 */
-	public void createGroup(MemberGroupDTO memberGroupDto) throws AddException{
+	public void createGroup(MemberGroupDTO memberGroupDto, MultipartFile groupImage) throws AddException{
+		//-------그룹 생성 START-------
 		GroupsDTO groupDto = memberGroupDto.getGroups();
 		Groups entity = groupsDtoToEntity(groupDto);
 //		log.error("memberGroupDto.getGroups().getName()={}", memberGroupDto.getGroups().getName() );
 		gr.save(entity); //사용자가 그룹을 생성하면 그룹을 생성한 사용자가 자동으로 그룹멤버의 그룹장으로 추가되어야함
+		//-------그룹 생성 END-------
+		//-------그룹장 추가 START-------
 		MemberGroup mgEntity = new MemberGroup();
 		mgEntity.setGroupId(entity);
 		Member mEntity = new Member();
@@ -114,7 +136,17 @@ public class GroupsService {
 		mgEntity.setMemberEmail(mEntity);
 		mgEntity.setLeader(1);
 		mgr.save(mgEntity);
+		//-------그룹장 추가 END-------
+		//-------그룹이미지 추가 START-------
+		Long groupId = entity.getId(); // 새로 생성된 그룹의 ID
+		try {
+			updateGroupImage(groupId, groupImage);
+		} catch (Exception e) {
+			throw new AddException("그룹생성에 실패했습니다: "+e.getMessage());
+		}
+		//-------그룹이미지 추가 END-------
 	}
+	
 	
 	/**
 	 * 그룹장이 그룹명을 수정한다
@@ -131,6 +163,71 @@ public class GroupsService {
 		entity.modifyGroupName(groupsDto.getName());
 		gr.save(entity);
 	}
+	
+	public void uploadGroupImage(MultipartFile groupImage) throws Exception{
+		
+	}
+	
+	
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Autowired
+    private AmazonS3 amazonS3;
+	/**
+	 * 그룹장이 그룹이미지를 수정한다
+	 * @param groupId
+	 * @param groupImage
+	 * @throws Exception
+	 */
+	public void updateGroupImage(Long groupId, MultipartFile groupImage) throws Exception{
+		GroupsDTO groupDto = new GroupsDTO();
+		groupDto.setId(groupId);
+		Optional<Groups> optEntity = gr.findById(groupId);
+		optEntity.orElseThrow(()->
+			new ModifyException("그룹이 없어 수정이 불가능합니다")
+		);
+		Groups entity = optEntity.get();
+		try {
+//			File targetFile = new File("D:\\KOSA202307\\attaches", groupId+groupImage.getOriginalFilename());
+//			FileCopyUtils.copy(groupImage.getBytes(), targetFile);
+			//--------그룹이미지 파일 만들기 START---------
+			String imageUrl = awsS3Service.uploadImage(groupImage, groupImageUploadPath);
+			groupImage.getContentType();
+			String extName = groupImage.getOriginalFilename().substring(groupImage.getOriginalFilename().lastIndexOf("."));
+			log.error(imageUrl);
+			//--------그룹이미지 파일 만들기 END---------
+			//--------그룹섬네일 파일 만들기 START---------
+			int width=150;
+			int height=150;
+			String thumbFileName = groupId+"_groupImage.jpg"; //+  groupImage.getOriginalFilename() + extName; //그룹이미지 파일명
+//			png파일을 업로드 해도 jpg로 저장이 됨!
+			File thumbFile = new File("C:\\Users\\COM\\Downloads", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
+			FileOutputStream thumbnailOS = new FileOutputStream(thumbFile);//출력스트림
+			URL url = new URL(imageUrl);
+			InputStream thumbnailIS =  url.openStream();//imageUrl);
+			Thumbnailator.createThumbnail(thumbnailIS, thumbnailOS, width, height); //섬네일파일생성
+			//--------그룹섬네일 파일 만들기 END---------
+			//--------그룹섬네일 파일 올리기 START---------
+			FileInputStream inputStream   = new FileInputStream(thumbFile);
+			ObjectMetadata objectMetadata = new ObjectMetadata();
+		    objectMetadata.setContentLength(thumbFile.length());
+		    objectMetadata.setContentType(Files.probeContentType(thumbFile.toPath()));
+		    PutObjectRequest putObjectRequest =
+	                new PutObjectRequest(bucket.concat(groupImageUploadPath), thumbFileName, inputStream, objectMetadata)
+	                        .withCannedAcl(CannedAccessControlList.PublicRead);
+		    amazonS3.putObject(putObjectRequest);
+	        
+	        log.error("bucket.concat(groupImageUploadPath)={}, thumbFileName={}, objectMetadata.setContentLength={}, objectMetadata.setContentType()={}",
+	        		bucket.concat(groupImageUploadPath), thumbFileName, objectMetadata.getContentLength(), objectMetadata.getContentType());
+	        
+	        thumbnailOS.close();
+	        thumbnailIS.close();
+	      //--------그룹섬네일 파일 올리기 START---------
+		}catch(Exception e){
+			throw new ModifyException("그룹이미지 수정이 불가능합니다");
+		}
+	}
+
 	
 	/**
 	 * 그룹장이 그룹을 삭제한다

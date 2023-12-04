@@ -30,8 +30,6 @@ public class Groups {
 	private Long id;
 	
 	private String name;
-	
-	private String groupImage;
 
 	
 //	@OneToMany(mappedBy = "", cascade = CascadeType.REMOVE)
