@@ -1,28 +1,33 @@
 package com.kosa.mapbegood.domain.member.repository;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.member.entity.QMember;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 class MemberRepositoryTest {
-
 	@Autowired
 	private MemberRepository repository;
-	
-
 	@Autowired
 	private PasswordEncoder pwEncoder;
+	@PersistenceContext
+	EntityManager em;
 
 	@Test
 	@DisplayName("회원 조회")
@@ -108,6 +113,35 @@ class MemberRepositoryTest {
 
 		// then
 	}
-	
 
+	@Test
+	void queryDSLTest() {
+		// given
+		String email = "qTest@mail.com";
+		String nickName = "qTest";
+		String password = "qwe123!@#";
+
+		Member member = new Member().builder()
+				.email(email)
+				.nickname(nickName)
+				.password(pwEncoder.encode(password))
+				.build();
+
+		em.persist(member);
+		em.flush();
+		em.clear();
+
+		QMember qm = new QMember("test");
+		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+		// when
+		Member findMember = queryFactory
+				.selectFrom(qm)
+				.where(qm.nickname.eq(nickName))
+				.fetchOne();
+
+		// then
+		assertNotNull(findMember);
+		assertThat(findMember.getEmail()).isEqualTo(email);
+	}
 }

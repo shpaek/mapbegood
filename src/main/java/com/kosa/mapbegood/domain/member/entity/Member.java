@@ -11,11 +11,14 @@ import javax.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @Table
 public class Member extends AuditEntity {
 	@Id
 	private String email;
+
+	private String profileImage;
 
 	private String nickname;
 	
