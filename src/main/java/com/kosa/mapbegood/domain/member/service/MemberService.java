@@ -36,6 +36,7 @@ public class MemberService implements MemberServiceInterface {
 	private final MailService mailService;
 	private final RedisService redisService;
 	private final AwsS3Service awsS3Service;
+	private final String profileImageUploadPath = "/profile-image";
 
 	@Value("${spring.mail.auth-code-expiration-millis}")
 	private long authCodeExpirationMillis;
@@ -134,7 +135,7 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public void updateProfileImage(String email, MultipartFile profileImage) throws Exception{
 		try {
-			String imageUrl = awsS3Service.uploadImage(profileImage);
+			String imageUrl = awsS3Service.uploadImage(profileImage, profileImageUploadPath);
 			Member member = findMember(email);
 			member.setProfileImage(imageUrl);
 			repository.save(member);
