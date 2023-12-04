@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.member.mapper;
 
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import org.mapstruct.Mapper;
@@ -14,4 +15,6 @@ public interface MemberMapper {
                 .password(memberSignUpDto.getPassword())
                 .build();
     }
+
+    Member memberPostToMember(MemberDTO memberDTO);
 }
