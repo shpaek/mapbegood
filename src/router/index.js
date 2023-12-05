@@ -30,6 +30,7 @@ const router = createRouter({
     { path: "/group", component: GroupView },
     { path: "/groupcreate", component: GroupCreate },
     { path: "/groupthememaplist", component: GroupThemeMapList },
+    { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
     { path: "/thememap", component: ThemeMap },
