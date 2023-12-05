@@ -185,7 +185,7 @@ public class MemberService implements MemberServiceInterface {
 		findMember(email);
 
 		List<Member> memberList = repository.findAllByNickname(nickName);
-//		List<ThemeMapDTO> themeMap = themeMapService.tsdf;
+//		List<ThemeMapResponseDTO> themeMap = themeMapService.tsdf;
 //		List<MemberSearchResponseDTO>  = mapper(themeMap);
 		return null;
 	}

@@ -15,6 +15,4 @@ public interface MemberMapper {
                 .password(memberSignUpDto.getPassword())
                 .build();
     }
-
-    Member memberPostToMember(MemberDTO memberDTO);
 }
