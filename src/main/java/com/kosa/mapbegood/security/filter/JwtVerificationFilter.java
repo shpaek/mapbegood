@@ -77,13 +77,11 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private Map<String, Object> verifyJws(HttpServletRequest request) throws Exception {
-        String jws = request.getHeader("Authorization");
-
-        if(Objects.isNull(jws) || !jws.startsWith("Bearer ")) {
+        if(!request.getHeader("Authorization").startsWith("Bearer ")) {
             throw new SignatureException("");
         }
+        String jws = request.getHeader("Authorization").replace("Bearer ", "");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-
         return jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getPayload();
     }
 

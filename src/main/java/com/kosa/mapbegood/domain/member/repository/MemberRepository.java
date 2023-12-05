@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.member.repository;
 
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
