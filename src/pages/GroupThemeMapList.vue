@@ -27,7 +27,7 @@
                 <span>{{listWriter}}</span>
             </div>
         </div>
-    </div>
+    </form>
 </template>
 <script>
 export default {

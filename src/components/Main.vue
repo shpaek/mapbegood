@@ -9,9 +9,15 @@
 <script>
 import Menubar from './Menubar.vue';
 import Section from './Section.vue';
+// import Search from './Search.vue';
+
 export default {
     name: "Main",
-    components: {Menubar, Section}
+    components: {
+    Menubar, 
+    Section
+    // Search,
+  }
 }
 </script>
 <style scoped>
