@@ -1,4 +1,5 @@
 <template lang="">
+    <!-- 특정 그룹의 테마지도 목록을 전부 불러옴, 그룹이미지, 그룹명, 그룹장도 가져와야함 -->
     <form class="group-detail">
         <div class="group-info">
             <img :src="image" alt="그룹이미지" @doubleClick="imageDoubleClickHandler"/>
