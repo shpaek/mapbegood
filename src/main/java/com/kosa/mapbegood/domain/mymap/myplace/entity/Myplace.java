@@ -18,12 +18,12 @@ public class Myplace {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "ThemeMapId")
+	@JoinColumn(name = "thememap_id")
 	private ThemeMap thememapId;
 	
 	private Date visitedAt;
 	
-	private Long palceId;
+	private Long placeId;
 	
 	private String placeName;
 	

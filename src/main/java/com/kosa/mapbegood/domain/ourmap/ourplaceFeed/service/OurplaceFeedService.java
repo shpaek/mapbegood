@@ -59,6 +59,7 @@ public class OurplaceFeedService implements OurplaceFeedServiceInterface {
      */
     public OurplaceFeedDTO findOurFeedById(OurplaceFeedEmbedded feedId) throws FindException {
         Optional<OurplaceFeed> feed = ofr.findById(feedId);
+
         if (feed.isPresent()) {
             return mapper.OurplaceFeedToOurplaceFeedDTO(feed.get());
         } else {

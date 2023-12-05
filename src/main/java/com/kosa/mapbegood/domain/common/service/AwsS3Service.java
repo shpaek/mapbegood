@@ -1,0 +1,76 @@
+package com.kosa.mapbegood.domain.common.service;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class AwsS3Service {
+    private final AmazonS3 amazonS3;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    public String uploadImage(MultipartFile file, String filePath) throws Exception {
+        String fileName = createFileName(file.getOriginalFilename());
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+
+        try (InputStream inputStream = file.getInputStream()) {
+            uploadFile(inputStream, objectMetadata, fileName, bucket.concat(filePath));
+        } catch (IOException e) {
+            log.error("AWS S3 Image Upload Error: " + e.getMessage());
+            throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생하였습니다 (%s)", file.getOriginalFilename()));
+        }
+        return getFileUrl(fileName, bucket.concat(filePath));
+    }
+
+    private String createFileName(String originalFileName) throws Exception {
+        return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
+    }
+
+    private String getFileExtension(String fileName) throws Exception{
+        String extension;
+
+        try {
+            extension = fileName.substring(fileName.lastIndexOf("."));
+        } catch (StringIndexOutOfBoundsException e) {
+            log.error("Image FileType Error: " + e.getMessage());
+            throw new IllegalArgumentException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName));
+        }
+
+        if (!extension.equals(".jpg") && !extension.equals(".png")) {
+            throw new IllegalArgumentException(String.format("잘못된 형식의 파일 (%s) 입니다", fileName));
+        }
+        return extension;
+    }
+
+    private void uploadFile(InputStream inputStream,
+                           ObjectMetadata objectMetadata,
+                           String fileName,
+                           String bucketPath) {
+
+        PutObjectRequest putObjectRequest =
+                new PutObjectRequest(bucketPath, fileName, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead);
+
+        amazonS3.putObject(putObjectRequest);
+    }
+
+    private String getFileUrl(String fileName, String bucketPath) {
+        return amazonS3.getUrl(bucketPath, fileName).toString();
+    }
+}

@@ -16,10 +16,9 @@ import java.io.IOException;
 @Component
 public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         Exception exception = (Exception) request.getAttribute("exception");
-        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
-
+        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, null);
         logExceptionMessage(authException, exception);
     }
 

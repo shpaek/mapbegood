@@ -24,9 +24,10 @@ public class Favorite extends AuditEntity {
 	private FavoriteEmbedded id = new FavoriteEmbedded();
 	
 	@ManyToOne
-	@JoinColumn(name = "ThemeMapId")
+	@JoinColumn(name = "thememap_id")
 	@MapsId("thememapId")
 	private ThemeMap thememapId;
+//	private ThemeMap themeMap;
 	
 	@ManyToOne
 	@JoinColumn(name = "email")

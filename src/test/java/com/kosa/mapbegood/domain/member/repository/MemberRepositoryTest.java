@@ -1,29 +1,41 @@
 package com.kosa.mapbegood.domain.member.repository;
 
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
+import com.kosa.mapbegood.domain.member.dto.QMemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.member.entity.QMember;
+import com.kosa.mapbegood.domain.mymap.thememap.dto.QThemeMapResponseDTO;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.QThemeMap;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.querydsl.core.group.GroupBy.groupBy;
+//import static com.querydsl.core.types.Projections.list;
+import static com.querydsl.core.group.GroupBy.list;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 class MemberRepositoryTest {
-
 	@Autowired
 	private MemberRepository repository;
-	
-
 	@Autowired
 	private PasswordEncoder pwEncoder;
+	@PersistenceContext
+	EntityManager em;
 
 	@Test
 	@DisplayName("회원 조회")
@@ -43,22 +55,25 @@ class MemberRepositoryTest {
 		// then
 		assertNotNull(optMember);
 		assertEquals(nick, m.getNickname());
-		assertEquals(pwEncoder.encode(pwd), m.getPassword());
-		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+		assertTrue(pwEncoder.matches(pwd, m.getPassword()));
+//		log.error(m.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+		log.error(m.getCreatedAt().toString());
 	}
 
 	@Test
 	@DisplayName("회원 가입")
 	public void insertMember() {
 		// given
-		String nick = "test";
-		String email = "test@mail.com";
-		String pwd = "test";
+		String nick = "test1";
+		String email = "test1@mail.com";
+		String pwd = "test1";
+		int status = 1;
 
 		Member m = Member.builder()
 				.email(email)
 				.nickname(nick)
 				.password(pwEncoder.encode(pwd))
+				.status(status)
 				.build();
 
 		// when
@@ -68,7 +83,7 @@ class MemberRepositoryTest {
 		assertNotNull(savedMember);
 		assertEquals(email, savedMember.getEmail());
 		assertEquals(nick, savedMember.getNickname());
-		assertEquals(pwEncoder.encode(pwd), savedMember.getPassword());
+		assertTrue(pwEncoder.matches(pwd, savedMember.getPassword()));
 	}
 
 	@Test
@@ -93,7 +108,7 @@ class MemberRepositoryTest {
 
 		// then
 		assertEquals(updateNick, updateMember.getNickname());
-		assertEquals(pwEncoder.encode(updatePwd), updateMember.getPassword());
+		assertTrue(pwEncoder.matches(updatePwd, updateMember.getPassword()));
 	}
 
 	@Test
@@ -106,6 +121,96 @@ class MemberRepositoryTest {
 
 		// then
 	}
-	
 
+	@Test
+	void queryDSLTest() {
+		// given
+		String email = "qTest@mail.com";
+		String nickName = "qTest";
+		String password = "qwe123!@#";
+
+		Member member = new Member().builder()
+				.email(email)
+				.nickname(nickName)
+				.password(pwEncoder.encode(password))
+				.build();
+
+		em.persist(member);
+		em.flush();
+		em.clear();
+
+		QMember qm = new QMember("test");
+		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+		// when
+		Member findMember = queryFactory
+				.selectFrom(qm)
+				.where(qm.nickname.eq(nickName))
+				.fetchOne();
+
+		// then
+		assertNotNull(findMember);
+		assertThat(findMember.getEmail()).isEqualTo(email);
+	}
+
+	@Test
+	void queryDSLDTOTest() {
+		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+		QMember member = new QMember("member");
+//		QMemberSearchResponseDTO qmsr = new QMemberSearchResponseDTO(qm.nickname, qm.profileImage);
+
+//		List<MemberSearchResponseDTO> memberResponseDTOList = queryFactory
+//				.select(qmsr)
+//				.from(qm)
+//				.fetch();
+//
+//		log.error(String.valueOf(memberResponseDTOList.size()));
+//		for (MemberSearchResponseDTO msr : memberResponseDTOList) {
+//			log.error(msr.getNickName());
+//			log.error(msr.getProfileImage());
+//		}
+
+		QThemeMap themeMap = new QThemeMap("themeMap");
+//		QThemeMapResponseDTO qtmrDTO = new QThemeMapResponseDTO(qtm.id, qtm.name, qtm.color, qtm.memo);
+
+//		List<ThemeMapResponseDTO> themeMapDTOList = queryFactory
+//				.select(qtmrDTO)
+//				.from(qtm)
+//				.fetch();
+//
+//		log.error(String.valueOf(themeMapDTOList.size()));
+//		for (ThemeMapResponseDTO tmr : themeMapDTOList) {
+//			log.error(String.valueOf(tmr.getId()));
+//			log.error(String.valueOf(tmr.getName()));
+//			log.error(String.valueOf(tmr.getColor()));
+//			log.error(String.valueOf(tmr.getMemo()));
+//		}
+
+//		QThemeMapResponseDTO qtmrDto = new QThemeMapResponseDTO(qtm.id, qtm.name, qtm.color, qtm.memo);
+//		QMemberSearchResponseDTO qmsrDto = new QMemberSearchResponseDTO(qm.nickname, qm.profileImage, List<qtmrDto>);
+
+		List<MemberSearchResponseDTO> result = queryFactory
+				.from(member)
+				.leftJoin(themeMap)
+				.on(member.email.eq(themeMap.memberEmail.email))
+				.transform(
+						groupBy(member.email).list(
+								new QMemberSearchResponseDTO(
+										member.nickname,
+										member.profileImage,
+										list(
+												new QThemeMapResponseDTO(
+														themeMap.id,
+														themeMap.name,
+														themeMap.color,
+														themeMap.memo
+												)
+										).as("themeMapResponseDTOList")
+								)
+						)
+				);
+
+		log.error(String.valueOf(result.size()));
+	}
 }

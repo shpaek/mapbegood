@@ -71,7 +71,6 @@ public class JwtTokenizerTest {
         assertDoesNotThrow(() -> jwtTokenizer.verifySignature(accessToken, base64EncodedSecretKey));
     }
 
-    @DisplayName("throw ExpiredJwtException when jws verify")
     @Test
     public void verifyExpirationTest() throws InterruptedException {
         String accessToken = getAccessToken(Calendar.SECOND, 2);

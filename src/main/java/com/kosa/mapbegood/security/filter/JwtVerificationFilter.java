@@ -1,10 +1,12 @@
 package com.kosa.mapbegood.security.filter;
 
 import com.kosa.mapbegood.security.jwt.JwtTokenizer;
-import io.jsonwebtoken.Claims;
+import com.kosa.mapbegood.security.response.ErrorResponder;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
@@ -27,16 +31,18 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            Map<String, Object> claims = verifyJws(request);
-            setAuthenticationToContext(claims);
+            Map<String, Object> claims = this.verifyJws(request);
+            this.setAuthenticationToContext(claims);
         } catch (SignatureException se) {
-            request.setAttribute("exception", se);
+            log.error("토큰 인증 Error: " + se.getMessage());
+            ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "The token information is incorrect.");
         } catch (ExpiredJwtException ee) {
-            request.setAttribute("exception", ee);
+            log.error("토큰 만료 Error: " + ee.getMessage());
+            ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "The token has expired.");
         } catch (Exception e) {
+            log.error("토큰 Error: " + e.getMessage());
             request.setAttribute("exception", e);
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -67,20 +73,28 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");
-        return authorization == null || !authorization.startsWith("Bearer ");
+        return authorization == null;
     }
 
-    private Map<String, Object> verifyJws(HttpServletRequest request) {
-        String jws = request.getHeader("Authorization").replace("Bearer ", "");
+    private Map<String, Object> verifyJws(HttpServletRequest request) throws Exception {
+        String jws = request.getHeader("Authorization");
+
+        if(Objects.isNull(jws) || !jws.startsWith("Bearer ")) {
+            throw new SignatureException("");
+        }
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
-        return claims;
+
+        return jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getPayload();
     }
 
-    private void setAuthenticationToContext(Map<String, Object> claims) {
-        String username = (String) claims.get("username");
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    private void setAuthenticationToContext(Map<String, Object> claims) throws Exception {
+        try {
+            String username = (String) claims.get("email");
+            List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+            Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (SignatureException se) {
+            throw new SignatureException("");
+        }
     }
 }

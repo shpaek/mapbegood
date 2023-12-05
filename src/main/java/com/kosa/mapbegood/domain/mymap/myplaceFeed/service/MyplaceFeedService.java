@@ -30,6 +30,7 @@ public class MyplaceFeedService implements MyplaceFeedServiceInterface {
      * @return 피드
      * @throws FindException
      */
+<<<<<<< HEAD
     public MyplaceFeed findMyFeedById(Long myplaceId) throws FindException {
             Optional<MyplaceFeed> feed = mfr.findById(myplaceId);
             if (feed.isPresent()) {
@@ -37,6 +38,16 @@ public class MyplaceFeedService implements MyplaceFeedServiceInterface {
             } else {
                 throw new FindException("해당 피드를 찾을 수 없습니다");
             }
+=======
+    public MyplaceFeedDTO findMyFeedById(Long myplaceId) throws FindException {
+        Optional<MyplaceFeed> feed = mfr.findById(myplaceId);
+        MyplaceFeedDTO feedDto = new MyplaceFeedDTO();
+        feedDto.setMyplaceId(myplaceId);
+//        feedDto.setMemberNickname(String.valueOf(feed.get().getMemberNickname()));
+        feedDto.setContent(feed.get().getContent());
+//        feedDto.setCreatedAt(feed.get().getCreatedAt());
+        return feedDto;
+>>>>>>> 32c2621344c0c3f09934b5398f2cab9050837280
     }
 
     /**
