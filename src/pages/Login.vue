@@ -6,7 +6,13 @@
         <input type="text" v-model="email" /><br />
         <input type="password" v-model="password" /><br />
         <input type="checkbox" v-model="checked" />아이디저장
-        <button>로그인</button>
+        <button>로그인</button> <br />
+        <a href="{kakaoHref}">
+          <img
+            src="../../public/images/kakao_login_medium_narrow.png"
+            alt="kakao-login"
+          />
+        </a>
       </form>
     </div>
   </div>
