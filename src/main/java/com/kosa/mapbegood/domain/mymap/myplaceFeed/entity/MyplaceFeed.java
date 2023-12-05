@@ -15,19 +15,18 @@ import javax.persistence.*;
 @Entity
 @Table
 public class MyplaceFeed extends AuditEntity {
-	
+
 	@Id
-	@Column(name = "myplaceId")
-	private Long id;
-	
-	@MapsId
-	@OneToOne
 	@JoinColumn(name = "myplaceId")
-	private Myplace myplaceId;
+	private Long myplaceId;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "email")
 	private Member memberEmail;
 
 	private String content;
+
+	@OneToOne
+	@JoinColumn(name = "myplaceId", referencedColumnName = "id", insertable = false, updatable = false)
+	private Myplace myplace;
 }

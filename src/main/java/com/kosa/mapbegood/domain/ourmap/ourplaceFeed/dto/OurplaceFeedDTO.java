@@ -1,6 +1,9 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -9,14 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OurplaceFeedDTO {
-
     private Long ourplaceId;
     private String memberEmail;
     private String content;
     private LocalDateTime createdAt;
 
-    public OurplaceFeedDTO(Long ourplaceId, String memberEmail) {
-        this.ourplaceId = ourplaceId;
-        this.memberEmail = memberEmail;
-    }
 }

@@ -23,12 +23,12 @@ public class OurplaceFeed extends AuditEntity {
 	@ManyToOne
 	@JoinColumn(name = "OurplaceId")
 	@MapsId("ourplaceId")
-	private Ourplace ourplaceId;
+	private Ourplace ourplace;
 	
 	@OneToOne
 	@JoinColumn(name = "email")
 	@MapsId("email")
-	private Member memberEmail;
+	private Member member;
 	
 	private String content;
 }

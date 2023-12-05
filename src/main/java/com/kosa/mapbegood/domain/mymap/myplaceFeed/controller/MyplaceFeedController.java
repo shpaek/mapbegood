@@ -1,15 +1,19 @@
 package com.kosa.mapbegood.domain.mymap.myplaceFeed.controller;
 
+import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.dto.MyplaceFeedDTO;
-import com.kosa.mapbegood.domain.mymap.myplaceFeed.service.MyplaceFeedService;
+import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
+import com.kosa.mapbegood.domain.mymap.myplaceFeed.service.MyplaceFeedServiceInterface;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
+import com.kosa.mapbegood.util.AuthenticationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,18 +21,24 @@ import org.springframework.web.bind.annotation.*;
 public class MyplaceFeedController {
 
 	@Autowired
-	private MyplaceFeedService service;
+	private MyplaceFeedServiceInterface service;
+
+	@Autowired
+	private AuthenticationUtil authenticationUtil;
 
 	//GET	/myfeed/{myplaceId}
 	@GetMapping("/{myplaceId}")
-	public MyplaceFeedDTO find(@PathVariable Long myplaceId) throws FindException{
+	public MyplaceFeed find(@PathVariable Long myplaceId) throws FindException{
 		return service.findMyFeedById(myplaceId);
 	}
 
 	//POST	/myfeed/{myplaceId}
 	@PostMapping(value = "/{myplaceId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<?> create(@RequestBody MyplaceFeedDTO feedDto) throws AddException {
+	public ResponseEntity<?> create(Authentication authentication, @RequestBody MyplaceFeedDTO feedDto) throws AddException {
 		try {
+			Member memberEmail = new Member();
+			memberEmail.setEmail(authenticationUtil.getUserEmail(authentication));
+			feedDto.setMemberEmail(memberEmail);
 			service.createMyFeed(feedDto);
 
 			HttpHeaders headers = new HttpHeaders();
@@ -51,7 +61,7 @@ public class MyplaceFeedController {
 	}
 
 	@DeleteMapping("/{myplaceId}")
-	public ResponseEntity<?> delete(@PathVariable Long myplaceId) throws RemoveException{
+	public ResponseEntity<?> delete(@PathVariable Long myplaceId) throws RemoveException, FindException {
 		service.deleteMyFeed(myplaceId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

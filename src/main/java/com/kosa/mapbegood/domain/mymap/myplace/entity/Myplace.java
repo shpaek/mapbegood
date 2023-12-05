@@ -1,19 +1,11 @@
 package com.kosa.mapbegood.domain.mymap.myplace.entity;
 
-import java.sql.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-
 import lombok.Data;
+
+import javax.persistence.*;
+import java.sql.Date;
 
 @Data
 @Entity
@@ -40,7 +32,7 @@ public class Myplace {
 	private Double y;
 	
 	private String category;
-	
-//	@OneToOne(cascade = CascadeType.REMOVE)
-//	private MyplaceFeed feed;
+
+	@OneToOne(mappedBy = "myplace", cascade = CascadeType.REMOVE)
+	private MyplaceFeed myplaceFeed;
 }
