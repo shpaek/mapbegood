@@ -146,11 +146,11 @@ public class MemberService implements MemberServiceInterface {
 
 	@Override
 	public void sendCodeToEmail(String email) throws Exception {
-		findMember(email);
-		String title = "[MapBeGood] Email Verification String";
+		Member member = findMember(email);
+		String title = "[MapBeGood] " + member.getNickname() + "님 인증번호 안내드립니다.";
 		String authCode = RandomStringUtils.randomAlphanumeric(10);
 		try {
-			mailService.sendEmail(email, title, authCode);
+			mailService.sendEmail(email, title, authCode, member.getNickname());
 		} catch (Exception e) {
 			log.error("이메일 전송 Error: " + e.getMessage());
 			throw new Exception();
