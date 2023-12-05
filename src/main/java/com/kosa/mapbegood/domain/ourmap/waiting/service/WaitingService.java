@@ -106,6 +106,7 @@ public class WaitingService {
 		waiting = waitingDtoToEntity(waitingDto);
 		Optional<Waiting> optWaiting = wr.findByGroupIdAndMemberEmail(waiting.getGroupId(), waiting.getMemberEmail()); // waiting																											// id받아옴
 		if (optWaiting.isPresent()) {
+			waiting = optWaiting.get();
 			return waiting;
 		} else {
 			throw new FindException("수락대기 목록이 없습니다");
@@ -121,6 +122,7 @@ public class WaitingService {
 	public void deleteWaiting(WaitingDTO waitingDto) throws RemoveException{
 		try {
 			Waiting waiting = findIdByGroupIdAndMemberEmail(waitingDto);
+//			log.error("delete단 waiting.getId={}", waiting.getId());
 			wr.deleteById(waiting.getId());
 		} catch (Exception e) {
 			throw new RemoveException("수락대기 삭제 실패"+e.getMessage());

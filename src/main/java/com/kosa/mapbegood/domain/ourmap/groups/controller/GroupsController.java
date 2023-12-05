@@ -41,6 +41,7 @@ public class GroupsController {
 	@Autowired
 	private AuthenticationUtil authenticationUtil;
 	
+	//사용자가 속한 그룹 전체보기
 	@GetMapping(value="", produces="application/json;charset=UTF-8")
 	public List<GroupsDTO> findAllGroupsByMemberNickname(@RequestBody Map<String,String> map) throws FindException{
 		//ㄴRequestBody로 보내야 응답결과를 json으로 반환이 가능함
@@ -49,6 +50,7 @@ public class GroupsController {
 		return gs.findAllGroupsByMemberEmail(map.get("memberEmail"));
 	}
 	
+	//그룹생성
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> createGroup(Authentication authentication, 
 			String name, @RequestPart MultipartFile image) throws AddException{ //그룹이미지도 받아야 해서 formdata로 받음
@@ -75,6 +77,8 @@ public class GroupsController {
 		}
 	}
 	
+	
+	//그룹생성(섬네일추가전)
 //	@PostMapping(value="", produces="application/json;charset=UTF-8")
 //	public ResponseEntity<?> createGroup(@RequestBody MemberGroupDTO memberGroupDto) throws AddException{
 //		try{
@@ -86,6 +90,7 @@ public class GroupsController {
 //	}
 	
 	
+	//그룹이미지 수정
 	@PutMapping(value="/{id}/group-image", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> updateGroupImage(@PathVariable Long id, @RequestPart MultipartFile image) throws Exception{
 		try {
@@ -101,6 +106,7 @@ public class GroupsController {
 	}
 	
 	
+	//그룹명 수정
 	@PutMapping(value="/{id}", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> updateGroup(@PathVariable Long id, @RequestBody GroupsDTO groupsDto) throws ModifyException{
 		groupsDto.setId(id);
@@ -112,6 +118,8 @@ public class GroupsController {
 		}
 	}
 	
+	
+	//그룹 삭제
 	@DeleteMapping(value="/{id}", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> deleteGroup(@PathVariable Long id) throws RemoveException {
 		try{
