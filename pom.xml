@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-=======
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
->>>>>>> 32c2621344c0c3f09934b5398f2cab9050837280
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -149,24 +144,18 @@
 			<artifactId>spring-cloud-aws-autoconfigure</artifactId>
 			<version>2.2.6.RELEASE</version>
 		</dependency>
-<<<<<<< HEAD
-=======
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.20</version>
 		</dependency>
->>>>>>> 32c2621344c0c3f09934b5398f2cab9050837280
 		<!--		<dependency>-->
 		<!--			<groupId>org.bgee.log4jdbc-log4j2</groupId>-->
 		<!--			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>-->
 		<!--			<version>1.16</version>-->
 		<!--		</dependency>-->
-<<<<<<< HEAD
-=======
 		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
 
->>>>>>> 32c2621344c0c3f09934b5398f2cab9050837280
 	</dependencies>
 
 	<build>
@@ -196,11 +185,7 @@
 							<goal>process</goal>
 						</goals>
 						<configuration>
-<<<<<<< HEAD
-							<outputDirectory>src/generated-sources</outputDirectory>
-=======
 							<outputDirectory>target/generated-sources</outputDirectory>
->>>>>>> 32c2621344c0c3f09934b5398f2cab9050837280
 							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 						</configuration>
 					</execution>
