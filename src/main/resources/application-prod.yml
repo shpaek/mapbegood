@@ -11,8 +11,8 @@ spring:
     password: ${database.pass}
 
   redis:
-    host: 172.31.1.201
-    port: 6379
+    host: ${redis.host}
+    port: ${redis.port}
 
   servlet:
     multipart:
@@ -32,10 +32,27 @@ spring:
         default_batch_fetch_size: 100
       open-in-view: false
 
+  mail:
+    host: ${mail.host}
+    port: ${mail.port}
+    username: ${admin.mail}
+    password: ${admin.mail.pass}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connection-timeout: 5000
+          timeout: 5000
+          write-timeout: 5000
+    auth-code-expiration-millis: ${mail.auth.code.exp}
+
 jwt:
-  key: 20231120try241map1315be316good9612161catch20231222
-  access-token-expiration-minutes: 5
-  refresh-token-expiration-minutes: 360
+  key: ${jwt.secret.key}
+  access-token-expiration-minutes: ${jwt.access.token.exp}
+  refresh-token-expiration-minutes: ${jwt.refresh.token.exp}
 
 cloud:
   aws:
@@ -43,8 +60,7 @@ cloud:
       access-key: ${s3.access.key}
       secret-key: ${s3.secret.key}
     s3:
-      bucket: mapbegood-image
-      bucket-path: profile-image
+      bucket: ${aws.s3.bucket.image}
     region:
       static: ap-northeast-2
     stack:

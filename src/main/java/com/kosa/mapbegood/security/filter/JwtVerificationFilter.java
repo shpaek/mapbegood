@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -75,17 +76,23 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         return authorization == null;
     }
 
-    private Map<String, Object> verifyJws(HttpServletRequest request) {
-        String jws = request.getHeader("Authorization");
+    private Map<String, Object> verifyJws(HttpServletRequest request) throws Exception {
+        if(!request.getHeader("Authorization").startsWith("Bearer ")) {
+            throw new SignatureException("");
+        }
+        String jws = request.getHeader("Authorization").replace("Bearer ", "");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-
         return jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getPayload();
     }
 
-    private void setAuthenticationToContext(Map<String, Object> claims) {
-        String username = (String) claims.get("email");
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    private void setAuthenticationToContext(Map<String, Object> claims) throws Exception {
+        try {
+            String username = (String) claims.get("email");
+            List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+            Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (SignatureException se) {
+            throw new SignatureException("");
+        }
     }
 }

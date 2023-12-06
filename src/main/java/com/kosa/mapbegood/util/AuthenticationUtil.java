@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationUtil {
-    public String getUserEmail(Authentication authentication) {
+    public static String getUserEmail(Authentication authentication) {
         return authentication.getPrincipal().toString();
     }
 }

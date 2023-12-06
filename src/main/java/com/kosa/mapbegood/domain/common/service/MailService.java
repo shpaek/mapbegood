@@ -17,23 +17,35 @@ public class MailService {
 
     public void sendEmail(String toEmail,
                           String title,
-                          String text) throws Exception {
-        SimpleMailMessage emailForm = createEmailForm(toEmail, title, text);
+                          String authCode,
+                          String nickName) throws Exception {
+        SimpleMailMessage emailForm = createEmailForm(toEmail, title, authCode, nickName);
         try {
             emailSender.send(emailForm);
         } catch (RuntimeException e) {
-            log.debug("MailService.sendEmail exception occur toEmail: {}, title: {}, text: {}", toEmail, title, text);
+            log.debug("MailService.sendEmail exception occur toEmail: {}, title: {}, text: {}", toEmail, title, authCode);
             throw new MailSendException("Error: MailService");
         }
     }
 
     private SimpleMailMessage createEmailForm(String toEmail,
                                               String title,
-                                              String text) {
+                                              String authCode,
+                                              String nickName) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject(title);
-        message.setText(text);
+        message.setText("" +
+                "<div>" +
+                    "<table>" +
+                        "<h2>" + nickName + "님, 안녕하세요.</h2>" +
+                        "사이트에서 인증번호를 입력해주세요." +
+                        "감사합니다." +
+
+                        "인증번호: <b>" + authCode + "</b>" +
+                    "</table>" +
+                "</div>" +
+                "");
 
         return message;
     }
