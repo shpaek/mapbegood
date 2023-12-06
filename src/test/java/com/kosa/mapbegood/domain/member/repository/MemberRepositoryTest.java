@@ -206,7 +206,7 @@ class MemberRepositoryTest {
 				.from(qm)
 				.leftJoin(qtm)
 				.on(qm.email.eq(qtm.memberEmail.email))
-						.where(qm.nickname.eq("test"))
+						.where(qm.nickname.contains("test"))
 				.transform(
 						groupBy(qm.email).list(
 								new QMemberSearchResponseDTO(
