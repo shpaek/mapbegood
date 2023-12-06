@@ -118,7 +118,7 @@
             role="img"
             aria-label="thememap"
           >
-            <use xlink:href="#thememap" />
+            <use xlink:href="#thememaplist" />
           </svg>
           <span class="menu-text">내 테마지도</span>
         </router-link>
