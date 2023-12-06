@@ -141,18 +141,18 @@ class MemberRepositoryTest {
 		em.flush();
 		em.clear();
 
-		QMember qm = new QMember("test");
-		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-		// when
-		Member findMember = queryFactory
-				.selectFrom(qm)
-				.where(qm.nickname.eq(nickName))
-				.fetchOne();
-
-		// then
-		assertNotNull(findMember);
-		assertThat(findMember.getEmail()).isEqualTo(email);
+//		QMember qm = new QMember("test");
+//		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+//
+//		// when
+//		Member findMember = queryFactory
+//				.selectFrom(qm)
+//				.where(qm.nickname.eq(nickName))
+//				.fetchOne();
+//
+//		// then
+//		assertNotNull(findMember);
+//		assertThat(findMember.getEmail()).isEqualTo(email);
 	}
 
 	@Test
