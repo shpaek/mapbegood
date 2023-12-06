@@ -14,9 +14,16 @@ import lombok.Setter;
 @AllArgsConstructor
 	
 public class FavoriteDto {
-	
+    
+	private ThemeMapDto themeMapDto;
     private ThemeMap thememapId;
     private Member Memberemail;
 //    private date createAt;
-    
+    public ThemeMapDto getThemeMapDto() {
+        return themeMapDto;
+    }
+
+    public void setThemeMapDto(ThemeMapDto themeMapDto) {
+        this.themeMapDto = themeMapDto;
+    }
 }

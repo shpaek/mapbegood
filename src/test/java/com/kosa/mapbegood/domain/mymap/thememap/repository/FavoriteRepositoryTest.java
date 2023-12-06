@@ -1,6 +1,5 @@
 package com.kosa.mapbegood.domain.mymap.thememap.repository;
 
-
 import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
 import com.kosa.mapbegood.domain.mymap.favorite.entity.FavoriteEmbedded;
 import com.kosa.mapbegood.domain.mymap.favorite.repository.FavoriteRepository;
@@ -28,7 +27,6 @@ public class FavoriteRepositoryTest {
         Favorite favorite = new Favorite();
         FavoriteEmbedded favoriteem = new FavoriteEmbedded();
         favoriteem.setThememapId(3L); 
-//        favoriteem.setNickname("test");
         favorite.setId(favoriteem);
 
         Optional<ThemeMap> themeMapOptional = themeMapRepository.findById(3L);
@@ -70,7 +68,6 @@ public class FavoriteRepositoryTest {
     public void selectFavoriteList() {
         
         String nickname = "test";
-
         // 즐겨찾기한 리스트 조회
 //        List<Favorite> favoriteList = favoriteRepository.findByMemberNickname_Nickname(nickname);
 
@@ -79,7 +76,6 @@ public class FavoriteRepositoryTest {
 //            ThemeMap themeMap = favorite.getThememapId();
 //            System.out.println("조회되었습니다: " + themeMap.getName());
 //        }
-
 //        if (favoriteList.isEmpty()) {
 //            System.out.println("---실패--");
 //        }

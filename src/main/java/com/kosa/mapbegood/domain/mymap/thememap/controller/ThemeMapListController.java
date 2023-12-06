@@ -36,7 +36,7 @@ public class ThemeMapListController {
 	   검색할 리스트 이름이나 리스트 태그를 입력하세요.
 		
 	  */
-	@GetMapping("/search")
+	@GetMapping("/search") //o
 	public ResponseEntity<List<ThemeMapDto>> searchThemeMap(Authentication authentication,
 									  @RequestBody Map<String,String> map) {		
 	//검색 서비스 호출 및 결과 반환
@@ -53,10 +53,7 @@ public class ThemeMapListController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-	
-    /* 설명: 
-     * 테마지도 내 장소 복사붙혀넣기 
-     */
+	 
 	
 	
 }

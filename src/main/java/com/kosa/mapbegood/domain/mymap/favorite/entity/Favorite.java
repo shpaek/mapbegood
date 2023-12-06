@@ -17,20 +17,19 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
-@Table
+@Table(name="favorite")
 public class Favorite extends AuditEntity {
 	
 	@EmbeddedId
 	private FavoriteEmbedded id = new FavoriteEmbedded();
 	
 	@ManyToOne
-	@JoinColumn(name = "thememap_id")
-	@MapsId("thememapId")
-	private ThemeMap thememapId;
-//	private ThemeMap themeMap;
-	
-	@ManyToOne
-	@JoinColumn(name = "email")
+	@JoinColumn(name = "member_email")
 	@MapsId("email")
 	private Member memberEmail;
+
+	@ManyToOne
+	@JoinColumn(name = "thememap_id")  // 수정: "thememap_id"로 변경
+	@MapsId("thememapId")
+	private ThemeMap thememapId;
 }

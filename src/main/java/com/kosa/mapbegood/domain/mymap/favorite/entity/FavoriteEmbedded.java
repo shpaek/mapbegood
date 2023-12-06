@@ -27,5 +27,6 @@ public class FavoriteEmbedded implements Serializable {
 	
 	@Column(name = "member_email")
 	private String email;
+
 	 
 }
