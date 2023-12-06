@@ -1,30 +1,16 @@
 package com.kosa.mapbegood.domain.mymap.myplace.mapper;
 
-import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
+import java.util.Optional;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
-public class MyplaceMapper {
-
-	public static Myplace toEntity(MyplaceDTO dto) {
-		
-		Myplace entity =new Myplace();
-		
-		entity.setId(dto.getId());
-		
-		ThemeMap thememap=new ThemeMap();
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface MyplaceMapper {
+	Myplace dtoToEntity(MyplaceDTO myplaceDto);	
+	MyplaceDTO entityToDto(Myplace myplace);
 	
-		
-		return null;
-}
-	
-	public static Myplace toDto(Myplace entity) {
-		
-		
-		
-		
-		return null;
-	
-	}
 }
