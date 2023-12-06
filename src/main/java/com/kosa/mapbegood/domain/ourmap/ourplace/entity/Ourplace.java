@@ -33,8 +33,9 @@ public class Ourplace {
 	private GroupThememap groupThememapId;
 	
 	@ManyToOne
-	@JoinColumn(name = "nickname")
-	private Member memberNickname;
+	@JoinColumn(name = "member_email") //준택
+//	private Member memberNickname;
+	private Member memberEmail;
 	
 	private Long placeId;
 	

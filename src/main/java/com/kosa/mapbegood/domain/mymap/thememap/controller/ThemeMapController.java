@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
+import com.kosa.mapbegood.domain.mymap.thememap.dto.themeMapDTO;
 import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.util.AuthenticationUtil;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/mymap")
 public class ThemeMapController {
@@ -32,8 +35,9 @@ public class ThemeMapController {
     @Autowired
     private AuthenticationUtil authenticationUtil;
 
+    
     //토큰으로 받아와서 setnickname 교체해주기
-    // 테마맵 생성
+    // 테마맵 생성 o
     @PostMapping("/create")
     public ThemeMapDto createThemeMap(Authentication authentication,
     								  @RequestBody ThemeMapDto themeMapDto) {
@@ -50,56 +54,64 @@ public class ThemeMapController {
 		}
     	return null;
     }
-
-    // 테마맵 조회 (ID로)
-    @GetMapping("/{themeMapId}")
-    public ResponseEntity<ThemeMapDto> getThemeMapById(Authentication authentication,
-    													@PathVariable Long themeMapId)
-    //throws FindException
-    {
-    	//String email = authenticationUtil.getUserEmail(authentication);
-    	try {
-			themeMapService.getThemeMapById(themeMapId);
-			return ResponseEntity.ok(null);
-		} catch (FindException e) {
-			// TODO/ Auto-generated catch block
-			//e.printStackTrace();
-			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}    	///
-    }
-
     
-    // 테마맵 삭제
+ 
+    
+    // 테마맵 삭제    o favorite자식 테이블의 매핑 문제 같은데 모르겠음
     @DeleteMapping("/delete/{themeMapId}")
     public ResponseEntity<String> deleteThemeMap(Authentication authentication,
     						@PathVariable Long themeMapId) throws FindException {
     	
-    	String email = authenticationUtil.getUserEmail(authentication);
-		themeMapService.deleteThemeMap(email, themeMapId);
+    		String email = authenticationUtil.getUserEmail(authentication);
+    		log.error("email은 갖고옴"+email);
+    		log.error("thememap은?"+themeMapId);
+    		//두개는 갖고오는데 sql이 오류가 뜨는데 왜 favorite 테이블이 오류나는지 
+    		
+    		themeMapService.deleteThemeMap(email, themeMapId);
 		
-		return ResponseEntity.ok("삭제 성공");
+    		return ResponseEntity.ok("삭제 성공");
+//    }catch(FindException e){
+//    		return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
-   
-    // 테마맵 수정
+    
+   //테마맵 수정 o
     @PutMapping("/update/{themeMapId}")
-    public ThemeMapDto updateThemeMap(Authentication authentication,
-    								@PathVariable Long themeMapId,
-    								@RequestBody ThemeMapDto themeMapDto) {
-    	String email = "test@mail.com";
-    	Member m = new Member();
-    	m.setEmail(email);
-    	//-----------------------------
-    	themeMapDto.setMemberEmail(m);
-    	
-    	return themeMapService.updateThemeMap(email, themeMapDto);
+    public ResponseEntity<ThemeMapDto> updateThemeMap(Authentication authentication,
+                                                      @PathVariable Long themeMapId,   
+                                                      @RequestBody ThemeMapDto themeMapDto) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            ThemeMapDto updatedThemeMap = themeMapService.updateThemeMap(email, themeMapId, themeMapDto);
+            return ResponseEntity.ok(updatedThemeMap);
+        } catch (FindException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
+    
 
-    // 모든 테마맵 조회
+    // 테마맵 조회 o
     @GetMapping("/list")
-    public List<ThemeMapDto> getAllThemeMaps() {
-    	Member m = new Member();
-    	m.setEmail("test@mail.com");
-    	//-----------------------------
-        return themeMapService.getAllThemeMaps(m);
+    public ResponseEntity<List<ThemeMapDto>> getAllThemeMaps(Authentication authentication) {
+    	String email = authenticationUtil.getUserEmail(authentication);
+    	 try {
+             List<ThemeMapDto> themeMapDtos = themeMapService.getAllThemeMaps(email);
+             return ResponseEntity.ok(themeMapDtos);
+         } catch (FindException e) {
+             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+         }
+     }
+    
+ // 테마맵 조회 (ID로) o
+    @GetMapping("/{themeMapId}")
+    public ResponseEntity<ThemeMapDto> getThemeMapById(Authentication authentication,
+                                                      @PathVariable Long themeMapId) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            ThemeMapDto themeMapDto = themeMapService.getThemeMapById(email, themeMapId);
+            return ResponseEntity.ok(themeMapDto);
+        } catch (FindException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
-}
+  }
+  

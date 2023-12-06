@@ -1,10 +1,12 @@
 package com.kosa.mapbegood.domain.member.repository;
 
+import org.springframework.stereotype.Repository;
+
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.entity.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
