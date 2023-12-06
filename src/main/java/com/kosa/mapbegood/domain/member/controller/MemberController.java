@@ -81,8 +81,8 @@ public class MemberController {
 		}
 		return new ResponseEntity<>(new Response(1, "닉네임이 수정되었습니다."), HttpStatus.OK);
 	}
-	// 비밀번호 변경
 
+	// 비밀번호 변경
 	@PutMapping("/pwd")
 	public ResponseEntity updatePassword(Authentication authentication,
 										 @Valid @RequestBody MemberPassDTO passwordDto) {
@@ -134,18 +134,17 @@ public class MemberController {
 		}
 	}
 
-	// TODO: 2023-11-30
 	// 사용자 검색
 	@GetMapping("/user")
-	public ResponseEntity searchMember(Authentication authentication,
-									   @Valid @RequestParam("nickName") String nickName) {
+	public ResponseEntity<List<MemberSearchResponseDTO>> searchMember(Authentication authentication,
+																	  @Valid @RequestParam("nickName") String nickName) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
-			List<String> nickNameList = service.searchMember(email, nickName);
+			List<MemberSearchResponseDTO> memberSearchResult = service.searchMember(email, nickName);
+			return ResponseEntity.ok(memberSearchResult);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 	// 회원 탈퇴
