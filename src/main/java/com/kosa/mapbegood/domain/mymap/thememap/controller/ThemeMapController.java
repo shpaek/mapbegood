@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
-import com.kosa.mapbegood.domain.mymap.thememap.dto.themeMapDTO;
+//import com.kosa.mapbegood.domain.mymap.thememap.dto.themeMapDTO;
 import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.util.AuthenticationUtil;
