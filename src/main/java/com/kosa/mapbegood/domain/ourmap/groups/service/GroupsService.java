@@ -97,6 +97,7 @@ public class GroupsService {
 		
 						MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
 						memberGroupDTO.setMember(leaderMemberDTO);
+						memberGroupDTO.setLeader(mg.getLeader());
 						
 						List<MemberGroupDTO> listGroupMemberDTO = new ArrayList<>();
 						listGroupMemberDTO.add(memberGroupDTO);

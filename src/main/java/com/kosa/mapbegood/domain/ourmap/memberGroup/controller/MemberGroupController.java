@@ -36,7 +36,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	//그룹의 전체 멤버 찾기
 	@GetMapping(value="/{groupId}", produces="application/json;charset=UTF-8")
-	public List<MemberGroupDTO> findAllGroupMembersByGroupId(@PathVariable Long groupId) throws FindException{
+	public List<MemberGroupDTO> findAllGroupMembersByGroupId(Authentication authentication, @PathVariable Long groupId) throws FindException{
 		return mgs.findAllGroupMembersByGroupId(groupId);
 	}
 	

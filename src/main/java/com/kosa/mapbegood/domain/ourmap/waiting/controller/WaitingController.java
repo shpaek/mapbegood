@@ -33,14 +33,15 @@ public class WaitingController {
 	@Autowired
 	private AuthenticationUtil authenticationUtil;
 	
+	//그룹 초대에 응답하지 않은 사람 목록 조회
 	@GetMapping(value="{groupId}", produces="application/json;charset=UTF-8")
-	public List<MemberDTO> findAllWaitingsByGroupId(@PathVariable Long groupId) throws FindException{
+	public List<MemberDTO> findAllWaitingsByGroupId(Authentication authentication, @PathVariable Long groupId) throws FindException{
 		return ws.findAllWaitingsByGroupId(groupId);
 	}
 	
 	//그룹장이 그룹에 사람을 초대했을 때 추가
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> createWaiting(@RequestBody WaitingDTO waitingDto) throws AddException{
+	public ResponseEntity<?> createWaiting(Authentication authentication, @RequestBody WaitingDTO waitingDto) throws AddException{
 		try {
 			ws.createWaiting(waitingDto);
 			return new ResponseEntity<>(HttpStatus.OK);
