@@ -1,13 +1,18 @@
 <template lang="">
     <div>
-        그룹의 테마지도목록입니다
+        
     </div>
 </template>
 <script>
 export default {
-    name: "GroupThemeMapList"
+    name:"GroupImageChange",
+    data(){
+        return{
+
+        }
+    }
 }
 </script>
-<style scoped>
+<style lang="">
     
 </style>

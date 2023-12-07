@@ -1,23 +1,25 @@
 <template>
-    <div class="main-container">
-        <Menubar/>
-        <Section/>
-    </div>
+  <div class="main-container">
+    <Menubar />
+    <Section />
+  </div>
 </template>
+
 <script>
-import Menubar from './Menubar.vue';
-import Section from './Section.vue';
-import Search from './Search.vue';
+import Menubar from "./Menubar.vue";
+import Section from "./Section.vue";
+import Search from "./Search.vue";
 
 export default {
-    name: "Main",
-    components: {
-    Menubar, 
+  name: "Main",
+  components: {
+    Menubar,
     Section,
     Search,
-  }
-}
+  },
+};
 </script>
+
 <style scoped>
 .main-container {
   display: flex;
