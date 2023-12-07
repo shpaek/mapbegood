@@ -3,6 +3,7 @@ package com.kosa.mapbegood.domain.ourmap.groupThememap.dto;
 import java.util.List;
 
 import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
+import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
 
 import lombok.AllArgsConstructor;

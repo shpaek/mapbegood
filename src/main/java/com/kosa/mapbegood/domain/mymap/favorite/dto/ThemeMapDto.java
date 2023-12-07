@@ -17,13 +17,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ThemeMapDto {
     private Long id;
-    private Member MemberEmail;
+//    private Member MemberEmail;
     private String name;
     private String color;
     private String memo;
     private Boolean show;
     private Boolean mainmap;
-    private List<MyPlaceDto> myplaceList;
+//    private List<MyPlaceDto> myplaceList;
 //    private List<Favorite> favoriteList;
     // Constructors, getters, and setters
 
