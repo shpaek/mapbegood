@@ -46,30 +46,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-//            throws ServletException, IOException {
-//        String token = jwtUtil.resolveToken(request);
-//        if (token != null) {
-//            if (!jwtUtil.validateToken(token)) { //쿠키가 만료되면 false가되어 밑에 코드가 실행됌
-//                Cookie rc[] = request.getCookies(); //request에서 쿠키를 받아온다.
-//                String refreshToken = "";
-//                for (Cookie cookie : rc) { //벨류에 넣었던 리프레쉬토큰을 꺼내서 넣어준다.
-//                    refreshToken = cookie.getValue();
-//                }
-//                if (request.getCookies() != null && jwtUtil.getRefreshTokenEquals(refreshToken)) { //디비의 리프레시 토큰의 유효성 검사를 해준다.
-//                    Claims info = jwtUtil.getUserInfoFromToken(refreshToken); //리프레쉬토큰의 정보를 꺼내온다.
-//                    setAuthentication(info.getSubject()); //리프레쉬토큰의 정보를 인증객체로 바꾸어준다.
-//                    User authUser = jwtUtil.Authenticateduser(info.getSubject());
-//                    response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createAccessToken(info.getSubject(), authUser.getRole())); //다시 어세스토큰을 발급해준다.
-//                }
-//            } else {
-//                Claims info = jwtUtil.getUserInfoFromToken(token);
-//                setAuthentication(info.getSubject());
-//            }
-//        }
-//        filterChain.doFilter(request, response);
-//    }
-
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String authorization = request.getHeader("Authorization");

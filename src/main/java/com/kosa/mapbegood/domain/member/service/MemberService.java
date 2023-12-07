@@ -170,6 +170,7 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public boolean verifiedCode(String email, String authCode) throws Exception {
 		try {
+			log.error("인증용 getKey: " + AUTH_CODE_PREFIX + email);
 			String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
 			if (redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode)) {
 				redisService.deleteValues(AUTH_CODE_PREFIX + email);
