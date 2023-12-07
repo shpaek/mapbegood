@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <Menubar />
+    <Menubar v-show="menu" />
     <Section />
   </div>
 </template>
@@ -10,12 +10,18 @@ import Menubar from "./Menubar.vue";
 import Section from "./Section.vue";
 import Search from "./Search.vue";
 
+let menu = true;
+
 export default {
   name: "Main",
   components: {
     Menubar,
     Section,
     Search,
+  },
+  created() {
+    let path = location.pathname;
+    this.menu = path != "/login" && path != "/signup";
   },
 };
 </script>
