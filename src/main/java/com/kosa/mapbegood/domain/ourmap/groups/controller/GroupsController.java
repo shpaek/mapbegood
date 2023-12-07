@@ -2,7 +2,6 @@
 package com.kosa.mapbegood.domain.ourmap.groups.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +55,7 @@ public class GroupsController {
 	//그룹생성
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> createGroup(Authentication authentication, 
-			String name, @RequestPart MultipartFile image) throws AddException{ //그룹이미지도 받아야 해서 formdata로 받음
+			String name, @RequestPart MultipartFile image) { //그룹이미지도 받아야 해서 formdata로 받음
 		//파일은 요청요청바디로만 보낼 수 있어서 GET방식을 못 쓰고 POST방식으로만 보낼 수 있다
 		//프론트에서 파일테이터를 back으로 보내면 formdata형태로 보내게 된다
 		//formdata를 받을때는 @RequestBody를 못쓰고(아니니까) 위의 메서드처럼 데이터를 하나씩 받아야 한다
@@ -83,7 +83,7 @@ public class GroupsController {
 	
 	//그룹생성(섬네일추가전)
 //	@PostMapping(value="", produces="application/json;charset=UTF-8")
-//	public ResponseEntity<?> createGroup(@RequestBody MemberGroupDTO memberGroupDto) throws AddException{
+//	public ResponseEntity<?> createGroup(@RequestBody MemberGroupDTO memberGroupDto) {
 //		try{
 //			gs.createGroup(memberGroupDto);
 //			return new ResponseEntity<>(HttpStatus.OK);
@@ -95,7 +95,7 @@ public class GroupsController {
 	
 	//그룹이미지 수정
 	@PutMapping(value="/{id}/group-image", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> updateGroupImage(Authentication authentication, @PathVariable Long id, @RequestPart MultipartFile image) throws Exception{
+	public ResponseEntity<?> updateGroupImage(Authentication authentication, @PathVariable Long id, @RequestPart MultipartFile image) {
 		try {
 			if(image==null&&image.getSize()<0) {				
 				throw new ModifyException("올바른 파일을 올려주세요");
@@ -111,7 +111,7 @@ public class GroupsController {
 	
 	//그룹명 수정
 	@PutMapping(value="/{id}", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> updateGroup(Authentication authentication, @PathVariable Long id, @RequestBody GroupsDTO groupsDto) throws ModifyException{
+	public ResponseEntity<?> updateGroup(Authentication authentication, @PathVariable Long id, @RequestBody GroupsDTO groupsDto) {
 		groupsDto.setId(id);
 		try {
 			gs.updateGroup(groupsDto);
@@ -121,10 +121,20 @@ public class GroupsController {
 		}
 	}
 	
+	//그룹명 중복확인
+	@GetMapping(value="/{id}", produces="application/json;charset=UTF-8")
+	public ResponseEntity<?> dupchkGroupName(@RequestParam String groupName) {
+		try {
+			gs.dupchkGroupName(groupName);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //중복O
+		}catch(FindException e) {
+			return new ResponseEntity<>(HttpStatus.OK); //중복X
+		}
+	}
 	
 	//그룹 삭제
 	@DeleteMapping(value="/{id}", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> deleteGroup(Authentication authentication, @PathVariable Long id) throws RemoveException {
+	public ResponseEntity<?> deleteGroup(Authentication authentication, @PathVariable Long id)  {
 		try{
 //			String email = authenticationUtil.getUserEmail(authentication); 사용자 email을 쓰지 않아도 로그인 이후에 쓰는 기능이라 Authentication을 받아야 함 
 			gs.deleteGroup(id);

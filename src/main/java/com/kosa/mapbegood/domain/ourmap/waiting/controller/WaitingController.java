@@ -41,7 +41,7 @@ public class WaitingController {
 	
 	//그룹장이 그룹에 사람을 초대했을 때 추가
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> createWaiting(Authentication authentication, @RequestBody WaitingDTO waitingDto) throws AddException{
+	public ResponseEntity<?> createWaiting(Authentication authentication, @RequestBody WaitingDTO waitingDto) {
 		try {
 			ws.createWaiting(waitingDto);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -52,7 +52,7 @@ public class WaitingController {
 	
 	//그룹초대 메시지에 수락/거절 했을 때 지워지도록 하기
 	@DeleteMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> deleteWaiting(Authentication authentication, @RequestBody WaitingDTO waitingDto) throws RemoveException{
+	public ResponseEntity<?> deleteWaiting(Authentication authentication, @RequestBody WaitingDTO waitingDto) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 //			log.error("email={}",email);

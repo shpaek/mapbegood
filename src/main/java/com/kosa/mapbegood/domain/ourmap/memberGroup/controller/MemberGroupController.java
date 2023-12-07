@@ -49,7 +49,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	//그룹초대에 수락했을 때만 멤버로 추가되도록
 	@PostMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> createMemberGroup(Authentication authentication, @RequestBody MemberGroupDTO memberGroupDto) throws AddException{
+	public ResponseEntity<?> createMemberGroup(Authentication authentication, @RequestBody MemberGroupDTO memberGroupDto) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			MemberDTO m = new MemberDTO();
@@ -64,7 +64,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	//멤버장이 그룹에서 나가려는 경우는 프론트에서 막기
 	@DeleteMapping(value="", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> deleteMemberGroup(Authentication authentication, @RequestBody MemberGroupDTO memberGroupDto) throws RemoveException {
+	public ResponseEntity<?> deleteMemberGroup(Authentication authentication, @RequestBody MemberGroupDTO memberGroupDto)  {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			MemberDTO m = new MemberDTO();
