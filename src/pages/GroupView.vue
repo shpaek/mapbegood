@@ -46,7 +46,7 @@ export default {
     created() {
         const url = `${this.backURL}/group`
 
-        const accessToken = localStorage.getItem("mapbegoodToken")
+        const accessToken = "Bearer "+localStorage.getItem("mapbegoodToken")
         axios.defaults.headers.common["Authorization"] = accessToken;
 
         axios.get(url, { withCredentials: true })

@@ -1,3 +1,4 @@
+<!--thememaplist.vue-->
 <template>
     <div>
       <!-- 생성 -->
@@ -18,11 +19,13 @@
   import axios from 'axios';
   
   export default {
+    name: 'thememaplist', 
+  
     methods: {
-        name:"thememaplist",
       async createThemeMap() {
+        
         try {
-          const response = await axios.post('/mymap/create', { /* 테마맵 데이터 */ });
+          const response = await axios.post('/mymap/create', { });
           console.log(response.data); // 생성된 테마맵 데이터
         } catch (error) {
           console.error('테마맵 생성 오류:', error);
@@ -59,4 +62,4 @@
       },
     },
   };
-  </script>
+ </script>
