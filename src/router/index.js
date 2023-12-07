@@ -5,9 +5,9 @@ import Signup from "../pages/Signup.vue";
 import PasswordFind from "../pages/PasswordFind.vue";
 import PasswordChange from "../pages/PasswordChange.vue";
 import NickChange from "../pages/NickChange.vue";
-import GroupView from "../pages/GroupView.vue";
+import GroupsView from "../pages/GroupsView.vue";
 import GroupCreate from "../pages/GroupCreate.vue";
-import GroupThemeMapList from "../pages/GroupThemeMapList.vue";
+import GroupDetail from "../pages/GroupDetail.vue";
 import GroupThemeMap from "../pages/GroupThemeMap.vue";
 import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
@@ -18,7 +18,8 @@ import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
 import FavoriteAdd from "../pages/FavoriteAdd.vue";
-
+import GroupNameChange from "../pages/GroupNameChange.vue";
+import GroupImageChange from "../pages/GroupImageChange.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -29,9 +30,13 @@ const router = createRouter({
     { path: "/pwdfind", component: PasswordFind },
     { path: "/pwdchange", component: PasswordChange },
     { path: "/nickchange", component: NickChange },
-    { path: "/group", component: GroupView },
+    // { path: "/group", component: GroupView },
+    { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
-    { path: "/groupthememaplist", component: GroupThemeMapList },
+    // { name: 'groupThemeMapList', path: "/groupthememaplist/:groupId/:groupName/:leaderNickname", component: GroupThemeMapList },
+    { name: "/group", path: "/group/:groupId/:groupName/:leaderNickname", component: GroupDetail },
+    { name: "/groupname", path:"/groupn/:groupId/:groupName/:leaderNickname", component: GroupNameChange},
+    { name: "/groupimage", path:"/groupi/:groupId/:groupName/:leaderNickname", component: GroupImageChange},
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },

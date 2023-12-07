@@ -51,10 +51,8 @@ export default {
 
             const fd = new FormData(e.target)
 
-            // const accessToken = "Bearer "+localStorage.getItem("mapbegoodToken")
             const accessToken = "Bearer "+localStorage.getItem("mapbegoodToken")
             axios.defaults.headers.common["Authorization"] = accessToken;
-            // const data = fd
 
             axios.post(url, fd, { contentType: false, processData: false, withCredentials: true })
                 .then(response => {
