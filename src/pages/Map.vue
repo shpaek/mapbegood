@@ -2,6 +2,9 @@
   <div>
     <div id="map"></div>
     <Search @center-map="centerMap" />
+    <button class="my-location-btn" @click="moveToMyLocation" alt="내위치로이동">
+      <img src="/public/images/mylocation.png"/>
+    </button>
   </div>
 </template>
 
@@ -28,7 +31,9 @@ export default {
   mounted() {
     this.mapContainer = document.getElementById('map');
     this.loadScript();
+    
   },
+
   methods: {
     loadScript() {
       const script = document.createElement('script');
@@ -104,6 +109,12 @@ export default {
       const zoomControl = new window.kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
     },
+    showPlaceOnMap(place) {
+      // place를 이용하여 마커를 생성하고 지도에 추가하는 로직을 구현
+      // 예를 들어, addMarker 메서드를 활용할 수 있습니다.
+      const position = new window.kakao.maps.LatLng(place.y, place.x);
+      this.addMarker(position, place.place_name);
+    },
     getMyLocation() {
       this.getCurrentLocation()
         .then((position) => {
@@ -122,6 +133,15 @@ export default {
       console.log('Centering map at:', placePosition);
       this.map.setCenter(placePosition);
     },
+    setZoomLevel(level) {
+    if (this.map) {
+      this.map.setLevel(level);
+    }
+    
+  },
+  moveToMyLocation() {
+      this.getMyLocation();
+    },
   },
 };
 </script>
@@ -134,4 +154,21 @@ export default {
   overflow: hidden;
   z-index: 1;
 }
+
+.my-location-btn {
+  position: absolute;
+  bottom: 510px;
+  right: 0px;
+  z-index: 2; /* 맵 보다 위에 나타나도록 설정 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  border: none;
+  background: none;
+}
+.my-location-btn img {
+  user-drag: none; /* 드래그 비활성화 */
+  -webkit-user-drag: none; /* 웹킷 브라우저 지원 */                  
+  width: 30px; /* 원하는 너비로 조절하세요 */
+  height: 30px; /* 원하는 높이로 조절하세요 */
+}
+
 </style>
