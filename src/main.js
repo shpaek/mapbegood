@@ -9,5 +9,5 @@ loadFonts();
 const app = createApp(App);
 app.use(vuetify);
 app.use(router);
-app.config.globalProperties.backURL = "http://localhost:8080";
+app.config.globalProperties.backURL = "http://localhost:8080/mapbegood";
 app.mount("#app");
