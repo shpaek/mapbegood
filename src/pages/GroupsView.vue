@@ -1,11 +1,10 @@
 <template lang="">
     <h2>내 그룹</h2>
     <div class="group-container">
-        <div class="group" v-for="group in groupList" 
-            @click="groupClickHandler"> <!-- v-for로 이미지 여러개 보이게 하기 -->
+        <div class="group" v-for="group in groupList" @click="groupClickHandler(group)">
             <ul>
                 <li>
-                    <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id+'_groupImage.jpg'" alt="그룹이미지" class="img-size">
+                    <img id="i" :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id+'_groupImage.jpg'" alt="그룹이미지" class="img-size">
                 </li>
                 <li>
                     <span class="group-info">{{group.name}}</span>
@@ -27,7 +26,7 @@
 <script>
 import axios from 'axios';
 export default {
-    name: "GroupView",
+    name: "GroupsView",
     data() {
         return {
             groupList: []
@@ -37,16 +36,26 @@ export default {
         addgroupClickHandler() { //그룹추가 페이지로 이동
             location.href = '/groupcreate'
         },
-        // groupClickHandler(){
-        //     //그룹의 테마그룹 List보여주는 탭으로 주소이동시키기
-        //     // loaction.href='/' 
-        // },
+        groupClickHandler(group) {
+            //그룹의 테마그룹 List보여주는 탭으로 주소이동시키기
+            console.log(group.id);
+            // loaction.href=`/groupthememaplist/${group.id}`
+            // this.$router.push(`/groupthememaplist/${group.id}`);
+            this.$router.push({
+                name: '/group', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: group.id,
+                    groupName: group.name,
+                    leaderNickname: group.memberGroupList[0].member.nickname
+                }
+            });
+        },
 
     },
     created() {
         const url = `${this.backURL}/group`
 
-        const accessToken = localStorage.getItem("mapbegoodToken")
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
         axios.defaults.headers.common["Authorization"] = accessToken;
 
         axios.get(url, { withCredentials: true })
@@ -70,11 +79,14 @@ export default {
 .group-container {
     display: grid;
     margin-left: 50px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 200px 이상의 크기로 반복 */
-    gap: 30px; /* grid당 간격 */
-  }
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* 200px 이상의 크기로 반복 */
+    gap: 30px;
+    /* grid당 간격 */
+}
+
 div.group {
-    margin:50px;
+    margin: 50px;
     display: flex;
 }
 
@@ -107,5 +119,4 @@ span.add-group {
     display: flex;
     margin-left: 30px;
     margin-bottom: 50px;
-}
-</style>
+}</style>
