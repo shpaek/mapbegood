@@ -143,7 +143,7 @@
         </router-link>
 
         <router-link
-          to="/group"
+          to="/groups"
           class="menu-item"
           title="group"
           data-bs-toggle="tooltip"

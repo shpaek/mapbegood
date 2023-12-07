@@ -4,7 +4,7 @@
         <div class="group-info">
             <ul>
                 <li class="img">   
-                    <img :src="image" alt="그룹이미지"/>             
+                    <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+this.groupId+'_groupImage.jpg'" alt="그룹이미지"/>             
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"
                         @click="gearClickHandler">
                         <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -12,8 +12,8 @@
                     </svg> 
                     <div class="combobox">
                         <!-- 콤보상자를 나타내는 요소 -->
-                        <div v-if="isDropdownOpen" class="triangle"></div>
-                        <div v-if="isDropdownOpen" class="dropdown" @click.stop>
+                        <div v-show="isDropdownOpen" class="triangle"></div>
+                        <div v-show="isDropdownOpen" class="dropdown" @click.stop>
                             <!-- 콤보상자 내용 -->
                             <ul>
                                 <li class="update-image" @click="updateImageClickHandler">이미지 변경</li>
@@ -55,7 +55,7 @@
 </template>
 <script>
 export default {
-    name: "GroupThemeMapList",
+    name: "GroupDetail",
     data() {
         return {
             groupId: '',
@@ -63,21 +63,35 @@ export default {
             listCnt: 0,
             leaderNickname: '그룹장',
             memCnt: 0,
-            image: '../../../public/images/defaultGroupProfile.jpg',
             listName: '리스트명',
             listWriter: '리스트작성자',
-            isDropdownOpen: false  // 콤보상자의 상태를 나타내는 데이터
+            isDropdownOpen: false  // 콤보상자의 상태를 나타내는 데이터,
         }
     },
     methods: {
         gearClickHandler() {
             this.isDropdownOpen = !this.isDropdownOpen;
         },
-        updateImageClickHandler(){
-
+        updateImageClickHandler(){ //그룹이미지 변경하러 이동
+            this.$router.push({
+                name: '/groupimage', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
         },
-        updateNameClickHandler(){
-
+        updateNameClickHandler(){ //그룹명 변경하러 이동
+            this.$router.push({ 
+                name: '/groupname', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
+            console.log("------3---------")
         },
         deleteGroupClickHandler(){
 

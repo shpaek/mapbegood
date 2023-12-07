@@ -26,7 +26,7 @@
 <script>
 import axios from 'axios';
 export default {
-    name: "GroupView",
+    name: "GroupsView",
     data() {
         return {
             groupList: []
@@ -42,7 +42,7 @@ export default {
             // loaction.href=`/groupthememaplist/${group.id}`
             // this.$router.push(`/groupthememaplist/${group.id}`);
             this.$router.push({
-                name: 'groupThemeMapList', // 라우터에서 정의한 이름
+                name: '/group', // 라우터에서 정의한 이름
                 params: { //params로 설정하여 아래의 데이터 전부 전달가능
                     groupId: group.id,
                     groupName: group.name,
