@@ -2,9 +2,9 @@
      <div class="menubar"> 
       <!-- SVG 심볼 -->
       <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-        <symbol id="logo" viewBox="0 0 118 94" width="100%" height="100%">
+        <symbol id="logo2" viewBox="0 0 118 94" width="100%" height="100%">
     <title></title>
-    <image href="/images/logo.jpg" width="118" height="94" />
+    <image href="/images/logo2.png" width="118" height="94" />
 </symbol>
 
         <symbol id="Map" viewBox="0 0 16 16">
@@ -33,44 +33,45 @@
      <!-- 메뉴바 -->
    <main class="d-flex flex-nowrap">
         <h1 class="visually-hidden">메뉴바</h1>
+
         <div class="b-example-divider b-example-vr"></div>
 <!-- 메뉴바 -->
 <div class="d-flex flex-column flex-shrink-0 bg-body-tertiary" style="width: 5.5rem; height: 100%;">    <!-- 로고 -->
-  <a href="/" class="d-nav-link active py-3 border-bottom rounded-0 p-3 link-body-emphasis text-decoration-none" title="logo" data-bs-toggle="tooltip" data-bs-placement="right">
-    <svg class="bi pe-none" width="55" height="55"><use xlink:href="#logo" /></svg>
+  <a href="/" class="d-nav-link active py-3 border-bottom rounded-0 p-3 link-body-emphasis text-decoration-none" title="logo2" data-bs-toggle="tooltip" data-bs-placement="right">
+    <svg class="bi pe-none" width="55" height="55"><use xlink:href="#logo2" /></svg>
     <span class="visually-hidden">로고</span>
   </a>
 
     <router-link to="/map" class="menu-item" title="Map" data-bs-toggle="tooltip" data-bs-placement="right">
-      <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Map">
+      <svg class="bi pe-none" width="28" height="28" role="img" aria-label="Map">
         <use xlink:href="#Map" />
       </svg>
       <span class="menu-text">지도</span>
     </router-link>
 
     <router-link to="/othersthememap" class="menu-item" title="othersthememap" data-bs-toggle="tooltip" data-bs-placement="right">
-      <svg class="bi pe-none" width="24" height="24" role="img" aria-label="othersthememap">
+      <svg class="bi pe-none" width="30" height="30" role="img" aria-label="othersthememap">
         <use xlink:href="#othersthememap" />
       </svg>
       <span class="menu-text">추천</span>
     </router-link>
 
     <router-link to="/thememap" class="menu-item" title="thememap" data-bs-toggle="tooltip" data-bs-placement="right">
-      <svg class="bi pe-none" width="24" height="24" role="img" aria-label="thememap">
+      <svg class="bi pe-none" width="28" height="28" role="img" aria-label="thememap">
         <use xlink:href="#thememap" />
       </svg>
       <span class="menu-text">내 테마지도</span>
     </router-link>
 
     <router-link to="/FavoriteList" class="menu-item" title="FavoriteList" data-bs-toggle="tooltip" data-bs-placement="right">
-      <svg class="bi pe-none" width="24" height="24" role="img" aria-label="FavoriteList">
+      <svg class="bi pe-none" width="28" height="28" role="img" aria-label="FavoriteList">
         <use xlink:href="#FavoriteList" />
       </svg>
       <span class="menu-text">즐겨찾기</span>
     </router-link>
 
     <router-link to="/group" class="menu-item" title="group" data-bs-toggle="tooltip" data-bs-placement="right">
-      <svg class="bi pe-none" width="24" height="24" role="img" aria-label="group">
+      <svg class="bi pe-none" width="28" height="28" role="img" aria-label="group">
         <use xlink:href="#group" />
       </svg>
       <span class="menu-text">그룹</span>
@@ -80,8 +81,7 @@
   <div class="mt-auto"> <!-- 메뉴를 아래로 밀어내기 위해 mt-auto 사용 -->
           <div class="dropdown border-top">
             <a href="/" class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="/images/xfda.jpg" alt="icon" width="30" height="30" class="rounded-circle">
-              프로필
+              <img src="/images/xfda.jpg" alt="icon" width="35" height="35" class="rounded-circle">
             </a>
             <ul class="dropdown-menu text-small shadow">
               <li><a class="dropdown-item" href="#">새 프로젝트...</a></li>
@@ -144,23 +144,54 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem;
+  padding: 1rem;
   color: #333;
   text-decoration: none;
+  border-bottom: 0.1px solid #1a1919; /* 각 메뉴 하단에 선 추가 */
 }
-
 .menu-text {
   font-size: 10px; /* You can adjust the font size as needed */
 }
 
 .menu-item svg {
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
+/* 드롭다운 전체 배경 색상 및 테두리 설정 */.dropdown {
+  background-color: #8fcdf7; 
+  border: 1px solid #8fcdf7; 
+  position: static; 
+}
+
+  /* 드롭다운 메뉴의 위치 조정 */
+  .dropdown-menu {
+    background-color: #8fcdf7; 
+    color: #fff; 
+    max-height: none; /* 최대 높이 해제 */
+    overflow: hidden; 
+    position: absolute; 
+    right: 0; /* 오른쪽으로 정렬 */
+    left: auto; /* 왼쪽 여백 제거 */
+    width: auto;
+  }
+
+/* 드롭다운 토글 버튼의 텍스트 색상 변경 */
+.dropdown-toggle {
+  color: #fff;
+  position: relative; 
+}
+
+/* 드롭다운 메뉴 아이템의 배경 색상과 텍스트 색상 변경 */
 .dropdown-item {
-  font-size: 11px; /* You can adjust the font size as needed */
+  background-color: #8fcdf7; 
+  color: #fff; 
+  font-size: 12px;
 }
 
+/* 드롭다운 메뉴의 스타일 변경 */
+.dropdown-menu.show {
+  display: block;
+}
 .nav-link {
   color: #333;
 }
