@@ -66,14 +66,12 @@
       </svg>
       <span class="menu-text">추천</span>
     </router-link>
-
     <router-link to="/thememap" class="menu-item" title="thememap" data-bs-toggle="tooltip" data-bs-placement="right">
       <svg class="bi pe-none" width="28" height="28" role="img" aria-label="thememap">
         <use xlink:href="#thememap" />
       </svg>
       <span class="menu-text">내 테마지도</span>
     </router-link>
-
     <router-link to="/FavoriteList" class="menu-item" title="FavoriteList" data-bs-toggle="tooltip" data-bs-placement="right">
       <svg class="bi pe-none" width="28" height="28" role="img" aria-label="FavoriteList">
         <use xlink:href="#FavoriteList" />
