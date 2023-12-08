@@ -12,6 +12,7 @@ import GroupThemeMap from "../pages/GroupThemeMap.vue";
 import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
 import FavoriteList from "../pages/FavoriteList.vue";
+import FavoriteAdd from "../pages/FavoriteAdd.vue";
 import Place from "../pages/Place.vue";
 import Feed from "../pages/Feed.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
@@ -33,14 +34,23 @@ const router = createRouter({
     { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
     // { name: 'groupThemeMapList', path: "/groupthememaplist/:groupId/:groupName/:leaderNickname", component: GroupThemeMapList },
-    { name: "/group", path: "/group/:groupId/:groupName/:leaderNickname", component: GroupDetail },
-    { name: "/groupname", path:"/groupn/:groupId/:groupName/:leaderNickname", component: GroupNameChange},
-    { name: "/groupimage", path:"/groupi/:groupId/:groupName/:leaderNickname", component: GroupImageChange},
+    // { name: "/group", path: "/group/:groupId/:groupName/:leaderNickname", component: GroupDetail },
+    {
+      name: "/groupname",
+      path: "/groupn/:groupId/:groupName/:leaderNickname",
+      component: GroupNameChange,
+    },
+    {
+      name: "/groupimage",
+      path: "/groupi/:groupId/:groupName/:leaderNickname",
+      component: GroupImageChange,
+    },
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
     { path: "/thememap", component: ThemeMap },
     { path: "/favoritelist", component: FavoriteList },
+    { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
     { path: "/map", component: Map },
     { path: "/place", component: Place },
     { path: "/feed", component: Feed },
