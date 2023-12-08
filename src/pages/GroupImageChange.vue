@@ -4,24 +4,28 @@
     <div class="fill">
       <ul>
         <li class="before">
-          <label for="bn">기존 그룹명:</label>&nbsp;
-          <span id="bn">{{ groupName }}</span>
+          <label for="bi">기존 이미지:</label>&nbsp;
+          <img
+            :src="
+              'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
+              this.groupId +
+              '_groupImage.jpg'
+            "
+            alt="기존이미지"
+          />
         </li>
         <li class="after">
-          <label for="an">변경할 그룹명:</label>&nbsp;
+          <label for="ai">변경할 이미지:</label>&nbsp;
+          <img :src="updateImage" alt="바꿀이미지" />
           <input
-            type="text"
-            name="name"
-            id="an"
-            v-model="name"
-            maxlength="20"
-            placeholder="20자 이내로 입력하세요"
+            type="file"
+            name="image"
+            id="ai"
+            v-model="image"
             required
-            @focus="inputPocusHandler"
-          />&nbsp;&nbsp;&nbsp;
-          <button type="button" id="b1" @click="b1ClickHandler">
-            중복 확인
-          </button>
+            @change="updateimageChangeHandler"
+          />
+          <div v-if="fileErrorMsg">{{ fileErrorMsg }}</div>
         </li>
       </ul>
     </div>
@@ -38,10 +42,11 @@ export default {
   name: "GroupImageChange",
   data() {
     return {
-      name: "",
       groupId: "",
       groupName: "",
       leaderNickname: "",
+      updateImage: "../../../public/images/defaultGroupProfile.jpg",
+      fileErrorMsg: null,
     };
   },
   created() {
@@ -60,6 +65,32 @@ export default {
     b3ClickHandler() {
       //변경 취소 버튼 클릭 시
       this.$router.go(-1); // 뒤로가기
+    },
+    updateimageChangeHandler() {
+      const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
+      this.updateImage = url; //$('form.signup img.profile').attr('src', url)
+
+      const fileInput = e.target;
+      const file = fileInput.files[0];
+
+      // 이미지 파일만 허용
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        this.fileErrorMsg = "이미지 파일만 허용됩니다.";
+        fileInput.value = ""; // 파일 선택 초기화
+        return;
+      }
+
+      // 파일 크기 제한 (2MB)
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
+        fileInput.value = ""; // 파일 선택 초기화
+        return;
+      }
+
+      // 유효성 검사를 통과한 경우
+      this.fileErrorMsg = null;
     },
   },
 };
