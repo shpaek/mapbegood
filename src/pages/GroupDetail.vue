@@ -32,7 +32,8 @@
                     <span class="group-member" @click="groupmemberClickHandler">
                         {{leaderNickname}}({{memCnt}})
                     </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16"
+                        @click="personClickHandler">
                         <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
                     </svg>
                     <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
@@ -68,6 +69,18 @@ export default {
             listWriter: '리스트작성자',
             isDropdownOpen: false  // 콤보상자의 상태를 나타내는 데이터,
         }
+    },
+    created() {
+        // $route.params를 통해 전달된 파라미터 확인
+        const groupId = this.$route.params.groupId;
+        const groupName = this.$route.params.groupName;
+        const leaderNickname = this.$route.params.leaderNickname;
+        this.groupId = groupId
+        this.groupName = groupName
+        this.leaderNickname = leaderNickname
+
+        // 확인한 값들을 사용하거나 로그에 출력
+        console.log(groupId, groupName, leaderNickname);
     },
     methods: {
         gearClickHandler() {
@@ -108,21 +121,19 @@ export default {
                     console.log(error)
                     alert("그룹이 삭제되지 않았습니다 ")
                  })
+        },
+        personClickHandler(){
+            this.$router.push({
+                name: '/groupmember',
+                params:{
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            })
         }
 
-    },
-    created() {
-        // $route.params를 통해 전달된 파라미터 확인
-        const groupId = this.$route.params.groupId;
-        const groupName = this.$route.params.groupName;
-        const leaderNickname = this.$route.params.leaderNickname;
-        this.groupId = groupId
-        this.groupName = groupName
-        this.leaderNickname = leaderNickname
-
-        // 확인한 값들을 사용하거나 로그에 출력
-        console.log(groupId, groupName, leaderNickname);
-    },
+    }
 }
 </script>
 <style scoped>
