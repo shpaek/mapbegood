@@ -13,7 +13,12 @@ import java.util.List;
 
 public interface MemberServiceInterface {
 
-    // 로그인 사용자 정보 리턴
+    /**
+     * 로그인 사용자 정보 리턴
+     * @param email
+     * @return
+     * @throws Exception
+     */
     MemberInfoDTO findLoginInfo(String email) throws Exception;
 
     /**
