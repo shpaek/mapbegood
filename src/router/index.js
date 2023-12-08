@@ -8,12 +8,11 @@ import NickChange from "../pages/NickChange.vue";
 import GroupsView from "../pages/GroupsView.vue";
 import GroupCreate from "../pages/GroupCreate.vue";
 import GroupDetail from "../pages/GroupDetail.vue";
-import GroupThemeMapList from "../pages/GroupThemeMapList.vue";
+// import GroupThemeMapList from "../pages/GroupThemeMapList.vue";
 import GroupThemeMap from "../pages/GroupThemeMap.vue";
 import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
 import FavoriteList from "../pages/FavoriteList.vue";
-import FavoriteAdd from "../pages/FavoriteAdd.vue";
 import Place from "../pages/Place.vue";
 import Feed from "../pages/Feed.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
@@ -51,11 +50,8 @@ const router = createRouter({
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
     { path: "/thememap", component: ThemeMap },
-    { path: "/favoritelist", component: FavoriteList },
-<<<<<<< HEAD
-    { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
-=======
->>>>>>> a5efb55 (rollback)
+    // { path: "/favoritelist", component: FavoriteList },
+    // { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
     { path: "/map", component: Map },
     { path: "/place", component: Place },
     { path: "/feed", component: Feed },
