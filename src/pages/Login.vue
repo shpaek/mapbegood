@@ -91,6 +91,7 @@
 
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "login",
@@ -108,7 +109,12 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(["user"]),
+  },
   methods: {
+    ...mapActions(["loginUser"]),
+
     loginFormSubmitHandler() {
       if (this.checked) {
         localStorage.setItem("mapbegoodId", this.email);
@@ -126,34 +132,35 @@ export default {
         return;
       }
 
-      const url = `${this.backURL}/auth`;
       let data = {
         email: `${this.email}`,
         password: `${this.password}`,
       };
 
-      axios
-        .post(url, data, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          if (response.status == 200) {
-            const accessToken = response.headers.authorization;
-            const refreshToke = response.headers.refresh;
+      // axios
+      //   .post(url, data, {
+      //     withCredentials: true,
+      //   })
+      //   .then((response) => {
+      //     if (response.status == 200) {
+      //       const accessToken = response.headers.authorization;
+      //       const refreshToke = response.headers.refresh;
 
-            axios.defaults.headers.common["Authorization"] = accessToken;
-            localStorage.setItem("mapbegoodToken", accessToken);
-            localStorage.setItem("refresh", refreshToke);
+      //       axios.defaults.headers.common["Authorization"] = accessToken;
+      //       localStorage.setItem("mapbegoodToken", accessToken);
+      //       localStorage.setItem("refresh", refreshToke);
 
-            alert("로그인 성공");
-            location.href = "/";
+      //       alert("로그인 성공");
+      //       location.href = "/";
 
-            console.log(axios.defaults.headers.common);
-          }
-        })
-        .catch((error) => {
-          alert("로그인 실패");
-        });
+      //       console.log(axios.defaults.headers.common);
+
+      //       this.$store.dispacer;
+      //     }
+      //   })
+      //   .catch(() => {
+      //     alert("로그인 실패");
+      //   });
     },
   },
   created() {
