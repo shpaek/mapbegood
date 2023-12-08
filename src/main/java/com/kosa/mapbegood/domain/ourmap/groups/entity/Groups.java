@@ -35,12 +35,10 @@ public class Groups {
 //	@OneToMany(mappedBy = "", cascade = CascadeType.REMOVE)
 //	private List<MemberGroup> memberList;
 	
-	@OneToMany(cascade = CascadeType.REMOVE)
-	@JoinColumn(name = "groupId")
+	@OneToMany(mappedBy = "groupId", cascade = CascadeType.REMOVE)
 	private List<Waiting> waitingList;
 	
-	@OneToMany(cascade = CascadeType.REMOVE)
-	@JoinColumn(name = "groupId")
+	@OneToMany(mappedBy = "groupId", cascade = CascadeType.REMOVE)
 	private List<GroupThememap> groupThememapList;
 	
 	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="id.groupsId")

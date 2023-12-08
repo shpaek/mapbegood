@@ -34,7 +34,9 @@ public class GroupThememap {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_thememap_seq_gener")
 	private Long id;
 	
-	private Long groupId;
+	@ManyToOne
+	@JoinColumn(name="group_id")
+	private Groups groupId;
 	
 	private String name;
 	
