@@ -4,7 +4,8 @@
         <div class="group" v-for="group in groupList" @click="groupClickHandler(group)">
             <ul>
                 <li>
-                    <img id="i" :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id+'_groupImage.jpg'+ Date()" alt="그룹이미지" class="img-size">
+                    <img id="i" alt="그룹이미지" class="img-size"
+                        :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id+'_groupImage.jpg?'+new Date().getTime()">
                 </li>
                 <li>
                     <span class="group-info">{{group.name}}</span>
@@ -65,14 +66,13 @@ export default {
                 //사용자의 그룹 목록 받기
                 const list = response.data
                 this.groupList = list
-                console.log(response.data)
-                // console.log("---start----") 
-                // console.log(this.groupList)
-                // console.log("---end----")
+                if( this.groupList.length<1){
+                    this.emptyMsg='소속된 그룹이 없습니다'
+                }
             })
             .catch(error => {
                 console.log(error)
-                this.emptyMsg = '소속된 그룹이 없습니다'
+                this.emptyMsg = '그룹을 불러올 수 없습니다'
             })
     }
 }

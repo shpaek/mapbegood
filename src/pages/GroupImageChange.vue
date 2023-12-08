@@ -51,7 +51,7 @@ export default {
     name:"GroupImageChange",
     data(){
         return{
-            groupId: '',
+            groupId: 0,
             groupName: '',
             leaderNickname: '',
             image: '../../../public/images/defaultGroupProfile.jpg',

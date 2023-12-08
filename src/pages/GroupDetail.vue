@@ -4,7 +4,7 @@
         <div class="group-info">
             <ul>
                 <li class="img">   
-                    <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+this.groupId+'_groupImage.jpg'" alt="그룹이미지"/>             
+                    <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+this.groupId+'_groupImage.jpg?'+new Date().getTime()" alt="그룹이미지"/>             
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"
                         @click="gearClickHandler">
                         <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -54,11 +54,12 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
     name: "GroupDetail",
     data() {
         return {
-            groupId: '',
+            groupId: 0,
             groupName: '그룹명',
             listCnt: 0,
             leaderNickname: '그룹장',
@@ -93,7 +94,20 @@ export default {
             });
         },
         deleteGroupClickHandler(){
-
+            const url = `http://localhost:8080/mapbegood/group/${this.groupId}`
+            
+            const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
+            axios.defaults.headers.common["Authorization"] = accessToken;
+            
+            axios.delete(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
+                 .then(response => {
+                    alert("그룹이 삭제되었습니다")
+                    location.href = '/groups'
+                 })
+                 .catch(error => {
+                    console.log(error)
+                    alert("그룹이 삭제되지 않았습니다 ")
+                 })
         }
 
     },
@@ -124,6 +138,7 @@ ul {
 
 li.img {
     position: relative;
+    height: 150px;
 }
 
 li.img svg.bi-gear {
