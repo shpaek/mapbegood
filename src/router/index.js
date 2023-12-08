@@ -50,7 +50,7 @@ const router = createRouter({
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
     { path: "/thememap", component: ThemeMap },
-    // { path: "/favoritelist", component: FavoriteList },
+    { path: "/favoritelist", component: FavoriteList },
     // { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
     { path: "/map", component: Map },
     { path: "/place", component: Place },
