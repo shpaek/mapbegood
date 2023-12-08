@@ -1,7 +1,6 @@
-<template>
+<template lang="">
   <Main />
 </template>
-
 <script>
 import Main from "./components/Main.vue";
 import Map from "./pages/Map.vue";
@@ -9,7 +8,6 @@ import Map from "./pages/Map.vue";
 
 export default {
   name: "App",
-
   components: {
     Main,
     Map,
@@ -21,12 +19,6 @@ export default {
       console.log("Centering map to:", position);
     },
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>
-
-<style scoped>
-</style>
+<style lang=""></style>

@@ -92,9 +92,14 @@ export default {
       // 유효성 검사를 통과한 경우
       this.fileErrorMsg = null;
     },
-  },
-};
+    methods: {
+        b3ClickHandler() { //변경 취소 버튼 클릭 시
+            this.$router.go(-1); // 뒤로가기
+        },
+    }
+}
 </script>
+
 <style scoped>
 div.fill {
   display: flex;

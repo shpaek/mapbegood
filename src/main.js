@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store/store";
 
+<<<<<<< HEAD
 // Vuetify
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
@@ -14,6 +15,8 @@ const vuetify = createVuetify({
   directives,
 });
 
+=======
+>>>>>>> a5efb55 (rollback)
 const app = createApp(App);
 app.use(router);
 app.use(store);

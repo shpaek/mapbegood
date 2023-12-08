@@ -115,7 +115,29 @@ export default {
           groupName: this.groupName,
           leaderNickname: this.leaderNickname,
         },
-      });
+        updateImageClickHandler(){ //그룹이미지 변경하러 이동
+            this.$router.push({
+                name: '/groupimage', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
+        },
+        updateNameClickHandler(){ //그룹명 변경하러 이동
+            this.$router.push({
+                name: '/groupname', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
+        },
+        deleteGroupClickHandler(){
+
+        }
     },
     updateNameClickHandler() {
       //그룹명 변경하러 이동
