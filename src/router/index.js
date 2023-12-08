@@ -8,6 +8,7 @@ import NickChange from "../pages/NickChange.vue";
 import GroupsView from "../pages/GroupsView.vue";
 import GroupCreate from "../pages/GroupCreate.vue";
 import GroupDetail from "../pages/GroupDetail.vue";
+import GroupThemeMapList from "../pages/GroupThemeMapList.vue";
 import GroupThemeMap from "../pages/GroupThemeMap.vue";
 import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
@@ -29,6 +30,7 @@ const router = createRouter({
     { path: "/pwdfind", component: PasswordFind },
     { path: "/pwdchange", component: PasswordChange },
     { path: "/nickchange", component: NickChange },
+
     // { path: "/group", component: GroupView },
     { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
@@ -44,6 +46,7 @@ const router = createRouter({
       path: "/groupi/:groupId/:groupName/:leaderNickname",
       component: GroupImageChange,
     },
+
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },

@@ -131,7 +131,6 @@ export default {
         this.$refs.password.focus();
         return;
       }
-
       let data = {
         email: `${this.email}`,
         password: `${this.password}`,
