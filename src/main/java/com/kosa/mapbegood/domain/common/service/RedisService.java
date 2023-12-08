@@ -38,8 +38,8 @@ public class RedisService {
         return (String) values.get(key);
     }
 
-    public void deleteValues(String key) {
-        redisTemplate.delete(key);
+    public boolean deleteValues(String key) {
+        return redisTemplate.delete(key);
     }
 
     public void expireValues(String key, int timeout) {

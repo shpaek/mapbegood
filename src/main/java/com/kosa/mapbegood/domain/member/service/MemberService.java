@@ -32,7 +32,6 @@ public class MemberService implements MemberServiceInterface {
 	private static final String AUTH_CODE_PREFIX = "AuthCode ";
 	private final PasswordEncoder pwEncoder;
 	private final MemberRepository repository;
-//	private final ThemeMapService themeMapService;
 	private final MailService mailService;
 	private final RedisService redisService;
 	private final AwsS3Service awsS3Service;
@@ -99,7 +98,7 @@ public class MemberService implements MemberServiceInterface {
 	public void verifyPassword(String email, String password) throws Exception {
 		try {
 			Member member = findMember(email);
-			if (!member.getPassword().equals(pwEncoder.encode(password))) {
+			if (!pwEncoder.matches(password, member.getPassword())) {
 				throw new Exception();
 			};
 		} catch (Exception e) {
@@ -147,11 +146,11 @@ public class MemberService implements MemberServiceInterface {
 
 	@Override
 	public void sendCodeToEmail(String email) throws Exception {
-		findMember(email);
-		String title = "[MapBeGood] Email Verification String";
+		Member member = findMember(email);
+		String title = "[MapBeGood] " + member.getNickname() + "님 인증번호 안내드립니다.";
 		String authCode = RandomStringUtils.randomAlphanumeric(10);
 		try {
-			mailService.sendEmail(email, title, authCode);
+			mailService.sendEmail(email, title, authCode, member.getNickname());
 		} catch (Exception e) {
 			log.error("이메일 전송 Error: " + e.getMessage());
 			throw new Exception();
@@ -171,23 +170,24 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public boolean verifiedCode(String email, String authCode) throws Exception {
 		try {
+			log.error("인증용 getKey: " + AUTH_CODE_PREFIX + email);
 			String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
-			return redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode);
+			if (redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode)) {
+				redisService.deleteValues(AUTH_CODE_PREFIX + email);
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			log.error("이메일 인증코드 Error: " + e.getMessage());
 			throw new Exception();
 		}
 	}
 
-	// TODO: 2023-11-29  
 	@Override
-	public List<String> searchMember(String email, String nickName) throws Exception {
+	public List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception {
 		findMember(email);
-
-		List<Member> memberList = repository.findAllByNickname(nickName);
-//		List<ThemeMapResponseDTO> themeMap = themeMapService.tsdf;
-//		List<MemberSearchResponseDTO>  = mapper(themeMap);
-		return null;
+		return repository.memberSearch(nickName);
 	}
 
 	@Override
@@ -201,5 +201,4 @@ public class MemberService implements MemberServiceInterface {
 			throw new RemoveException();
 		}
 	}
-
 }

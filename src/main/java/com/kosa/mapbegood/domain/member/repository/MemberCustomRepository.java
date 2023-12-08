@@ -1,5 +1,9 @@
 package com.kosa.mapbegood.domain.member.repository;
 
-public interface MemberCustomRepository {
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 
+import java.util.List;
+
+public interface MemberCustomRepository {
+    List<MemberSearchResponseDTO> memberSearch(String nick);
 }

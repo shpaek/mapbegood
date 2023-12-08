@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.member.service;
 
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
@@ -84,7 +85,7 @@ public interface MemberServiceInterface {
     /**
      * 사용자 nickname 검색
      */
-    List<String> searchMember(String email, String nickName) throws Exception;
+    List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception;
 
     /**
      * 회원 탈퇴

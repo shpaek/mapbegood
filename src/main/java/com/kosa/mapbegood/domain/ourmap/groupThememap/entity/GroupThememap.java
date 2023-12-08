@@ -7,9 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
 
 import lombok.Data;
@@ -17,10 +21,17 @@ import lombok.Data;
 @Data
 @Entity
 @Table
+@SequenceGenerator(
+		   name = 
+		       "group_thememap_seq_gener", // 사용할 sequence 이름
+		   sequenceName =
+		         "GROUP_THEMEMAP_SEQ", // 실제 데이터베이스 sequence 이름
+		   initialValue = 1, allocationSize = 1
+		)
 public class GroupThememap {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_thememap_seq_gener")
 	private Long id;
 	
 	private Long groupId;

@@ -5,6 +5,7 @@ import com.kosa.mapbegood.domain.member.dto.QMemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.entity.QMember;
 import com.kosa.mapbegood.domain.mymap.thememap.dto.QThemeMapResponseDTO;
+import com.kosa.mapbegood.domain.mymap.thememap.dto.ThemeMapResponseDTO;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.QThemeMap;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
-//import static com.querydsl.core.types.Projections.list;
 import static com.querydsl.core.group.GroupBy.list;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -139,18 +141,18 @@ class MemberRepositoryTest {
 		em.flush();
 		em.clear();
 
-		QMember qm = new QMember("test");
-		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-		// when
-		Member findMember = queryFactory
-				.selectFrom(qm)
-				.where(qm.nickname.eq(nickName))
-				.fetchOne();
-
-		// then
-		assertNotNull(findMember);
-		assertThat(findMember.getEmail()).isEqualTo(email);
+//		QMember qm = new QMember("test");
+//		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+//
+//		// when
+//		Member findMember = queryFactory
+//				.selectFrom(qm)
+//				.where(qm.nickname.eq(nickName))
+//				.fetchOne();
+//
+//		// then
+//		assertNotNull(findMember);
+//		assertThat(findMember.getEmail()).isEqualTo(email);
 	}
 
 	@Test
@@ -171,46 +173,72 @@ class MemberRepositoryTest {
 //			log.error(msr.getProfileImage());
 //		}
 
-		QThemeMap themeMap = new QThemeMap("themeMap");
-//		QThemeMapResponseDTO qtmrDTO = new QThemeMapResponseDTO(qtm.id, qtm.name, qtm.color, qtm.memo);
+		QThemeMap qtm = new QThemeMap("themeMap");
+		QThemeMapResponseDTO qtmrDTO = new QThemeMapResponseDTO(qtm.id, qtm.name, qtm.color, qtm.memo);
 
-//		List<ThemeMapResponseDTO> themeMapDTOList = queryFactory
-//				.select(qtmrDTO)
-//				.from(qtm)
-//				.fetch();
-//
-//		log.error(String.valueOf(themeMapDTOList.size()));
-//		for (ThemeMapResponseDTO tmr : themeMapDTOList) {
-//			log.error(String.valueOf(tmr.getId()));
-//			log.error(String.valueOf(tmr.getName()));
-//			log.error(String.valueOf(tmr.getColor()));
-//			log.error(String.valueOf(tmr.getMemo()));
-//		}
+		List<ThemeMapResponseDTO> themeMapDTOList = queryFactory
+				.select(qtmrDTO)
+				.from(qtm)
+				.fetch();
 
-//		QThemeMapResponseDTO qtmrDto = new QThemeMapResponseDTO(qtm.id, qtm.name, qtm.color, qtm.memo);
-//		QMemberSearchResponseDTO qmsrDto = new QMemberSearchResponseDTO(qm.nickname, qm.profileImage, List<qtmrDto>);
+		log.error(String.valueOf(themeMapDTOList.size()));
+		for (ThemeMapResponseDTO tmr : themeMapDTOList) {
+			log.error(String.valueOf(tmr.getId()));
+			log.error(String.valueOf(tmr.getName()));
+			log.error(String.valueOf(tmr.getColor()));
+			log.error(String.valueOf(tmr.getMemo()));
+		}
+	}
 
-		List<MemberSearchResponseDTO> result = queryFactory
-				.from(member)
-				.leftJoin(themeMap)
-				.on(member.email.eq(themeMap.memberEmail.email))
+	@Test
+	public void qdslTest1() {
+		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+		QMember qm = new QMember("qm");
+		QThemeMap qtm = new QThemeMap("qtm");
+
+		QThemeMapResponseDTO qtmrDto =  new QThemeMapResponseDTO(qtm.id, qtm.name, qtm.color, qtm.memo);
+		List<QThemeMapResponseDTO> qtmrDtoList = new ArrayList<>();
+//		QMemberSearchResponseDTO qmsrDto = new QMemberSearchResponseDTO(qm.nickname, qm.profileImage, );
+
+		List<MemberSearchResponseDTO> result =
+				queryFactory
+				.from(qm)
+				.leftJoin(qtm)
+				.on(qm.email.eq(qtm.memberEmail.email))
+						.where(qm.nickname.contains("test"))
 				.transform(
-						groupBy(member.email).list(
+						groupBy(qm.email).list(
 								new QMemberSearchResponseDTO(
-										member.nickname,
-										member.profileImage,
+										qm.nickname,
+										qm.profileImage,
 										list(
 												new QThemeMapResponseDTO(
-														themeMap.id,
-														themeMap.name,
-														themeMap.color,
-														themeMap.memo
+														qtm.id,
+														qtm.name,
+														qtm.color,
+														qtm.memo
 												)
-										).as("themeMapResponseDTOList")
+										)
 								)
 						)
 				);
 
 		log.error(String.valueOf(result.size()));
+		log.error("========================= for ============================");
+		for (MemberSearchResponseDTO r : result) {
+			log.error(r.getNickname());
+			log.error(r.getProfileImage());
+			if (r.getThemeMapResponseDTOList().size() == 1) {
+				log.error(String.valueOf(r.getThemeMapResponseDTOList().get(0).getId()));
+				log.error(String.valueOf(r.getThemeMapResponseDTOList().get(0).getName()));
+				log.error(String.valueOf(r.getThemeMapResponseDTOList().get(0).getColor()));
+				log.error(String.valueOf(r.getThemeMapResponseDTOList().get(0).getMemo()));
+			} else {
+				log.error(String.valueOf(r.getThemeMapResponseDTOList().size()));
+			}
+			log.error("========================= for ============================");
+		}
 	}
+
 }

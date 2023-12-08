@@ -1,26 +1,40 @@
 package com.kosa.mapbegood.domain.member.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kosa.mapbegood.domain.common.response.Response;
-import com.kosa.mapbegood.domain.common.service.AwsS3Service;
-import com.kosa.mapbegood.domain.member.dto.*;
+import com.kosa.mapbegood.domain.member.dto.MemberEmailDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberEmailVerifyDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberNickNameDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberPassDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.security.refresh.RefreshTokenService;
 import com.kosa.mapbegood.util.AuthenticationUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -134,18 +148,17 @@ public class MemberController {
 		}
 	}
 
-	// TODO: 2023-11-30
 	// 사용자 검색
 	@GetMapping("/user")
-	public ResponseEntity searchMember(Authentication authentication,
-									   @Valid @RequestParam("nickName") String nickName) {
+	public ResponseEntity<List<MemberSearchResponseDTO>> searchMember(Authentication authentication,
+																	  @Valid @RequestParam("nickName") String nickName) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
-			List<String> nickNameList = service.searchMember(email, nickName);
+			List<MemberSearchResponseDTO> memberSearchResult = service.searchMember(email, nickName);
+			return ResponseEntity.ok(memberSearchResult);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 	// 회원 탈퇴

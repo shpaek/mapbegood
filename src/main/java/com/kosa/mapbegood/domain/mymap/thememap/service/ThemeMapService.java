@@ -27,7 +27,7 @@ public class ThemeMapService {
     
     /**
      * 
-     * 테마지도 검색 
+     * 테마지도 검색 o
      * 
      * 설명: 테마지도에서 show가 되어 있는 것(공개테마지도)중에 테마지돟이름으로 검색이 가능하게 해야한다.
      * @param email
@@ -35,7 +35,6 @@ public class ThemeMapService {
      * @return
      * @throws FindException
      */
-     
     public List<ThemeMapDto> searchThemeMap(String name) throws FindException{//ThemeMapDto themeMapDto) {
 //        if (themeMapDto.getName() != null && !themeMapDto.getName().isEmpty()) {
             //  이름으로 검색
@@ -50,38 +49,8 @@ public class ThemeMapService {
 //            return null;
 //        }
     }
-    
-    
     /**
-     * 테마지도 내의 장소 복붙 
-     * 설명: 공개테마지도에서 마음에 드는 테마지도를 복사 붙혀넣기 한다.
-     * @param email
-     * @param themeMapDto
-     * @return
-     * @throws FindException
-     */
-    public ThemeMapDto copyMyplace( ){
-    	
-    	return null; 
-    }  
-    /**
-     * 설명: 공개 테마지도(show가true인 것)중에서 나의 장소로 리스트가 생성 가능하게 해야한다.
-     * 테마지도 내 장소로 새 리스트 생성
-     * @param email
-     * @param themeMapDto
-     * @return
-     * @throws FindException
-     */
-    public ThemeMapDto bringMyPlace() {
-    	return null; 
-
-    }
-    
-    
-    
-    
-    /**
-     * 테마맵 생성
+     * 테마맵 생성 o
      * @param email
      * @param themeMapDto
      * @return
@@ -90,7 +59,7 @@ public class ThemeMapService {
    
     public ThemeMapDto createThemeMap(String email, ThemeMapDto themeMapDto) throws FindException {
     	Optional<Member> optMember = memberRepository.findById(email);
-    	Member findMember = optMember.orElseThrow(() -> new FindException());
+    	Member findMember = optMember.orElseThrow(() -> new FindException("멤버가 없어용"));
     	
     	ThemeMap themeMap = ThemeMapMapper.toEntity(themeMapDto);
     	themeMap.setMemberEmail(findMember);
@@ -98,38 +67,29 @@ public class ThemeMapService {
         ThemeMap savedThemeMap = themeMapRepository.save(themeMap);
         return ThemeMapMapper.toDto(savedThemeMap);
     }
+    
+ // 테마맵 조회 (ID로) o
+    public ThemeMapDto getThemeMapById(String email, Long themeMapId) throws FindException {
+        Optional<Member> optMember = memberRepository.findById(email);
+        Member findMember = optMember.orElseThrow(() -> new FindException("멤버가 없어용"));
 
-    // 테마맵 조회 (ID로)
-    public ThemeMapDto getThemeMapById(Long themeMapId) throws FindException{
-//    	Optional<Member> optMember = memberRepository.findById(email);
-//    	Member findMember = optMember.orElseThrow(() -> new FindException());
-//
-//        if(optDto.isPresent()){
-//        	ThemeMapDto dto = optDto.get();
-//        	dto.getMemberEmail().setPassword(null);
-//        	return dto;
-//        }else{
-//        	throw new FindException("테마지도가 없습니다");
-//        }
-        //return optionalThemeMap.map(ThemeMapMapper::toDto).orElse(null);
-    	Optional<ThemeMap> opttm = themeMapRepository.findById(themeMapId);
-    	if(opttm.isPresent()) {
-    		ThemeMap tm = opttm.get();
-    		return ThemeMapMapper.toDto(tm);
-    		
-    	}else {
-    		throw new FindException("테마지도가 없습니다");
-    	}
+        Optional<ThemeMap> optionalThemeMap = themeMapRepository.findByIdAndMemberEmail(themeMapId, findMember);
+        if (optionalThemeMap.isPresent()) {
+            ThemeMap themeMap = optionalThemeMap.get();
+            return ThemeMapMapper.toDto(themeMap);
+        } else {
+            throw new FindException("테마맵을 찾을 수 없습니다. ID: " + themeMapId);
+        }
     }
 
-    // 테마맵 삭제
+    // 테마맵 삭제o 
     public void deleteThemeMap(String email,Long themeMapId) {
         themeMapRepository.deleteById(themeMapId);
     }
 
-    // 테마맵 수정
-    public ThemeMapDto updateThemeMap(String email,ThemeMapDto themeMapDto) {
-        Optional<ThemeMap> optionalThemeMap = themeMapRepository.findById(themeMapDto.getId());
+ // 테마맵 수정 o
+    public ThemeMapDto updateThemeMap(String email, Long themeMapId, ThemeMapDto themeMapDto) throws FindException {
+        Optional<ThemeMap> optionalThemeMap = themeMapRepository.findById(themeMapId);
         if (optionalThemeMap.isPresent()) {
             ThemeMap existingThemeMap = optionalThemeMap.get();
             
@@ -140,20 +100,34 @@ public class ThemeMapService {
             existingThemeMap.setMainmap(themeMapDto.getShow());
             existingThemeMap.setShow(themeMapDto.getShow());
              
-
             // 필요한 필드들을 업데이트
             ThemeMap updatedThemeMap = themeMapRepository.save(existingThemeMap);
             return ThemeMapMapper.toDto(updatedThemeMap);
+        } else {
+            throw new FindException("테마맵을 찾을 수 없습니다. ID: " + themeMapId);
         }
-		return themeMapDto;
-      
     }
+    /*
+     * auth 토큰으로 이메일을 받아와서 그 이메일에 해당하는 자신이 가진 모든 thememap을 list로 보여주기.
+     * **/
+    // 모든 테마맵 조회 o
+    public List<ThemeMapDto> getAllThemeMaps(String email) throws FindException {
+    	Optional<Member> optMember = memberRepository.findById(email);
+    	  if (optMember.isPresent()) {
+              Member member = optMember.get();
+              List<ThemeMap> themeMaps = themeMapRepository.findByMemberEmail(member);
 
-    // 모든 테마맵 조회
-    public List<ThemeMapDto> getAllThemeMaps(Member m) {
-        List<ThemeMap> themeMapList = themeMapRepository.findByMemberEmail(m);
-        return themeMapList.stream()
-                .map(ThemeMapMapper::toDto)
-                .collect(Collectors.toList());
+              // ThemeMap을 ThemeMapDto로 변환
+              List<ThemeMapDto> themeMapDtos = themeMaps.stream()
+                      .map(ThemeMapMapper::toDto)
+                      .collect(Collectors.toList());
+
+              return themeMapDtos;
+          } else {
+              // 회원을 찾을 수 없는 경우 예외 처리 또는 빈 리스트 반환
+              throw new FindException("회원을 찾을 수 없습니다.");
+          }
+    	
+    	
     }
 }
