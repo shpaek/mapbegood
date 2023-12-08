@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.member.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
@@ -53,13 +54,10 @@ public class MemberService implements MemberServiceInterface {
 
 		if (!redisService.checkExistsValue(loginInfo)) {
 			Member member = this.findMember(email);
-			MemberInfoDTO memberInfoDTO = mapper.MemberToMemberInfoDTO(member);
-			String memberInfoJson = objectMapper.writeValueAsString(memberInfoDTO);
-			redisService.setValues(loginInfo, memberInfoJson, Duration.ofMillis(DURATION_CACHE));
-			return memberInfoDTO;
+			this.loginInfoRedisSave(member);
+			return mapper.MemberToMemberInfoDTO(member);
 		} else {
-			String memberInfoJson = redisService.getValues(loginInfo);
-			return objectMapper.readValue(memberInfoJson, MemberInfoDTO.class);
+			return objectMapper.readValue(loginInfo, MemberInfoDTO.class);
 		}
 	}
 
@@ -136,6 +134,7 @@ public class MemberService implements MemberServiceInterface {
 			Member member = this.findMember(email);
 			member.setNickname(nickName);
 			repository.save(member);
+			this.loginInfoRedisSave(member);
 		} catch (Exception e) {
 			log.error("닉네임 수정 Error: " + e.getMessage());
 			throw new ModifyException();
@@ -161,6 +160,7 @@ public class MemberService implements MemberServiceInterface {
 			Member member = this.findMember(email);
 			member.setProfileImage(imageUrl);
 			repository.save(member);
+			this.loginInfoRedisSave(member);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			throw new ModifyException();
@@ -223,5 +223,12 @@ public class MemberService implements MemberServiceInterface {
 			log.error("회원탈퇴 Error: " + e.getMessage());
 			throw new RemoveException();
 		}
+	}
+
+	private void loginInfoRedisSave(Member member) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		MemberInfoDTO memberInfoDTO = mapper.MemberToMemberInfoDTO(member);
+		String memberInfoJson = objectMapper.writeValueAsString(memberInfoDTO);
+		redisService.setValues(LOGIN_CACHE + member.getEmail(), memberInfoJson, Duration.ofMillis(DURATION_CACHE));
 	}
 }

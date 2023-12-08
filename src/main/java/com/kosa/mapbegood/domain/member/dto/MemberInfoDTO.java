@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberInfoDTO implements Serializable {
+public class MemberInfoDTO implements Serializable{
     private String email;
     private String nickName;
     private String profileImage;

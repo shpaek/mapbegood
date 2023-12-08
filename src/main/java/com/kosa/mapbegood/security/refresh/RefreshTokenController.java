@@ -20,13 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Slf4j
-@RequestMapping("/refresh")
 @RestController
 @RequiredArgsConstructor
 public class RefreshTokenController {
     private final RefreshTokenService service;
 
-    @PostMapping
+    @PostMapping("/refresh")
     public ResponseEntity<String> refreshAccessToken(HttpServletRequest request) {
         try {
             String refreshTokenHeader = request.getHeader("Refresh");
@@ -42,7 +41,7 @@ public class RefreshTokenController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         try {
             String refreshTokenBearer = request.getHeader("Refresh");

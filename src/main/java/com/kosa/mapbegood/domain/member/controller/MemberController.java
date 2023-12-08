@@ -42,7 +42,7 @@ public class MemberController {
 	private final RefreshTokenService refreshTokenService;
 
 	// 로그인 정보
-	@GetMapping("/auth")
+	@GetMapping("/login-info")
 	public ResponseEntity getLoginInfo(Authentication authentication) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
