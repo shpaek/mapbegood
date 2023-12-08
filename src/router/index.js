@@ -13,6 +13,7 @@ import GroupThemeMap from "../pages/GroupThemeMap.vue";
 import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
 import FavoriteList from "../pages/FavoriteList.vue";
+import FavoriteAdd from "../pages/FavoriteAdd.vue";
 import Place from "../pages/Place.vue";
 import Feed from "../pages/Feed.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
