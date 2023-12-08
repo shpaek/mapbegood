@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.kosa.mapbegood.domain.common.service.RedisService;
+import com.kosa.mapbegood.domain.member.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,12 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosa.mapbegood.domain.common.response.Response;
-import com.kosa.mapbegood.domain.member.dto.MemberEmailDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberEmailVerifyDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberNickNameDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberPassDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
@@ -44,6 +40,19 @@ public class MemberController {
 	private final AuthenticationUtil authenticationUtil;
 	private final MemberMapper mapper;
 	private final RefreshTokenService refreshTokenService;
+
+	// 로그인 정보
+	@GetMapping("/auth")
+	public ResponseEntity getLoginInfo(Authentication authentication) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			MemberInfoDTO memberInfoDTO = service.findLoginInfo(email);
+        	return new ResponseEntity<>(memberInfoDTO, HttpStatus.OK);
+        } catch (Exception e) {
+			log.error("로그인 사용자 Redis 조회 Error: " + e.getMessage());
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+	}
 
 	// 회원 가입
 	@PostMapping("/signup")
