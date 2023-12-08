@@ -17,7 +17,6 @@ import Feed from "../pages/Feed.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
-import FavoriteAdd from "../pages/FavoriteAdd.vue";
 import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
 
@@ -42,13 +41,11 @@ const router = createRouter({
     { path: "/thememaplist", component: ThemeMapList },
     { path: "/thememap", component: ThemeMap },
     { path: "/favoritelist", component: FavoriteList },
-    { path: "/favoriteadd", component: FavoriteAdd },  // 새로운 FavoriteAdd 컴포넌트 추가
     { path: "/map", component: Map },
     { path: "/place", component: Place },
     { path: "/feed", component: Feed },
     { path: "/members", component: MemberInfo },
     { path: "/groupmembers", component: GroupMember },
-    { path: "/favoriteadd", component: FavoriteAdd },
 
     //동적라우팅 방법
     // {path: '/members/:id', component: MemberInfo}
