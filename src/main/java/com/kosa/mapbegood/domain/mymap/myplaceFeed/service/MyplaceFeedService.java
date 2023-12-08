@@ -24,37 +24,15 @@ public class MyplaceFeedService implements MyplaceFeedServiceInterface {
     @Autowired
     private MyplaceFeedMapper mapper;
 
-    /**
-     * 내 피드를 조회할 수 있다
-     * @param myplaceId 마이플레이스id
-     * @return 피드
-     * @throws FindException
-     */
-<<<<<<< HEAD
-    public MyplaceFeed findMyFeedById(Long myplaceId) throws FindException {
+    public MyplaceFeedDTO findMyFeedById(Long myplaceId) throws FindException {
             Optional<MyplaceFeed> feed = mfr.findById(myplaceId);
             if (feed.isPresent()) {
-                return feed.get();
+                return mapper.MyplaceToMyplaceFeedDTO(feed.get());
             } else {
                 throw new FindException("해당 피드를 찾을 수 없습니다");
             }
-=======
-    public MyplaceFeedDTO findMyFeedById(Long myplaceId) throws FindException {
-        Optional<MyplaceFeed> feed = mfr.findById(myplaceId);
-        MyplaceFeedDTO feedDto = new MyplaceFeedDTO();
-        feedDto.setMyplaceId(myplaceId);
-//        feedDto.setMemberNickname(String.valueOf(feed.get().getMemberNickname()));
-        feedDto.setContent(feed.get().getContent());
-//        feedDto.setCreatedAt(feed.get().getCreatedAt());
-        return feedDto;
->>>>>>> 32c2621344c0c3f09934b5398f2cab9050837280
     }
 
-    /**
-     * 내 피드를 생성할 수 있다
-     * @param feedDto 피드
-     * @throws AddException
-     */
     public void createMyFeed(MyplaceFeedDTO feedDto) throws AddException {
         MyplaceFeed mf = mapper.MyplaceFeedDTOtoMyplaceFeed(feedDto);
         try {
@@ -64,13 +42,6 @@ public class MyplaceFeedService implements MyplaceFeedServiceInterface {
         }
     }
 
-
-    /**
-     * 내 피드를 수정할 수 있다
-     * @param feedDto 피드
-     * @throws FindException
-     * @throws AddException
-     */
     public void updateMyFeed(MyplaceFeedDTO feedDto) throws FindException, ModifyException {
         Optional<MyplaceFeed> feed = mfr.findById(feedDto.getMyplaceId());
         if (feed.isPresent()) {
@@ -89,11 +60,6 @@ public class MyplaceFeedService implements MyplaceFeedServiceInterface {
         }
     }
 
-    /**
-     * 내 피드를 삭제할 수 있다
-     * @param feedId 마이플레이스id
-     * @throws RemoveException
-     */
     public void deleteMyFeed(Long feedId) throws RemoveException, FindException {
         Optional<MyplaceFeed> feed = mfr.findById(feedId);
         if (feed.isPresent()) {

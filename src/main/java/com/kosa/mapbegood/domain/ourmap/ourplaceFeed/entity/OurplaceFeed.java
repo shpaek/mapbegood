@@ -29,6 +29,8 @@ public class OurplaceFeed extends AuditEntity {
 	@JoinColumn(name = "email")
 	@MapsId("email")
 	private Member member;
+
+	private Long GroupId;
 	
 	private String content;
 }

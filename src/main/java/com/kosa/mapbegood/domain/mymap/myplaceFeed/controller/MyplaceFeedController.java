@@ -2,20 +2,19 @@ package com.kosa.mapbegood.domain.mymap.myplaceFeed.controller;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.dto.MyplaceFeedDTO;
-import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.service.MyplaceFeedServiceInterface;
 import com.kosa.mapbegood.exception.AddException;
-import com.kosa.mapbegood.exception.FindException;
-import com.kosa.mapbegood.exception.ModifyException;
-import com.kosa.mapbegood.exception.RemoveException;
 import com.kosa.mapbegood.util.AuthenticationUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/myfeed")
 public class MyplaceFeedController {
@@ -23,46 +22,61 @@ public class MyplaceFeedController {
 	@Autowired
 	private MyplaceFeedServiceInterface service;
 
-	@Autowired
-	private AuthenticationUtil authenticationUtil;
+	private final AuthenticationUtil authenticationUtil;
 
-	//GET	/myfeed/{myplaceId}
+	// GET /myfeed/{myplaceId}
 	@GetMapping("/{myplaceId}")
-	public MyplaceFeed find(@PathVariable Long myplaceId) throws FindException{
-		return service.findMyFeedById(myplaceId);
+	public ResponseEntity<?> find(@PathVariable Long myplaceId) {
+		try {
+			MyplaceFeedDTO feed = service.findMyFeedById(myplaceId);
+			return ResponseEntity.ok(List.of(feed));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("피드를 찾지 못했습니다");
+		}
 	}
 
-	//POST	/myfeed/{myplaceId}
+	// POST /myfeed/{myplaceId}
 	@PostMapping(value = "/{myplaceId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<?> create(Authentication authentication, @RequestBody MyplaceFeedDTO feedDto) throws AddException {
+	public ResponseEntity<String> create(
+			Authentication authentication,
+			@RequestBody MyplaceFeedDTO feedDto) {
+
 		try {
 			Member memberEmail = new Member();
 			memberEmail.setEmail(authenticationUtil.getUserEmail(authentication));
 			feedDto.setMemberEmail(memberEmail);
+
+			// MyplaceFeed 등록
 			service.createMyFeed(feedDto);
 
-			HttpHeaders headers = new HttpHeaders();
-			headers.add("Content-Type", "text/html;charset=UTF-8");
-			return new ResponseEntity<>("작성완료",
-					headers,
-					HttpStatus.OK);
+			return ResponseEntity.ok("작성완료");
 		} catch (AddException e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작성 실패: " + e.getMessage());
 		}
 	}
 
-	//PUT	/myfeed/{myplaceId}
+	// PUT /myfeed/{myplaceId}
 	@PutMapping(value = "/{myplaceId}", produces = "application/json;charset=UTF-8")
-	public ResponseEntity<?> update(@PathVariable Long myplaceId, @RequestBody MyplaceFeedDTO feedDto) throws ModifyException, FindException {
+	public ResponseEntity<?> update(@PathVariable Long myplaceId, @RequestBody MyplaceFeedDTO feedDto) {
 		feedDto.setMyplaceId(myplaceId);
 
-		service.updateMyFeed(feedDto);
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			service.updateMyFeed(feedDto);
+			return ResponseEntity.ok("수정 완료");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패: " + e.getMessage());
+		}
 	}
 
+	// DELETE /myfeed/{myplaceId}
 	@DeleteMapping("/{myplaceId}")
-	public ResponseEntity<?> delete(@PathVariable Long myplaceId) throws RemoveException, FindException {
-		service.deleteMyFeed(myplaceId);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> delete(@PathVariable Long myplaceId) {
+		try {
+			service.deleteMyFeed(myplaceId);
+			return ResponseEntity.ok("삭제 완료");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패: " + e.getMessage());
+		}
 	}
 }
+

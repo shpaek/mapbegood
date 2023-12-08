@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class OurplaceFeedDTO {
     private Long ourplaceId;
     private String memberEmail;
+    private Long groupId;
     private String content;
     private LocalDateTime createdAt;
 

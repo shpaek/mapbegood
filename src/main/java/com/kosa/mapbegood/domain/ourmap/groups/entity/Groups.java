@@ -1,23 +1,13 @@
 package com.kosa.mapbegood.domain.ourmap.groups.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
+import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed;
 import com.kosa.mapbegood.domain.ourmap.waiting.entity.Waiting;
-
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -46,6 +36,10 @@ public class Groups {
 	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="id.groupsId")
 //	@JoinColumn(name=)
 	private List<MemberGroup> memberGroupList;
+
+	@OneToMany(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "groupId")
+	private List<OurplaceFeed> OurplaceFeedList;
 	
 	public void modifyGroupName(String groupName) {
 		this.name = groupName;

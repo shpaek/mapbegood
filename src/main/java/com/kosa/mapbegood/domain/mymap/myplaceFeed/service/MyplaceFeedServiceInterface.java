@@ -1,7 +1,6 @@
 package com.kosa.mapbegood.domain.mymap.myplaceFeed.service;
 
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.dto.MyplaceFeedDTO;
-import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
@@ -15,7 +14,7 @@ public interface MyplaceFeedServiceInterface {
      * @return 피드
      * @throws FindException
      */
-    public MyplaceFeed findMyFeedById(Long myplaceId) throws FindException;
+    public MyplaceFeedDTO findMyFeedById(Long myplaceId) throws FindException;
 
     /**
      * 내 피드를 생성할 수 있다

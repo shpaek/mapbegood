@@ -1,5 +1,7 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.controller;
 
+import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.service.MemberGroupService;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.dto.OurplaceFeedDTO;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeedEmbedded;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.service.OurplaceFeedService;
@@ -14,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +27,9 @@ public class OurplaceFeedController {
 
     @Autowired
     private OurplaceFeedService service;
+
+    @Autowired
+    private MemberGroupService mgService;
 
     @Autowired
     private AuthenticationUtil authenticationUtil;
@@ -35,27 +42,59 @@ public class OurplaceFeedController {
     }
 
     //GET	/ourfeed/{ourplaceId}
-    @GetMapping("/{ourplaceId}")
-    public List<OurplaceFeedDTO> findAll(Authentication authentication, @PathVariable Long ourplaceId) throws FindException {
-        String email = authenticationUtil.getUserEmail(authentication);
-        OurplaceFeedEmbedded ofid = service.getOurFeedEmId(setOurfeedEmId(ourplaceId, email));
-        return service.findAllOurFeed(List.of(ofid));
+    @GetMapping("/{groupId}/{ourplaceId}")
+    public ResponseEntity<?> findAll(@PathVariable Long groupId, @PathVariable Long ourplaceId) {
+        try {
+            List<MemberGroupDTO> members = mgService.findAllGroupMembersByGroupId(groupId);
+            List<Object> ourFeedList = new ArrayList<>();
+
+            for (MemberGroupDTO member : members) {
+                OurplaceFeedEmbedded ourfeedId = new OurplaceFeedEmbedded();
+                ourfeedId.setOurplaceId(ourplaceId);
+                ourfeedId.setEmail(member.getMember().getEmail());
+
+                OurplaceFeedDTO ourfeedDto = service.findOurFeedById(ourfeedId);
+
+                List<Object> ourFeed = List.of(ourfeedDto);
+                ourFeedList.add(ourFeed);
+            }
+
+            return ResponseEntity.ok(ourFeedList);
+        } catch (FindException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("피드를 찾지 못했습니다");
+        }
     }
+
 
     //GET	/ourfeed/{ourplaceId}/{memberNickname}
     @GetMapping("/{ourplaceId}/{memberNickname}")
-    public OurplaceFeedDTO find(Authentication authentication, @PathVariable Long ourplaceId) throws FindException{
-        String email = authenticationUtil.getUserEmail(authentication);
-        OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
-        return service.findOurFeedById(service.getOurFeedEmId(feedDto));
+    public ResponseEntity<?> find(Authentication authentication, @PathVariable Long ourplaceId) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
+            OurplaceFeedDTO feed = service.findOurFeedById(service.getOurFeedEmId(feedDto));
+
+            String imgId = ourplaceId.toString() + email;
+
+            return ResponseEntity.ok(List.of(feed));
+        } catch (FindException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("피드를 찾지 못했습니다: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());
+        }
     }
+
 
     //POST	/ourfeed/{ourplaceId}/{memberNickname}
     @PostMapping(value = "/{ourplaceId}/{memberNickname}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<?> create(Authentication authentication, @RequestBody OurplaceFeedDTO feedDto) throws AddException {
+    public ResponseEntity<?> create(Authentication authentication, @RequestBody OurplaceFeedDTO feedDto,
+                                    @RequestParam("imageFiles") List<MultipartFile> imageFiles) {
         try {
             String email = authenticationUtil.getUserEmail(authentication);
             feedDto.setMemberEmail(email);
+            String imgId = feedDto.getOurplaceId().toString() + email;
+
+            // OurplaceFeed 등록
             service.createOurFeed(feedDto);
 
             HttpHeaders headers = new HttpHeaders();

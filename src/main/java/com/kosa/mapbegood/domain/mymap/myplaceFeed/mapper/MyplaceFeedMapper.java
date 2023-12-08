@@ -9,4 +9,6 @@ import org.mapstruct.ReportingPolicy;
 public interface MyplaceFeedMapper {
     MyplaceFeed MyplaceFeedDTOtoMyplaceFeed(MyplaceFeedDTO myfeedDto);
 
+    MyplaceFeedDTO MyplaceToMyplaceFeedDTO(MyplaceFeed myfeed);
+
 }
