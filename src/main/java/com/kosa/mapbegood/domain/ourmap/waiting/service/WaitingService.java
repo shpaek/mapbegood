@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.waiting.dto.WaitingDTO;
 import com.kosa.mapbegood.domain.ourmap.waiting.entity.Waiting;
 import com.kosa.mapbegood.domain.ourmap.waiting.repository.WaitingRepository;
@@ -36,7 +37,9 @@ public class WaitingService {
 	public Waiting waitingDtoToEntity(WaitingDTO waitingDto) {
 		Waiting waitingEntity = new Waiting();
 //		waitingEntity.setId(waitingDto.getId());
-		waitingEntity.setGroupId(waitingDto.getGroupId());
+		Groups groupEntity = new Groups();
+		groupEntity.setId(waitingDto.getGroupId());
+		waitingEntity.setGroupId(groupEntity);
 		waitingEntity.setMemberEmail(waitingDto.getMemberEmail());
 		return waitingEntity;
 	}
@@ -104,7 +107,9 @@ public class WaitingService {
 	public Waiting findIdByGroupIdAndMemberEmail(WaitingDTO waitingDto) throws FindException {
 		Waiting waiting = new Waiting();
 		waiting = waitingDtoToEntity(waitingDto);
-		Optional<Waiting> optWaiting = wr.findByGroupIdAndMemberEmail(waiting.getGroupId(), waiting.getMemberEmail()); // waiting																											// id받아옴
+		Groups group = new Groups();
+		group.setId(waitingDto.getGroupId());
+		Optional<Waiting> optWaiting = wr.findByGroupIdAndMemberEmail(group, waiting.getMemberEmail()); // waiting																											// id받아옴
 		if (optWaiting.isPresent()) {
 			waiting = optWaiting.get();
 			return waiting;
