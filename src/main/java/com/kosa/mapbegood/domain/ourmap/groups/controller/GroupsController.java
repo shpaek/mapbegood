@@ -123,9 +123,9 @@ public class GroupsController {
 	
 	//그룹명 중복확인
 	@GetMapping(value="/{id}", produces="application/json;charset=UTF-8")
-	public ResponseEntity<?> dupchkGroupName(@RequestParam String groupName) {
+	public ResponseEntity<?> dupchkGroupName(@RequestParam String name) {
 		try {
-			gs.dupchkGroupName(groupName);
+			gs.dupchkGroupName(name);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //중복O
 		}catch(FindException e) {
 			return new ResponseEntity<>(HttpStatus.OK); //중복X
