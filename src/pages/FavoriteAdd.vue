@@ -1,5 +1,3 @@
- 
-
 <!--favoriteAdd.vue-->
 
 <template>
