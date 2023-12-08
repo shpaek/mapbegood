@@ -57,7 +57,7 @@ const router = createRouter({
     { path: "/place", component: Place },
     { path: "/feed", component: Feed },
     { path: "/members", component: MemberInfo },
-    { path: "/groupmembers", component: GroupMember },
+    { name: "/groupmember", path: "/groupmember/:groupId/:groupName/:leaderNickname", component: GroupMember },
 
     //동적라우팅 방법
     // {path: '/members/:id', component: MemberInfo}

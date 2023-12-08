@@ -35,6 +35,27 @@ export default {
             emptyMsg: '',
         }
     },
+    created() {
+        const url = `${this.backURL}/group`
+
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        axios.get(url, { withCredentials: true })
+            .then(response => {
+                //사용자의 그룹 목록 받기
+                const list = response.data
+                console.log(list)
+                this.groupList = list
+                if( this.groupList.length<1){
+                    this.emptyMsg='소속된 그룹이 없습니다'
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                this.emptyMsg = '그룹을 불러올 수 없습니다'
+            })
+    },
     methods: {
         addgroupClickHandler() { //그룹추가 페이지로 이동
             location.href = '/groupcreate'
@@ -54,26 +75,6 @@ export default {
             });
         },
 
-    },
-    created() {
-        const url = `${this.backURL}/group`
-
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
-        axios.defaults.headers.common["Authorization"] = accessToken;
-
-        axios.get(url, { withCredentials: true })
-            .then(response => {
-                //사용자의 그룹 목록 받기
-                const list = response.data
-                this.groupList = list
-                if( this.groupList.length<1){
-                    this.emptyMsg='소속된 그룹이 없습니다'
-                }
-            })
-            .catch(error => {
-                console.log(error)
-                this.emptyMsg = '그룹을 불러올 수 없습니다'
-            })
     }
 }
 </script>
