@@ -20,8 +20,8 @@ export default {
     Search,
   },
   created() {
-    let path = location.pathname;
-    this.menu = path != "/login" && path != "/signup";
+    let path = location.pathname.substring(1).toLowerCase();
+    this.menu = path != "login" && path != "signup";
   },
 };
 </script>

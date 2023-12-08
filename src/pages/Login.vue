@@ -87,10 +87,16 @@
       </v-card-text>
     </v-card>
   </div>
+  <!-- <table>
+    <tr>
+      {{
+        userInfo
+      }}
+    </tr>
+  </table> -->
 </template>
 
 <script>
-import axios from "axios";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -99,6 +105,7 @@ export default {
     return {
       email: "",
       password: "",
+      checked: "",
       rules: {
         required: (value) => !!value || "Required.",
         email: (value) => {
@@ -109,19 +116,13 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapState(["user"]),
-  },
+  // computed: {
+  //   ...mapState(["userInfo"]),
+  // },
   methods: {
-    ...mapActions(["loginUser"]),
+    ...mapActions(["login"]),
 
     loginFormSubmitHandler() {
-      if (this.checked) {
-        localStorage.setItem("mapbegoodId", this.email);
-      } else {
-        localStorage.removeItem("mapbegoodId");
-      }
-
       if (this.email == "") {
         alert("이메일을 입력하세요.");
         this.$refs.email.focus();
@@ -132,35 +133,19 @@ export default {
         return;
       }
 
-      let data = {
-        email: `${this.email}`,
-        password: `${this.password}`,
-      };
+      this.login({
+        backUrl: `${this.backURL}`,
+        userInfo: {
+          email: `${this.email}`,
+          password: `${this.password}`,
+        },
+      });
 
-      // axios
-      //   .post(url, data, {
-      //     withCredentials: true,
-      //   })
-      //   .then((response) => {
-      //     if (response.status == 200) {
-      //       const accessToken = response.headers.authorization;
-      //       const refreshToke = response.headers.refresh;
-
-      //       axios.defaults.headers.common["Authorization"] = accessToken;
-      //       localStorage.setItem("mapbegoodToken", accessToken);
-      //       localStorage.setItem("refresh", refreshToke);
-
-      //       alert("로그인 성공");
-      //       location.href = "/";
-
-      //       console.log(axios.defaults.headers.common);
-
-      //       this.$store.dispacer;
-      //     }
-      //   })
-      //   .catch(() => {
-      //     alert("로그인 실패");
-      //   });
+      if (this.checked) {
+        localStorage.setItem("mapbegoodId", this.email);
+      } else {
+        localStorage.removeItem("mapbegoodId");
+      }
     },
   },
   created() {
