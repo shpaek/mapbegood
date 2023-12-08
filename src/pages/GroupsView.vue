@@ -4,7 +4,7 @@
         <div class="group" v-for="group in groupList" @click="groupClickHandler(group)">
             <ul>
                 <li>
-                    <img id="i" :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id+'_groupImage.jpg'" alt="그룹이미지" class="img-size">
+                    <img id="i" :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id+'_groupImage.jpg'+ Date()" alt="그룹이미지" class="img-size">
                 </li>
                 <li>
                     <span class="group-info">{{group.name}}</span>
@@ -14,6 +14,7 @@
                 </li>
             </ul> 
          </div>
+         <span class="empty-msg">{{emptyMsg}}</span>
     </div>
     <br>
     <span class="add-group"
@@ -29,7 +30,8 @@ export default {
     name: "GroupsView",
     data() {
         return {
-            groupList: []
+            groupList: [],
+            emptyMsg: '',
         }
     },
     methods: {
@@ -70,7 +72,7 @@ export default {
             })
             .catch(error => {
                 console.log(error)
-                alert(error.msg)
+                this.emptyMsg = '소속된 그룹이 없습니다'
             })
     }
 }
@@ -119,4 +121,11 @@ span.add-group {
     display: flex;
     margin-left: 30px;
     margin-bottom: 50px;
-}</style>
+}
+span.empty-msg{
+    margin-top: 75px;
+    margin-bottom: 50px;
+    font-size: 14px;
+    color: darkgray;
+}
+</style>
