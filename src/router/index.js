@@ -18,6 +18,7 @@ import Feed from "../pages/Feed.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
+import FavoriteAdd from "../pages/FavoriteAdd.vue";
 import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
 
@@ -30,7 +31,6 @@ const router = createRouter({
     { path: "/pwdfind", component: PasswordFind },
     { path: "/pwdchange", component: PasswordChange },
     { path: "/nickchange", component: NickChange },
-
     // { path: "/group", component: GroupView },
     { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
@@ -58,6 +58,7 @@ const router = createRouter({
     { path: "/feed", component: Feed },
     { path: "/members", component: MemberInfo },
     { path: "/groupmembers", component: GroupMember },
+    { path: "/favoriteadd", component: FavoriteAdd },
 
     //동적라우팅 방법
     // {path: '/members/:id', component: MemberInfo}

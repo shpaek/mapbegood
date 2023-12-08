@@ -1,21 +1,19 @@
+ 
+
 <!--favoriteAdd.vue-->
 
 <template>
     <div class="content">
-      <h1>나의 테마지도리스트 입니다.</h1>
+     <h1>나의 thememaplist 입니다.</h1>
+      <h2>즐겨찾기 할 thememap을 선택하세요</h2>
       <ul>
         <li v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
           <h3>{{ thememap.themeMapDto.name }}</h3>
           <p>{{ thememap.themeMapDto.memo }}</p>
-          <!-- <p> {{favorite.themeMapDto.id }}</p> -->
-
-           <!-- "상세보기" 버튼 -->
-          <button @click="viewThememapDetail(thememap.themeMapDto.id)">상세보기</button>
+          <!-- "즐겨찾기 추가" 버튼 추가 -->
+          <button @click="addFavorite(thememap.themeMapDto.id)">즐겨찾기 추가</button>
         </li>
       </ul>
-  
-      <!-- "테마맵 추가" 버튼 -->
-      <button @click="addNewThememap">리스트 생성</button>
     </div>
   </template>
   
@@ -36,34 +34,47 @@
     methods: {
       loadFavoriteList() {
         const url = `${this.backURL}/mymap/list`;
-  
+  2
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
   
         axios.get(url, { withCredentials: true })
           .then(response => {
-            // 사용자의 테마맵 리스트를 받아옴
-            const themeMapList = response.data;
+             // 사용자의 테마맵 리스트를 받아옴
+        const themeMapList = response.data;
+
+    // 즐겨찾기 테마맵 정보와 함께 favoriteList에 추가
+    this.favoriteList = themeMapList.map(themeMap => {
+        return {
+            themeMapDto: themeMap, // 테마맵 정보
+        };
+        });
+        console.log(this.favoriteList);
+      })
+      .catch(error => {
+        console.error(error);
+        alert(error.msg);
+      });
+  },
+      addFavorite(themeMapId) {
+        console.log("아이디 가져와주세요:", themeMapId);
+
+        // "즐겨찾기 추가" 로직 추가
+        const url = `${this.backURL}/favorite/create/${themeMapId}`;
   
-            // 즐겨찾기 테마맵 정보와 함께 favoriteList에 추가
-            this.favoriteList = themeMapList.map(themeMap => {
-              return {
-                themeMapDto: themeMap, // 테마맵 정보
-              };
-            });
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+  
+        axios.post(url, { themeMapId: themeMapId }, { withCredentials: true })
+          .then(response => {
+            // 성공적으로 즐겨찾기를 추가한 경우에 수행할 작업
+            console.log(response.data);
           })
           .catch(error => {
+            // 즐겨찾기 추가 중에 오류가 발생한 경우에 수행할 작업
             console.error(error);
             alert(error.msg);
           });
-      },
-      addNewThememap() {
-      // "리스트 생성" 버튼 클릭 시 ThememapCreate 페이지로 이동
-      this.$router.push({ name: 'thememap-create' });
-    },
-      viewThememapDetail(themeMapId) {
-        // 상세보기 버튼 클릭 시 ThememapDetail 페이지로 이동
-        this.$router.push({ name: 'thememap-detail', params: { id: themeMapId } });
       },
     },
   };
