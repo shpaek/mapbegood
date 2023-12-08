@@ -46,7 +46,7 @@ public class OurplaceFeedService {
         for(OurplaceFeed of: ofList){
             OurplaceFeedDTO ourFeedDto = findOurFeedById(of.getId());
             ourFeedList.add(ourFeedDto);
-        }
+        }	
         return ourFeedList;
     }
 

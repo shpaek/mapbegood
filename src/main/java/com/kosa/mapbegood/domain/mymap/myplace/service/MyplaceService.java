@@ -35,7 +35,7 @@ public class MyplaceService {
 	 * @return 마이플레이스 리스트
 	 */
 	public List<MyplaceDTO> findAllMyplace(Long themeMapId) throws FindException{
-		List<Myplace> myplaceList = mpr.findBythemeMapId(themeMapId);
+		List<Myplace> myplaceList = mpr.findBythememapId(themeMapId);
 		List<MyplaceDTO> myplaceDtoList = new ArrayList<MyplaceDTO>();
 		for(Myplace myplace: myplaceList) {
 			myplaceDtoList.add(mapper.entityToDto(myplace));

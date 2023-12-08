@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.17</version>
-		<relativePath />
+		<relativePath/>
 	</parent>
 	<groupId>com.kosa.mapbegood</groupId>
 	<artifactId>mapbegood</artifactId>
@@ -74,16 +73,16 @@
 			<version>5.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.oracle.database.security</groupId>
-			<artifactId>oraclepki</artifactId>
-		</dependency>
+            <groupId>com.oracle.database.security</groupId>
+            <artifactId>oraclepki</artifactId>
+            </dependency>
 		<dependency>
-			<groupId>com.oracle.database.security</groupId>
-			<artifactId>osdt_cert</artifactId>
-		</dependency>
+            <groupId>com.oracle.database.security</groupId>
+            <artifactId>osdt_cert</artifactId>
+            </dependency>
 		<dependency>
-			<groupId>com.oracle.database.security</groupId>
-			<artifactId>osdt_core</artifactId>
+            <groupId>com.oracle.database.security</groupId>
+            <artifactId>osdt_core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -149,13 +148,11 @@
 			<artifactId>thumbnailator</artifactId>
 			<version>0.4.20</version>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>org.bgee.log4jdbc-log4j2</groupId>-->
-		<!--			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>-->
-		<!--			<version>1.16</version>-->
-		<!--		</dependency>-->
-		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
-
+<!--		<dependency>-->
+<!--			<groupId>org.bgee.log4jdbc-log4j2</groupId>-->
+<!--			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>-->
+<!--			<version>1.16</version>-->
+<!--		</dependency>-->
 	</dependencies>
 
 	<build>
@@ -185,7 +182,7 @@
 							<goal>process</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/generated-sources</outputDirectory>
+							<outputDirectory>src/generated-sources</outputDirectory>
 							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
 						</configuration>
 					</execution>
