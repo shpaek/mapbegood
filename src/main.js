@@ -19,9 +19,8 @@ app.use(router);
 app.use(store);
 app.use(vuetify);
 app.config.globalProperties.backURL = "http://localhost:8080";
-// app.beforCreate(
-//   // beforCreate() {
-//   store.dispatch("getUserInfo")
-//   // }
-// );
+// app.config.globalProperties.beforCreate = function () {
+//   console.log("before");
+//   this.$store.dispatch("getUserInfo");
+// };
 app.mount("#app");

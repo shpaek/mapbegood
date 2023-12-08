@@ -87,26 +87,13 @@
       </v-card-text>
     </v-card>
   </div>
-  <table>
+  <!-- <table>
     <tr>
-      <td>{{ userInfo.email }}</td>
+      {{
+        userInfo
+      }}
     </tr>
-    <tr>
-      <td>{{ userInfo.nickName }}</td>
-    </tr>
-    <tr>
-      <td>{{ userInfo.profileImage }}</td>
-    </tr>
-    <tr>
-      <td>{{ userInfo.accessToken }}</td>
-    </tr>
-    <tr>
-      <td>{{ userInfo.refreshToken }}</td>
-    </tr>
-    <tr>
-      <td>{{ userInfo.isLogin }}</td>
-    </tr>
-  </table>
+  </table> -->
 </template>
 
 <script>
@@ -129,9 +116,9 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapState(["userInfo"]),
-  },
+  // computed: {
+  //   ...mapState(["userInfo"]),
+  // },
   methods: {
     ...mapActions(["login"]),
 

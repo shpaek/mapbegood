@@ -1,46 +1,25 @@
-import { createApp } from "vue";
 import { createStore } from "vuex";
 import axios from "axios";
 
 export default createStore({
   state: {
-    userInfo: {
-      email: "email",
-      nickName: "nickName",
-      profileImage: "profileImage",
-      accessToken: "accessToken",
-      refreshToken: "refreshToken",
-      isLogin: false,
-    },
+    userInfo: null,
+    isLogin: false,
   },
   getters: {
-    isLogin(state) {
-      return state.user.isLogin;
+    isLogin({ state }) {
+      return this.state.userInfo.isLogin;
     },
   },
   mutations: {
     // commit 으로 부를 수 있다.
     loginSuccess({ state }, payload) {
-      // console.log(payload.email);
-      // console.log(payload.nickName);
-      // console.log(payload.profileImage);
-      // console.log(payload.accessToken);
-      // console.log(payload.refreshToken);
-
-      state.userInfo.email = payload.email;
-      state.userInfo.nickName = payload.nickName;
-      state.userInfo.profileImage = payload.profileImage;
-      state.userInfo.accessToken = payload.accessToken;
-      state.userInfo.refreshToken = payload.refreshToken;
-      state.userInfo.isLogin = true;
+      this.state.userInfo = payload;
+      this.state.userInfo.isLogin = true;
     },
-    logOut(state) {
-      state.userInfo.email = "";
-      state.userInfo.nickName = "";
-      state.userInfo.profileImage = "";
-      state.userInfo.accessToken = "";
-      state.userInfo.refreshToken = "";
-      state.userInfo.isLogin = false;
+    logOut({ state }) {
+      this.state.userInfo = null;
+      this.state.userInfo.isLogin = false;
     },
   },
   actions: {
@@ -54,12 +33,9 @@ export default createStore({
           localStorage.setItem("mapbegoodToken", res.headers.authorization);
           localStorage.setItem("refresh", res.headers.refresh);
 
-          // axios.defaults.headers.common["Authorization"] =
-          //   "Bearer " + accessToken;
-          // console.log(`${this.backURL}`);
-
-          dispatch("getUserInfo");
+          this.dispatch("getUserInfo");
           alert("로그인 성공");
+          location.href = "/";
         })
         .catch(() => {
           alert("이메일과 비밀번호를 확인해 주세요.");
@@ -68,41 +44,59 @@ export default createStore({
     logOut({ commit }) {
       commit("logOut");
     },
-    getUserInfo({ commit }) {
-      let config = {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("mapbegoodToken"),
-        },
-      };
+    getUserInfo({ commit, dispatch }) {
+      let isToken = localStorage.getItem("mapbegoodToken");
+
+      if (isToken != null) {
+        let config = {
+          headers: {
+            Authorization: "Bearer " + isToken,
+          },
+        };
+
+        axios
+          .get("http://localhost:8080/login-info", config, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            if (res.data.message == "The token has expired.") {
+              this.dispatch("getTokenRefresh");
+            }
+
+            let userInfo = {
+              email: res.data.email,
+              nickName: res.data.nickName,
+              profileImage: res.data.profileImage,
+            };
+
+            this.commit("loginSuccess", userInfo);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        this.commit("logOut");
+        alert("로그아웃 되었습니다.");
+        location.href = "/login";
+      }
+    },
+    getTokenRefresh() {
+      axios.defaults.headers.common["Refresh"] =
+        "Bearer " + localStorage.getItem("refresh");
 
       axios
-        .get("http://localhost:8080" + "/login-info", config, {
+        .post("http://localhost:8080/refresh", {
           withCredentials: true,
         })
-        .then((response) => {
-          console.log(response.data.email);
-          console.log(response.data.nickName);
-          console.log(response.data.profileImage);
-          console.log("Bearer " + localStorage.getItem("mapbegoodToken"));
-          console.log("Bearer " + localStorage.getItem("refresh"));
-
-          let userInfo = {
-            email: response.data.email,
-            nickName: response.data.nickName,
-            profileImage: response.data.profileImage,
-            accessToken: "Bearer " + localStorage.getItem("mapbegoodToken"),
-            refreshToken: "Bearer " + localStorage.getItem("refresh"),
-          };
-
-          // commit("loginSuccess", userInfo);
+        .then((res) => {
+          localStorage.setItem("mapbegoodToken", res.headers.authorization);
+          location.reload();
         })
         .catch(() => {
+          this.commit("logOut");
           alert("로그아웃 되었습니다.");
+          location.href = "/login";
         });
     },
   },
 });
-
-const app = createApp({});
-
-app.use(createStore);
