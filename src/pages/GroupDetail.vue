@@ -8,7 +8,8 @@
             :src="
               'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
               this.groupId +
-              '_groupImage.jpg'
+              '_groupImage.jpg?' +
+              new Date().getTime()
             "
             alt="그룹이미지"
           />
@@ -47,51 +48,55 @@
             </div>
           </div>
         </li>
-        <li>
-          <span class="group-name" @click="groupnameClickHandler">
-            {{ groupName }}({{ listCnt }})
-          </span>
-        </li>
-        <li class="group-member">
-          <span class="group-member" @click="groupmemberClickHandler">
-            {{ leaderNickname }}({{ memCnt }})
-          </span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            fill="currentColor"
-            class="bi bi-person-lines-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"
-            />
-          </svg>
-          <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
-        </li>
+        <li class="update-name" @click="updateNameClickHandler">그룹명 변경</li>
+        <li class="delete-group" @click="deleteGroupClickHandler">그룹 삭제</li>
       </ul>
     </div>
-    <hr />
-    <div class="new-group">
-      <span>새 리스트 추가</span>
-      <!-- 클릭이벤트 주기 -->
-    </div>
-    <div class="group-thememap-list">
-      그룹의 테마지도목록입니다
-      <div class="group-thememap">
-        <span>{{ listName }}</span>
-        <span>{{ listWriter }}</span>
-      </div>
+  </div>
+  <li>
+    <span class="group-name" @click="groupnameClickHandler">
+      {{ groupName }}({{ listCnt }})
+    </span>
+  </li>
+  <li class="group-member">
+    <span class="group-member" @click="groupmemberClickHandler">
+      {{ leaderNickname }}({{ memCnt }})
+    </span>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      fill="currentColor"
+      class="bi bi-person-lines-fill"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"
+      />
+    </svg>
+    <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
+  </li>
+  <hr />
+  <div class="new-group">
+    <span>새 리스트 추가</span>
+    <!-- 클릭이벤트 주기 -->
+  </div>
+  <div class="group-thememap-list">
+    그룹의 테마지도목록입니다
+    <div class="group-thememap">
+      <span>{{ listName }}</span>
+      <span>{{ listWriter }}</span>
     </div>
   </div>
 </template>
+
 <script>
+import axios from "axios";
 export default {
   name: "GroupDetail",
   data() {
     return {
-      groupId: "",
+      groupId: 0,
       groupName: "그룹명",
       listCnt: 0,
       leaderNickname: "그룹장",
@@ -101,62 +106,76 @@ export default {
       isDropdownOpen: false, // 콤보상자의 상태를 나타내는 데이터,
     };
   },
-  methods: {
-    gearClickHandler() {
-      this.isDropdownOpen = !this.isDropdownOpen;
-    },
-    updateImageClickHandler() {
-      //그룹이미지 변경하러 이동
-      this.$router.push({
-        name: "/groupimage", // 라우터에서 정의한 이름
-        params: {
-          //params로 설정하여 아래의 데이터 전부 전달가능
-          groupId: this.groupId,
-          groupName: this.groupName,
-          leaderNickname: this.leaderNickname,
-        },
-        updateImageClickHandler() {
-          //그룹이미지 변경하러 이동
-          this.$router.push({
-            name: "/groupimage", // 라우터에서 정의한 이름
-            params: {
-              //params로 설정하여 아래의 데이터 전부 전달가능
-              groupId: this.groupId,
-              groupName: this.groupName,
-              leaderNickname: this.leaderNickname,
-            },
+  updateImageClickHandler() {
+    //그룹이미지 변경하러 이동
+    this.$router.push({
+      name: "/groupimage", // 라우터에서 정의한 이름
+      params: {
+        //params로 설정하여 아래의 데이터 전부 전달가능
+        groupId: this.groupId,
+        groupName: this.groupName,
+        leaderNickname: this.leaderNickname,
+      },
+      updateImageClickHandler() {
+        //그룹이미지 변경하러 이동
+        this.$router.push({
+          name: "/groupimage", // 라우터에서 정의한 이름
+          params: {
+            //params로 설정하여 아래의 데이터 전부 전달가능
+            groupId: this.groupId,
+            groupName: this.groupName,
+            leaderNickname: this.leaderNickname,
+          },
+        });
+      },
+      updateNameClickHandler() {
+        //그룹명 변경하러 이동
+        this.$router.push({
+          name: "/groupname", // 라우터에서 정의한 이름
+          params: {
+            //params로 설정하여 아래의 데이터 전부 전달가능
+            groupId: this.groupId,
+            groupName: this.groupName,
+            leaderNickname: this.leaderNickname,
+          },
+        });
+      },
+      deleteGroupClickHandler() {
+        const url = `http://localhost:8080/mapbegood/group/${this.groupId}`;
+
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        axios
+          .delete(url, {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
+          })
+          .then((response) => {
+            alert("그룹이 삭제되었습니다");
+            location.href = "/groups";
+          })
+          .catch((error) => {
+            console.log(error);
+            alert("그룹이 삭제되지 않았습니다 ");
           });
-        },
-        updateNameClickHandler() {
-          //그룹명 변경하러 이동
-          this.$router.push({
-            name: "/groupname", // 라우터에서 정의한 이름
-            params: {
-              //params로 설정하여 아래의 데이터 전부 전달가능
-              groupId: this.groupId,
-              groupName: this.groupName,
-              leaderNickname: this.leaderNickname,
-            },
-          });
-        },
-        deleteGroupClickHandler() {},
-      });
-    },
-    updateNameClickHandler() {
-      //그룹명 변경하러 이동
-      this.$router.push({
-        name: "/groupname", // 라우터에서 정의한 이름
-        params: {
-          //params로 설정하여 아래의 데이터 전부 전달가능
-          groupId: this.groupId,
-          groupName: this.groupName,
-          leaderNickname: this.leaderNickname,
-        },
-      });
-      console.log("------3---------");
-    },
-    deleteGroupClickHandler() {},
+      },
+    });
   },
+  updateNameClickHandler() {
+    //그룹명 변경하러 이동
+    this.$router.push({
+      name: "/groupname", // 라우터에서 정의한 이름
+      params: {
+        //params로 설정하여 아래의 데이터 전부 전달가능
+        groupId: this.groupId,
+        groupName: this.groupName,
+        leaderNickname: this.leaderNickname,
+      },
+    });
+    console.log("------3---------");
+  },
+  deleteGroupClickHandler() {},
   created() {
     // $route.params를 통해 전달된 파라미터 확인
     const groupId = this.$route.params.groupId;
@@ -184,6 +203,7 @@ ul {
 
 li.img {
   position: relative;
+  height: 150px;
 }
 
 li.img svg.bi-gear {
