@@ -91,7 +91,6 @@ export default {
                     leaderNickname: this.leaderNickname
                 }
             });
-            console.log("------3---------")
         },
         deleteGroupClickHandler(){
 
