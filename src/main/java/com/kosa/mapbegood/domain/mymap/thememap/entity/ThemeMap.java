@@ -1,23 +1,12 @@
 package com.kosa.mapbegood.domain.mymap.thememap.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
-
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity

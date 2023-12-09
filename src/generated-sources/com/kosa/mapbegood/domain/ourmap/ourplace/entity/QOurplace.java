@@ -22,7 +22,10 @@ public class QOurplace extends EntityPathBase<Ourplace> {
 
     public static final QOurplace ourplace = new QOurplace("ourplace");
 
-    public final StringPath category = createString("category");
+    public final com.kosa.mapbegood.domain.common.entity.QAuditEntity _super = new com.kosa.mapbegood.domain.common.entity.QAuditEntity(this);
+
+    //inherited
+    public final DateTimePath<java.util.Date> createdAt = _super.createdAt;
 
     public final com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap groupThememapId;
 
@@ -30,15 +33,9 @@ public class QOurplace extends EntityPathBase<Ourplace> {
 
     public final com.kosa.mapbegood.domain.member.entity.QMember memberEmail;
 
-    public final NumberPath<Long> placeId = createNumber("placeId", Long.class);
-
-    public final StringPath placeName = createString("placeName");
+    public final com.kosa.mapbegood.domain.place.entity.QPlace placeId;
 
     public final DatePath<java.sql.Date> visitedAt = createDate("visitedAt", java.sql.Date.class);
-
-    public final NumberPath<Double> x = createNumber("x", Double.class);
-
-    public final NumberPath<Double> y = createNumber("y", Double.class);
 
     public QOurplace(String variable) {
         this(Ourplace.class, forVariable(variable), INITS);
@@ -60,6 +57,7 @@ public class QOurplace extends EntityPathBase<Ourplace> {
         super(type, metadata, inits);
         this.groupThememapId = inits.isInitialized("groupThememapId") ? new com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap(forProperty("groupThememapId"), inits.get("groupThememapId")) : null;
         this.memberEmail = inits.isInitialized("memberEmail") ? new com.kosa.mapbegood.domain.member.entity.QMember(forProperty("memberEmail")) : null;
+        this.placeId = inits.isInitialized("placeId") ? new com.kosa.mapbegood.domain.place.entity.QPlace(forProperty("placeId")) : null;
     }
 
 }

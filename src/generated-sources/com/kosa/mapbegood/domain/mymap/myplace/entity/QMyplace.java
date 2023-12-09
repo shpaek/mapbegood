@@ -22,21 +22,13 @@ public class QMyplace extends EntityPathBase<Myplace> {
 
     public static final QMyplace myplace = new QMyplace("myplace");
 
-    public final StringPath category = createString("category");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final NumberPath<Long> placeId = createNumber("placeId", Long.class);
-
-    public final StringPath placeName = createString("placeName");
+    public final com.kosa.mapbegood.domain.place.entity.QPlace placeId;
 
     public final com.kosa.mapbegood.domain.mymap.thememap.entity.QThemeMap thememapId;
 
     public final DatePath<java.sql.Date> visitedAt = createDate("visitedAt", java.sql.Date.class);
-
-    public final NumberPath<Double> x = createNumber("x", Double.class);
-
-    public final NumberPath<Double> y = createNumber("y", Double.class);
 
     public QMyplace(String variable) {
         this(Myplace.class, forVariable(variable), INITS);
@@ -56,6 +48,7 @@ public class QMyplace extends EntityPathBase<Myplace> {
 
     public QMyplace(Class<? extends Myplace> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.placeId = inits.isInitialized("placeId") ? new com.kosa.mapbegood.domain.place.entity.QPlace(forProperty("placeId")) : null;
         this.thememapId = inits.isInitialized("thememapId") ? new com.kosa.mapbegood.domain.mymap.thememap.entity.QThemeMap(forProperty("thememapId"), inits.get("thememapId")) : null;
     }
 
