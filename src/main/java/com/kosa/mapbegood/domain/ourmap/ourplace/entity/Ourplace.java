@@ -48,7 +48,4 @@ public class Ourplace {
 	private Date visitedAt;
 	
 	private String category;
-	
-//	@OneToMany(cascade = CascadeType.REMOVE)
-//	private List<OurplaceFeed> feedList;
 }

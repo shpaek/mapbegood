@@ -34,7 +34,7 @@ public class GroupThemeMapService {
         Groups group = optionalGroup.orElseThrow(() -> new FindException("그룹을 찾을 수 없습니다."));
 
         GroupThememap groupThememap = mapGroupThememapDTOToEntity(groupThememapDTO);
-        groupThememap.setGroupId(group.getId()); // groupId를 URL에서 받아온 값으로 설정
+        groupThememap.setGroupId(group); // groupId를 URL에서 받아온 값으로 설정
 
         GroupThememap savedGroupThememap = groupThememapRepository.save(groupThememap);
 
@@ -147,7 +147,7 @@ public class GroupThemeMapService {
 	    private GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
 	        return GroupThememapDTO.builder()
 	                .id(groupThememap.getId())
-	                .groupId(groupThememap.getGroupId())
+	                .groupId(groupThememap.getGroupId().getId())
 	                .name(groupThememap.getName())
 	                .color(groupThememap.getColor())
 	                .memo(groupThememap.getMemo())
@@ -163,9 +163,11 @@ public class GroupThemeMapService {
 
 	    // 그룹 테마지도 DTO를 엔터티로 변환 
 	    private GroupThememap mapGroupThememapDTOToEntity(GroupThememapDTO groupThememapDTO) {
+	    	Groups group = new Groups();
+	    	group.setId(groupThememapDTO.getGroupId());
 	        GroupThememap groupThememap = new GroupThememap();
 	        groupThememap.setId(groupThememapDTO.getId());
-	        groupThememap.setGroupId(groupThememapDTO.getGroupId());
+	        groupThememap.setGroupId(group);
 	        groupThememap.setName(groupThememapDTO.getName());
 	        groupThememap.setColor(groupThememapDTO.getColor());
 	        groupThememap.setMemo(groupThememapDTO.getMemo());
