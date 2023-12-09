@@ -1,18 +1,13 @@
 package com.kosa.mapbegood.domain.mymap.myplace.entity;
 
 import java.sql.Date;
+import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
+import com.kosa.mapbegood.domain.place.entity.Place;
 import lombok.Data;
 
 @Data
@@ -28,19 +23,24 @@ public class Myplace {
 	@ManyToOne
 	@JoinColumn(name = "thememap_id")
 	private ThemeMap thememapId;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "place_id")
+	private Place placeId;
+
 	private Date visitedAt;
+
+//	private String placeName;
 	
-	private Long placeId;
+//	private Double x;
 	
-	private String placeName;
+//	private Double y;
 	
-	private Double x;
-	
-	private Double y;
-	
-	private String category;
+//	private String category;
 	
 //	@OneToOne(cascade = CascadeType.REMOVE)
 //	private MyplaceFeed feed;
+
+//	@OneToMany(cascade = CascadeType.REMOVE)
+//	private List<Place> placeList;
 }
