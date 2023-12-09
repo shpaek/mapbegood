@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Map from "../pages/Map.vue";
 import Login from "../pages/Login.vue";
-import Signup from "../pages/Signup.vue";
 import PasswordFind from "../pages/PasswordFind.vue";
 import PasswordChange from "../pages/PasswordChange.vue";
 import NickChange from "../pages/NickChange.vue";
@@ -27,7 +26,6 @@ const router = createRouter({
   routes: [
     { path: "/", component: OthersThemeMap }, // /일때 뭘 보여줄지 고민, 로그인 전-추천리스트 로그인 후-대표지도
     { path: "/login", component: Login },
-    { path: "/signup", component: Signup },
     { path: "/pwdfind", component: PasswordFind },
     { path: "/pwdchange", component: PasswordChange },
     { path: "/nickchange", component: NickChange },
@@ -35,7 +33,11 @@ const router = createRouter({
     { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
     // { name: 'groupThemeMapList', path: "/groupthememaplist/:groupId/:groupName/:leaderNickname", component: GroupThemeMapList },
-    { name: "/group", path: "/group/:groupId/:groupName/:leaderNickname", component: GroupDetail },
+    {
+      name: "/group",
+      path: "/group/:groupId/:groupName/:leaderNickname",
+      component: GroupDetail,
+    },
     {
       name: "/groupname",
       path: "/groupn/:groupId/:groupName/:leaderNickname",
