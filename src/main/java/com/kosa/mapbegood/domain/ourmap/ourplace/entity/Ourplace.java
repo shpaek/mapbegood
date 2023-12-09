@@ -1,14 +1,17 @@
 package com.kosa.mapbegood.domain.ourmap.ourplace.entity;
 
+import java.sql.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
 import com.kosa.mapbegood.domain.common.entity.AuditEntity;
-import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.member.entity.Member;
+
 import com.kosa.mapbegood.domain.place.entity.Place;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.persistence.*;
-import java.sql.Date;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -30,13 +33,13 @@ public class Ourplace extends AuditEntity {
 	private Member memberEmail;
 
 	@ManyToOne
-	@JoinColumn(name = "palce_id")
+	@JoinColumn(name = "place_id")
 	private Place placeId;
 
 	private Date visitedAt;
 
 //	private String placeName;
-
+	
 //	private Double x;
 	
 //	private Double y;
@@ -49,4 +52,3 @@ public class Ourplace extends AuditEntity {
 //	@OneToMany(cascade = CascadeType.REMOVE)
 //	private List<Place> placeList;
 }
-

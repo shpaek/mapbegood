@@ -1,24 +1,28 @@
 package com.kosa.mapbegood.domain.mymap.myplace.entity;
 
-<<<<<<< HEAD
-import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-=======
 import java.sql.Date;
-import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-
 import com.kosa.mapbegood.domain.place.entity.Place;
->>>>>>> 2d312b8be56a47f48605df689b35bf026560ca5b
-import lombok.Data;
 
-import javax.persistence.*;
-import java.sql.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 @SequenceGenerator(name = "myplace_seq_gener", sequenceName = "myplace_seq", initialValue = 1, allocationSize = 1)
@@ -28,9 +32,9 @@ public class Myplace {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "myplace_seq_gener")
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "thememap_id")
-	private ThemeMap thememapId;
+//	@ManyToOne
+//	@JoinColumn(name = "thememap_id")
+	private Long thememapId;
 
 	@ManyToOne
 	@JoinColumn(name = "place_id")
@@ -43,7 +47,7 @@ public class Myplace {
 //	private Double x;
 	
 //	private Double y;
-
+	
 //	private String category;
 	
 //	@OneToOne(cascade = CascadeType.REMOVE)
@@ -51,5 +55,4 @@ public class Myplace {
 
 //	@OneToMany(cascade = CascadeType.REMOVE)
 //	private List<Place> placeList;
-
 }

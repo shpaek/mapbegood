@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
+import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceWrapperDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 import com.kosa.mapbegood.domain.mymap.myplace.mapper.MyplaceMapper;
 import com.kosa.mapbegood.domain.mymap.myplace.repository.MyplaceRepository;
@@ -49,8 +50,14 @@ public class MyplaceService {
 	 * @throws FindException
 	 */
 	public MyplaceDTO findMyplace(Long myplaceId) throws FindException{
-		Optional<Myplace> myplace = mpr.findById(myplaceId);
-		return mapper.entityToDto(myplace.get());
+		Optional<Myplace> myplace = mpr.findByIdWithPlace(myplaceId);
+		System.out.println("1");
+		if (myplace.isPresent()) {
+			System.out.println("2");
+			return mapper.entityToDto(myplace.get());	
+		} else {
+		    return null;
+		}
 	}
 
 	/** 
