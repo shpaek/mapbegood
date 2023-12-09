@@ -17,16 +17,19 @@ import javax.persistence.*;
 public class MyplaceFeed extends AuditEntity {
 
 	@Id
-	@JoinColumn(name = "myplaceId")
+	@Column(name = "myplace_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long myplaceId;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "email")
+	@JoinColumn(name = "member_email", referencedColumnName = "email")
 	private Member memberEmail;
 
+	@Column(name = "content")
 	private String content;
 
-	@OneToOne
-	@JoinColumn(name = "myplaceId", referencedColumnName = "id", insertable = false, updatable = false)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "myplace_id", referencedColumnName = "id", unique = true)
 	private Myplace myplace;
+
 }

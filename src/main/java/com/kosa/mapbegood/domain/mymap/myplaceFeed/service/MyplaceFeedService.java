@@ -38,7 +38,7 @@ public class MyplaceFeedService implements MyplaceFeedServiceInterface {
         try {
             mfr.save(mf);
         } catch (DataAccessException e) {
-            throw new AddException("피드 생성 중 오류가 발생했습니다");
+            throw new AddException("피드 생성 중 오류가 발생했습니다" + e.getMessage());
         }
     }
 

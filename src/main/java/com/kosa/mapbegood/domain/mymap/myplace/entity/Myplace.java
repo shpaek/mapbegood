@@ -33,6 +33,7 @@ public class Myplace {
 	
 	private String category;
 
-	@OneToOne(mappedBy = "myplace", cascade = CascadeType.REMOVE)
+	@OneToOne(mappedBy = "myplace", cascade = CascadeType.ALL)
+	@JoinColumn(name = "myplace_id")
 	private MyplaceFeed myplaceFeed;
 }
