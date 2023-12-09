@@ -33,7 +33,7 @@ public class Ourplace extends AuditEntity {
 	private Member memberEmail;
 
 	@ManyToOne
-	@JoinColumn(name = "palce_id")
+	@JoinColumn(name = "place_id")
 	private Place placeId;
 
 	private Date visitedAt;

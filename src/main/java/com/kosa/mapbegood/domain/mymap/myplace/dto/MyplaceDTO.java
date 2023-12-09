@@ -2,12 +2,6 @@ package com.kosa.mapbegood.domain.mymap.myplace.dto;
 
 import java.sql.Date;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.place.entity.Place;
 
@@ -21,7 +15,7 @@ public class MyplaceDTO {
 
 	private Long id;
 	
-	private ThemeMap thememapId;
+	private Long thememapId;
 
 	private Place placeId;
 

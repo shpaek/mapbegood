@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
+import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceWrapperDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.service.MyplaceService;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
+import com.kosa.mapbegood.domain.place.dto.PlaceDTO;
+import com.kosa.mapbegood.domain.place.service.PlaceService;
+import com.kosa.mapbegood.exception.FindException;
 
 @RestController
 @RequestMapping("/place")
@@ -25,11 +29,24 @@ public class MyplaceController {
 	@Autowired
 	MyplaceService mps;	
 	
-	@GetMapping("/{myplaceId}") 
-	public ResponseEntity<MyplaceDTO> findMyPlace(@PathVariable Long myplaceId) {
+	@Autowired
+	PlaceService ps;
+	
+	/**
+	 * Myplace에 저장된 장소 정보 조회
+	 * @param themeMapId
+	 * @param mythemeMapId
+	 * @return
+	 */
+	@GetMapping("/{myplaceId}")                    
+	public ResponseEntity<?> findMyPlace(@PathVariable Long myplaceId) throws FindException{
 		try {
 			MyplaceDTO myplace = mps.findMyplace(myplaceId);
-			return ResponseEntity.ok(myplace);
+			if(myplace!=null) {
+				return ResponseEntity.ok(myplace);				
+			}else {
+				return ResponseEntity.ok(new FindException("못찾음"));
+			}
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -37,8 +54,16 @@ public class MyplaceController {
 	}
 	
 	@PostMapping("")
-	ResponseEntity<?> createMyplace(@RequestBody MyplaceDTO myplaceDto){
+	ResponseEntity<?> createMyplace(@RequestBody MyplaceWrapperDTO myplaceWrapperDto){
 		try {
+			MyplaceDTO myplaceDto = myplaceWrapperDto.getMyplaceDto();
+			PlaceDTO placeDto = myplaceWrapperDto.getPlaceDto();
+			System.out.println("1");
+			if(ps.findPlace(placeDto.getId()) == null) {
+				ps.createPlace(placeDto);
+				System.out.println("2");
+			}
+			System.out.println("3");
 			mps.createMyplace(myplaceDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e){
@@ -73,9 +98,7 @@ public class MyplaceController {
 		try {
 			List<MyplaceDTO> placeList = mps.findAllMyplace(themeMapId);
 			for(MyplaceDTO myplace: placeList) {
-				ThemeMap thememap = new ThemeMap();
-				thememap.setId(mythemeMapId);
-				myplace.setThememapId(thememap);
+				myplace.setThememapId(mythemeMapId);
 				mps.createMyplace(myplace);
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
