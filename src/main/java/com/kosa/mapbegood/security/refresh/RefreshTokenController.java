@@ -29,7 +29,7 @@ public class RefreshTokenController {
     public ResponseEntity<String> refreshAccessToken(HttpServletRequest request) {
         try {
             String refreshTokenHeader = request.getHeader("Refresh");
-            if (refreshTokenHeader == null && !refreshTokenHeader.startsWith("Bearer ")) {
+            if (refreshTokenHeader != null && refreshTokenHeader.startsWith("Bearer ")) {
                 String accessToken = service.refreshAccessToken(refreshTokenHeader);
                 return ResponseEntity.ok().header("Authorization", accessToken).body("AccessToken Refreshed");
             } else {

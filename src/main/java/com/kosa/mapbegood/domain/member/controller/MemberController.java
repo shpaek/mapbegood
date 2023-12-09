@@ -1,6 +1,7 @@
 package com.kosa.mapbegood.domain.member.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -44,14 +45,18 @@ public class MemberController {
 	// 로그인 정보
 	@GetMapping("/login-info")
 	public ResponseEntity getLoginInfo(Authentication authentication) {
-		try {
-			String email = authenticationUtil.getUserEmail(authentication);
-			MemberInfoDTO memberInfoDTO = service.findLoginInfo(email);
-        	return new ResponseEntity<>(memberInfoDTO, HttpStatus.OK);
-        } catch (Exception e) {
-			log.error("로그인 사용자 Redis 조회 Error: " + e.getMessage());
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+		if (Objects.isNull(authentication)) {
+			return ResponseEntity.ok().build();
+		}else {
+			try {
+				String email = authenticationUtil.getUserEmail(authentication);
+				MemberInfoDTO memberInfoDTO = service.findLoginInfo(email);
+				return new ResponseEntity<>(memberInfoDTO, HttpStatus.OK);
+			} catch (Exception e) {
+				log.error("로그인 사용자 Redis 조회 Error: " + e.getMessage());
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		}
 	}
 
 	// 회원 가입
