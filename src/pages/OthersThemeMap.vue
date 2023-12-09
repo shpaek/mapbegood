@@ -1,32 +1,42 @@
 <template>
-    <div>
-      <input v-model="searchTerm" placeholder="검색어를 입력하세요" />
-      <!--검색버튼-->
-      <button @click="executeSearch">검색하기</button>
-      <div v-if="themeMaps.length > 0">
-        <!--검색결과가 있는 경우-->
-        <ul>
-            <!--각 테마맵에 대한 목록-->
-          <li v-for="themeMap in themeMaps" :key="themeMap.id">
-            {{ themeMap.name }}  
-            {{ themeMap.memo }}
-            {{ themeMap.id }}
-            <!--추가하기 버튼-->
-            <button @click="addToFavorites(themeMap.id)">추가하기</button>
-            <!-- 중복 여부 확인 -->
-            <span v-if="isInFavorites(themeMap.id)">
-              이미 즐겨찾기에 추가된 테마맵입니다.
-            </span>
-          </li>
-        </ul>
-      </div>
-                <!-- 중복 여부 확인 메시지 -->
-      <div v-else>
-        검색 결과가 없습니다.
+  <div>
+    <p class="mt-3">테마맵 이름을 검색하세요</p>
+    <div class="input-group mb-3">
+      <input v-model="searchTerm" placeholder="검색어를 입력하세요" class="form-control" />
+      <div class="input-group-append">
+        <button @click="executeSearch" class="btn btn-primary">검색하기</button>
       </div>
     </div>
-  </template>
-  
+
+    <div v-if="themeMaps.length > 0">
+      <!-- 검색 결과가 있는 경우 -->
+      <ul class="list-group">
+        <!-- 각 테마맵에 대한 목록 -->
+        <li v-for="themeMap in themeMaps" :key="themeMap.id" class="list-group-item">
+          <div>
+            <h5 class="mb-1">{{ themeMap.name }}</h5>
+            <p class="mb-1">{{ themeMap.memo }}</p>
+            <small>{{ themeMap.id }}</small>
+
+            <!-- 추가하기 버튼 -->
+            <button @click="addToFavorites(themeMap.id)" class="btn btn-success">추가하기</button>
+
+            <!-- 중복 여부 확인 메시지 -->
+            <span v-if="isInFavorites(themeMap.id)" class="text-danger ml-2">
+              이미 추가된 list입니다.
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 중복 여부 확인 메시지 -->
+    <div v-else class="alert alert-warning mt-3" role="alert">
+      검색 결과가 없습니다.
+    </div>
+  </div>
+</template>
+
   <script>
   import axios from 'axios';
   
@@ -76,8 +86,10 @@
           console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
           const response = await axios.post(url);
           console.log(response.data); // 성공하면 콘솔에 출력
-  
-          // Update the isInFavorites property after successfully adding to favorites
+        // 추가 성공 메시지
+        alert("추가되었습니다");
+         
+        // Update the isInFavorites property after successfully adding to favorites
           const updatedThemeMaps = this.themeMaps.map(map => {
             if (map.id === themeMapId) {
               return { ...map, isInFavorites: true };
@@ -96,3 +108,14 @@
     },
   };
   </script>
+  <style scoped>
+
+
+
+
+
+
+
+
+
+</style>

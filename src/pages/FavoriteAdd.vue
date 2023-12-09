@@ -9,8 +9,7 @@
           <h3>{{ thememap.themeMapDto.name }}</h3>
           <p>{{ thememap.themeMapDto.memo }}</p>
           <!-- "즐겨찾기 추가" 버튼 추가 -->
-          <button @click="addFavorite(thememap.themeMapDto.id)">즐겨찾기 추가</button>
-        </li>
+         </li>
       </ul>
     </div>
   </template>
@@ -53,26 +52,26 @@
         console.error(error);
         alert(error.msg);
       });
-  },
-      addFavorite(themeMapId) {
-        console.log("아이디 가져와주세요:", themeMapId);
+  // },
+  //     addFavorite(themeMapId) {
+  //       console.log("아이디 가져와주세요:", themeMapId);
 
-        // "즐겨찾기 추가" 로직 추가
-        const url = `${this.backURL}/favorite/create/${themeMapId}`;
+  //       // "즐겨찾기 추가" 로직 추가
+  //       const url = `${this.backURL}/favorite/create/${themeMapId}`;
   
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-        axios.defaults.headers.common["Authorization"] = accessToken;
+  //       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+  //       axios.defaults.headers.common["Authorization"] = accessToken;
   
-        axios.post(url, { themeMapId: themeMapId }, { withCredentials: true })
-          .then(response => {
-            // 성공적으로 즐겨찾기를 추가한 경우에 수행할 작업
-            console.log(response.data);
-          })
-          .catch(error => {
-            // 즐겨찾기 추가 중에 오류가 발생한 경우에 수행할 작업
-            console.error(error);
-            alert(error.msg);
-          });
+  //       axios.post(url, { themeMapId: themeMapId }, { withCredentials: true })
+  //         .then(response => {
+  //           // 성공적으로 즐겨찾기를 추가한 경우에 수행할 작업
+  //           console.log(response.data);
+  //         })
+  //         .catch(error => {
+  //           // 즐겨찾기 추가 중에 오류가 발생한 경우에 수행할 작업
+  //           console.error(error);
+  //           alert(error.msg);
+  //         });
       },
     },
   };

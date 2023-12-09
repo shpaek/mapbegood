@@ -1,16 +1,23 @@
-<!--favoriteAdd.vue-->
-
+<!--ThemeMap.vue-->
 <template>
     <div class="content">
       <h1>나의 테마지도리스트 입니다.</h1>
       <ul>
+        <!-- favoriteList 내 각 항목에 대해 반복 -->
+        <!-- v-for을 사용해서 반복문 구현 -->
+        <!--in favaoriteList: 반복할 대상 데이터이며 , favoriteList 배열의 각 요소를 하나씩 순회함.-->
+        <!--key는반복된 엘리먼트에 고유한 키를 제공하며, thememapDto.id를 사용-->
         <li v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
           <h3>{{ thememap.themeMapDto.name }}</h3>
           <p>{{ thememap.themeMapDto.memo }}</p>
-          <!-- <p> {{favorite.themeMapDto.id }}</p> -->
-
-           <!-- "상세보기" 버튼 -->
-          <button @click="viewThememapDetail(thememap.themeMapDto.id)">상세보기</button>
+          <p>{{ thememap.themeMapDto.id }}</p>
+            
+          <!-- "상세보기" 버튼 -->
+          <button @click="detailThememap(thememap.themeMapDto.id)">상세보기</button>
+          <!--리스트 수정 버튼-->
+          <button @click="editThememap(thememap.themeMapDto.id)">수정</button>
+          <!--리스트 삭제 버튼-->
+          <button @click="deleteThememap(thememap.themeMapDto.id)">삭제</button>
         </li>
       </ul>
   
@@ -20,21 +27,23 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import axios from 'axios'; //axios를 사용하기 위해서는 import를 해야한다.
   
+
   export default {
     name: 'FavoriteList',
     data() {
       return {
-        favoriteList: [], // favoritelist이 보여지고 담을 곳
-      };
+        favoriteList: [], // 테마 맵 목록을 저장할 배열
+        themeMapId: null, 
+    };
     },
     mounted() {
-      this.loadFavoriteList();
+      this.loadMymapList();
     },
-  
+  //서버에서 테마 맵 목록 가져오는 코드 Start------
     methods: {
-      loadFavoriteList() {
+      loadMymapList() {
         const url = `${this.backURL}/mymap/list`;
   
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -42,13 +51,11 @@
   
         axios.get(url, { withCredentials: true })
           .then(response => {
-            // 사용자의 테마맵 리스트를 받아옴
+             // 받은 데이터를 처리하고 favoriteList 배열을 채운다.
             const themeMapList = response.data;
-  
-            // 즐겨찾기 테마맵 정보와 함께 favoriteList에 추가
             this.favoriteList = themeMapList.map(themeMap => {
               return {
-                themeMapDto: themeMap, // 테마맵 정보
+                themeMapDto: themeMap,
               };
             });
           })
@@ -57,15 +64,39 @@
             alert(error.msg);
           });
       },
+    //서버에서 테마 맵 목록 가져오는 코드 End------
+
       addNewThememap() {
-      // "리스트 생성" 버튼 클릭 시 ThememapCreate 페이지로 이동
-      this.$router.push({ name: 'thememap-create' });
-    },
-      viewThememapDetail(themeMapId) {
-        // 상세보기 버튼 클릭 시 ThememapDetail 페이지로 이동
-        this.$router.push({ name: 'thememap-detail', params: { id: themeMapId } });
+        this.$router.push({ name: 'ThememapCreate' });
+      },
+  
+      detailThememap(themeMapId) {
+        this.$router.push({ name: 'thememapdetail', params: { id: themeMapId } });
+      },
+      //이건 페이지 이동하는 것이며 $router.push를 통해 지정한 .vue로 이동함. 또한 index.js에서 따로 수정해야함.
+      editThememap(themeMapId) {
+      this.themeMapId = themeMapId; // themeMapId를 설정
+      this.$router.push({ name: 'thememapupdate', params: { id: themeMapId } });
+      },
+      //삭제 버튼을 눌렀을때 할 일 START----- 
+      deleteThememap(themeMapId) {
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+  
+        const url = `${this.backURL}/mymap/delete/${themeMapId}`;
+        axios.delete(url)
+          .then(response => {
+            console.log(response.data);
+            alert("삭제 성공");
+            this.loadMymapList(); // 함수명 수정
+          })
+          .catch(error => {
+            console.error(error);
+            alert("삭제 실패");
+          });
       },
     },
+    //삭제 버튼을 눌렀을때 할 일 END----- 
   };
   </script>
   
@@ -76,6 +107,11 @@
     color: #600;
     font-size: 1.5rem;
     margin-bottom: 1rem;
+  }
+  
+  button {
+    margin-right: 10px;
+    margin-bottom: 0;
   }
   
   ul {
@@ -101,7 +137,7 @@
     margin-bottom: 0;
   }
   
-  .sidebar { /*사이드바에서 사용하는 것이고 위치 설정해두기*/  
+  .sidebar {
     position: fixed;
     top: 50%;
     left: 10px;
@@ -113,6 +149,6 @@
   }
   
   .content {
-    margin-left: 200px; /* 사이드바 너비에 따라 조정 */
+    margin-left: 200px;
   }
   </style>
