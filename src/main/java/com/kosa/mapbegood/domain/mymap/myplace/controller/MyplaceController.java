@@ -36,7 +36,7 @@ public class MyplaceController {
 		
 	}
 	
-	@PostMapping("/{myplaceId}")
+	@PostMapping("")
 	ResponseEntity<?> createMyplace(@RequestBody MyplaceDTO myplaceDto){
 		try {
 			mps.createMyplace(myplaceDto);
@@ -55,6 +55,8 @@ public class MyplaceController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
 	
 	@PostMapping("/merge/{themeMapId}")
 	ResponseEntity<?> mergeMyplace(@PathVariable Long themeMapId, @RequestParam Long mythemeMapId){

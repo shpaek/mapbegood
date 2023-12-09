@@ -58,7 +58,7 @@ public class QOurplace extends EntityPathBase<Ourplace> {
 
     public QOurplace(Class<? extends Ourplace> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.groupThememapId = inits.isInitialized("groupThememapId") ? new com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap(forProperty("groupThememapId")) : null;
+        this.groupThememapId = inits.isInitialized("groupThememapId") ? new com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap(forProperty("groupThememapId"), inits.get("groupThememapId")) : null;
         this.memberEmail = inits.isInitialized("memberEmail") ? new com.kosa.mapbegood.domain.member.entity.QMember(forProperty("memberEmail")) : null;
     }
 

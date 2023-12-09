@@ -6,13 +6,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 import com.kosa.mapbegood.domain.mymap.myplace.mapper.MyplaceMapper;
 import com.kosa.mapbegood.domain.mymap.myplace.repository.MyplaceRepository;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
@@ -66,13 +65,14 @@ public class MyplaceService {
 	 * 내 테마지도에 등록된 장소를 삭제한다
 	 * @param myplaceId
 	 */
-	public void deleteMyplace(Long myplaceId) throws RemoveException{
-		Optional<Myplace> myplace = mpr.findById(myplaceId);
-		if(myplace.isPresent()) {
-			mpr.deleteById(myplaceId);			
-		}else {
-			throw new RemoveException("마이플레이스 삭제 못했대요 ㅋㅋ");
-		}
+	public void deleteMyplace(Long myplaceId) throws RemoveException {
+	    Optional<Myplace> mp = mpr.findById(myplaceId);
+	    Myplace myplace = mp.get();
+	    if (mp.isPresent()) {
+	        mpr.delete(myplace);
+	    } else {
+	        throw new RemoveException("마이플레이스 삭제 못했대요 ㅋㅋ");
+	    }
 	}
 
 	//공개 리스트인지 확인하는 코드 추가해야함
@@ -84,9 +84,13 @@ public class MyplaceService {
 	 * @throws FindException
 	 */
 	public void mergeToMyThemeMap(Long openThemeMapId, Long mythemeMapId) throws AddException, FindException {
-		if(tmr.findShowById(openThemeMapId)){
+		System.out.println("1");
+		if(tmr.existsShowById(openThemeMapId)){
+			System.out.println("2");
 			List<MyplaceDTO> openPlaceList = findAllMyplace(openThemeMapId);
+			System.out.println(openPlaceList);
 			List<MyplaceDTO> myPlaceList = findAllMyplace(mythemeMapId);
+			System.out.println(openPlaceList);
 			for(MyplaceDTO openPlace : openPlaceList) {
 				if(myPlaceList.contains(openPlace.getPlaceId())) {
 					return;

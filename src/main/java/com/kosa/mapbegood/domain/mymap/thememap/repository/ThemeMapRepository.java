@@ -17,7 +17,7 @@ public interface ThemeMapRepository extends JpaRepository<ThemeMap, Long>, Theme
 //   public List<ThemeMap>findByShowTrue(ThemeMap t);
    
    //현중
-   boolean findShowById(Long id);
+   boolean existsShowById(Long id);
 
 public Optional<ThemeMap> findByIdAndMemberEmail(Long themeMapId, Member findMember);
     
