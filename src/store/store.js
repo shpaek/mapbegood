@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    userInfo: null,
+    userInfo: "",
     isLogin: false,
   },
   getters: {
@@ -15,11 +15,11 @@ export default createStore({
     // commit 으로 부를 수 있다.
     loginSuccess({ state }, payload) {
       this.state.userInfo = payload;
-      this.state.userInfo.isLogin = true;
+      this.state.isLogin = true;
     },
     logOut({ state }) {
-      this.state.userInfo = null;
-      this.state.userInfo.isLogin = false;
+      this.state.userInfo = "";
+      this.state.isLogin = false;
     },
   },
   actions: {
@@ -42,7 +42,7 @@ export default createStore({
         });
     },
     logOut({ commit }) {
-      commit("logOut");
+      this.commit("logOut");
     },
     getUserInfo({ commit, dispatch }) {
       let isToken = localStorage.getItem("mapbegoodToken");
@@ -76,8 +76,6 @@ export default createStore({
           });
       } else {
         this.commit("logOut");
-        alert("로그아웃 되었습니다.");
-        location.href = "/login";
       }
     },
     getTokenRefresh() {
@@ -94,8 +92,6 @@ export default createStore({
         })
         .catch(() => {
           this.commit("logOut");
-          alert("로그아웃 되었습니다.");
-          location.href = "/login";
         });
     },
   },
