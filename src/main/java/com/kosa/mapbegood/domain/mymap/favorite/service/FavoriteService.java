@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,27 @@ public class FavoriteService {
             // Handle the exception as needed
         }
     }
+    /**
+     * 중복 조회
+     * @throws AddException 
+     * */
+    public boolean isThemeMapAlreadyFavorited(String userEmail, Long themeMapId) throws AddException {
+        Optional<Member> optMember = memberrepository.findByEmail(userEmail);
+        if (optMember.isPresent()) {
+            Member member = optMember.get();
+            Optional<Favorite> existingFavorite = favoriteRepository.findByMemberEmailAndThememapId(member, themeMapId);
+            // 중복 여부 확인
+            if (existingFavorite.isPresent()) {
+                throw new AddException("이미 즐겨찾기에 추가된 테마지도입니다.");
+            }
+
+            return false;
+        } else {
+            // 회원을 찾을 수 없는 경우에 대한 예외 처리 또는 false 반환
+            return false;
+        }
+    }
+    
     /*
      * 멤버의 이메일과 thememap의 id를 사용해서 즐겨찾기에 추가한 것 조회.
      * **/
@@ -109,7 +131,7 @@ private ThemeMapDto mapThemeMapEntityToDto(ThemeMap themeMap) {
     if (themeMap != null) {
         ThemeMapDto themeMapDto = new ThemeMapDto();
         // ThemeMapDto 반환될 값 설정 
-//        themeMapDto.setId(themeMap.getId());
+        themeMapDto.setId(themeMap.getId());
         themeMapDto.setName(themeMap.getName());//
         themeMapDto.setMemo(themeMap.getMemo());
         themeMapDto.setColor(themeMap.getColor());

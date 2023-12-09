@@ -23,6 +23,7 @@ public class ThemeMapDto {
     private String memo;
     private Boolean show;
     private Boolean mainmap;
+}
 //    private List<MyPlaceDto> myplaceList;
 //    private List<Favorite> favoriteList;
     // Constructors, getters, and setters
@@ -55,4 +56,3 @@ public class ThemeMapDto {
 //
 //        return themeMap;
     
-}

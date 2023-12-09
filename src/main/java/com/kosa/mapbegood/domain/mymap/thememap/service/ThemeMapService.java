@@ -97,7 +97,7 @@ public class ThemeMapService {
             existingThemeMap.setName(themeMapDto.getName());
             existingThemeMap.setColor(themeMapDto.getColor());
             existingThemeMap.setMemo(themeMapDto.getMemo());
-            existingThemeMap.setMainmap(themeMapDto.getShow());
+            existingThemeMap.setMainmap(themeMapDto.getMainmap());
             existingThemeMap.setShow(themeMapDto.getShow());
              
             // 필요한 필드들을 업데이트
