@@ -1,28 +1,21 @@
 package com.kosa.mapbegood.domain.ourmap.ourplace.entity;
 
-import java.sql.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
-import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.common.entity.AuditEntity;
 import com.kosa.mapbegood.domain.member.entity.Member;
-
+import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.place.entity.Place;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.sql.Date;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table
 @SequenceGenerator(name = "ourplace_seq_gener", sequenceName = "ourplace_seq", initialValue = 1, allocationSize = 1)
-public class Ourplace {
+public class Ourplace extends AuditEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ourplace_seq_gener")
@@ -33,19 +26,27 @@ public class Ourplace {
 	private GroupThememap groupThememapId;
 	
 	@ManyToOne
-	@JoinColumn(name = "member_email") //준택
-//	private Member memberNickname;
+	@JoinColumn(name = "member_email")
 	private Member memberEmail;
-	
-	private Long placeId;
-	
-	private String placeName;
-	
-	private Double x;
-	
-	private Double y;
-		
+
+	@ManyToOne
+	@JoinColumn(name = "palce_id")
+	private Place placeId;
+
 	private Date visitedAt;
+
+//	private String placeName;
+
+//	private Double x;
 	
-	private String category;
+//	private Double y;
+
+//	private String category;
+	
+//	@OneToMany(cascade = CascadeType.REMOVE)
+//	private List<OurplaceFeed> feedList;
+
+//	@OneToMany(cascade = CascadeType.REMOVE)
+//	private List<Place> placeList;
 }
+
