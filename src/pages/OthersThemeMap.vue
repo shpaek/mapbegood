@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <p class="mt-3">테마맵 이름을 검색하세요</p>
@@ -118,4 +119,23 @@
 
 
 
-</style>
+<!-- </style>
+ <template lang="">
+  <div>추천리스트입니다</div>
+  <div>{{ userInfo }}</div>
+</template>
+<script>
+import { mapState, mapActions } from "vuex";
+
+export default {
+  name: "OthersThemeMap",
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+  beforeCreate() {
+    this.$store.dispatch("getUserInfo");
+  },
+};
+</script>
+<style scoped></style> -->
+
