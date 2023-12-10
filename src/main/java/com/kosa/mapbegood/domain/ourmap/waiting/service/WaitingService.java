@@ -50,7 +50,7 @@ public class WaitingService {
 	 * @return 특정 그룹의 수락대기중인 사용자의 닉네임과 이메일
 	 * @throws FindException
 	 */
-	public List<MemberDTO> findAllWaitingsByGroupId(Long groupId) throws FindException{
+	public List<MemberDTO> findAllWaitingsByGroupId(Groups groupId) throws FindException{
 		List<MemberDTO> resultMemberDtoList = new ArrayList();
 		try {
 			List<Waiting> waitingList = wr.findByGroupId(groupId);
