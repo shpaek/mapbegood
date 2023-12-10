@@ -96,9 +96,63 @@
                     label="Email"
                     variant="underlined"
                     :rules="[rules.email]"
+                    :loading="showSignUpAuthEmailBtDisable"
                     ref="signupEmail"
                     style="text-align: right"
                   ></v-text-field>
+
+                  <v-btn
+                    v-show="showSignUpAuthEmailBt"
+                    :disabled="
+                      signupEmail.length < 1 || showSignUpAuthEmailBtDisable
+                    "
+                    size="small"
+                    color="blue-darken-1"
+                    variant="tonal"
+                    @click="sendSignUpAuthEmailHandler"
+                    style="left: 316px"
+                  >
+                    이메일 인증
+                  </v-btn>
+
+                  <v-text-field
+                    v-show="showSignUpAuthCode"
+                    v-model="signupAuthCode"
+                    color="primary"
+                    label="AuthCode"
+                    variant="underlined"
+                    ref="signupAuthCode"
+                  ></v-text-field>
+
+                  <div v-show="showSignUpAuthCodeBt" style="height: 31px">
+                    <div style="display: inline-block; margin-left: 273px">
+                      <span
+                        v-show="timerActive"
+                        style="color: #ff2323; font-size: 13px"
+                        >{{ minutes }}:{{
+                          seconds < 10 ? "0" + seconds : seconds
+                        }}</span
+                      >
+                    </div>
+                    <div
+                      style="
+                        display: inline-block;
+                        float: right;
+                        margin-right: 8px;
+                      "
+                    >
+                      <v-btn
+                        v-show="showSignUpAuthCodeBt"
+                        :disabled="signupAuthCode.length < 10"
+                        size="small"
+                        color="blue-darken-1"
+                        variant="tonal"
+                        @click="sendSignUpAuthCodeHandle"
+                      >
+                        인증번호 확인
+                      </v-btn>
+                    </div>
+                  </div>
 
                   <v-text-field
                     v-model="signupPassword"
@@ -130,12 +184,15 @@
                     label="Nickname"
                     variant="underlined"
                     ref="signupNickName"
+                    @keyup="editNicknameHandler"
                   ></v-text-field>
+
                   <v-btn
+                    v-show="!nickduplication"
+                    :disabled="signupNickName.length < 1"
                     size="small"
                     color="blue-darken-1"
                     variant="tonal"
-                    v-show="!nickduplication"
                     @click="nickNameDuplicationHandler"
                     style="left: 290px"
                   >
@@ -184,6 +241,7 @@
                     label="Email"
                     variant="underlined"
                     :rules="[rules.email]"
+                    :loading="showAuthEmailBtDisable"
                     ref="authEmail"
                     style="text-align: right"
                   ></v-text-field>
@@ -193,6 +251,7 @@
                     size="small"
                     color="blue-darken-1"
                     variant="tonal"
+                    :disabled="authEmail.length < 1 || showAuthEmailBtDisable"
                     style="left: 310px"
                     @click="sendAuthEmailHandler"
                   >
@@ -213,6 +272,7 @@
                     size="small"
                     color="blue-darken-1"
                     variant="tonal"
+                    :disabled="authCode.length < 10"
                     style="left: 310px"
                     @click="sendAuthCodeHandle"
                   >
@@ -249,18 +309,19 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
-                  v-show="showFindPwdBt"
-                  color="blue-darken-1"
-                  @click="initFindPwdHandler"
-                >
-                  확인
-                </v-btn>
-                <v-btn
                   v-show="showChangePwdBt"
                   color="blue-darken-1"
                   @click="sendChangePassword"
+                  :disabled="
+                    changePassword.length < 9 ||
+                    changePassword1.length < 9 ||
+                    changePassword != changePassword1
+                  "
                 >
                   변경하기
+                </v-btn>
+                <v-btn color="blue-darken-1" @click="initFindPwdHandler">
+                  취소
                 </v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -330,27 +391,43 @@ export default {
           return "Incorrect Password";
         },
       },
+      minutes: 5,
+      seconds: 0,
+      timerActive: false,
+      timer: null,
 
+      // signup data
       signupDialog: false,
+
       signupProfileImage: "",
+      displayImage:
+        "https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/profile-image/default-profile.jpg",
+
       signupEmail: "",
+      signupAuthEmail: false,
+      showSignUpAuthEmailBtDisable: false,
+      showSignUpAuthEmailBt: true,
+
+      signupAuthCode: "",
+      showSignUpAuthCode: false,
+      showSignUpAuthCodeBt: false,
+
       signupPassword: "",
       signupPassword1: "",
       signupNickName: "",
       nickduplication: false,
-      displayImage:
-        "https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/profile-image/default-profile.jpg",
 
+      // findPwd data
       findPwdDialog: false,
+
       authEmail: "",
       showAuthEmail: true,
+      showAuthEmailBtDisable: false,
       showAuthEmailBt: true,
 
       authCode: "",
       showAuthCode: false,
       showAuthCodeBt: false,
-
-      showFindPwdBt: true,
 
       changePassword: "",
       showPassword: false,
@@ -364,9 +441,36 @@ export default {
   methods: {
     ...mapActions(["login"]),
 
+    startTimer() {
+      this.timerActive = true;
+      this.timer = setInterval(() => {
+        if (this.seconds === 0) {
+          if (this.minutes === 0) {
+            this.stopTimer();
+            return;
+          }
+          this.minutes--;
+          this.seconds = 59;
+        } else {
+          this.seconds--;
+        }
+      }, 1000);
+    },
+
+    stopTimer() {
+      clearInterval(this.timer);
+      this.timerActive = false;
+      this.minutes = 5;
+      this.seconds = 0;
+    },
+
     loginFormSubmitHandler() {
       if (this.email == "") {
         alert("이메일을 입력하세요.");
+        this.$refs.email.focus();
+        return;
+      } else if (this.rules.email(this.email) != true) {
+        alert("올바른 이메일 형식이 아닙니다.");
         this.$refs.email.focus();
         return;
       } else if (this.password == "") {
@@ -399,9 +503,9 @@ export default {
         alert("올바른 이메일 형식이 아닙니다.");
         this.$refs.signupEmail.focus();
         return;
-      } else if (this.signupNickName == "") {
-        alert("닉네임을 입력하세요.");
-        this.$refs.signupNickName.focus();
+      } else if (this.signupAuthEmail != true) {
+        alert("이메일 인증이 필요합니다.");
+        this.$refs.signupEmail.focus();
         return;
       } else if (this.signupPassword == "") {
         alert("비밀번호를 입력하세요.");
@@ -414,6 +518,10 @@ export default {
       } else if (this.signupPassword != this.signupPassword1) {
         alert("비밀번호가 다릅니다.");
         this.$refs.signupPassword.select();
+        return;
+      } else if (this.signupNickName == "") {
+        alert("닉네임을 입력하세요.");
+        this.$refs.signupNickName.focus();
         return;
       } else if (this.nickduplication != true) {
         alert("닉네임 중복확인이 필요합니다.");
@@ -453,6 +561,7 @@ export default {
           alert(res.data.message);
           this.email = this.signupEmail;
           this.initSignUpHandler();
+          this.$refs.password.focus();
         })
         .catch((err) => {
           // console.log(err);
@@ -463,6 +572,10 @@ export default {
           }
           this.$refs.signupEmail.focus();
         });
+    },
+
+    editNicknameHandler() {
+      this.nickduplication = false;
     },
 
     nickNameDuplicationHandler() {
@@ -501,21 +614,104 @@ export default {
       this.displayImage = window.URL.createObjectURL(this.signupProfileImage);
     },
 
+    sendSignUpAuthEmailHandler() {
+      const pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      if (this.signupEmail == "") {
+        alert("이메일을 입력해주세요.");
+        this.$refs.signupEmail.focus();
+        return;
+      } else if (!pattern.test(this.signupEmail)) {
+        alert("이메일을 확인해 주세요.");
+        this.$refs.signupEmail.focus();
+        return;
+      }
+
+      const sendEmail = {
+        email: this.signupEmail,
+      };
+
+      this.showSignUpAuthEmailBtDisable = true;
+      axios
+        .post(`${this.backURL}/auth-email`, sendEmail)
+        .then((res) => {
+          alert(res.data.message);
+          this.showSignUpAuthCode = true;
+          this.showSignUpAuthCodeBt = true;
+          this.showSignUpAuthEmailBtDisable = false;
+          this.startTimer();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err.response.data.message);
+        });
+    },
+
+    sendSignUpAuthCodeHandle() {
+      if (this.signupAuthCode == "") {
+        alert("인증번호를 입력해 주세요.");
+        this.$refs.signupAuthCode.focus();
+        return;
+      }
+
+      const sendCode = {
+        email: this.signupEmail,
+        code: this.signupAuthCode,
+      };
+
+      axios
+        .post(`${this.backURL}/signup-auth-code`, sendCode)
+        .then((res) => {
+          alert(res.data.message);
+          this.signupAuthEmail = true;
+          this.showSignUpAuthEmailBt = false;
+          this.showSignUpAuthCode = false;
+          this.showSignUpAuthCodeBt = false;
+          this.stopTimer();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err.response.data.message);
+        });
+    },
+
     initSignUpHandler() {
       this.signupDialog = false;
+
       this.signupProfileImage = "";
-      this.signupEmail = "";
-      this.signupPassword = "";
-      this.signupPassword1 = "";
-      this.signupNickName = "";
-      this.nickduplication = false;
       this.displayImage =
         "https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/profile-image/default-profile.jpg";
+
+      this.signupEmail = "";
+      this.signupAuthEmail = false;
+      this.showSignUpAuthEmailBt = true;
+
+      this.signupAuthCode = "";
+      this.showSignUpAuthCode = false;
+      this.showSignUpAuthCodeBt = false;
+
+      this.signupPassword = "";
+      this.signupPassword1 = "";
+
+      this.signupNickName = "";
+      this.nickduplication = false;
+
+      this.email = "";
+      this.password = "";
+      this.stopTimer();
     },
 
     sendAuthEmailHandler() {
+      const pattern =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
       if (this.authEmail == "") {
         alert("가입한 이메일을 입력해주세요.");
+        this.$refs.authEmail.focus();
+        return;
+      } else if (!pattern.test(this.authEmail)) {
+        alert("이메일을 확인해 주세요.");
         this.$refs.authEmail.focus();
         return;
       }
@@ -524,13 +720,14 @@ export default {
         email: this.authEmail,
       };
 
+      this.showAuthEmailBtDisable = true;
       axios
         .post(`${this.backURL}/auth-email`, sendEmail)
         .then((res) => {
           alert(res.data.message);
-          this.$refs.authEmail.append("readonly");
           this.showAuthCode = true;
           this.showAuthCodeBt = true;
+          this.showAuthEmailBtDisable = false;
         })
         .catch((err) => {
           console.log(err);
@@ -562,7 +759,6 @@ export default {
           this.showAuthCodeBt = false;
           this.showPassword = true;
           this.showPassword1 = true;
-          this.showFindPwdBt = false;
           this.showChangePwdBt = true;
         })
         .catch((err) => {
@@ -621,8 +817,6 @@ export default {
       this.showAuthCode = false;
       this.showAuthCodeBt = false;
 
-      this.showFindPwdBt = true;
-
       this.changePassword = "";
       this.showPassword = false;
       this.changePassword1 = "";
@@ -630,6 +824,8 @@ export default {
       this.showChangePwdBt = false;
 
       this.tmpAccessToken = "";
+      this.email = "";
+      this.password = "";
     },
   },
   created() {
