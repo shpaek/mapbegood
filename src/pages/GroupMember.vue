@@ -1,15 +1,16 @@
 <template lang="">
-    <h2>그룹 멤버입니다</h2>
+    <h2>그룹 멤버</h2>
     <div class="group-member-container">
         <div class="icons">
             <!-- 아이콘들 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16"
+                @click="waitinglistClickHandler">
                 <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
             </svg>
             <span v-if="isleader">
                 <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16"
-                    @click="addmemberClickHandler">
+                    @click="searchMemberForAddClickHandler">
                     <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
                     <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
                 </svg> 
@@ -23,7 +24,7 @@
                     <span>삭제</span>
                 </div> -->
                 <div class="info">
-                    <span>
+                    <span class="member" @click="memberdetailClickHandler">
                         {{gm.member.nickname}}
                     </span>
                     <span v-if="isleader">
@@ -85,10 +86,39 @@ export default {
              })
     },
     methods:{
-        memberdeleteClickHandler(){
+        memberdeleteClickHandler(){ //그룹장의 멤버 방출
             this.selectedNickname = this.memberList[0].member.nickname;
             // this.selectedNickname에 값을 할당
             alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
+
+            const url = `http://localhost:8080/mapbegood/groupmember`
+            const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
+            axios.defaults.headers.common["Authorization"] = accessToken;
+
+            // axios.delete(url, data, { withCredentials: true })
+            //      .then(response => {
+            //         alert("멤버가 방출되었습니다")
+            //      })
+            //      .catch(error => {
+            //         console.log(error)
+            //         alert("멤버가 방출되지 않았습니다")
+            //      })
+        },
+        waitinglistClickHandler(){ //그룹초대 미응답 명단
+            this.$router.push({ 
+                name: '/waiting', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
+        },
+        searchMemberForAddClickHandler(){ //그룹에 초대하고 싶은 사용자 검색
+
+        },
+        memberdetailClickHandler(){ //그룹멤버의 상세보기로 이동
+
         }
     }
 }
@@ -111,10 +141,10 @@ div.member-list{
     margin-left:auto;
     margin-right:auto;
 }
-div.guide{
+/* div.guide{
     display: flex;
     justify-content: space-between;
-}
+} */
 div.info{
     display: flex;
     justify-content: space-between;
