@@ -29,11 +29,13 @@ public class QOurplaceFeed extends EntityPathBase<OurplaceFeed> {
     //inherited
     public final DateTimePath<java.util.Date> createdAt = _super.createdAt;
 
+    public final NumberPath<Long> groupId = createNumber("groupId", Long.class);
+
     public final QOurplaceFeedEmbedded id;
 
-    public final com.kosa.mapbegood.domain.member.entity.QMember memberEmail;
+    public final com.kosa.mapbegood.domain.member.entity.QMember member;
 
-    public final com.kosa.mapbegood.domain.ourmap.ourplace.entity.QOurplace ourplaceId;
+    public final com.kosa.mapbegood.domain.ourmap.ourplace.entity.QOurplace ourplace;
 
     public QOurplaceFeed(String variable) {
         this(OurplaceFeed.class, forVariable(variable), INITS);
@@ -54,8 +56,8 @@ public class QOurplaceFeed extends EntityPathBase<OurplaceFeed> {
     public QOurplaceFeed(Class<? extends OurplaceFeed> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.id = inits.isInitialized("id") ? new QOurplaceFeedEmbedded(forProperty("id")) : null;
-        this.memberEmail = inits.isInitialized("memberEmail") ? new com.kosa.mapbegood.domain.member.entity.QMember(forProperty("memberEmail")) : null;
-        this.ourplaceId = inits.isInitialized("ourplaceId") ? new com.kosa.mapbegood.domain.ourmap.ourplace.entity.QOurplace(forProperty("ourplaceId"), inits.get("ourplaceId")) : null;
+        this.member = inits.isInitialized("member") ? new com.kosa.mapbegood.domain.member.entity.QMember(forProperty("member")) : null;
+        this.ourplace = inits.isInitialized("ourplace") ? new com.kosa.mapbegood.domain.ourmap.ourplace.entity.QOurplace(forProperty("ourplace"), inits.get("ourplace")) : null;
     }
 
 }

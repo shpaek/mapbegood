@@ -1,9 +1,13 @@
 package com.kosa.mapbegood.domain.mymap.myplaceFeed.dto;
 
-import com.kosa.mapbegood.domain.member.entity.Member;
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -13,7 +17,7 @@ public class MyplaceFeedDTO {
 
 	private Long myplaceId;
 	
-	private Member memberEmail;
+	private MemberDTO memberEmail;
 	
 	private String content;
 	

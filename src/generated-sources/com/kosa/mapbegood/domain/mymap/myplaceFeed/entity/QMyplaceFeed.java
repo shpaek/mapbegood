@@ -29,11 +29,11 @@ public class QMyplaceFeed extends EntityPathBase<MyplaceFeed> {
     //inherited
     public final DateTimePath<java.util.Date> createdAt = _super.createdAt;
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
     public final com.kosa.mapbegood.domain.member.entity.QMember memberEmail;
 
-    public final com.kosa.mapbegood.domain.mymap.myplace.entity.QMyplace myplaceId;
+    public final com.kosa.mapbegood.domain.mymap.myplace.entity.QMyplace myplace;
+
+    public final NumberPath<Long> myplaceId = createNumber("myplaceId", Long.class);
 
     public QMyplaceFeed(String variable) {
         this(MyplaceFeed.class, forVariable(variable), INITS);
@@ -54,7 +54,7 @@ public class QMyplaceFeed extends EntityPathBase<MyplaceFeed> {
     public QMyplaceFeed(Class<? extends MyplaceFeed> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.memberEmail = inits.isInitialized("memberEmail") ? new com.kosa.mapbegood.domain.member.entity.QMember(forProperty("memberEmail")) : null;
-        this.myplaceId = inits.isInitialized("myplaceId") ? new com.kosa.mapbegood.domain.mymap.myplace.entity.QMyplace(forProperty("myplaceId"), inits.get("myplaceId")) : null;
+        this.myplace = inits.isInitialized("myplace") ? new com.kosa.mapbegood.domain.mymap.myplace.entity.QMyplace(forProperty("myplace"), inits.get("myplace")) : null;
     }
 
 }

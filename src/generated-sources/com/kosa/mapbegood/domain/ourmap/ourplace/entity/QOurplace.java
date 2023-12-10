@@ -27,6 +27,8 @@ public class QOurplace extends EntityPathBase<Ourplace> {
     //inherited
     public final DateTimePath<java.util.Date> createdAt = _super.createdAt;
 
+    public final ListPath<com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed, com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.QOurplaceFeed> feedList = this.<com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed, com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.QOurplaceFeed>createList("feedList", com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed.class, com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.QOurplaceFeed.class, PathInits.DIRECT2);
+
     public final com.kosa.mapbegood.domain.ourmap.groupThememap.entity.QGroupThememap groupThememapId;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

@@ -28,6 +28,8 @@ public class QGroups extends EntityPathBase<Groups> {
 
     public final StringPath name = createString("name");
 
+    public final ListPath<com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed, com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.QOurplaceFeed> OurplaceFeedList = this.<com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed, com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.QOurplaceFeed>createList("OurplaceFeedList", com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed.class, com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.QOurplaceFeed.class, PathInits.DIRECT2);
+
     public final ListPath<com.kosa.mapbegood.domain.ourmap.waiting.entity.Waiting, com.kosa.mapbegood.domain.ourmap.waiting.entity.QWaiting> waitingList = this.<com.kosa.mapbegood.domain.ourmap.waiting.entity.Waiting, com.kosa.mapbegood.domain.ourmap.waiting.entity.QWaiting>createList("waitingList", com.kosa.mapbegood.domain.ourmap.waiting.entity.Waiting.class, com.kosa.mapbegood.domain.ourmap.waiting.entity.QWaiting.class, PathInits.DIRECT2);
 
     public QGroups(String variable) {

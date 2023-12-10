@@ -3,17 +3,34 @@ package com.kosa.mapbegood.domain.ourmap.ourplace.entity;
 import java.sql.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.kosa.mapbegood.domain.common.entity.AuditEntity;
-import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.member.entity.Member;
-
+import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeed;
 import com.kosa.mapbegood.domain.place.entity.Place;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table
@@ -46,8 +63,8 @@ public class Ourplace extends AuditEntity {
 
 //	private String category;
 	
-//	@OneToMany(cascade = CascadeType.REMOVE)
-//	private List<OurplaceFeed> feedList;
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy="id.ourplaceId")
+	private List<OurplaceFeed> feedList;
 
 //	@OneToMany(cascade = CascadeType.REMOVE)
 //	private List<Place> placeList;

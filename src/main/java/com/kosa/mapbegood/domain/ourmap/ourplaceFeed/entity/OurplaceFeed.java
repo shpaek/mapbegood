@@ -7,7 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-
+//@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,17 +20,17 @@ public class OurplaceFeed extends AuditEntity {
 	@EmbeddedId
 	private OurplaceFeedEmbedded id = new OurplaceFeedEmbedded();
 	
-	@ManyToOne
-	@JoinColumn(name = "OurplaceId")
-	@MapsId("ourplaceId")
-	private Ourplace ourplace;
-	
-	@OneToOne
-	@JoinColumn(name = "email")
-	@MapsId("email")
-	private Member member;
+    @ManyToOne
+    @MapsId("ourplaceId")
+//    @JoinColumn(name = "ourplace_id")
+    private Ourplace ourplace;
 
-	private Long GroupId;
+    @ManyToOne
+    @MapsId("email")
+//    @JoinColumn(name = "member_email")
+    private Member member;
+
+	private Long groupId;
 	
 	private String content;
 }

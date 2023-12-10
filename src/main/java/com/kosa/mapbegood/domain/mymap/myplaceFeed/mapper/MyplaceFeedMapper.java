@@ -7,8 +7,8 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MyplaceFeedMapper {
-    MyplaceFeed MyplaceFeedDTOtoMyplaceFeed(MyplaceFeedDTO myfeedDto);
+    MyplaceFeed dtoToEntity(MyplaceFeedDTO myfeedDto);
 
-    MyplaceFeedDTO MyplaceToMyplaceFeedDTO(MyplaceFeed myfeed);
+    MyplaceFeedDTO entityToDto(MyplaceFeed myfeed);
 
 }
