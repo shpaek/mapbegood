@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-import com.kosa.mapbegood.domain.common.service.RedisService;
 import com.kosa.mapbegood.domain.member.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,7 @@ import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.service.MemberServiceInterface;
 import com.kosa.mapbegood.exception.AddException;
-import com.kosa.mapbegood.security.refresh.RefreshTokenService;
+import com.kosa.mapbegood.security.refresh.TokenService;
 import com.kosa.mapbegood.util.AuthenticationUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class MemberController {
 	private final MemberServiceInterface service;
 	private final AuthenticationUtil authenticationUtil;
 	private final MemberMapper mapper;
-	private final RefreshTokenService refreshTokenService;
+	private final TokenService tokenService;
 
 	// 로그인 정보
 	@GetMapping("/login-info")
@@ -61,7 +60,7 @@ public class MemberController {
 
 	// 회원 가입
 	@PostMapping("/signup")
-	public ResponseEntity createMember(@Valid @RequestPart MemberSignUpDTO signUpDto,
+	public ResponseEntity create(@Valid @RequestPart MemberSignUpDTO signUpDto,
 									   @RequestPart(required = false) MultipartFile profileImage) {
 		try {
 				Member member = mapper.MemberDTOPostToMember(signUpDto);
@@ -139,7 +138,7 @@ public class MemberController {
 
 	// 이메일 인증
 	@PostMapping("/auth-email")
-	public ResponseEntity sendAuthEmailCode(@Valid @RequestBody MemberEmailDTO emailDto) {
+	public ResponseEntity sendAuthEmail(@Valid @RequestBody MemberEmailDTO emailDto) {
 		try {
 			service.sendCodeToEmail(emailDto.getEmail());
 		} catch (Exception e) {
@@ -150,7 +149,7 @@ public class MemberController {
 
 	// 회원 가입(이메일 인증번호 인증)
 	@PostMapping("/signup-auth-code")
-	public ResponseEntity signUpEmailAuthCode(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
+	public ResponseEntity signupAuthCode(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
 		try {
 			if (service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode())) {
 				return new ResponseEntity<>(new Response(1, "인증번호가 일치합니다."), HttpStatus.OK);
@@ -164,7 +163,7 @@ public class MemberController {
 
 	// 비밀번호 찾기(이메일 인증번호 인증)
 	@PostMapping("/auth-code")
-	public ResponseEntity findPasswordEmailAuthCode(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
+	public ResponseEntity findPasswordAuthCode(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
 		try {
 			if (service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode())) {
 				MultiValueMap<String, String> headers = this.addHeaderTempAccessToken(emailVerifyDto.getEmail());
@@ -192,7 +191,7 @@ public class MemberController {
 
 	// 회원 탈퇴
 	@DeleteMapping("/user")
-	public ResponseEntity deleteMember(Authentication authentication) {
+	public ResponseEntity delete(Authentication authentication) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.deleteMember(email);
@@ -204,7 +203,7 @@ public class MemberController {
 
 	private MultiValueMap<String, String> addHeaderTempAccessToken(String email) throws Exception {
 		Member findMember = service.findMember(email);
-		String tempAccessToken = refreshTokenService.delegateAccessToken(findMember);
+		String tempAccessToken = tokenService.delegateAccessToken(findMember);
 
 		MultiValueMap<String, String> tempAccessTokenHeader = new LinkedMultiValueMap<>();
 		tempAccessTokenHeader.add("Authorization", tempAccessToken);
