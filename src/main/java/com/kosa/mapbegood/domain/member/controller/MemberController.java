@@ -61,14 +61,15 @@ public class MemberController {
 
 	// 회원 가입
 	@PostMapping("/signup")
-	public ResponseEntity createMember(@Valid @RequestBody MemberSignUpDTO signUpDto) {
+	public ResponseEntity createMember(@Valid @RequestPart MemberSignUpDTO signUpDto,
+									   @RequestPart(required = false) MultipartFile profileImage) {
 		try {
-			Member member = mapper.MemberDTOPostToMember(signUpDto);
-			service.createMember(member);
+				Member member = mapper.MemberDTOPostToMember(signUpDto);
+				service.createMember(member, profileImage);
 		} catch (AddException ae) {
-			return new ResponseEntity<>(new Response(0, "이미 가입된 계정이 있습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "이미 가입된 계정이 있습니다."), HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "회원가입에 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "회원가입에 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "회원가입이 완료되었습니다."), HttpStatus.CREATED);
 	}
@@ -79,7 +80,7 @@ public class MemberController {
 		try {
 			service.duplicationNickName(nickName);
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "중복된 닉네임 입니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "이미 사용중인 닉네임 입니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "사용 가능한 닉네임 입니다."), HttpStatus.OK);
 	}
@@ -92,7 +93,7 @@ public class MemberController {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.verifyPassword(email, passDto.getPassword());
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "패스워드가 다릅니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "패스워드가 다릅니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "패스워드 확인"), HttpStatus.OK);
 	}
@@ -105,7 +106,7 @@ public class MemberController {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.updateNickName(email, nickNameDto.getNickname());
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "닉네임 수정이 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "닉네임 수정이 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "닉네임이 수정되었습니다."), HttpStatus.OK);
 	}
@@ -118,7 +119,7 @@ public class MemberController {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.updatePassword(email, passwordDto.getPassword());
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "패스워드 변경이 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "패스워드 변경이 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "패스워드가 변경되었습니다."), HttpStatus.OK);
 	}
@@ -131,34 +132,48 @@ public class MemberController {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.updateProfileImage(email, profileImage);
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "프로필 사진 변경이 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "프로필 사진 변경이 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "프로필 사진이 변경되었습니다."), HttpStatus.OK);
 	}
 
-	// 비밀번호 찾기(이메일 전송)
+	// 이메일 인증
 	@PostMapping("/auth-email")
-	public ResponseEntity sendMessage(@Valid @RequestBody MemberEmailDTO emailDto) {
+	public ResponseEntity sendAuthEmailCode(@Valid @RequestBody MemberEmailDTO emailDto) {
 		try {
 			service.sendCodeToEmail(emailDto.getEmail());
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "이메일 전송이 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "이메일 전송이 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "인증번호가 이메일로 전송되었습니다."), HttpStatus.OK);
 	}
 
-	// 비밀번호 찾기(문자일 인증)
+	// 회원 가입(이메일 인증번호 인증)
+	@PostMapping("/signup-auth-code")
+	public ResponseEntity signUpEmailAuthCode(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
+		try {
+			if (service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode())) {
+				return new ResponseEntity<>(new Response(1, "인증번호가 일치합니다."), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	// 비밀번호 찾기(이메일 인증번호 인증)
 	@PostMapping("/auth-code")
-	public ResponseEntity verificationEmail(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
+	public ResponseEntity findPasswordEmailAuthCode(@Valid @RequestBody MemberEmailVerifyDTO emailVerifyDto) {
 		try {
 			if (service.verifiedCode(emailVerifyDto.getEmail(), emailVerifyDto.getCode())) {
 				MultiValueMap<String, String> headers = this.addHeaderTempAccessToken(emailVerifyDto.getEmail());
 				return new ResponseEntity<>(new Response(1, "인증번호가 일치합니다."), headers, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.OK);
+				return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "인증에 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -171,7 +186,7 @@ public class MemberController {
 			List<MemberSearchResponseDTO> memberSearchResult = service.searchMember(email, nickName);
 			return ResponseEntity.ok(memberSearchResult);
 		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -182,7 +197,7 @@ public class MemberController {
 			String email = authenticationUtil.getUserEmail(authentication);
 			service.deleteMember(email);
 		} catch (Exception e) {
-			return new ResponseEntity<>(new Response(0, "회원탈퇴에 실패했습니다."), HttpStatus.OK);
+			return new ResponseEntity<>(new Response(0, "회원탈퇴에 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "탈퇴 되었습니다."), HttpStatus.OK);
 	}

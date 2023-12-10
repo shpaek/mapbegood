@@ -33,7 +33,7 @@ public interface MemberServiceInterface {
      * @param member
      * @throws AddException
      */
-    void createMember(Member member) throws Exception;
+    void createMember(Member member, MultipartFile profileImage) throws Exception;
 
     /**
      * 닉네임 중복 확인

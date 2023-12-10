@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Objects;
 
 @Slf4j
 @Transactional
@@ -58,7 +59,7 @@ public class MailService {
                         "        <div class=\"auth-title\" style=\"margin-top: 50px; text-align: left\">\n" +
                         "          <a href=\"http://localhost:5173\">\n" +
                         "            <img\n" +
-                        "              src=\"https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/image/mainlogo.png\"\n" +
+                        "              src=\"https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/image/logo2.png\"\n" +
                         "              alt=\"mapbegood\"\n" +
                         "              style=\"width: 25px\"\n" +
                         "            />\n" +
