@@ -1,5 +1,27 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.service.MemberGroupService;
+import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
+import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.dto.OurplaceFeedDTO;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeedEmbedded;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.service.OurplaceFeedService;
@@ -7,13 +29,7 @@ import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.kosa.mapbegood.util.AuthenticationUtil;
 
 @RestController
 @RequestMapping("/ourfeed")
@@ -22,60 +38,112 @@ public class OurplaceFeedController {
     @Autowired
     private OurplaceFeedService service;
 
+    @Autowired
+    private MemberGroupService mgService;
+
+    @Autowired
+    private AuthenticationUtil authenticationUtil;
+
     public OurplaceFeedDTO setOurfeedEmId(Long ourplaceId, String memberEmail){
         OurplaceFeedDTO feedDto = new OurplaceFeedDTO();
-        feedDto.setOurplaceId(ourplaceId);
-        feedDto.setMemberEmail(memberEmail);
+        OurplaceDTO opDto = new OurplaceDTO();
+        opDto.setId(ourplaceId);
+        MemberDTO member = new MemberDTO();
+        member.setEmail(memberEmail);
+        feedDto.setOurplaceId(opDto);
+        feedDto.setMemberEmail(member);
         return feedDto;
     }
 
-    //GET	/ourfeed/{ourplaceId}
-    @GetMapping("/{ourplaceId}")
-    public List<OurplaceFeedDTO> findAll(@PathVariable Long ourplaceId) throws FindException {
-        OurplaceFeedDTO feedDto = new OurplaceFeedDTO();
-        feedDto.setOurplaceId(ourplaceId);
-        OurplaceFeedEmbedded ofid = service.getOurFeedEmId(feedDto);
-        return service.findAllOurFeed(List.of(ofid));
-    }
-
-    //GET	/ourfeed/{ourplaceId}/{memberNickname}
-    @GetMapping("/{ourplaceId}/{memberNickname}")
-    public OurplaceFeedDTO find(@PathVariable Long ourplaceId, @PathVariable String memberNickname) throws FindException{
-        OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, memberNickname);
-        return service.findOurFeedById(service.getOurFeedEmId(feedDto));
-    }
-
-    //POST	/ourfeed/{ourplaceId}/{memberNickname}
-    @PostMapping(value = "/{ourplaceId}/{memberNickname}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<?> create(@RequestBody OurplaceFeedDTO feedDto) throws AddException {
+    //GET	/ourfeed/{groupId}/{ourplaceId}
+    @GetMapping("/{groupId}/{ourplaceId}")
+    public ResponseEntity<?> findAll(@PathVariable Long groupId, @PathVariable Long ourplaceId) {
         try {
-            service.createOurFeed(feedDto);
+            List<MemberGroupDTO> members = mgService.findAllGroupMembersByGroupId(groupId);
+            List<Object> ourFeedList = new ArrayList<>();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "text/html;charset=UTF-8");
-            return new ResponseEntity<>("작성완료",
-                    headers,
-                    HttpStatus.OK);
-        } catch (AddException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            for (MemberGroupDTO member : members) {
+                OurplaceFeedEmbedded ourfeedId = new OurplaceFeedEmbedded();
+                ourfeedId.setOurplaceId(ourplaceId);
+                ourfeedId.setEmail(member.getMember().getEmail());
+
+                OurplaceFeedDTO ourfeedDto = service.findOurFeedById(ourfeedId);
+                if(ourfeedDto!=null) {
+                List<Object> ourFeed = List.of(ourfeedDto);
+                ourFeedList.add(ourFeed);
+                }
+            }
+
+            return ResponseEntity.ok(ourFeedList);
+        } catch (FindException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("피드를 찾지 못했습니다");
         }
     }
 
 
-    //PUT	/ourfeed/{ourplaceId}/{memberNickname}
-    @PutMapping(value = "/{ourplaceId}/{memberNickname}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<?> update(@PathVariable Long ourplaceId, @PathVariable String memberEmail, @RequestBody OurplaceFeedDTO feedDto) throws ModifyException, FindException {
-        feedDto.setOurplaceId(ourplaceId);
-        feedDto.setMemberEmail(memberEmail);
-        service.updateOurFeed(feedDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    //GET	/ourfeed/{groupId}/{ourplaceId}/{memberEmail}
+    @GetMapping("/{groupId}/{ourplaceId}/{memberEmail}")
+    public ResponseEntity<?> find(Authentication authentication, @PathVariable Long ourplaceId) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
+            OurplaceFeedDTO feed = service.findOurFeedById(service.getOurFeedEmId(feedDto));
+            if(feed!=null) {
+            return ResponseEntity.ok(feed);
+            }else {
+				return ResponseEntity.ok(new FindException("피드를 찾을 수 없습니다"));
+			}
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("피드를 찾지 못했습니다: " + e.getMessage());
+        }
     }
 
-    //DELETE	/ourfeed/{ourplaceId}/{memberNickname}
-    @DeleteMapping("/{ourplaceId}/{memberNickname}")
-    public ResponseEntity<?> delete(@PathVariable Long ourplaceId, @PathVariable String memberNickname) throws RemoveException {
-        OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, memberNickname);
-        service.deleteOurFeed(service.getOurFeedEmId(feedDto));
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    //POST	/ourfeed/{groupId}/{ourplaceId}/{memberEmail}
+    @PostMapping(value = "/{groupId}/{ourplaceId}/{memberEmail}", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> create(Authentication authentication, @RequestBody OurplaceFeedDTO feedDto) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            MemberDTO member = new MemberDTO();
+            member.setEmail(email);
+            feedDto.setMemberEmail(member);
+            System.out.println(email); 
+            service.createOurFeed(feedDto);
+
+            return ResponseEntity.ok("작성완료");
+        } catch (AddException e) {
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작성 실패: " + e.getMessage());
+        }
+    }
+
+
+    //PUT	/ourfeed/{groupId}/{ourplaceId}/{memberEmail}
+    @PutMapping(value = "/{groupId}/{ourplaceId}/{memberEmail}", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<?> update(Authentication authentication, @RequestBody OurplaceFeedDTO feedDto) throws ModifyException, FindException {
+        String email = authenticationUtil.getUserEmail(authentication);
+        MemberDTO member = new MemberDTO();
+        member.setEmail(email);
+        feedDto.setMemberEmail(member);
+
+		try {
+	        service.updateOurFeed(feedDto);
+			return ResponseEntity.ok("수정 완료");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패: " + e.getMessage());
+		}
+    }
+
+    //DELETE	/ourfeed/{groupId}/{ourplaceId}/{memberNickname}
+    @DeleteMapping("/{groupId}/{ourplaceId}/{memberNickname}")
+    public ResponseEntity<?> delete(Authentication authentication, @PathVariable Long ourplaceId) throws RemoveException, FindException {
+        String email = authenticationUtil.getUserEmail(authentication);
+        OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
+
+		try {
+	        service.deleteOurFeed(service.getOurFeedEmId(feedDto));
+			return ResponseEntity.ok("삭제 완료");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패: " + e.getMessage());
+		}
     }
 }
