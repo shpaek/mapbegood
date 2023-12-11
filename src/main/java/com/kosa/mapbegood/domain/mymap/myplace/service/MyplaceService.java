@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.mymap.myplace.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +13,10 @@ import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 import com.kosa.mapbegood.domain.mymap.myplace.mapper.MyplaceMapper;
 import com.kosa.mapbegood.domain.mymap.myplace.repository.MyplaceRepository;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
+import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
 
 @Service
@@ -36,7 +37,6 @@ public class MyplaceService {
 	 */
 	public List<MyplaceDTO> findAllMyplace(Long themeMapId) throws FindException{
 		List<Myplace> myplaceList = mpr.findByThememapId_Id(themeMapId);
-		System.out.println(myplaceList);
 		List<MyplaceDTO> myplaceDtoList = new ArrayList<MyplaceDTO>();
 		for(Myplace myplace: myplaceList) {
 			myplaceDtoList.add(mapper.entityToDto(myplace));
@@ -52,9 +52,7 @@ public class MyplaceService {
 	 */
 	public MyplaceDTO findMyplace(Long myplaceId) throws FindException{
 		Optional<Myplace> myplace = mpr.findById(myplaceId);
-		System.out.println("1");
 		if (myplace.isPresent()) {
-			System.out.println("2");
 			return mapper.entityToDto(myplace.get());	
 		} else {
 		    return null;
@@ -69,6 +67,20 @@ public class MyplaceService {
 		mpr.save(mapper.dtoToEntity(myplaceDto));
 	}
 
+	public void updateMyplace(MyplaceDTO myplaceDto) throws ModifyException {
+		Optional<Myplace> existingmyplace = mpr.findById(myplaceDto.getId());
+
+		if (existingmyplace.isPresent()) {
+			Myplace myplace = existingmyplace.get();
+			Date sqlDate = new Date(myplaceDto.getVisitedAt().getTime());
+			myplace.setVisitedAt(sqlDate);
+
+			mpr.save(myplace);
+		}else {
+			throw new ModifyException("해당 ID에 대한 our 플레이스를 찾을 수 없습니다.");
+		}
+	}
+	
 	/**
 	 * 내 테마지도에 등록된 장소를 삭제한다
 	 * @param myplaceId
@@ -92,26 +104,19 @@ public class MyplaceService {
 	 * @throws FindException
 	 */
 	public void mergeToMyThemeMap(Long openThemeMapId, Long mythemeMapId) throws AddException, FindException {
-		System.out.println("1");
 		if(tmr.existsShowById(openThemeMapId)){
-			System.out.println("2");
 			List<MyplaceDTO> openPlaceList = findAllMyplace(openThemeMapId);
-			System.out.println(openPlaceList);
 			List<MyplaceDTO> myPlaceList = findAllMyplace(mythemeMapId);
-			System.out.println(openPlaceList);
 			for(MyplaceDTO openPlace : openPlaceList) {
 				if(myPlaceList.contains(openPlace.getPlaceId())) {
-					System.out.println("4");
 					return;
 				}else {
-					System.out.println("5");
 					MyplaceDTO copyDto = new MyplaceDTO();
 					copyDto.setPlaceId(openPlace.getPlaceId());
 					ThemeMapDto thememapDto = new ThemeMapDto();
 					thememapDto.setId(mythemeMapId);
 					copyDto.setThememapId(thememapDto);
 					createMyplace(copyDto);
-					System.out.println("6");
 				}
 			}
 		}else {

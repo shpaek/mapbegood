@@ -1,4 +1,4 @@
-package com.kosa.mapbegood.domain.mymap.myplace.controller;
+package com.kosa.mapbegood.domain.ourmap.ourplace.controller;
 
 import java.util.List;
 
@@ -17,86 +17,62 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
-import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceWrapperDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.service.MyplaceService;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
+import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
+import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceWrapperDTO;
+import com.kosa.mapbegood.domain.ourmap.ourplace.service.OurplaceService;
 import com.kosa.mapbegood.domain.place.dto.PlaceDTO;
 import com.kosa.mapbegood.domain.place.service.PlaceService;
 import com.kosa.mapbegood.exception.FindException;
 
 @RestController
-@RequestMapping("/myplace")
-public class MyplaceController {
+@RequestMapping("/ourplace")
+public class OurplaceController {
+	
+	@Autowired
+	OurplaceService ops;
 	
 	@Autowired
 	MyplaceService mps;	
 	
 	@Autowired
 	PlaceService ps;
-
-	@GetMapping("/{thememapId}")
-	public ResponseEntity<?> findAllMyPlace(@PathVariable Long thememapId) throws FindException{
+	
+	@GetMapping("/{groupThememapId}")
+	public ResponseEntity<?> findAllOurPlace(@PathVariable Long groupThememapId) throws FindException{
 		try {
-			List<MyplaceDTO> myplace = mps.findAllMyplace(thememapId);
-				return ResponseEntity.ok(myplace);				
+			List<OurplaceDTO> ourplace = ops.findAllOurplace(groupThememapId);
+				return ResponseEntity.ok(ourplace);				
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
 	}
 	
-	
-	
-	/**
-	 * Myplace에 저장된 장소 정보 조회
-	 * @param themeMapId
-	 * @param mythemeMapId
-	 * @return
-	 */
-	@GetMapping("/detail/{myplaceId}")                    
-	public ResponseEntity<?> findMyPlace(@PathVariable Long myplaceId) throws FindException{
+	 
+	@GetMapping("/detail/{ourplaceId}")
+	public ResponseEntity<?> findOurPlace(@PathVariable Long ourplaceId) throws FindException{	
 		try {
-			MyplaceDTO myplace = mps.findMyplace(myplaceId);
-			if(myplace!=null) {
-				return ResponseEntity.ok(myplace);				
+			OurplaceDTO ourplace = ops.findOurplace(ourplaceId);
+			if(ourplace!=null) {
+				return ResponseEntity.ok(ourplace);				
 			}else {
 				return ResponseEntity.ok(new FindException("못찾음"));
 			}
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		
+		}		
 	}
 	
 	@PostMapping("")
-	ResponseEntity<?> createMyplace(@RequestBody MyplaceWrapperDTO myplaceWrapperDto){
+	ResponseEntity<?> createOurplace(@RequestBody OurplaceWrapperDTO ourplaceWrapperDto){
 		try {
-			MyplaceDTO myplaceDto = myplaceWrapperDto.getMyplaceDto();
-			PlaceDTO placeDto = myplaceWrapperDto.getPlaceDto();
+			OurplaceDTO ourplaceDto = ourplaceWrapperDto.getOurplaceDto();
+			PlaceDTO placeDto = ourplaceWrapperDto.getPlaceDto();
 			if(ps.findPlace(placeDto.getId()) == null) {
 				ps.createPlace(placeDto);
 			}
-			mps.createMyplace(myplaceDto);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e){
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@DeleteMapping("/{myplaceId}")
-	ResponseEntity<?> deleteMyplace(@PathVariable Long myplaceId){
-		try {
-			mps.deleteMyplace(myplaceId);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e){
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PutMapping("/{myplaceId}")
-	ResponseEntity<?> updateMyplace(@RequestBody MyplaceDTO myplaceDto){
-		try {
-			mps.updateMyplace(myplaceDto);
+			ops.createOurplace(ourplaceDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -104,21 +80,42 @@ public class MyplaceController {
 	}
 	
 	
-	@PostMapping("/merge/{themeMapId}")
-	ResponseEntity<?> mergeMyplace(@PathVariable Long themeMapId, @RequestParam Long mythemeMapId){
+	@DeleteMapping("/{ourplaceId}")
+	ResponseEntity<?> deleteOurplace(@PathVariable Long ourplaceId){
 		try {
-			mps.mergeToMyThemeMap(themeMapId, mythemeMapId);
+			ops.deleteOurplace(ourplaceId);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e){
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@PostMapping("/copy/{themeMapId}")
-	ResponseEntity<?> copyMyplace(@PathVariable Long themeMapId, @RequestParam Long mythemeMapId){
+	@PutMapping("/{ourplaceId}")
+	ResponseEntity<?> updateOurplace(@RequestBody OurplaceDTO ourplaceDto){
 		try {
-			List<MyplaceDTO> placeList = mps.findAllMyplace(themeMapId);
-			for(MyplaceDTO place: placeList) {
+			ops.updateOurplace(ourplaceDto);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	@PostMapping("/merge/{groupThemeMapId}")
+	ResponseEntity<?> mergeMyplace(@PathVariable Long groupThemeMapId, @RequestParam Long mythemeMapId){
+		try {
+			ops.mergeToMyThemeMap(groupThemeMapId, mythemeMapId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/copy/{groupThemeMapId}")
+	ResponseEntity<?> copyMyplace(@PathVariable Long groupThemeMapId, @RequestParam Long mythemeMapId){
+		try {
+			List<OurplaceDTO> placeList = ops.findAllOurplace(groupThemeMapId);
+			for(OurplaceDTO place: placeList) {
 				ThemeMapDto thememapDto = new ThemeMapDto();
 				thememapDto.setId(mythemeMapId);
 				MyplaceDTO copyDto = new MyplaceDTO();
@@ -133,5 +130,3 @@ public class MyplaceController {
 	}
 	
 }
-
-

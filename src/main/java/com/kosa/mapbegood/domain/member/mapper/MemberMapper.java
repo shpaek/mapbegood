@@ -3,9 +3,11 @@ package com.kosa.mapbegood.domain.member.mapper;
 import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.stereotype.Component;
 
 import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
+
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {

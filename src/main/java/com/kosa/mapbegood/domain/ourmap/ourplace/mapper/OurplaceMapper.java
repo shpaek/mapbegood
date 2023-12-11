@@ -1,0 +1,24 @@
+package com.kosa.mapbegood.domain.ourmap.ourplace.mapper;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
+
+import com.kosa.mapbegood.domain.ourmap.groupThememap.dto.GroupThememapDTO;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
+import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+
+public interface OurplaceMapper {
+    Ourplace dtoToEntity(OurplaceDTO ourplaceDto);
+
+    OurplaceDTO entityToDto(Ourplace ourplace);
+
+    @Mapping(target = "groupId", source = "groupId.id")
+    GroupThememapDTO mapToGroupThememapDTO(GroupThememap groupThememap);
+
+    @Mapping(target = "groupId.id", source = "groupId")
+    GroupThememap mapToGroupThememap(GroupThememapDTO groupThememapDTO);
+}

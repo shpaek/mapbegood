@@ -2,6 +2,7 @@ package com.kosa.mapbegood.domain.mymap.myplace.dto;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.place.dto.PlaceDTO;
 
@@ -19,6 +20,7 @@ public class MyplaceDTO {
 
 	private PlaceDTO placeId;
 
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date visitedAt;
 	
 }
