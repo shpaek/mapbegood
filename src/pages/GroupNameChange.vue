@@ -31,7 +31,7 @@ export default {
         return {
             name: '',
             isDupchkOk: false,
-            groupId: '',
+            groupId: 0,
             groupName: '',
             leaderNickname: '',
         }

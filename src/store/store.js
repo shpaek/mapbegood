@@ -3,68 +3,96 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    user: {
-      loginEmail: "",
-      nickName: "",
-      accessToken: "",
-      refreshToken: "",
-      isLogin: false,
-    },
+    userInfo: "",
+    isLogin: false,
   },
   getters: {
-    isLogin(state) {
-      return state.user.isLogin;
+    isLogin({ state }) {
+      return this.state.userInfo.isLogin;
     },
   },
   mutations: {
     // commit 으로 부를 수 있다.
-    loginUser({ state, commit }, data) {
-      axios
-        .post(`${this.backURL}/auth`, data, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          if (response.status == 200) {
-            const accessToken = response.headers.authorization;
-            const refreshToke = response.headers.refresh;
-
-            axios.defaults.headers.common["Authorization"] = accessToken;
-            localStorage.setItem("mapbegoodToken", accessToken);
-            localStorage.setItem("refresh", refreshToke);
-
-            alert("로그인 성공");
-            location.href = "/";
-
-            console.log(axios.defaults.headers.common);
-
-            this.$store.dispacer;
-          }
-        })
-        .catch(() => {
-          alert("로그인 실패");
-        });
-
-      state.user.loginEmail = _user.loginEmail;
-      state.user.nickName = _user.nickName;
-      state.user.accessToken = _user.accessToken;
-      state.user.refreshToken = _user.refreshToken;
-      state.user.isLogin = true;
+    loginSuccess({ state }, payload) {
+      this.state.userInfo = payload;
+      this.state.isLogin = true;
     },
-    logOutUser(state) {
-      state.user.loginEmail = "";
-      state.user.nickName = "";
-      state.user.accessToken = "";
-      state.user.refreshToken = "";
-      state.user.isLogin = false;
+    logOut({ state }) {
+      this.state.userInfo = "";
+      this.state.isLogin = false;
     },
   },
   actions: {
     // dispatch 로 부를 수 있다.
-    loginUser: ({ commit }, _user) => {
-      commit("setUser", _user);
+    login({ dispatch }, loginObj) {
+      axios
+        .post(loginObj.backUrl + "/auth", loginObj.userInfo, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          localStorage.setItem("mapbegoodToken", res.headers.authorization);
+          localStorage.setItem("refresh", res.headers.refresh);
+
+          this.dispatch("getUserInfo");
+          alert("로그인 성공");
+          location.href = "/";
+        })
+        .catch(() => {
+          alert("이메일과 비밀번호를 확인해 주세요.");
+        });
     },
-    logOutUser: ({ commit }) => {
-      commit("logOutUser");
+    logOut({ commit }) {
+      this.commit("logOut");
+    },
+    getUserInfo({ commit, dispatch }) {
+      let isToken = localStorage.getItem("mapbegoodToken");
+
+      if (isToken != null) {
+        let config = {
+          headers: {
+            Authorization: "Bearer " + isToken,
+          },
+        };
+
+        axios
+          .get("http://localhost:8080/login-info", config, {
+            withCredentials: true,
+          })
+          .then((res) => {
+            if (res.data.message == "The token has expired.") {
+              this.dispatch("getTokenRefresh");
+            }
+
+            let userInfo = {
+              email: res.data.email,
+              nickName: res.data.nickName,
+              profileImage: res.data.profileImage,
+            };
+
+            this.commit("loginSuccess", userInfo);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        this.commit("logOut");
+      }
+    },
+    getTokenRefresh() {
+      axios.defaults.headers.common["Refresh"] =
+        "Bearer " + localStorage.getItem("refresh");
+
+      axios
+        .post("http://localhost:8080/refresh", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          localStorage.setItem("mapbegoodToken", res.headers.authorization);
+          location.reload();
+        })
+        .catch(() => {
+          this.commit("logOut");
+        });
     },
   },
 });
