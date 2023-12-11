@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         namechageFromSubmitHandler() {
-            const url = `http://localhost:8080/mapbegood/group/${this.groupId}`
+            const url = `${this.backURL}/group/${this.groupId}`
             // 필요한 데이터 추가
             const requestBody = {
                 name: this.name,
@@ -77,7 +77,7 @@ export default {
         },
         b1ClickHandler() { //중복확인 버튼 클릭 시
             if (this.name.trim().length > 0) {
-                const url = `http://localhost:8080/mapbegood/group/${this.groupId}?name=${this.name}`
+                const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`
                 axios.get(url)
                     .then(response => {
                         alert("사용가능한 그룹명입니다")
