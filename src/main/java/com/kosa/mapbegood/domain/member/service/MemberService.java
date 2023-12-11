@@ -186,7 +186,7 @@ public class MemberService implements MemberServiceInterface {
 		} catch (Exception e) {
 			nickName = email.substring(0, email.indexOf("@"));
 		} finally {
-			String title = "[MapBeGood] " + nickName + " 님 인증번호 안내드립니다.";
+			String title = "[좋을지도] " + nickName + " 님 인증번호 안내드립니다.";
 			String authCode = RandomStringUtils.randomAlphanumeric(10);
 			this.sendEmail(email, title, authCode, nickName);
 			this.saveAuthCode(email, authCode);
