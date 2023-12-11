@@ -64,7 +64,7 @@ const router = createRouter({
     { path: "/members", component: MemberInfo },
     { path: "/groupmembers", component: GroupMember },
     {path: '/thememapupdate/:id',name: 'thememapupdate',component: ThememapUpdate},
-    // {path: '/thememapdetail/:id',name: 'thememapdetail',component: ThememapDetail},
+    {path: '/thememapdetail/:id',name: 'thememapdetail',component: ThememapDetail},
 
     //동적라우팅 방법
     // {path: '/members/:id', component: MemberInfo}

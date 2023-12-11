@@ -6,7 +6,7 @@
         <!-- favoriteList 내 각 항목에 대해 반복 -->
         <!-- v-for을 사용해서 반복문 구현 -->
         <!--in favaoriteList: 반복할 대상 데이터이며 , favoriteList 배열의 각 요소를 하나씩 순회함.-->
-        <!--key는반복된 엘리먼트에 고유한 키를 제공하며, thememapDto.id를 사용-->
+        <!--key는 반복된 엘리먼트에 고유한 키를 제공하며, thememapDto.id를 사용-->
         <li v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
           <h3>{{ thememap.themeMapDto.name }}</h3>
           <p>{{ thememap.themeMapDto.memo }}</p>
@@ -18,6 +18,9 @@
           <button @click="editThememap(thememap.themeMapDto.id)">수정</button>
           <!--리스트 삭제 버튼-->
           <button @click="deleteThememap(thememap.themeMapDto.id)">삭제</button>
+          <!--리스트 복사 버튼-->
+          <button @click="copyThememap(thememap.themeMapDto.id)">복사</button>
+
         </li>
       </ul>
   
@@ -78,6 +81,28 @@
       this.themeMapId = themeMapId; // themeMapId를 설정
       this.$router.push({ name: 'thememapupdate', params: { id: themeMapId } });
       },
+      //복사 버튼을 눌렀을때 할일 START----
+      copyThememap(themeMapId) {
+      // 선택한 테마맵을 복사하기 위한 서버 요청
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      const url = `${this.backURL}/mymap/copy/${themeMapId}`;
+
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      axios.post(url)
+        .then(response => {
+          console.log(response.data);
+          // 성공적으로 복사되었을 때의 로직 추가
+          alert("테마맵이 성공적으로 복사되었습니다.");
+        })
+        .catch(error => {
+          console.error(error);
+          alert("테마맵 복사에 실패했습니다. 다시 시도하세요.");
+        });
+    },
+
+      //복사 버튼을 눌렀을때 할일 END---
+
       //삭제 버튼을 눌렀을때 할 일 START----- 
       deleteThememap(themeMapId) {
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
