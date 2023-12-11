@@ -33,12 +33,6 @@
 
       <div class="sub-func-container">
         <div class="saveid">
-          <!-- <v-checkbox
-                label="info"
-                color="info"
-                value="info"
-                hide-details
-              ></v-checkbox> -->
           <label
             for="saveemail"
             class="text-caption text-decoration-none text-blue"
@@ -363,9 +357,7 @@
       <v-divider color="warningss"></v-divider>
 
       <v-card-text class="text-center">
-        <a
-          href="https://kauth.kakao.com/oauth/authorize?client_id=d1c3e8aae1df4eb30d44f96550d55977&redirect_uri=http://localhost:8080/login/oauth2/code/kakao&response_type=code"
-        >
+        <a href="http://localhost:8080/oauth2/authorization/kakao">
           <img
             src="../../public/images/kakao_login_medium_narrow.png"
             alt="kakao_signup_img1"
