@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
@@ -54,7 +55,18 @@ public class ThemeMapController {
 		}
     	return null;
     }
-    
+    //테마맵 복사 
+    @PostMapping("/copy/{themeMapId}")
+    public ResponseEntity<ThemeMapDto> copyThemeMap(Authentication authentication,
+                                                    @PathVariable Long themeMapId) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            ThemeMapDto copiedThemeMap = themeMapService.copyThemeMap(email, themeMapId);
+            return ResponseEntity.ok(copiedThemeMap);
+        } catch (FindException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
  
     
     // 테마맵 삭제    o favorite자식 테이블의 매핑 문제 같은데 모르겠음
@@ -87,8 +99,17 @@ public class ThemeMapController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-    
-
+    @PostMapping("/addlist/{themeMapId}")
+    public ResponseEntity<ThemeMapDto> addToMyThemeMapList(Authentication authentication,
+                                                          @PathVariable Long themeMapId) {
+        try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            ThemeMapDto addedThemeMap = themeMapService.addToMyThemeMapList(email, themeMapId);
+            return ResponseEntity.ok(addedThemeMap);
+        } catch (FindException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
     // 테마맵 조회 o
     @GetMapping("/list")
     public ResponseEntity<List<ThemeMapDto>> getAllThemeMaps(Authentication authentication) {
@@ -97,6 +118,7 @@ public class ThemeMapController {
              List<ThemeMapDto> themeMapDtos = themeMapService.getAllThemeMaps(email);
              return ResponseEntity.ok(themeMapDtos);
          } catch (FindException e) {
+        	 e.printStackTrace();
              return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
          }
      }

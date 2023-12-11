@@ -130,4 +130,44 @@ public class ThemeMapService {
     	
     	
     }
+ // 검색한 리스트 중 한개를 나의 테마맵으로 추가
+    public ThemeMapDto addToMyThemeMapList(String email, Long themeMapId) throws FindException {
+        // 특정 ID의 테마맵 DTO 얻어오기
+        ThemeMapDto themeMapDtoToAdd = getThemeMapDtoById(themeMapId);
+
+        // 현재 사용자의 모든 테마맵 가져오기
+        List<ThemeMapDto> myThemeMaps = getAllThemeMaps(email);
+
+        // 이미 내 테마맵 리스트에 있는지 확인
+        if (myThemeMaps.stream().anyMatch(map -> map.getId().equals(themeMapDtoToAdd.getId()))) {
+            throw new FindException("이미 내 테마맵 리스트에 추가된 테마맵입니다.");
+        }
+
+        // 내 테마맵 리스트에 추가
+        myThemeMaps.add(themeMapDtoToAdd);
+
+        return themeMapDtoToAdd;
+    }
+    
+ // 특정 ID의 테마맵 DTO 얻어오기
+    private ThemeMapDto getThemeMapDtoById(Long themeMapId) throws FindException {
+        Optional<ThemeMap> optionalThemeMap = themeMapRepository.findById(themeMapId);
+        if (optionalThemeMap.isPresent()) {
+            ThemeMap themeMap = optionalThemeMap.get();
+            return ThemeMapMapper.toDto(themeMap);
+        } else {
+            throw new FindException("테마맵을 찾을 수 없습니다. ID: " + themeMapId);
+        }
+    }
+ // 테마맵 복사 기능 추가
+    public ThemeMapDto copyThemeMap(String email, Long themeMapId) throws FindException {
+        // 원본 테마맵 조회
+        ThemeMapDto originalThemeMap = getThemeMapById(email, themeMapId);
+
+        // 새로운 테마맵 생성 및 복사
+        ThemeMapDto copiedThemeMap = createThemeMap(email, originalThemeMap);
+
+        return copiedThemeMap;
+    }
+    
 }
