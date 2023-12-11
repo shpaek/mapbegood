@@ -20,6 +20,7 @@ import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
 import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
+import GroupWaiting from "../pages/GroupWaiting.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -59,7 +60,8 @@ const router = createRouter({
     { path: "/place", component: Place },
     { path: "/feed", component: Feed },
     { path: "/members", component: MemberInfo },
-    { path: "/groupmembers", component: GroupMember },
+    { name: "/groupmember", path: "/groupmember/:groupId/:groupName/:leaderNickname", component: GroupMember },
+    { name: "/waiting", path: "/waiting/:groupId/:groupName/:leaderNickname", component: GroupWaiting },
 
     //동적라우팅 방법
     // {path: '/members/:id', component: MemberInfo}
