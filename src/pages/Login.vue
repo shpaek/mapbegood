@@ -98,6 +98,7 @@
                     :rules="[rules.email]"
                     :loading="showSignUpAuthEmailBtDisable"
                     ref="signupEmail"
+                    @keyup="editEmailHandler"
                     style="text-align: right"
                   ></v-text-field>
 
@@ -267,17 +268,35 @@
                     ref="authCode"
                   ></v-text-field>
 
-                  <v-btn
-                    v-show="showAuthCodeBt"
-                    size="small"
-                    color="blue-darken-1"
-                    variant="tonal"
-                    :disabled="authCode.length < 10"
-                    style="left: 310px"
-                    @click="sendAuthCodeHandle"
-                  >
-                    인증번호 확인
-                  </v-btn>
+                  <div v-show="showAuthCodeBt" style="height: 31px">
+                    <div style="display: inline-block; margin-left: 273px">
+                      <span
+                        v-show="timerActive"
+                        style="color: #ff2323; font-size: 13px"
+                        >{{ minutes }}:{{
+                          seconds < 10 ? "0" + seconds : seconds
+                        }}</span
+                      >
+                    </div>
+                    <div
+                      style="
+                        display: inline-block;
+                        float: right;
+                        margin-right: 2px;
+                      "
+                    >
+                      <v-btn
+                        v-show="showAuthCodeBt"
+                        :disabled="authCode.length < 10"
+                        size="small"
+                        color="blue-darken-1"
+                        variant="tonal"
+                        @click="sendAuthCodeHandle"
+                      >
+                        인증번호 확인
+                      </v-btn>
+                    </div>
+                  </div>
 
                   <v-text-field
                     v-show="showPassword"
@@ -447,6 +466,12 @@ export default {
         if (this.seconds === 0) {
           if (this.minutes === 0) {
             this.stopTimer();
+            this.signupAuthCode = "";
+            this.authCode = "";
+            this.showSignUpAuthCode = false;
+            this.showSignUpAuthCodeBt = false;
+            this.showAuthCode = false;
+            this.showAuthCodeBt = false;
             return;
           }
           this.minutes--;
@@ -565,13 +590,14 @@ export default {
         })
         .catch((err) => {
           // console.log(err);
-          if (err.response.data.status == 400) {
-            alert(err.response.data.message);
-          } else {
-            alert("회원가입에 실패했습니다.");
-          }
+          alert(err.response.data.message);
           this.$refs.signupEmail.focus();
         });
+    },
+
+    editEmailHandler() {
+      this.signupAuthEmail = false;
+      this.showSignUpAuthEmailBt = true;
     },
 
     editNicknameHandler() {
@@ -640,6 +666,7 @@ export default {
           this.showSignUpAuthCode = true;
           this.showSignUpAuthCodeBt = true;
           this.showSignUpAuthEmailBtDisable = false;
+          this.stopTimer();
           this.startTimer();
         })
         .catch((err) => {
@@ -728,6 +755,8 @@ export default {
           this.showAuthCode = true;
           this.showAuthCodeBt = true;
           this.showAuthEmailBtDisable = false;
+          this.stopTimer();
+          this.startTimer();
         })
         .catch((err) => {
           console.log(err);
