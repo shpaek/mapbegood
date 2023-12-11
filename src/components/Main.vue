@@ -21,7 +21,7 @@ export default {
   },
   created() {
     let path = location.pathname;
-    this.menu = path != "/login" && path != "/signup";
+    this.menu = path != "/Login" && path != "/signup";
   },
 };
 </script>
