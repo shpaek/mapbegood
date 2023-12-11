@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceWrapperDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.service.MyplaceService;
@@ -97,9 +98,13 @@ public class MyplaceController {
 	ResponseEntity<?> copyMyplace(@PathVariable Long themeMapId, @RequestParam Long mythemeMapId){
 		try {
 			List<MyplaceDTO> placeList = mps.findAllMyplace(themeMapId);
-			for(MyplaceDTO myplace: placeList) {
-				myplace.setThememapId(mythemeMapId);
-				mps.createMyplace(myplace);
+			for(MyplaceDTO place: placeList) {
+				ThemeMapDto thememapDto = new ThemeMapDto();
+				thememapDto.setId(mythemeMapId);
+				MyplaceDTO copyDto = new MyplaceDTO();
+				copyDto.setPlaceId(place.getPlaceId());
+				copyDto.setThememapId(thememapDto);
+				mps.createMyplace(copyDto);
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e){

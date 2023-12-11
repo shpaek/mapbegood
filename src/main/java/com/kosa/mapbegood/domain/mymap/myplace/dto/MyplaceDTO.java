@@ -2,8 +2,8 @@ package com.kosa.mapbegood.domain.mymap.myplace.dto;
 
 import java.sql.Date;
 
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.place.entity.Place;
+import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
+import com.kosa.mapbegood.domain.place.dto.PlaceDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,9 +15,9 @@ public class MyplaceDTO {
 
 	private Long id;
 	
-	private Long thememapId;
+	private ThemeMapDto thememapId;
 
-	private Place placeId;
+	private PlaceDTO placeId;
 
 	private Date visitedAt;
 	

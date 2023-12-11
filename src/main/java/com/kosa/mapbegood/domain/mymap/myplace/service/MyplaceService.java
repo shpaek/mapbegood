@@ -6,13 +6,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
-import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceWrapperDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 import com.kosa.mapbegood.domain.mymap.myplace.mapper.MyplaceMapper;
 import com.kosa.mapbegood.domain.mymap.myplace.repository.MyplaceRepository;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
@@ -35,7 +35,8 @@ public class MyplaceService {
 	 * @return 마이플레이스 리스트
 	 */
 	public List<MyplaceDTO> findAllMyplace(Long themeMapId) throws FindException{
-		List<Myplace> myplaceList = mpr.findBythememapId(themeMapId);
+		List<Myplace> myplaceList = mpr.findByThememapId_Id(themeMapId);
+		System.out.println(myplaceList);
 		List<MyplaceDTO> myplaceDtoList = new ArrayList<MyplaceDTO>();
 		for(Myplace myplace: myplaceList) {
 			myplaceDtoList.add(mapper.entityToDto(myplace));
@@ -50,7 +51,7 @@ public class MyplaceService {
 	 * @throws FindException
 	 */
 	public MyplaceDTO findMyplace(Long myplaceId) throws FindException{
-		Optional<Myplace> myplace = mpr.findByIdWithPlace(myplaceId);
+		Optional<Myplace> myplace = mpr.findById(myplaceId);
 		System.out.println("1");
 		if (myplace.isPresent()) {
 			System.out.println("2");
@@ -100,9 +101,17 @@ public class MyplaceService {
 			System.out.println(openPlaceList);
 			for(MyplaceDTO openPlace : openPlaceList) {
 				if(myPlaceList.contains(openPlace.getPlaceId())) {
+					System.out.println("4");
 					return;
 				}else {
-					createMyplace(openPlace);
+					System.out.println("5");
+					MyplaceDTO copyDto = new MyplaceDTO();
+					copyDto.setPlaceId(openPlace.getPlaceId());
+					ThemeMapDto thememapDto = new ThemeMapDto();
+					thememapDto.setId(mythemeMapId);
+					copyDto.setThememapId(thememapDto);
+					createMyplace(copyDto);
+					System.out.println("6");
 				}
 			}
 		}else {
