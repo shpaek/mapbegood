@@ -13,7 +13,8 @@ import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
 import FavoriteList from "../pages/FavoriteList.vue";
 import Place from "../pages/Place.vue";
-import Feed from "../pages/Feed.vue";
+import MyFeed from "../pages/MyFeed.vue";
+import FeedCreate from "../pages/FeedCreate.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
@@ -43,7 +44,8 @@ const router = createRouter({
     { path: "/favoritelist", component: FavoriteList },
     { path: "/map", component: Map },
     { path: "/place", component: Place },
-    { path: "/feed", component: Feed },
+    { path: "/myfeed", component: MyFeed },
+    { path: "/feedcreate", component: FeedCreate },
     { path: "/members", component: MemberInfo },
     { path: "/groupmembers", component: GroupMember },
 

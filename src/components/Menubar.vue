@@ -4,7 +4,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="logo" viewBox="0 0 118 94" width="100%" height="100%">
         <title></title>
-        <image href="/images/logo.jpg" width="118" height="94" />
+        <image href="/images/mapbegood_logo2.png" width="118" height="94" />
       </symbol>
 
       <symbol id="Map" viewBox="0 0 16 16">
