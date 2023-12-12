@@ -7,10 +7,11 @@
                 @click="waitinglistClickHandler">
                 <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
             </svg>
-            <span v-if="isleader">
+            <span class="invite"> 
+            <!-- v-if="isleader"> -->
                 <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16"
-                    @click="searchMemberForAddClickHandler">
+                    @click="openModal">
                     <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
                     <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
                 </svg> 
@@ -34,8 +35,9 @@
                             <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
                         </svg>
                     </span>
-                    <span v-if="gm.leader === 0" class="delete">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"
+                    <span class="delete">
+                    <!-- v-if="isleader" > -->
+                        <svg v-show="gm.leader === 0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"
                             @click="memberdeleteClickHandler(gm)" >
                             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                             <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
@@ -46,13 +48,21 @@
         </div>
         <span class="emty-msg">{{emptyMsg}}</span>
     </div>
+    <div class="modal-container">
+        <!-- 모달창 -->
+        <SearchMember :isModalOpen="isModalOpen" />
+    </div>
 </template>
 <script>
 import axios from 'axios';
 import { mapState, mapActions } from 'vuex';
+import SearchMember from '../pages/SearchMember.vue';
 
 export default {
     name: "GroupMember",
+    components: {
+        SearchMember
+    },
     computed: {
         ...mapState(["userInfo", "isLogin"]),
     },
@@ -67,6 +77,7 @@ export default {
             selectedNickname: '',
             selectedEmail: '',
             selectedLeader: '',
+            isModalOpen: false,
         }
     },
     beforeCreate() {
@@ -159,15 +170,19 @@ export default {
                 }
             });
         },
-        searchMemberForAddClickHandler(){ //그룹에 초대하고 싶은 사용자 검색
-
-        },
         memberdetailClickHandler(nickname){ //그룹멤버의 상세보기로 이동
             this.selectedNickname = nickname;
             // this.selectedNickname에 값을 할당
             alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
-        }
-    }
+        },
+        openModal(){ //그룹에 초대하고 싶은 사용자 검색
+            this.isModalOpen = true;
+            console.log(this.isModalOpen)
+        },
+        closeModal() {
+            this.isModalOpen = false;
+        },
+    },
 }
 </script>
 <style scoped>
