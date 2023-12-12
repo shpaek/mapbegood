@@ -50,7 +50,7 @@
     </div>
     <div class="modal-container">
         <!-- 모달창 -->
-        <SearchMember :isModalOpen="isModalOpen" />
+        <SearchMember :isModalOpen="isModalOpen" :groupId="groupId" @close-modal="closeModal"/>
     </div>
 </template>
 <script>

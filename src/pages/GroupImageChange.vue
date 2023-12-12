@@ -123,6 +123,7 @@ export default {
                   });
               })
               .catch(error => {
+                  console.log(error)
                   alert("그룹 이미지를 변경하지 못했습니다")
               })
       },
