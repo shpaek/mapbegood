@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService {
+public class TokenService {
     private final JwtTokenizer jwtTokenizer;
     private final RefreshTokenRepository repository;
     private final MemberRepository memberRepository;

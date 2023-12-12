@@ -12,5 +12,5 @@ import com.kosa.mapbegood.exception.FindException;
 public interface WaitingRepository extends JpaRepository<Waiting, Long>{
 	
 	public Optional<Waiting> findByGroupIdAndMemberEmail(Groups groupId, String memberEmail) throws FindException;
-	public List<Waiting> findByGroupId(Long groupId) throws FindException;
+	public List<Waiting> findByGroupId(Groups groupId) throws FindException;
 }
