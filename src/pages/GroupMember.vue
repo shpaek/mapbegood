@@ -68,7 +68,7 @@ export default {
         console.log(groupId, groupName, leaderNickname);
 
         // axios로 back에 그룹 멤버 명단 요청
-        const url = `http://localhost:8080/groupmember/${this.groupId}`
+        const url = `${this.backURL}/groupmember/${this.groupId}`
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
         axios.defaults.headers.common["Authorization"] = accessToken;
         axios.get(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' }})
@@ -91,7 +91,8 @@ export default {
             // this.selectedNickname에 값을 할당
             alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
 
-            const url = `http://localhost:8080/groupmember`
+
+            const url = `${this.backURL}/groupmember`
             const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
             axios.defaults.headers.common["Authorization"] = accessToken;
 

@@ -1,4 +1,5 @@
 <template lang="">
+ 
   <!-- 특정 그룹의 테마지도 목록을 전부 불러옴, 그룹이미지, 그룹명, 그룹장도 가져와야함 -->
   <div class="group-detail">
       <div class="group-info">
@@ -68,7 +69,7 @@
 </template>
 <script>
 import axios from 'axios';
-
+ 
 export default {
   name: "GroupDetail",
   data() {
@@ -154,7 +155,6 @@ export default {
         }
       });
     },
-
     addnewgroupclickHandler() {
       this.$router.push({ name: 'addgroupmap' });
     },
@@ -194,30 +194,30 @@ editGroupmap(thememapId) {
 };
 </script>
 <style scoped>
-div.group-detail>div.group-info {
-  margin-left: 75px;
-  margin-top: 50px;
-}
+div.group-info {
+    margin-left: 75px;
+    margin-top: 50px;
+ }
 
 ul {
-  list-style-type: none;
-  padding-left: 0px;
+    list-style-type: none;
+    padding-left: 0px;
 }
 
 li.img {
-  position: relative;
-  height: 150px;
+    position: relative;
+    height: 150px;
 }
 
 li.img svg.bi-gear {
-  position: absolute;
-  left: 92%;
-  /* 조절하고자 하는 거리 */
-  top: 10px;
-  /* 원하는 세로 위치 조절 */
+    position: absolute;
+    left: 92%;
+    /* 조절하고자 하는 거리 */
+    top: 10px;
+    /* 원하는 세로 위치 조절 */
 }
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown{
-  position: absolute;
+   position: absolute;
   font-size:12px;
   left: 94.7%;
   transform: translateX(-94.7%);
@@ -245,13 +245,42 @@ div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
   border-left: 7px solid transparent;  /* 왼쪽 변 */
   border-right: 7px solid transparent; /* 오른쪽 변 */
   border-bottom: 12px solid rgb(240, 240, 240);  /* 아래쪽 변 */
+ 
+    position: absolute;
+    font-size:12px;
+    left: 94.7%;
+    transform: translateX(-94.7%);
+    top: 42px;
+    width: 75px;
+    height: 55px;
+    text-align: center;
+    background-color: rgb(240, 240, 240);
+    border-color: 1px rgb(240, 240, 240);
+    border-radius: 15%;
+    white-space: nowrap;
 }
+div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li{
+    color: rgb(80, 80, 80);
+}
+div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li:hover {
+    text-decoration: underline;
+    cursor: pointer; /* 선택 가능한 요소로 마우스 커서를 변경합니다. */
+}
+div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
+    position: absolute;
+    top: 32px; /* 조절 가능한 값 */
+    left: 93%;
+    transform: translateX(-93%);
+    border-left: 7px solid transparent;  /* 왼쪽 변 */
+    border-right: 7px solid transparent; /* 오른쪽 변 */
+    border-bottom: 12px solid rgb(240, 240, 240);  /* 아래쪽 변 */
+ }
 li.group-member {
-  position: relative;
+    position: relative;
 }
 
 li.group-member svg.bi-person-lines-fill {
-  position: absolute;
-  left: 92%;
+    position: absolute;
+    left: 92%;
 }
 </style>

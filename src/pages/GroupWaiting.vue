@@ -52,7 +52,8 @@ export default {
         console.log(groupId, groupName, leaderNickname);
 
         // axios로 back에 그룹 멤버 명단 요청
-        const url = `http://localhost:8080/waiting/${this.groupId}`
+
+        const url = `${this.backURL}/waiting/${this.groupId}`
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
         axios.defaults.headers.common["Authorization"] = accessToken;
         axios.get(url, { withCredentials: true })
