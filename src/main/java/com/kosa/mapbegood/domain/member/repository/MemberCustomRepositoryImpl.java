@@ -1,19 +1,20 @@
 package com.kosa.mapbegood.domain.member.repository;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+
+import java.util.List;
+import org.springframework.stereotype.Repository;
+
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.dto.QMemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.QMember;
 import com.kosa.mapbegood.domain.mymap.thememap.dto.QThemeMapResponseDTO;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.QThemeMap;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
-import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 
 @Slf4j
 @RequiredArgsConstructor

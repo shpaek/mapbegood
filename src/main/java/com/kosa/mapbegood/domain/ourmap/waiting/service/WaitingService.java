@@ -66,6 +66,7 @@ public class WaitingService {
 					MemberDTO memberDto = new MemberDTO();
 					memberDto.setEmail(member.getEmail());
 					memberDto.setNickname(member.getNickname());
+					memberDto.setProfileImage(member.getProfileImage());
 					resultMemberDtoList.add(memberDto);
 				}
 			}			

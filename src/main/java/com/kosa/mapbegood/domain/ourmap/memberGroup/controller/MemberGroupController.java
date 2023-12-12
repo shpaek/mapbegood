@@ -66,10 +66,8 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 	@DeleteMapping(value="", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> deleteMemberGroup(Authentication authentication, @RequestBody MemberGroupDTO memberGroupDto)  {
 		try {
+			//그룹장, 그룹원
 			String email = authenticationUtil.getUserEmail(authentication);
-			MemberDTO m = new MemberDTO();
-			m.setEmail(email);
-			memberGroupDto.setMember(m);
 			mgs.deleteMemberGroup(memberGroupDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(RemoveException e) {
