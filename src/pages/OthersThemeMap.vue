@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <p class="mt-3">테마맵 이름을 검색하세요</p>
@@ -38,80 +37,73 @@
   </div>
 </template>
 
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-    // 검색어와 테마맵 목록을 담는 데이터
-        searchTerm: "",
-        themeMaps: [],
-      };
-    },
-    methods: {
-    // 테마맵 검색 메서드
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+// 검색어와 테마맵 목록을 담는 데이터
+      searchTerm: "",
+      themeMaps: [],
+    };
+  },
+  methods: {
+// 테마맵 검색 메서드
     async searchThemeMap() {
-    try {
+      try {
         const url = `${this.backURL}/maplist/search`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
 
         const response = await axios.get(url, {
-            params: {
-                name: this.searchTerm,
-            },
+          params: {
+            name: this.searchTerm,
+          },
         });
 
-        // Add an "isInFavorites" property to each themeMap
         this.themeMaps = response.data.map(map => ({
-            ...map,
-            isInFavorites: false,
+          ...map,
+          isInFavorites: false,
         }));
-    } catch (error) {
+      } catch (error) {
         console.error("검색 중 오류 발생:", error);
         this.themeMaps = [];
-    }
-},
-      executeSearch() {
-        // 검색 메서드 호출
-        this.searchThemeMap();
-      },
-          // 즐겨찾기에 추가 메서드
-      async addToFavorites(themeMapId) {
-        try {
-          const url = `${this.backURL}/favorite/create/${themeMapId}`;
-          const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-          axios.defaults.headers.common["Authorization"] = accessToken;
-  
-          console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
-          const response = await axios.post(url);
-          console.log(response.data); // 성공하면 콘솔에 출력
+      }
+    },
+    executeSearch() {
+// 검색 메서드 호출
+      this.searchThemeMap();
+    },
+// 즐겨찾기에 추가 메서드
+    async addToFavorites(themeMapId) {
+      try {
+        const url = `${this.backURL}/favorite/create/${themeMapId}`;
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
+        const response = await axios.post(url);
+        console.log(response.data); // 성공하면 콘솔에 출력
         // 추가 성공 메시지
         alert("추가되었습니다");
-         
-        // Update the isInFavorites property after successfully adding to favorites
-          const updatedThemeMaps = this.themeMaps.map(map => {
-            if (map.id === themeMapId) {
-              return { ...map, isInFavorites: true };
-            }
-            return map;
-          });
-          this.themeMaps = updatedThemeMaps;
-        } catch (error) {
-          console.error("즐겨찾기 추가 중 오류 발생:", error);
-        }
-      },
-    // themeMapId가 현재 사용자의 즐겨찾기 목록에 있는지 확인
-      isInFavorites(themeMapId) {
-       return this.themeMaps.some(map => map.id === themeMapId && map.isInFavorites);
-      },
+
+// Update the isInFavorites property after successfully adding to favorites
+        const updatedThemeMaps = this.themeMaps.map(map => {
+          if (map.id === themeMapId) {
+            return { ...map, isInFavorites: true };
+          }
+          return map;
+        });
+        this.themeMaps = updatedThemeMaps;
+      } catch (error) {
+        console.error("즐겨찾기 추가 중 오류 발생:", error);
+      }
     },
-  };
-  </script>
-  <style scoped>
-</style>
-
-
-
-
+// themeMapId가 현재 사용자의 즐겨찾기 목록에 있는지 확인
+    isInFavorites(themeMapId) {
+      return this.themeMaps.some(map => map.id === themeMapId && map.isInFavorites);
+    },
+  },
+};
+</script>
