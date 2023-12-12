@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.waiting.dto.WaitingDTO;
 import com.kosa.mapbegood.domain.ourmap.waiting.service.WaitingService;
 import com.kosa.mapbegood.exception.AddException;
@@ -36,7 +37,9 @@ public class WaitingController {
 	//그룹 초대에 응답하지 않은 사람 목록 조회
 	@GetMapping(value="{groupId}", produces="application/json;charset=UTF-8")
 	public List<MemberDTO> findAllWaitingsByGroupId(Authentication authentication, @PathVariable Long groupId) throws FindException{
-		return ws.findAllWaitingsByGroupId(groupId);
+		Groups group = new Groups();
+		group.setId(groupId);
+		return ws.findAllWaitingsByGroupId(group);
 	}
 	
 	//그룹장이 그룹에 사람을 초대했을 때 추가

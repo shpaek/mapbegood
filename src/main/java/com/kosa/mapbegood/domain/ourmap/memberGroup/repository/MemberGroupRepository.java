@@ -13,5 +13,5 @@ public interface MemberGroupRepository  extends JpaRepository<MemberGroup, Membe
 	
 	public List<MemberGroup> findByMemberEmail(Member memberEmail);
 	public List<MemberGroup> findByGroupId(Groups groupId);
-//	public MemberGroup findByMemberEmailAndGroupId(Member memberEmail, Groups groupId);
+	public MemberGroup findByMemberEmailAndGroupId(Member memberEmail, Groups groupId);
 }

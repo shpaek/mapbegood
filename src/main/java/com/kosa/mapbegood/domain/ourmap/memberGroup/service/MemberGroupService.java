@@ -74,6 +74,7 @@ public class MemberGroupService {
 				MemberDTO memberDTO = new MemberDTO();
 				memberDTO.setEmail(member.getEmail());
 				memberDTO.setNickname(member.getNickname());
+				memberDTO.setProfileImage(member.getProfileImage());
 				
 				MemberGroupDTO memberGroupDTO = new MemberGroupDTO(); //멤버정보를 그룹멤버로 가져옴
 				memberGroupDTO.setMember(memberDTO);
@@ -102,7 +103,7 @@ public class MemberGroupService {
 	 * @return 특정 그룹의 특정 멤버 한 명의 이메일, 닉네임, 리더여부, 그룹아이디를 반환한다
 	 * @throws FindException
 	 */
-	/*public MemberGroupDTO findGroupMemberByMemberEmailAndGroupId(MemberGroupDTO memberGroupDto) throws FindException{
+	public MemberGroupDTO findGroupMemberByMemberEmailAndGroupId(MemberGroupDTO memberGroupDto) throws FindException{
 		//dto받아온 거 vo로 바꿔주고 각각의 vo에 넣어주고 mgs에 있는 메서드 사용하기! leader정보 잊지말기
 		MemberGroup memberGroup = memberGroupDtoToEntity(memberGroupDto);
 		Groups group = memberGroup.getGroupId();
@@ -127,7 +128,7 @@ public class MemberGroupService {
 			new FindException(e.getMessage());
 			return null;
 		}
-	}*/
+	}
 	
 	
 	/**
@@ -154,6 +155,7 @@ public class MemberGroupService {
 			pk.setGroupsId(memberGroupDto.getGroups().getId());
 			pk.setEmail(memberGroupDto.getMember().getEmail());
 			Optional<MemberGroup> optMg = mgr.findById(pk);
+			log.error("pk.getGroupsId={}, pk.getEmail={}",pk.getGroupsId(), pk.getEmail());
 			if(optMg.isPresent()) {
 				MemberGroup mg = optMg.get();
 				try {
