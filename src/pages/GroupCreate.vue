@@ -16,7 +16,8 @@
             <label for="n">그룹명</label>&nbsp;
             <input type="text" name="name" id="n" v-model="name" maxlength="20"
                    placeholder="20자 이내로 입력하세요" required/>
-            <br>    
+            <br>
+            <button type="button" id="b3" @click="b3ClickHandler">중복 확인</button>
             <!-- <label for="m">멤버 초대</label>&nbsp;
             <button>검색</button>
             <br>
@@ -26,7 +27,7 @@
                  그룹을 만들고 수정할 때 바꾸도록 하는 게 나을 듯 -->
         </div>
         <div class="button-container">
-            <button type="submit" class="create" id="b1">그룹 생성</button>&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="create" id="b1" v-show="isDupchkOk">그룹 생성</button>&nbsp;&nbsp;&nbsp;
             <button type="button" class="cancel" id="b2" @click="b2ClickHandler">생성 취소</button>
         </div>
     </form>
@@ -42,12 +43,14 @@ export default {
             // memberlist: [],  
             // member: '',
             fileErrorMsg: null,
+            isDupchkOk: false,
         }
     },
     methods: {
         groupcreateFormSubmitHandler(e) {//그룹 생성 버튼 클릭 시
             //axios로 백 url요청
-            const url = "http://localhost:8080/mapbegood/group" //`${this.backURL}/group`
+
+            const url = "${this.backURL}/group" //`${this.backURL}/group`
 
             const fd = new FormData(e.target)
 
@@ -56,7 +59,8 @@ export default {
 
             axios.post(url, fd, { contentType: false, processData: false, withCredentials: true })
                 .then(response => {
-                    alert("결과:" + response.data.msg)
+                    alert("그룹이 생성되었습니다")
+                    location.href = "/groups"
                 })
                 .catch(error => {
                     alert(error.message)
@@ -90,10 +94,24 @@ export default {
         },
         b2ClickHandler() { //생성 취소 버튼 클릭 시
             alert("그룹 생성을 취소합니다")
-            location.href = "/group"
+            location.href = "/groups"
         },
+        b3ClickHandler() { //중복확인 버튼 클릭 시
+            if (this.name.trim().length > 0) {
 
-
+                const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`
+                axios.get(url)
+                    .then(response => {
+                        alert("사용가능한 그룹명입니다")
+                        this.isDupchkOk = true
+                    })
+                    .catch(error => {
+                        alert("사용할 수 없는 그룹명입니다")
+                    })
+            } else {
+                alert("그룹명을 반드시 입력해주세요")
+            }
+        },
     }
 }
 </script>
