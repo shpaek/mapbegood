@@ -88,7 +88,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh", "Content-Type"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost"));
+        configuration.setAllowedOrigins(Arrays.asList("https://www.mapbegood.site", "http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
