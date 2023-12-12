@@ -94,7 +94,7 @@ public interface MemberServiceInterface {
     /**
      * 사용자 nickname 검색
      */
-    List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception;
+    List<MemberInfoDTO> searchMember(String email, String nickName) throws Exception;
 
     /**
      * 회원 탈퇴

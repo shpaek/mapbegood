@@ -210,7 +210,7 @@ public class MemberService implements MemberServiceInterface {
 	}
 
 	@Override
-	public List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception {
+	public List<MemberInfoDTO> searchMember(String email, String nickName) throws Exception {
 		this.findMember(email);
 		return repository.memberSearch(nickName);
 	}

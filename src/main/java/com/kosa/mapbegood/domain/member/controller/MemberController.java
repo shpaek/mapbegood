@@ -178,11 +178,11 @@ public class MemberController {
 
 	// 사용자 검색
 	@GetMapping("/user")
-	public ResponseEntity<List<MemberSearchResponseDTO>> searchMember(Authentication authentication,
+	public ResponseEntity<List<MemberInfoDTO>> searchMember(Authentication authentication,
 																	  @Valid @RequestParam("nickName") String nickName) {
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
-			List<MemberSearchResponseDTO> memberSearchResult = service.searchMember(email, nickName);
+			List<MemberInfoDTO> memberSearchResult = service.searchMember(email, nickName);
 			return ResponseEntity.ok(memberSearchResult);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
