@@ -24,12 +24,19 @@
                     <span>삭제</span>
                 </div> -->
                 <div class="info">
-                    <span class="member" @click="memberdetailClickHandler">
+                    <span class="member" @click="memberdetailClickHandler(gm.member.nickname)">
+                        <img :src="gm.member.profileImage" alt="프로필이미지" class="profileImage">
                         {{gm.member.nickname}}
+                        <!-- 리더용 아이콘 -->
+                        <svg v-show="gm.leader === 1"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                            <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
+                        </svg>
                     </span>
-                    <span v-if="isleader">
+                    <span v-if="gm.leader === 0" class="delete">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"
-                            @click="memberdeleteClickHandler" >
+                            @click="memberdeleteClickHandler(gm)" >
                             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                             <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
                         </svg>    
@@ -42,8 +49,13 @@
 </template>
 <script>
 import axios from 'axios';
+import { mapState, mapActions } from 'vuex';
+
 export default {
     name: "GroupMember",
+    computed: {
+        ...mapState(["userInfo", "isLogin"]),
+    },
     data(){
         return{
             memberList: [],
@@ -51,9 +63,14 @@ export default {
             groupName: '',
             leaderNickname: '',
             emptyMsg:'',
-            isleader: true, //leader에게만 그룹의 멤버추가/삭제 가능
+            isleader: false, //leader에게만 그룹의 멤버추가/삭제 가능
             selectedNickname: '',
+            selectedEmail: '',
+            selectedLeader: '',
         }
+    },
+    beforeCreate() {
+    this.$store.dispatch("getUserInfo");
     },
     created(){
         //$router.parmas를 통해 전달된 파라미터 확인
@@ -67,6 +84,15 @@ export default {
         // 확인한 값들을 사용하거나 로그에 출력
         console.log(groupId, groupName, leaderNickname);
 
+        //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
+        if(this.userInfo.nickName == this.leaderNickname){
+            this.isleader = true;
+        }
+        console.log("------START-----")
+        console.log(this.userInfo)
+        console.log(this.userInfo.nickName)
+        console.log(this.leaderNickname)
+        console.log("------END-----")
         // axios로 back에 그룹 멤버 명단 요청
         const url = `${this.backURL}/groupmember/${this.groupId}`
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
@@ -86,23 +112,42 @@ export default {
              })
     },
     methods:{
-        memberdeleteClickHandler(){ //그룹장의 멤버 방출
-            this.selectedNickname = this.memberList[0].member.nickname;
-            // this.selectedNickname에 값을 할당
-            alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
+        memberdeleteClickHandler(gm){ //그룹장이 멤버를 방출하는 경우
+            //선택된 사용자 정보
+            this.selectedNickname = gm.member.nickname;
+            this.selectedLeader = gm.leader;
+            this.selectedEmail = gm.member.email;
 
             const url = `${this.backURL}/groupmember`
             const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
             axios.defaults.headers.common["Authorization"] = accessToken;
-
-            // axios.delete(url, data, { withCredentials: true })
-            //      .then(response => {
-            //         alert("멤버가 방출되었습니다")
-            //      })
-            //      .catch(error => {
-            //         console.log(error)
-            //         alert("멤버가 방출되지 않았습니다")
-            //      })
+            
+            //DTO에 데이터 세팅
+            const memberDTO = {
+                email: this.selectedEmail,
+                nickname: this.selectedNickname
+            };
+            const groupsDTO = {
+                id: this.groupId
+            };
+            
+            // MemberGroupDTO 생성
+            const memberGroupDTO = {
+                member: memberDTO,
+                groups: groupsDTO, 
+                leader: this.selectedLeader
+            };
+            
+            const requestBody = memberGroupDTO;
+            axios.delete(url, { data: requestBody, withCredentials: true })
+                 .then(response => {
+                    alert("멤버가 방출되었습니다")
+                    window.location.reload();
+                 })
+                 .catch(error => {
+                    console.log(error)
+                    alert("멤버가 방출되지 않았습니다")
+                 })
         },
         waitinglistClickHandler(){ //그룹초대 미응답 명단
             this.$router.push({ 
@@ -117,8 +162,10 @@ export default {
         searchMemberForAddClickHandler(){ //그룹에 초대하고 싶은 사용자 검색
 
         },
-        memberdetailClickHandler(){ //그룹멤버의 상세보기로 이동
-
+        memberdetailClickHandler(nickname){ //그룹멤버의 상세보기로 이동
+            this.selectedNickname = nickname;
+            // this.selectedNickname에 값을 할당
+            alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
         }
     }
 }
@@ -148,5 +195,12 @@ div.member-list{
 div.info{
     display: flex;
     justify-content: space-between;
+}
+img.profileImage{
+    min-width: 44px;
+    min-height: 40px;
+    max-width: 44px;
+    max-height: 40px;
+    border-radius: 50%;
 }
 </style>

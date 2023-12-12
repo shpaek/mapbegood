@@ -107,7 +107,7 @@ export default {
             });
         },
         deleteGroupClickHandler(){
-            const url = `http://localhost:8080/mapbegood/group/${this.groupId}`
+            const url = `${this.backURL}/group/${this.groupId}`
             
             const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
             axios.defaults.headers.common["Authorization"] = accessToken;
