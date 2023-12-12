@@ -91,6 +91,7 @@ export default {
             // this.selectedNickname에 값을 할당
             alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
 
+
             const url = `${this.backURL}/groupmember`
             const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
             axios.defaults.headers.common["Authorization"] = accessToken;
