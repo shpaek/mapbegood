@@ -17,7 +17,8 @@
           d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
         />
       </svg>
-      <span v-if="isleader">
+      <span class="invite">
+        <!-- v-if="isleader"> -->
         <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +27,7 @@
           fill="currentColor"
           class="bi bi-person-add"
           viewBox="0 0 16 16"
-          @click="searchMemberForAddClickHandler"
+          @click="openModal"
         >
           <path
             d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
@@ -74,8 +75,10 @@
               />
             </svg>
           </span>
-          <span v-if="gm.leader === 0" class="delete">
+          <span class="delete">
+            <!-- v-if="isleader" > -->
             <svg
+              v-show="gm.leader === 0"
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
@@ -95,15 +98,27 @@
         </div>
       </div>
     </div>
-    <span class="emty-msg">{{ emptyMsg }}</span>
+  </div>
+
+  <div class="modal-container">
+    <!-- 모달창 -->
+    <SearchMember
+      :isModalOpen="isModalOpen"
+      :groupId="groupId"
+      @close-modal="closeModal"
+    />
   </div>
 </template>
 <script>
 import axios from "axios";
 import { mapState, mapActions } from "vuex";
+import SearchMember from "../pages/SearchMember.vue";
 
 export default {
   name: "GroupMember",
+  components: {
+    SearchMember,
+  },
   computed: {
     ...mapState(["userInfo", "isLogin"]),
   },
@@ -118,6 +133,7 @@ export default {
       selectedNickname: "",
       selectedEmail: "",
       selectedLeader: "",
+      isModalOpen: false,
     };
   },
   async created() {
@@ -216,14 +232,19 @@ export default {
         },
       });
     },
-    searchMemberForAddClickHandler() {
-      //그룹에 초대하고 싶은 사용자 검색
-    },
     memberdetailClickHandler(nickname) {
       //그룹멤버의 상세보기로 이동
       this.selectedNickname = nickname;
       // this.selectedNickname에 값을 할당
       alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
+    },
+    openModal() {
+      //그룹에 초대하고 싶은 사용자 검색
+      this.isModalOpen = true;
+      console.log(this.isModalOpen);
+    },
+    closeModal() {
+      this.isModalOpen = false;
     },
   },
 };
