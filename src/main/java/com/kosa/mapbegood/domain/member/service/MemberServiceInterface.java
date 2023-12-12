@@ -33,7 +33,7 @@ public interface MemberServiceInterface {
      * @param member
      * @throws AddException
      */
-    void createMember(Member member) throws Exception;
+    void createMember(Member member, MultipartFile profileImage) throws Exception;
 
     /**
      * 닉네임 중복 확인
@@ -94,7 +94,7 @@ public interface MemberServiceInterface {
     /**
      * 사용자 nickname 검색
      */
-    List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception;
+    List<MemberInfoDTO> searchMember(String email, String nickName) throws Exception;
 
     /**
      * 회원 탈퇴

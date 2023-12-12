@@ -1,6 +1,8 @@
 package com.kosa.mapbegood.domain.member.repository;
 
+import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
+import com.kosa.mapbegood.domain.member.dto.QMemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.QMemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.entity.QMember;
@@ -191,6 +193,26 @@ class MemberRepositoryTest {
 	}
 
 	@Test
+	public void qdslMemberSearch() {
+		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+		QMember qm = new QMember("qm");
+
+		List<MemberInfoDTO> memList = queryFactory
+				.select(new QMemberInfoDTO(qm.email, qm.nickname, qm.profileImage))
+				.from(qm)
+				.where(qm.nickname.contains("test"))
+				.fetch();
+
+		for (MemberInfoDTO m : memList) {
+			log.error("--------------------");
+			log.error(m.getEmail());
+			log.error(m.getNickName());
+			log.error(m.getProfileImage());
+		}
+	}
+
+	@Test
 	public void qdslTest1() {
 		JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
@@ -210,6 +232,7 @@ class MemberRepositoryTest {
 				.transform(
 						groupBy(qm.email).list(
 								new QMemberSearchResponseDTO(
+										qm.email,
 										qm.nickname,
 										qm.profileImage,
 										list(
@@ -227,8 +250,10 @@ class MemberRepositoryTest {
 		log.error(String.valueOf(result.size()));
 		log.error("========================= for ============================");
 		for (MemberSearchResponseDTO r : result) {
-			log.error(r.getNickname());
-			log.error(r.getProfileImage());
+			log.error("email: " + r.getEmail());
+			log.error("nickName: " + r.getNickname());
+			log.error("profileImage: " + r.getProfileImage());
+			log.error("themeMap LIst: -------------------------");
 			if (r.getThemeMapResponseDTOList().size() == 1) {
 				log.error(String.valueOf(r.getThemeMapResponseDTOList().get(0).getId()));
 				log.error(String.valueOf(r.getThemeMapResponseDTOList().get(0).getName()));
