@@ -97,6 +97,7 @@ public class GroupsService {
 		
 						MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
 						memberGroupDTO.setMember(leaderMemberDTO);
+						memberGroupDTO.setLeader(mg.getLeader());
 						
 						List<MemberGroupDTO> listGroupMemberDTO = new ArrayList<>();
 						listGroupMemberDTO.add(memberGroupDTO);
@@ -145,27 +146,6 @@ public class GroupsService {
 			throw new AddException("그룹생성에 실패했습니다: "+e.getMessage());
 		}
 		//-------그룹이미지 추가 END-------
-	}
-	
-	
-	/**
-	 * 그룹장이 그룹명을 수정한다
-	 * @param groupsDto
-	 * @throws ModifyException
-	 */
-	public void updateGroup(GroupsDTO groupsDto) throws ModifyException{
-		//find로 그룹이 있는지 찾고 수정!
-		Optional<Groups> optEntity = gr.findById(groupsDto.getId()); 
-		optEntity.orElseThrow(()->
-			new ModifyException("그룹이 없어 수정이 불가능합니다")
-		);
-		Groups entity = optEntity.get();
-		entity.modifyGroupName(groupsDto.getName());
-		gr.save(entity);
-	}
-	
-	public void uploadGroupImage(MultipartFile groupImage) throws Exception{
-		
 	}
 	
 	
@@ -227,7 +207,40 @@ public class GroupsService {
 			throw new ModifyException("그룹이미지 수정이 불가능합니다");
 		}
 	}
+	
+	
+	/**
+	 * 그룹장이 그룹명을 수정한다
+	 * @param groupsDto
+	 * @throws ModifyException
+	 */
+	public void updateGroup(GroupsDTO groupsDto) throws ModifyException{
+		//find로 그룹이 있는지 찾고 수정!
+		Optional<Groups> optEntity = gr.findById(groupsDto.getId()); 
+		optEntity.orElseThrow(()->
+			new ModifyException("그룹이 없어 수정이 불가능합니다")
+		);
+		Groups entity = optEntity.get();
+		entity.modifyGroupName(groupsDto.getName());
+		gr.save(entity);
+	}
+	
+	public void uploadGroupImage(MultipartFile groupImage) throws Exception{
+		
+	}
 
+	
+	/**
+	 * 그룹이름이 같은 게 존재하지 않으면 FindException발생
+	 * @param groupName 
+	 */
+	public void dupchkGroupName(String groupName) throws FindException {
+		Optional<Groups> optEntity = gr.findByName(groupName);
+		optEntity.orElseThrow(()->
+			new FindException("이미 존재하는 그룹명입니다")
+		);
+	}
+	
 	
 	/**
 	 * 그룹장이 그룹을 삭제한다
@@ -241,10 +254,11 @@ public class GroupsService {
 			try {
 				gr.deleteById(id);							
 			}catch(Exception e) {
-				new RemoveException(e.getMessage());
+				throw new RemoveException(e.getMessage());
 			}
 		}else {
-			new RemoveException("그룹이 없어 삭제가 불가능합니다");
+			throw new RemoveException("그룹이 없어 삭제가 불가능합니다");
 		}
 	}
+
 }

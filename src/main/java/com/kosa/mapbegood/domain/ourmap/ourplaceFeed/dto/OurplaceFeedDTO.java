@@ -1,22 +1,24 @@
 package com.kosa.mapbegood.domain.ourmap.ourplaceFeed.dto;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OurplaceFeedDTO {
-
-    private Long ourplaceId;
-    private String memberEmail;
+    private OurplaceDTO ourplaceId;
+    private MemberDTO memberEmail;
+    private Long groupId;
     private String content;
     private LocalDateTime createdAt;
 
-    public OurplaceFeedDTO(Long ourplaceId, String memberEmail) {
-        this.ourplaceId = ourplaceId;
-        this.memberEmail = memberEmail;
-    }
 }

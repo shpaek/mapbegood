@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.member.service;
 
+import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.exception.AddException;
@@ -11,6 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface MemberServiceInterface {
+
+    /**
+     * 로그인 사용자 정보 리턴
+     * @param email
+     * @return
+     * @throws Exception
+     */
+    MemberInfoDTO findLoginInfo(String email) throws Exception;
 
     /**
      * 사용자 조회

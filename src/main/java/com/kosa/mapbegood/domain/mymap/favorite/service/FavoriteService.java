@@ -1,8 +1,6 @@
 package com.kosa.mapbegood.domain.mymap.favorite.service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -13,22 +11,15 @@ import org.springframework.stereotype.Service;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
-import com.kosa.mapbegood.domain.member.service.MemberService;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.FavoriteDto;
-import com.kosa.mapbegood.domain.mymap.favorite.dto.MemberDto;
-import com.kosa.mapbegood.domain.mymap.favorite.dto.MyPlaceDto;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
 import com.kosa.mapbegood.domain.mymap.favorite.entity.FavoriteEmbedded;
 import com.kosa.mapbegood.domain.mymap.favorite.repository.FavoriteRepository;
-import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
-import com.kosa.mapbegood.domain.mymap.util.ThemeMapMapper;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
-
-import lombok.RequiredArgsConstructor;
 
 //@RequiredArgsConstructor
 @Service
@@ -73,6 +64,29 @@ public class FavoriteService {
         }
     }
     /**
+     * 즐겨찾기 삭제
+     */
+    public void deleteFavorite(Long themeMapId, String userEmail) {
+    	FavoriteEmbedded embedded = new FavoriteEmbedded(themeMapId, userEmail);
+    	favoriteRepository.deleteById(embedded);
+//        try {
+//            Member member = memberrepository.findByEmail(userEmail)
+//                    .orElseThrow(() -> new FindException("멤버가 없습니당"));
+//
+//            Optional<Favorite> favorite = favoriteRepository.findByMemberEmailAndThememapId(member, themeMapId);
+//            	
+//            if (favorite.isPresent()) {
+//                favoriteRepository.delete(favorite.get());
+//            } else {
+//                throw new FindException("즐겨찾기를 찾을 수 없습니다.");
+//            }
+//        } catch (FindException e) {
+//            e.printStackTrace();
+//            // Handle the exception as needed
+//        }
+    }
+    
+    /**
      * 중복 조회
      * @throws AddException 
      * */
@@ -112,6 +126,7 @@ public class FavoriteService {
             return Collections.emptyList();
         }
     }
+    
 
 private FavoriteDto mapFavoriteEntityToDto(Favorite favorite) {
     FavoriteDto favoriteDto = new FavoriteDto();

@@ -130,6 +130,7 @@ public class ThemeMapService {
     	
     	
     }
+    
  // 검색한 리스트 중 한개를 나의 테마맵으로 추가
     public ThemeMapDto addToMyThemeMapList(String email, Long themeMapId) throws FindException {
         // 특정 ID의 테마맵 DTO 얻어오기
@@ -145,7 +146,7 @@ public class ThemeMapService {
 
         // 내 테마맵 리스트에 추가
         myThemeMaps.add(themeMapDtoToAdd);
-
+        
         return themeMapDtoToAdd;
     }
     
@@ -159,7 +160,7 @@ public class ThemeMapService {
             throw new FindException("테마맵을 찾을 수 없습니다. ID: " + themeMapId);
         }
     }
- // 테마맵 복사 기능 추가
+ // 테마맵 복사 
     public ThemeMapDto copyThemeMap(String email, Long themeMapId) throws FindException {
         // 원본 테마맵 조회
         ThemeMapDto originalThemeMap = getThemeMapById(email, themeMapId);

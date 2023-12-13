@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.ourmap.groupThememap.service;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.dto.GroupThememapDTO;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThememapRepository;
@@ -15,7 +15,9 @@ import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository;
 import com.kosa.mapbegood.exception.FindException;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class GroupThemeMapService {
 
@@ -34,7 +36,7 @@ public class GroupThemeMapService {
         Groups group = optionalGroup.orElseThrow(() -> new FindException("그룹을 찾을 수 없습니다."));
 
         GroupThememap groupThememap = mapGroupThememapDTOToEntity(groupThememapDTO);
-        groupThememap.setGroupId(group.getId()); // groupId를 URL에서 받아온 값으로 설정
+        groupThememap.setGroupId(group); // groupId를 URL에서 받아온 값으로 설정
 
         GroupThememap savedGroupThememap = groupThememapRepository.save(groupThememap);
 
@@ -104,68 +106,81 @@ public class GroupThemeMapService {
 	   * */
 	  public List<GroupThememapDTO> getAllGroupThememaps(Long groupId) throws FindException {
 		    try {
-		        Optional<Groups> optionalGroup = groupsRepository.findById(groupId);
+		    	Optional<Groups> optionalGroup = groupsRepository.findById(groupId);
+		        
 		        if (optionalGroup.isPresent()) {
 		            Groups group = optionalGroup.get();
-		            List<GroupThememap> groupThememaps = groupThememapRepository.findByGroupId(group.getId());
-
+		            List<GroupThememap> groupThememaps = group.getGroupThememapList();
+		            			        
 		            // 조회된 엔터티 리스트를 DTO 리스트로 변환하여 반환
 		            return groupThememaps.stream()
 		                    .map(this::mapGroupThememapEntityToDTO)
 		                    .collect(Collectors.toList());
 		        } else {
-		            throw new FindException("그룹을 찾을 수 없습니다.");
+		            throw new FindException("그룹이 없습니다.");
 		        }
+		        
 		    } catch (Exception e) {
+		    	e.printStackTrace();
 		        throw new FindException("그룹 테마지도 조회 중 오류가 발생했습니다.");
 		    }
 		}
 	  
-	// 그룹테마지도 조회 by 그룹 ID 및 그룹테마맵 ID o
-	  public GroupThememapDTO getGroupThememap(Long groupId, Long groupThememapId) throws FindException {
-	      try {
-	          Optional<Groups> optionalGroup = groupsRepository.findById(groupId);
-	          if (optionalGroup.isPresent()) {
-	              Groups group = optionalGroup.get();
-	              Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findByIdAndGroupId(groupThememapId, group.getId());
-
-	              if (optionalGroupThememap.isPresent()) {
-	                  GroupThememap groupThememap = optionalGroupThememap.get();
-	                  return mapGroupThememapEntityToDTO(groupThememap);
-	              } else {
-	                  throw new FindException("그룹 테마지도를 찾을 수 없습니다");
-	              }
-	          } else {
-	              throw new FindException("그룹을 찾을 수 없습니다.");
-	          }
-	      } catch (Exception e) {
-	          throw new FindException("그룹 테마지도 조회 중 오류가 발생했습니다.");
-	      }
-	  }
-	  
+	// 정적 메서드 대신 인스턴스 메서드로 변경
+	    public GroupThememapDTO getGroupThememap(Long groupId, Long groupThememapId) throws FindException {
+	        try {
+	            Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findByIdAndGroupId(groupThememapId, groupId);
+	            if (optionalGroupThememap.isPresent()) {
+	                GroupThememap groupThememap = optionalGroupThememap.get();
+	                return mapGroupThememapEntityToDTO(groupThememap);
+	            } else {
+	                throw new FindException("그룹 테마지도를 찾을 수 없습니다");
+	            }
+	        } catch (Exception e) {
+	            throw new FindException("그룹 테마지도 조회 중 오류가 발생했습니다.");
+	        }
+	    }
+//	// 그룹테마지도 조회 by 그룹 ID 및 그룹테마맵 ID o
+//	  public GroupThememapDTO getGroupThememap(Long groupId, Long groupThememapId) throws FindException {
+//	      try {
+//	          Optional<Groups> optionalGroup = groupsRepository.findById(groupId);
+//	          if (optionalGroup.isPresent()) {
+//	              Groups group = optionalGroup.get();
+//	              Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findByIdAndGroupId(groupThememapId, group.getId());
+//
+//	              if (optionalGroupThememap.isPresent()) {
+//	                  GroupThememap groupThememap = optionalGroupThememap.get();
+//	                  return mapGroupThememapEntityToDTO(groupThememap);
+//	              } else {
+//	                  throw new FindException("그룹 테마지도를 찾을 수 없습니다");
+//	              }
+//	          } else {
+//	              throw new FindException("그룹을 찾을 수 없습니다.");
+//	          }
+//	      } catch (Exception e) {
+//	          throw new FindException("그룹 테마지도 조회 중 오류가 발생했습니다.");
+//	      }
+//	  }
+ 
 	  // 그룹 테마지도 엔터티를 DTO로 변환
 	    private GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
 	        return GroupThememapDTO.builder()
 	                .id(groupThememap.getId())
-	                .groupId(groupThememap.getGroupId())
+	                .groupId(groupThememap.getGroupId().getId())
 	                .name(groupThememap.getName())
 	                .color(groupThememap.getColor())
 	                .memo(groupThememap.getMemo())
-//	                 stream()
-//	                        .map(ourplace -> OurplaceDTO.builder()
-//	                                .id(ourplace.getId())
-//	                                .name(ourplace.getName())
-//	                                // 필요한 필드 추가
-//	                                .build())
-//	                        .collect(Collectors.toList()))
+               
 	                .build();
 	    }
 
 	    // 그룹 테마지도 DTO를 엔터티로 변환 
 	    private GroupThememap mapGroupThememapDTOToEntity(GroupThememapDTO groupThememapDTO) {
+	    	Groups group = new Groups();
+	    	group.setId(groupThememapDTO.getGroupId());
 	        GroupThememap groupThememap = new GroupThememap();
 	        groupThememap.setId(groupThememapDTO.getId());
-	        groupThememap.setGroupId(groupThememapDTO.getGroupId());
+	        groupThememap.setGroupId(group);
 	        groupThememap.setName(groupThememapDTO.getName());
 	        groupThememap.setColor(groupThememapDTO.getColor());
 	        groupThememap.setMemo(groupThememapDTO.getMemo());

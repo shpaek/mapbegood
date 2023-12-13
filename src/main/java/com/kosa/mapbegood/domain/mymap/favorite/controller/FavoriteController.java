@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 //필요한 import 문 추가
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,7 +71,22 @@ public class FavoriteController {
          return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
      }
  }
-
+ 
+ /**
+  * 즐겨찾기 삭제
+  */
+ @DeleteMapping("/delete/{themeMapId}")
+ public ResponseEntity<String> deleteFavorite(
+         @PathVariable Long themeMapId,
+         Authentication authentication) {
+     try {
+         String userEmail = AuthenticationUtil.getUserEmail(authentication);
+         favoriteService.deleteFavorite(themeMapId, userEmail);
+         return new ResponseEntity<>("즐겨찾기가 삭제되었습니다.", HttpStatus.OK);
+     } catch (Exception e) {
+         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+     }
+ }
  
  
  

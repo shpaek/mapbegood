@@ -99,6 +99,7 @@ public class ThemeMapController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+    //검색된 테마맵 중 한개를 내 태마맵으로
     @PostMapping("/addlist/{themeMapId}")
     public ResponseEntity<ThemeMapDto> addToMyThemeMapList(Authentication authentication,
                                                           @PathVariable Long themeMapId) {

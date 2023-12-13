@@ -30,7 +30,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .from(qm)
                 .leftJoin(qtm)
                 .on(qm.email.eq(qtm.memberEmail.email))
-                .where(qm.nickname.eq(nick))
+                .where(qm.nickname.contains(nick))
                 .transform(
                         groupBy(qm.email).list(
                                 new QMemberSearchResponseDTO(

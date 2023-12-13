@@ -28,7 +28,9 @@ public class Waiting {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="waiting_seq_gener")
 	private Long id;
 	
-	private Long groupId;
+	@ManyToOne
+	@JoinColumn(name="group_id")
+	private Groups groupId;
 	
 	@Column(name="member_email")
 	private String memberEmail;

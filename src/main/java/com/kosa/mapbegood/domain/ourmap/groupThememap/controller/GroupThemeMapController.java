@@ -73,6 +73,7 @@ public class GroupThemeMapController {
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	        }
 	    }
+	    
 	  //그룹 테마맵 조회 o 
 	    @GetMapping("/getall/{groupId}")
 	    public ResponseEntity<List<GroupThememapDTO>> getAllGroupThememaps(@PathVariable Long groupId) {
@@ -80,11 +81,11 @@ public class GroupThemeMapController {
 	    	        List<GroupThememapDTO> groupThememaps = groupthememapservice.getAllGroupThememaps(groupId);
 	    	        return new ResponseEntity<>(groupThememaps, HttpStatus.OK);
 	    	    } catch (FindException e) {
+//	    	    	e.printStackTrace();
 	    	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    	    }	    	
-	    	 
-	    
 	    }
+	    
 	 // 그룹 테마맵 조회 by 그룹 ID 및 그룹테마맵 ID o
 	    @GetMapping("/get/{groupId}/{groupThememapId}")
 	    public ResponseEntity<GroupThememapDTO> getGroupThememap(@PathVariable Long groupId, @PathVariable Long groupThememapId) {
@@ -95,7 +96,8 @@ public class GroupThemeMapController {
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	        }
 	    }
-
+	    
+	
 }		
 	
 	

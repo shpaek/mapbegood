@@ -1,9 +1,13 @@
 package com.kosa.mapbegood.domain.member.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
@@ -35,10 +39,27 @@ public class MemberService implements MemberServiceInterface {
 	private final MailService mailService;
 	private final RedisService redisService;
 	private final AwsS3Service awsS3Service;
+	private final MemberMapper mapper;
 	private final String profileImageUploadPath = "/profile-image";
+	private final String LOGIN_CACHE = "login-cache ";
+	private final Long DURATION_CACHE = 600000L;
 
 	@Value("${spring.mail.auth-code-expiration-millis}")
 	private long authCodeExpirationMillis;
+
+	@Override
+	public MemberInfoDTO findLoginInfo(String email) throws Exception {
+		String loginInfo = redisService.getValues(LOGIN_CACHE + email);
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		if (!redisService.checkExistsValue(loginInfo)) {
+			Member member = this.findMember(email);
+			this.loginInfoRedisSave(member);
+			return mapper.MemberToMemberInfoDTO(member);
+		} else {
+			return objectMapper.readValue(loginInfo, MemberInfoDTO.class);
+		}
+	}
 
 	@Override
 	public Member findMember(String email) throws Exception {
@@ -97,7 +118,7 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public void verifyPassword(String email, String password) throws Exception {
 		try {
-			Member member = findMember(email);
+			Member member = this.findMember(email);
 			if (!pwEncoder.matches(password, member.getPassword())) {
 				throw new Exception();
 			};
@@ -110,9 +131,10 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public void updateNickName(String email, String nickName) throws Exception {
 		try {
-			Member member = findMember(email);
+			Member member = this.findMember(email);
 			member.setNickname(nickName);
 			repository.save(member);
+			this.loginInfoRedisSave(member);
 		} catch (Exception e) {
 			log.error("닉네임 수정 Error: " + e.getMessage());
 			throw new ModifyException();
@@ -122,7 +144,7 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public void updatePassword(String email, String password) throws Exception {
 		try {
-			Member member = findMember(email);
+			Member member = this.findMember(email);
 			member.setPassword(pwEncoder.encode(password));
 			repository.save(member);
 		} catch (Exception e) {
@@ -135,9 +157,10 @@ public class MemberService implements MemberServiceInterface {
 	public void updateProfileImage(String email, MultipartFile profileImage) throws Exception{
 		try {
 			String imageUrl = awsS3Service.uploadImage(profileImage, profileImageUploadPath);
-			Member member = findMember(email);
+			Member member = this.findMember(email);
 			member.setProfileImage(imageUrl);
 			repository.save(member);
+			this.loginInfoRedisSave(member);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			throw new ModifyException();
@@ -146,7 +169,7 @@ public class MemberService implements MemberServiceInterface {
 
 	@Override
 	public void sendCodeToEmail(String email) throws Exception {
-		Member member = findMember(email);
+		Member member = this.findMember(email);
 		String title = "[MapBeGood] " + member.getNickname() + "님 인증번호 안내드립니다.";
 		String authCode = RandomStringUtils.randomAlphanumeric(10);
 		try {
@@ -170,6 +193,7 @@ public class MemberService implements MemberServiceInterface {
 	@Override
 	public boolean verifiedCode(String email, String authCode) throws Exception {
 		try {
+			log.error("인증용 getKey: " + AUTH_CODE_PREFIX + email);
 			String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
 			if (redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode)) {
 				redisService.deleteValues(AUTH_CODE_PREFIX + email);
@@ -185,19 +209,26 @@ public class MemberService implements MemberServiceInterface {
 
 	@Override
 	public List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception {
-		findMember(email);
+		this.findMember(email);
 		return repository.memberSearch(nickName);
 	}
 
 	@Override
 	public void deleteMember(String email) throws Exception {
 		try {
-			Member member = findMember(email);
+			Member member = this.findMember(email);
 			member.setStatus(0);
 			repository.save(member);
 		} catch (Exception e) {
 			log.error("회원탈퇴 Error: " + e.getMessage());
 			throw new RemoveException();
 		}
+	}
+
+	private void loginInfoRedisSave(Member member) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		MemberInfoDTO memberInfoDTO = mapper.MemberToMemberInfoDTO(member);
+		String memberInfoJson = objectMapper.writeValueAsString(memberInfoDTO);
+		redisService.setValues(LOGIN_CACHE + member.getEmail(), memberInfoJson, Duration.ofMillis(DURATION_CACHE));
 	}
 }
