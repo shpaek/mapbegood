@@ -3,7 +3,7 @@
 <template>
   <div>
     <div class="addfavorite">
-      <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link>
+      <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
     </div>
     <div class="content">
       <h2>favoriteList 목록</h2>
