@@ -153,11 +153,6 @@ export default {
     if (this.userInfo.nickName == this.leaderNickname) {
       this.isleader = true;
     }
-    console.log("------START-----");
-    console.log(this.userInfo);
-    console.log(this.userInfo.nickName);
-    console.log(this.leaderNickname);
-    console.log("------END-----");
     // axios로 back에 그룹 멤버 명단 요청
     const url = `${this.backURL}/groupmember/${this.groupId}`;
     const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -188,11 +183,9 @@ export default {
       this.selectedLeader = gm.leader;
       this.selectedEmail = gm.member.email;
 
-
       const url = `${this.backURL}/groupmember`;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
-
 
       //DTO에 데이터 세팅
       const memberDTO = {
@@ -252,9 +245,7 @@ export default {
 };
 </script>
 <style scoped>
-/* div.group-member-container{
-    background-color: rgb(240, 240, 240);
-} */
+
 div.icons {
   width: 500px;
   margin-top: 50px;
