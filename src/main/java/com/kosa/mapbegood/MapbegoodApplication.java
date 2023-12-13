@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 )
 @ComponentScan(basePackages = "com.kosa.mapbegood")
 public class MapbegoodApplication {
- 
 	public static void main(String[] args) {
 		SpringApplication.run(MapbegoodApplication.class, args);
 	}    

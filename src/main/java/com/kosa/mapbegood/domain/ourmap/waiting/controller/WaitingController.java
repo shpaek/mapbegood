@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kosa.mapbegood.domain.common.response.Response;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.waiting.dto.WaitingDTO;
@@ -49,7 +50,7 @@ public class WaitingController {
 			ws.createWaiting(waitingDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(AddException e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new Response(0, e.getMessage()), HttpStatus.BAD_REQUEST);
 		}
 	}
 	

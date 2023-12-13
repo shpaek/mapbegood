@@ -1,32 +1,35 @@
 package com.kosa.mapbegood.domain.member.service;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.common.service.AwsS3Service;
-import com.kosa.mapbegood.domain.common.service.MailService;
-import com.kosa.mapbegood.domain.common.service.RedisService;
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
+import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
-
+import com.kosa.mapbegood.domain.common.service.MailService;
+import com.kosa.mapbegood.domain.common.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,7 +48,7 @@ public class MemberService implements MemberServiceInterface {
 
 	@Value("${spring.mail.auth-code-expiration-millis}")
 	private long authCodeExpirationMillis;
-	
+
 	@Override
 	public MemberInfoDTO findLoginInfo(String email) throws Exception {
 		String loginInfo = redisService.getValues(LOGIN_CACHE + email);
@@ -78,11 +81,16 @@ public class MemberService implements MemberServiceInterface {
 		}
 	}
 
+	@Transactional
 	@Override
-	public void createMember(Member member) throws Exception {
+	public void createMember(Member member, MultipartFile profileImage) throws Exception {
 		try {
 			Optional<Member> optMember = repository.findById(member.getEmail());
 			if (optMember.isEmpty()) {
+				if (!Objects.isNull(profileImage)) {
+					String imageUrl = awsS3Service.uploadImage(profileImage, profileImageUploadPath);
+					member.setProfileImage(imageUrl);
+				}
 				member.setPassword(pwEncoder.encode(member.getPassword()));
 				member.setStatus(1);
 				repository.save(member);
@@ -127,6 +135,7 @@ public class MemberService implements MemberServiceInterface {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void updateNickName(String email, String nickName) throws Exception {
 		try {
@@ -152,6 +161,7 @@ public class MemberService implements MemberServiceInterface {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void updateProfileImage(String email, MultipartFile profileImage) throws Exception{
 		try {
@@ -166,33 +176,26 @@ public class MemberService implements MemberServiceInterface {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void sendCodeToEmail(String email) throws Exception {
-		Member member = this.findMember(email);
-		String title = "[MapBeGood] " + member.getNickname() + "님 인증번호 안내드립니다.";
-		String authCode = RandomStringUtils.randomAlphanumeric(10);
+		String nickName = null;
 		try {
-			mailService.sendEmail(email, title, authCode, member.getNickname());
+			Member member = this.findMember(email);
+			nickName = member.getNickname();
 		} catch (Exception e) {
-			log.error("이메일 전송 Error: " + e.getMessage());
-			throw new Exception();
-		}
-		try {
-			redisService.setValues(
-					AUTH_CODE_PREFIX + email,
-					authCode,
-					Duration.ofMillis(this.authCodeExpirationMillis)
-			);
-		} catch (Exception e) {
-			log.error("인증코드 저장 Error: " + e.getMessage());
-			throw new Exception();
+			nickName = email.substring(0, email.indexOf("@"));
+		} finally {
+			String title = "[좋을지도] " + nickName + " 님 인증번호 안내드립니다.";
+			String authCode = RandomStringUtils.randomAlphanumeric(10);
+			this.sendEmail(email, title, authCode, nickName);
+			this.saveAuthCode(email, authCode);
 		}
 	}
 
 	@Override
 	public boolean verifiedCode(String email, String authCode) throws Exception {
 		try {
-			log.error("인증용 getKey: " + AUTH_CODE_PREFIX + email);
 			String redisAuthCode = redisService.getValues(AUTH_CODE_PREFIX + email);
 			if (redisService.checkExistsValue(redisAuthCode) && redisAuthCode.equals(authCode)) {
 				redisService.deleteValues(AUTH_CODE_PREFIX + email);
@@ -207,7 +210,7 @@ public class MemberService implements MemberServiceInterface {
 	}
 
 	@Override
-	public List<MemberSearchResponseDTO> searchMember(String email, String nickName) throws Exception {
+	public List<MemberInfoDTO> searchMember(String email, String nickName) throws Exception {
 		this.findMember(email);
 		return repository.memberSearch(nickName);
 	}
@@ -229,5 +232,27 @@ public class MemberService implements MemberServiceInterface {
 		MemberInfoDTO memberInfoDTO = mapper.MemberToMemberInfoDTO(member);
 		String memberInfoJson = objectMapper.writeValueAsString(memberInfoDTO);
 		redisService.setValues(LOGIN_CACHE + member.getEmail(), memberInfoJson, Duration.ofMillis(DURATION_CACHE));
+	}
+
+	private void sendEmail(String email, String title, String authCode, String nickName) throws Exception {
+		try {
+			mailService.sendEmail(email, title, authCode, nickName);
+		} catch (Exception e) {
+			log.error("이메일 전송 Error: " + e.getMessage());
+			throw new Exception();
+		}
+	}
+
+	private void saveAuthCode(String email, String authCode) throws Exception {
+		try {
+			redisService.setValues(
+					AUTH_CODE_PREFIX + email,
+					authCode,
+					Duration.ofMillis(this.authCodeExpirationMillis)
+			);
+		} catch (Exception e) {
+			log.error("인증코드 저장 Error: " + e.getMessage());
+			throw new Exception();
+		}
 	}
 }
