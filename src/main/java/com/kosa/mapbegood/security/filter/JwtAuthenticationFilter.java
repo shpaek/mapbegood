@@ -3,7 +3,7 @@ package com.kosa.mapbegood.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosa.mapbegood.domain.member.dto.MemberLoginDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
-import com.kosa.mapbegood.security.refresh.RefreshTokenService;
+import com.kosa.mapbegood.security.refresh.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final RefreshTokenService refreshTokenService;
+    private final TokenService tokenService;
 
     @SneakyThrows
     @Override
@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws ServletException, IOException {
         Member member = (Member) authResult.getPrincipal();
 
-        String accessToken = refreshTokenService.delegateAccessToken(member);
-        String refreshToken = refreshTokenService.delegateRefreshToken(member);
+        String accessToken = tokenService.delegateAccessToken(member);
+        String refreshToken = tokenService.delegateRefreshToken(member);
 
         response.setHeader("Authorization", accessToken);
         response.setHeader("Refresh", refreshToken);

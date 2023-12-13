@@ -2,6 +2,8 @@ package com.kosa.mapbegood.domain.ourmap.memberGroup.controller;
 
 import java.util.List;
 
+import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.domain.member.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,21 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 	private MemberGroupService mgs;
 	@Autowired
 	private AuthenticationUtil authenticationUtil;
+
+	@Autowired
+	private MemberService memberService;
 	
 	//그룹의 전체 멤버 찾기
 	@GetMapping(value="/{groupId}", produces="application/json;charset=UTF-8")
 	public List<MemberGroupDTO> findAllGroupMembersByGroupId(Authentication authentication, @PathVariable Long groupId) throws FindException{
-		return mgs.findAllGroupMembersByGroupId(groupId);
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			memberService.findMember(email);
+			return mgs.findAllGroupMembersByGroupId(groupId);
+		} catch(Exception e) {
+			log.error("그룹 전체 멤버 찾기 인증 실패");
+			return null; 
+		}
 	}
 	
 	//그룹의 특정 멤버 찾기
@@ -66,10 +78,8 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 	@DeleteMapping(value="", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> deleteMemberGroup(Authentication authentication, @RequestBody MemberGroupDTO memberGroupDto)  {
 		try {
+			//그룹장, 그룹원
 			String email = authenticationUtil.getUserEmail(authentication);
-			MemberDTO m = new MemberDTO();
-			m.setEmail(email);
-			memberGroupDto.setMember(m);
 			mgs.deleteMemberGroup(memberGroupDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(RemoveException e) {

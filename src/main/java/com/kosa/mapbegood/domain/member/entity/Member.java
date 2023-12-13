@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,6 +13,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper=false)
 @Entity
 @Table
+
 public class Member extends AuditEntity {
 	@Id
 	private String email;
