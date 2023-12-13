@@ -46,7 +46,7 @@
           <span>새 리스트 추가</span>
         </div>
       </div>
-      <div class="col-md-6">
+       <div class="col-md-6">
         <div class="group-thememap-list">
           <p>그룹의 테마지도 목록입니다</p>
           <ul class="list-group">
@@ -71,7 +71,7 @@
 </template>
 <script>
 import axios from 'axios';
- 
+
 export default {
   name: "GroupDetail",
   data() {
@@ -99,6 +99,7 @@ export default {
     this.groupMemo = groupMemo;
     this.fetchGroupThememaps();
   },
+
   methods: {
     fetchGroupThememaps() {
       const url = `http://localhost:8080/ourmap/getall/${this.groupId}`;
@@ -134,93 +135,97 @@ export default {
       });
     },
     deleteGroupClickHandler() {
-      const url = `http://localhost:8080/group/${this.groupId}`;
-      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-      axios.defaults.headers.common["Authorization"] = accessToken;
-      axios.delete(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
-        .then(response => {
-          alert("그룹이 삭제되었습니다");
-          location.href = '/groups';
-        })
-        .catch(error => {
-          console.log(error);
-          alert("그룹이 삭제되지 않았습니다 ");
-        });
+        const url = `${this.backURL}/group/${this.groupId}`
+
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        axios.delete(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
+          .then(response => {
+            alert("그룹이 삭제되었습니다")
+            location.href = '/groups'
+          })
+          .catch(error => {
+            console.log(error)
+            alert("그룹이 삭제되지 않았습니다 ")
+          })
     },
     personClickHandler() {
-      this.$router.push({
-        name: '/groupmember',
-        params: {
-          groupId: this.groupId,
-          groupName: this.groupName,
-          leaderNickname: this.leaderNickname
-        }
-      });
+        this.$router.push({
+          name: '/groupmember',
+          params: {
+            groupId: this.groupId,
+            groupName: this.groupName,
+            leaderNickname: this.leaderNickname
+          }
+        })
     },
     addnewgroupclickHandler() {
-      this.$router.push({ name: 'addgroupmap' });
+        this.$router.push({ name: 'addgroupmap' });
     },
-
     goToDetailGroupMap(groupThememapId) {
-  // 그룹 테마지도의 ID를 사용하여 상세보기 페이지로 이동
-  this.$router.push({
-    name: 'detailgroupmap',
-    params: { groupThememapId: groupThememapId }  // Use the correct parameter name
-  });
-},
-editGroupmap(thememapId) {
-  this.$router.push({
-  name: 'updategroupmap',
-  params: { groupId: this.groupId, groupThememapId: thememapId }
-});
-},
-  deleteGroupmap(groupThememapId) {
-      const url = `http://localhost:8080/ourmap/delete/${this.groupId}/${groupThememapId}`;
-      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-
-      axios.defaults.headers.common["Authorization"] = accessToken;
-
-      axios.delete(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
-        .then(response => {
-          // Assuming your backend returns a success status
-          alert("그룹 테마지도가 삭제되었습니다.");
-          // Refresh the theme maps after deletion
-          this.fetchGroupThememaps();
-        })
-        .catch(error => {
-          console.error("Error deleting group theme map:", error);
-          alert("그룹 테마지도를 삭제하지 못했습니다.");
+        // 그룹 테마지도의 ID를 사용하여 상세보기 페이지로 이동
+        this.$router.push({
+          name: 'detailgroupmap',
+          params: { groupThememapId: groupThememapId }
         });
     },
-  },
-};
+    editGroupmap(thememapId) {
+        this.$router.push({
+          name: 'updategroupmap',
+          params: { groupId: this.groupId, groupThememapId: thememapId }
+        });
+    },
+    deleteGroupmap(groupThememapId) {
+        const url = `http://localhost:8080/ourmap/delete/${this.groupId}/${groupThememapId}`;
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        axios.delete(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
+          .then(response => {
+            // Assuming your backend returns a success status
+            alert("그룹 테마지도가 삭제되었습니다.");
+            // Refresh the theme maps after deletion
+            this.fetchGroupThememaps();
+          })
+          .catch(error => {
+            console.error("Error deleting group theme map:", error);
+            alert("그룹 테마지도를 삭제하지 못했습니다.");
+          });
+    },
+  }
+}
+
+
 </script>
 <style scoped>
 div.group-info {
-    margin-left: 75px;
-    margin-top: 50px;
- }
+  margin-left: 75px;
+  margin-top: 50px;
+}
 
 ul {
-    list-style-type: none;
-    padding-left: 0px;
+  list-style-type: none;
+  padding-left: 0px;
 }
 
 li.img {
-    position: relative;
-    height: 150px;
+  position: relative;
+  height: 150px;
 }
 
 li.img svg.bi-gear {
-    position: absolute;
-    left: 92%;
-    /* 조절하고자 하는 거리 */
-    top: 10px;
-    /* 원하는 세로 위치 조절 */
+  position: absolute;
+  left: 92%;
+  /* 조절하고자 하는 거리 */
+  top: 10px;
+  /* 원하는 세로 위치 조절 */
 }
-div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown{
-   position: absolute;
-  font-size:12px;
+
+div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown {
+  position: absolute;
+  font-size: 12px;
   left: 94.7%;
   transform: translateX(-94.7%);
   top: 42px;
@@ -232,57 +237,36 @@ div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown{
   border-radius: 15%;
   white-space: nowrap;
 }
-div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li{
+
+div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li {
   color: rgb(80, 80, 80);
 }
+
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li:hover {
   text-decoration: underline;
-  cursor: pointer; /* 선택 가능한 요소로 마우스 커서를 변경합니다. */
+  cursor: pointer;
+  /* 선택 가능한 요소로 마우스 커서를 변경합니다. */
 }
+
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
   position: absolute;
-  top: 32px; /* 조절 가능한 값 */
+  top: 32px;
+  /* 조절 가능한 값 */
   left: 93%;
   transform: translateX(-93%);
-  border-left: 7px solid transparent;  /* 왼쪽 변 */
-  border-right: 7px solid transparent; /* 오른쪽 변 */
-  border-bottom: 12px solid rgb(240, 240, 240);  /* 아래쪽 변 */
- 
-    position: absolute;
-    font-size:12px;
-    left: 94.7%;
-    transform: translateX(-94.7%);
-    top: 42px;
-    width: 75px;
-    height: 55px;
-    text-align: center;
-    background-color: rgb(240, 240, 240);
-    border-color: 1px rgb(240, 240, 240);
-    border-radius: 15%;
-    white-space: nowrap;
+  border-left: 7px solid transparent;
+  /* 왼쪽 변 */
+  border-right: 7px solid transparent;
+  /* 오른쪽 변 */
+  border-bottom: 12px solid rgb(240, 240, 240);
+  /* 아래쪽 변 */
 }
-div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li{
-    color: rgb(80, 80, 80);
-}
-div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li:hover {
-    text-decoration: underline;
-    cursor: pointer; /* 선택 가능한 요소로 마우스 커서를 변경합니다. */
-}
-div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
-    position: absolute;
-    top: 32px; /* 조절 가능한 값 */
-    left: 93%;
-    transform: translateX(-93%);
-    border-left: 7px solid transparent;  /* 왼쪽 변 */
-    border-right: 7px solid transparent; /* 오른쪽 변 */
-    border-bottom: 12px solid rgb(240, 240, 240);  /* 아래쪽 변 */
- }
+
 li.group-member {
-    position: relative;
+  position: relative;
 }
 
 li.group-member svg.bi-person-lines-fill {
-    position: absolute;
-    left: 92%;
-}
-</style>
+  position: absolute;
+  left: 92%;
+}</style>.
