@@ -22,4 +22,5 @@ public interface OurplaceMapper {
 
     @Mapping(target = "groupId.id", source = "groupId")
     GroupThememap mapToGroupThememap(GroupThememapDTO groupThememapDTO);
+
 }
