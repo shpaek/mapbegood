@@ -42,26 +42,28 @@
           </ul>
       </div>
       <hr>
-      <div class="new-group" @click="addnewgroupclickHandler">
-  <span>새 리스트 추가</span>
-          <!-- 클릭이벤트 주기 -->
+      <div class="new-group cursor-pointer" @click="addnewgroupclickHandler">
+          <span>새 리스트 추가</span>
+        </div>
       </div>
- 
-      <div class="group-thememap-list">
-  <p>그룹의 테마지도 목록입니다</p>
-  <ul class="group-thememap">
-    <li v-for="thememap in groupThememaps" :key="thememap.id">
-      <!-- Display information about each group theme map -->
-      <strong>그룹테마 list이름:{{ thememap.name }}</strong>
-      <p>그룹테마 list내용:{{ thememap.memo }}</p>
-      <!-- "상세보기" 버튼 -->
-      <button @click="goToDetailGroupMap(thememap.id)">상세보기</button>
-          <!-- 리스트 수정 버튼-->
-      <button @click="editGroupmap( )">수정</button>
-          <!--리스트 삭제 버튼-->
-      <button @click="deleteGroupmap(thememap.id)">삭제</button>
-          <!-- 리스트 복사 버튼
-      <button @click="copyGroupmap(thememap.themeMapDto.id)">복사</button> -->
+      <div class="col-md-6">
+        <div class="group-thememap-list">
+          <p>그룹의 테마지도 목록입니다</p>
+          <ul class="list-group">
+            <li v-for="thememap in groupThememaps" :key="thememap.id" class="list-group-item">
+              <strong>그룹테마 list이름: {{ thememap.name }}</strong>
+              <p>그룹테마 list내용: {{ thememap.memo }}</p>
+              <div class="btn-group" role="group" aria-label="Theme Map Actions">
+                <button type="button" class="btn btn-primary" @click="goToDetailGroupMap(thememap.id)">
+                  상세보기
+                </button>
+                <button type="button" class="btn btn-secondary" @click="editGroupmap(thememap.id)">
+                  수정
+                </button>
+                <button type="button" class="btn btn-danger" @click="deleteGroupmap(thememap.id)">
+                  삭제
+                </button>
+              </div>
     </li>
   </ul>
 </div>
@@ -159,11 +161,11 @@ export default {
       this.$router.push({ name: 'addgroupmap' });
     },
 
-  goToDetailGroupMap(groupThememapId) {
+    goToDetailGroupMap(groupThememapId) {
   // 그룹 테마지도의 ID를 사용하여 상세보기 페이지로 이동
   this.$router.push({
     name: 'detailgroupmap',
-    params: { id: groupThememapId }
+    params: { groupThememapId: groupThememapId }  // Use the correct parameter name
   });
 },
 editGroupmap(thememapId) {
