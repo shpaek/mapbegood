@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kosa.mapbegood.domain.common.entity.AuditEntity;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
@@ -41,9 +42,11 @@ public class Ourplace extends AuditEntity {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ourplace_seq_gener")
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "GroupThememapId")
-	private GroupThememap groupThememapId;
+//	@ManyToOne
+//	@JoinColumn(name = "group_thememap_id")
+//	private GroupThememap groupThememapId;
+	
+	private Long groupThememapId;
 	
 	@ManyToOne
 	@JoinColumn(name = "member_email")
@@ -63,8 +66,8 @@ public class Ourplace extends AuditEntity {
 
 //	private String category;
 	
-	@OneToMany(cascade = CascadeType.REMOVE, mappedBy="id.ourplaceId")
-	private List<OurplaceFeed> feedList;
+//	@OneToMany(cascade = CascadeType.REMOVE, mappedBy="id.ourplaceId")
+//	private List<OurplaceFeed> feedList;
 
 //	@OneToMany(cascade = CascadeType.REMOVE)
 //	private List<Place> placeList;

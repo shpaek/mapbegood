@@ -16,9 +16,15 @@ import javax.persistence.Table;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 @SequenceGenerator(

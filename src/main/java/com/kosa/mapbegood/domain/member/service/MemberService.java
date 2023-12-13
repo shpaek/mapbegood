@@ -1,33 +1,32 @@
 package com.kosa.mapbegood.domain.member.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kosa.mapbegood.domain.common.service.AwsS3Service;
-import com.kosa.mapbegood.domain.member.dto.MemberDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
-import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
-import com.kosa.mapbegood.domain.member.entity.Member;
-import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
-import com.kosa.mapbegood.domain.member.repository.MemberRepository;
-import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
-import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
-import com.kosa.mapbegood.exception.AddException;
-import com.kosa.mapbegood.exception.FindException;
-import com.kosa.mapbegood.exception.ModifyException;
-import com.kosa.mapbegood.exception.RemoveException;
-import com.kosa.mapbegood.domain.common.service.MailService;
-import com.kosa.mapbegood.domain.common.service.RedisService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kosa.mapbegood.domain.common.service.AwsS3Service;
+import com.kosa.mapbegood.domain.common.service.MailService;
+import com.kosa.mapbegood.domain.common.service.RedisService;
+import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
+import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
+import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.exception.AddException;
+import com.kosa.mapbegood.exception.FindException;
+import com.kosa.mapbegood.exception.ModifyException;
+import com.kosa.mapbegood.exception.RemoveException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,7 +45,7 @@ public class MemberService implements MemberServiceInterface {
 
 	@Value("${spring.mail.auth-code-expiration-millis}")
 	private long authCodeExpirationMillis;
-
+	
 	@Override
 	public MemberInfoDTO findLoginInfo(String email) throws Exception {
 		String loginInfo = redisService.getValues(LOGIN_CACHE + email);

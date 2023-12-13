@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
@@ -20,6 +21,7 @@ import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
 import com.kosa.mapbegood.exception.RemoveException;
 
+@Service
 public class OurplaceService {
 
 	@Autowired
@@ -39,9 +41,7 @@ public class OurplaceService {
 	 * @throws FindException
 	 */
 	public List<OurplaceDTO> findAllOurplace(Long groupThemeMapId) throws FindException{
-		GroupThememap groupThememap = new GroupThememap();
-		groupThememap.setId(groupThemeMapId);
-		List<Ourplace> ourplacelist = opr.findByGroupThememapId_Id(groupThememap);
+		List<Ourplace> ourplacelist = opr.findByGroupThememapId(groupThemeMapId);
 		List<OurplaceDTO> ourplaceDtoList = new ArrayList<OurplaceDTO>(); 	
 		for(Ourplace ourplace: ourplacelist) {
 			ourplaceDtoList.add(mapper.entityToDto(ourplace));
@@ -101,22 +101,28 @@ public class OurplaceService {
 	
 	
 	public void mergeToMyThemeMap(Long groupThemeMapId, Long mythemeMapId) throws FindException, AddException {
-		List<OurplaceDTO> ourPlaceList = findAllOurplace(groupThemeMapId);
-		List<MyplaceDTO> myPlaceList = mps.findAllMyplace(mythemeMapId);
-		for(OurplaceDTO ourPlace : ourPlaceList) {
-			if(myPlaceList.contains(ourPlace.getPlaceId())) {
-				return;				
-			}else {
-				MyplaceDTO copyDto = new MyplaceDTO();
-				copyDto.setPlaceId(ourPlace.getPlaceId());
-				ThemeMapDto thememapDto = new ThemeMapDto();
-				thememapDto.setId(mythemeMapId);
-				copyDto.setThememapId(thememapDto);
-				mps.createMyplace(copyDto);
-			}
-		}
+	    List<OurplaceDTO> ourPlaceList = findAllOurplace(groupThemeMapId);
+	    List<MyplaceDTO> myPlaceList = mps.findAllMyplace(mythemeMapId);
+
+	    for (OurplaceDTO ourPlace : ourPlaceList) {
+	        boolean isDuplicate = false;
+
+	        for (MyplaceDTO myplace : myPlaceList) {
+	            if (myplace.getPlaceId().getId() == ourPlace.getPlaceId().getId()) {
+	                isDuplicate = true;
+	                break;
+	            }
+	        }
+
+	        if (!isDuplicate) {
+	            MyplaceDTO copyDto = new MyplaceDTO();
+	            copyDto.setPlaceId(ourPlace.getPlaceId());
+	            ThemeMapDto thememapDto = new ThemeMapDto();
+	            thememapDto.setId(mythemeMapId);
+	            copyDto.setThememapId(thememapDto);
+	            mps.createMyplace(copyDto);
+	        }
+	    }
 	}
 	
-	
-
 }

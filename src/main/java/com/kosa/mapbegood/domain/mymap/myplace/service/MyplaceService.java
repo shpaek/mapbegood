@@ -64,6 +64,13 @@ public class MyplaceService {
 	 * @param myplaceDto
 	 */
 	public void createMyplace(MyplaceDTO myplaceDto) throws AddException{
+		List<Myplace> myplaceList = mpr.findByThememapId_Id(myplaceDto.getThememapId().getId());
+		for(Myplace myplace: myplaceList) {
+			System.out.println(myplace.getPlaceId().getId()+"/"+myplaceDto.getPlaceId().getId());
+			if(myplace.getPlaceId().getId()!=myplaceDto.getPlaceId().getId()) {
+				return;
+			}
+		}
 		mpr.save(mapper.dtoToEntity(myplaceDto));
 	}
 

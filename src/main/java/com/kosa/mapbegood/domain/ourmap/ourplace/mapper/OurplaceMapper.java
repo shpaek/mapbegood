@@ -11,6 +11,7 @@ import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 
+
 public interface OurplaceMapper {
     Ourplace dtoToEntity(OurplaceDTO ourplaceDto);
 

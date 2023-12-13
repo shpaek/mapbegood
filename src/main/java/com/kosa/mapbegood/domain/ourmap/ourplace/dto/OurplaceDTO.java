@@ -19,7 +19,7 @@ public class OurplaceDTO {
 
 	private Long id;
 
-	private GroupThememapDTO groupThememapId;	
+	private Long groupThememapId;
 	
 	private MemberDTO memberEmail;
 	
