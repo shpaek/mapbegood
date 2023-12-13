@@ -17,9 +17,4 @@ public interface OurplaceMapper {
 
     OurplaceDTO entityToDto(Ourplace ourplace);
 
-    @Mapping(target = "groupId", source = "groupId.id")
-    GroupThememapDTO mapToGroupThememapDTO(GroupThememap groupThememap);
-
-    @Mapping(target = "groupId.id", source = "groupId")
-    GroupThememap mapToGroupThememap(GroupThememapDTO groupThememapDTO);
 }
