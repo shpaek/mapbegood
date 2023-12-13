@@ -125,12 +125,22 @@ public class GroupThemeMapService {
 		        throw new FindException("그룹 테마지도 조회 중 오류가 발생했습니다.");
 		    }
 		}
+	 
+	  //groupid와 groupthememapid를 받아서 상세조회하기
+
 	  
-	// 정적 메서드 대신 인스턴스 메서드로 변경
-	    public GroupThememapDTO getGroupThememap(Long groupId, Long groupThememapId) throws FindException {
+	  
+	  /**
+	     * 그룹 테마지도 상세 조회
+	     * 설명: 그룹 ID와 그룹 테마지도 ID를 사용하여 특정 그룹 테마지도를 조회한다.
+	     */
+	    public GroupThememapDTO getGroupThememapDetail( Long groupThememapId) throws FindException {
 	        try {
-	            Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findByIdAndGroupId(groupThememapId, groupId);
-	            if (optionalGroupThememap.isPresent()) {
+//	            Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findByIdAndGroupId(groupThememapId, groupId);
+	        	Optional<GroupThememap> optionalGroupThememap = 
+	        			groupThememapRepository.findById(groupThememapId);
+	            
+	        	if (optionalGroupThememap.isPresent()) {
 	                GroupThememap groupThememap = optionalGroupThememap.get();
 	                return mapGroupThememapEntityToDTO(groupThememap);
 	            } else {

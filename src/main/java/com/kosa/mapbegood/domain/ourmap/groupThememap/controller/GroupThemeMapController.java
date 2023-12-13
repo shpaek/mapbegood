@@ -86,11 +86,13 @@ public class GroupThemeMapController {
 	    	    }	    	
 	    }
 	    
-	 // 그룹 테마맵 조회 by 그룹 ID 및 그룹테마맵 ID o
-	    @GetMapping("/get/{groupId}/{groupThememapId}")
-	    public ResponseEntity<GroupThememapDTO> getGroupThememap(@PathVariable Long groupId, @PathVariable Long groupThememapId) {
+	    @GetMapping("/get/{groupThememapId}")
+	    public ResponseEntity<GroupThememapDTO> getGroupThememapDetail(
+	             
+	            @PathVariable Long groupThememapId
+	    ) {
 	        try {
-	            GroupThememapDTO groupThememap = groupthememapservice.getGroupThememap(groupId, groupThememapId);
+	            GroupThememapDTO groupThememap = groupthememapservice.getGroupThememapDetail(groupThememapId);
 	            return new ResponseEntity<>(groupThememap, HttpStatus.OK);
 	        } catch (FindException e) {
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
