@@ -1,27 +1,28 @@
 <template lang="">
     <div v-show="isModalOpen" class="modal" @click="backClickHandler">
         <v-sheet :elevation="18" :height="400" :width="550" rounded @click.stop>
-            <div class="search">
+            <form class="search" @submit.prevent="searchUserClickHandler">
                 <!-- 검색부분 -->
                 <label for="n">닉네임: </label>&nbsp;
                 <input type="text" name="nickName" v-model="name" id="n" required
-                placeholder="초대할 사용자를 입력하세요" 
-                @change="inputPocusHandler"/>&nbsp;&nbsp;&nbsp;
-                <button type="submit" class="search" id="b1" @click="searchUserClickHandler">검색</button>
-            </div>
+                placeholder="초대할 사용자를 입력하세요" />
+                <button type="submit" class="search" id="b1">검색</button>
+            </form>
             <div class="result">
                 <div v-for="user in userList" :key="user.id" class="member">
                     <!-- 사용자정보 -->
-                    <img :src="user.profileImage" alt="프로필이미지" class="profileImage">
-                    {{user.nickname}}
+                    <img :src="user.profileImage" alt="프로필이미지" class="profileImage">&nbsp;
+                    <span>{{user.nickName}}</span>
                     <!-- 초대 아이콘 -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"
-                        @click="inviteUserClickHandler(user)">
-                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                    </svg>
+                    <span class="svg-add">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"
+                           @click="inviteUserClickHandler(user)">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                        </svg>
+                    </span>
                 </div>
-                <div calss="empty-msg">
+                <div class="empty-msg">
                     {{emptyMsg}}
                 </div>
             </div>
@@ -56,9 +57,9 @@ export default {
             // this.$emit('close-modal');
             window.location.reload();
         },
-        inputPocusHandler(){
-            this.emptyMsg = ''
-        },
+        // inputPocusHandler(){
+        //     this.emptyMsg = ''
+        // },
         searchUserClickHandler() {
             if (this.name.length < 1) {
                 alert("최소 한글자 이상 입력하세요")
@@ -83,24 +84,22 @@ export default {
             }
         },
         inviteUserClickHandler(user){
-            console.log(user.email); //반환데이터 목록에 없어서 아직 못 보냄
             const email = user.email
             const url = `${this.backURL}/waiting`
             const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
             axios.defaults.headers.common["Authorization"] = accessToken;
-            console.log(this.groupId);
-            // const requestBody = {
-            //     groupId: this.groupId,
-            //     memberEmail: email,
-            // };
-            // axios.post(url, requestBody, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
-            //      .then(response => {
-            //         alert("초대장을 보냈습니다")
-            //      })
-            //      .catch(error =>{
-            //         console.log(error)
-            //         alert("사용자를 그룹에 추가하지 못했습니다")
-            //      })
+            const requestBody = {
+                groupId: this.groupId,
+                memberEmail: email,
+            };
+            axios.post(url, requestBody, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
+                 .then(response => {
+                    alert("초대장을 보냈습니다")
+                 })
+                 .catch(error =>{
+                    console.log(error)
+                    alert(error.response.data.message)
+                 })
         }
     }
 }
@@ -119,7 +118,7 @@ export default {
     z-index: 999;
 }
 
-div.search {
+form.search {
     margin-top: 50px;
     text-align: center;
 }
@@ -129,6 +128,11 @@ div.result {
     margin-top: 10px;
     margin-left:110px;
     height: 240px;
+    width:330px;
+}
+
+div.result>div.member>span.svg-add{
+    margin-left: 10px;
 }
 
 button.close{
@@ -139,9 +143,9 @@ button.close{
 }
 
 img.profileImage {
-    min-width: 44px;
+    min-width: 42px;
     min-height: 40px;
-    max-width: 44px;
+    max-width: 42px;
     max-height: 40px;
     border-radius: 50%;
 }

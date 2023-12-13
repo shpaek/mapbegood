@@ -276,9 +276,9 @@ div.info {
   justify-content: space-between;
 }
 img.profileImage {
-  min-width: 44px;
+  min-width: 42px;
   min-height: 40px;
-  max-width: 44px;
+  max-width: 42px;
   max-height: 40px;
   border-radius: 50%;
 }
