@@ -1,5 +1,5 @@
 <template lang="">
-    <h2>그룹초대 미응답 명단</h2>
+    <h2>그룹초대 수락대기 명단</h2>
     <div class="waiting-list-container"> <!--group-member-container-->
         <div class="icons">
             <!-- 아이콘들 -->
@@ -16,8 +16,9 @@
                     <span>삭제</span>
                 </div> -->
                 <div class="info">
-                    <span class="member" @click="memberdetailClickHandler">
-                        {{waiting.memberNickname}}
+                    <span class="member" @click="memberdetailClickHandler(waiting.nickname)">
+                        <img :src="waiting.profileImage" alt="프로필이미지" class="profileImage">
+                        {{waiting.nickname}}
                     </span>
                 </div>
             </div>
@@ -36,7 +37,7 @@ export default {
             groupName: '',
             leaderNickname: '',
             emptyMsg:'',
-            isleader: true, //leader에게만 그룹의 멤버추가/삭제 가능
+            selectedNickname: '',
         }
     },
     created(){
@@ -69,6 +70,23 @@ export default {
                 console.log(error)
                 this.emptyMsg='그룹초대 수락대기 명단을 불러올 수 없습니다'
              })
+    },
+    methods:{
+        groupmemberlistClickHandler(){ //그룹멤버보기로 이동
+            this.$router.push({
+                name: '/groupmember',
+                params:{
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            })
+        },
+        memberdetailClickHandler(nickname){ //사용자 상세보기 페이지로 이동
+            this.selectedNickname = nickname;
+            // this.selectedNickname에 값을 할당
+            alert(this.selectedNickname); // 테스트를 위해 알림으로 출력
+        }
     }
 }
 </script>
@@ -94,5 +112,12 @@ div.waiting-list{
 div.info{
     display: flex;
     justify-content: space-between;
+}
+img.profileImage{
+    min-width: 42px;
+    min-height: 40px;
+    max-width: 42px;
+    max-height: 40px;
+    border-radius: 50%;
 }
 </style>
