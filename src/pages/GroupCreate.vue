@@ -50,7 +50,6 @@ export default {
         groupcreateFormSubmitHandler(e) {//그룹 생성 버튼 클릭 시
             //axios로 백 url요청
             const url = `${this.backURL}/group` //`${this.backURL}/group`
-
             const fd = new FormData(e.target)
 
             const accessToken = "Bearer "+localStorage.getItem("mapbegoodToken")
@@ -97,6 +96,7 @@ export default {
         },
         b3ClickHandler() { //중복확인 버튼 클릭 시
             if (this.name.trim().length > 0) {
+
                 const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`
                 axios.get(url)
                     .then(response => {

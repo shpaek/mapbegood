@@ -188,9 +188,11 @@ export default {
       this.selectedLeader = gm.leader;
       this.selectedEmail = gm.member.email;
 
+
       const url = `${this.backURL}/groupmember`;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
+
 
       //DTO에 데이터 세팅
       const memberDTO = {
