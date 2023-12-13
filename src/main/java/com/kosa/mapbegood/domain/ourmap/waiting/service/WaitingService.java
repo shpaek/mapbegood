@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
+import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
+import com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroupEmbedded;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.repository.MemberGroupRepository;
@@ -33,6 +35,8 @@ public class WaitingService {
 	private MemberRepository mr;
 	@Autowired
 	private MemberGroupRepository mgr;
+	@Autowired
+	private GroupsRepository gr;
 	
 	/**
 	 * WaitingDTO를 Waiting(엔터티)로 변환한다
@@ -81,6 +85,36 @@ public class WaitingService {
 		}
 	}
 	
+	/**
+	 * 특정 사용자의 수락대기목록(그룹)을 조회한다
+	 * @param memberEmail
+	 * @return 특정 사용자의 수락대기중인 그룹의 이름
+	 * @throws FindException
+	 */
+	public List<GroupsDTO> findAllWaitingByMemberEmail(String memberEmail) throws FindException{
+		List<GroupsDTO> resultGroupDtoList = new ArrayList();
+		try {
+			List<Waiting> waitingList = wr.findByMemberEmail(memberEmail);
+			log.error("waitingList={}", waitingList);
+			if(waitingList == null) {
+				throw new FindException("새로운 그룹초대 요청이 없습니다");
+			}
+			for(int i=0;i<waitingList.size();i++) {
+				Waiting waiting = waitingList.get(i); //수락대기 1개로 그룹 찾기
+				Optional<Groups> optGroup = gr.findById(waiting.getGroupId().getId());
+				if(optGroup.isPresent()) {
+					Groups group = optGroup.get();
+					GroupsDTO groupDto = new GroupsDTO();
+					groupDto.setId(group.getId());
+					groupDto.setName(group.getName());
+					resultGroupDtoList.add(groupDto);
+				}
+			}
+			return resultGroupDtoList;
+		}catch(Exception e) {
+			throw new FindException(e.getMessage());
+		}
+	}
 	
 	
 	/**
