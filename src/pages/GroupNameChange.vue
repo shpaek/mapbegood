@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         namechageFromSubmitHandler() {
-            const url = `${this.backURL}/group/${this.groupId}`
+            const url = `http://localhost:8080/group/${this.groupId}`
             // 필요한 데이터 추가
             const requestBody = {
                 name: this.name,
@@ -77,6 +77,7 @@ export default {
         },
         b1ClickHandler() { //중복확인 버튼 클릭 시
             if (this.name.trim().length > 0) {
+
                 const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`
                 axios.get(url)
                     .then(response => {
