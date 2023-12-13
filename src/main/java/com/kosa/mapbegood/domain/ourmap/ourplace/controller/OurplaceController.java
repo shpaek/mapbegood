@@ -20,6 +20,9 @@ import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.service.MyplaceService;
+import com.kosa.mapbegood.domain.mymap.thememap.service.ThemeMapService;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.dto.GroupThememapDTO;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
 import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceWrapperDTO;
 import com.kosa.mapbegood.domain.ourmap.ourplace.service.OurplaceService;
@@ -40,6 +43,9 @@ public class OurplaceController {
 	
 	@Autowired
 	PlaceService ps;
+	
+	@Autowired
+	ThemeMapService tms;
 	
     @Autowired
     private AuthenticationUtil authenticationUtil;

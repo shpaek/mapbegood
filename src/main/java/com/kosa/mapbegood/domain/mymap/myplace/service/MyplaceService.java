@@ -63,15 +63,19 @@ public class MyplaceService {
 	 * 내 테마지도에 장소를 추가한다
 	 * @param myplaceDto
 	 */
-	public void createMyplace(MyplaceDTO myplaceDto) throws AddException{
-		List<Myplace> myplaceList = mpr.findByThememapId_Id(myplaceDto.getThememapId().getId());
-		for(Myplace myplace: myplaceList) {
-			System.out.println(myplace.getPlaceId().getId()+"/"+myplaceDto.getPlaceId().getId());
-			if(myplace.getPlaceId().getId()!=myplaceDto.getPlaceId().getId()) {
-				return;
-			}
-		}
-		mpr.save(mapper.dtoToEntity(myplaceDto));
+	public void createMyplace(MyplaceDTO myplaceDto) throws AddException {
+	    List<Myplace> myplaceList = mpr.findByThememapId_Id(myplaceDto.getThememapId().getId());
+	    
+	    for (Myplace myplace : myplaceList) {
+	        System.out.println(myplace.getPlaceId().getId() + "/" + myplaceDto.getPlaceId().getId());
+	        if (myplace.getPlaceId().getId().equals(myplaceDto.getPlaceId().getId())) {
+	            // place_id가 같은 경우에는 이미 저장된 것이므로 더 이상 진행하지 않고 메소드 종료
+	            return;
+	        }
+	    }
+
+	    // 위의 for 루프에서 return이 실행되지 않았다면, 즉 중복된 place_id가 없다면 save 실행
+	    mpr.save(mapper.dtoToEntity(myplaceDto));
 	}
 
 	public void updateMyplace(MyplaceDTO myplaceDto) throws ModifyException {

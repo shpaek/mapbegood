@@ -114,6 +114,7 @@ public class MyplaceController {
 		}
 	}
 	
+	//공개여부확인, 내테마지도를 내테마지도로 복사할때
 	@PostMapping("/copy/{themeMapId}")
 	ResponseEntity<?> copyMyplace(@PathVariable Long themeMapId, @RequestParam Long mythemeMapId){
 		try {
