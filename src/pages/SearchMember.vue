@@ -2,7 +2,6 @@
     <div v-show="isModalOpen" class="modal" @click="backClickHandler">
         <v-sheet :elevation="18" :height="400" :width="550" rounded @click.stop>
             <form class="search" @submit.prevent="searchUserClickHandler">
-                <!-- 검색부분 -->
                 <label for="n">닉네임: </label>&nbsp;
                 <input type="text" name="nickName" v-model="name" id="n" required
                 placeholder="초대할 사용자를 입력하세요" />
@@ -10,10 +9,9 @@
             </form>
             <div class="result">
                 <div v-for="user in userList" :key="user.id" class="member">
-                    <!-- 사용자정보 -->
                     <img :src="user.profileImage" alt="프로필이미지" class="profileImage">&nbsp;
                     <span>{{user.nickName}}</span>
-                    <!-- 초대 아이콘 -->
+                    
                     <span class="svg-add">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"
                            @click="inviteUserClickHandler(user)">
@@ -104,8 +102,8 @@ export default {
     }
 }
 </script>
-<style>
-.modal {
+<style scoped>
+ .modal {
     position: fixed;
     top: 0;
     left: 0;
