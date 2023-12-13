@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
@@ -36,22 +37,17 @@ public class ThemeMapListController {
 	   검색할 리스트 이름이나 리스트 태그를 입력하세요.
 		
 	  */
-	@GetMapping("/search") //o
+	@GetMapping("/search")
 	public ResponseEntity<List<ThemeMapDto>> searchThemeMap(Authentication authentication,
-									  @RequestBody Map<String,String> map) {		
-	//검색 서비스 호출 및 결과 반환
-	//responseentity를 사용하는 이유 	
-		try {
-			String name = map.get("name");
-			List<ThemeMapDto> list = themeMapService.searchThemeMap(name);
-			log.error("이름으로 조회{}", list.size());
+	                                                       @RequestParam String name) {
+	    try {
+	        List<ThemeMapDto> list = themeMapService.searchThemeMap(name);
+	        log.error("이름으로 조회: {}", list.size());
 	        return ResponseEntity.ok(list);
-
-		} catch (FindException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	    } catch (FindException e) {
+	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-		}
+	    }
 	}
 	 
 	
