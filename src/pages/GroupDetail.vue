@@ -145,13 +145,57 @@ export default {
           alert("그룹이 삭제되지 않았습니다 ");
         });
     },
-    personClickHandler() {
-      this.$router.push({
-        name: '/groupmember',
-        params: {
-          groupId: this.groupId,
-          groupName: this.groupName,
-          leaderNickname: this.leaderNickname
+
+    methods: {
+        gearClickHandler() {
+            this.isDropdownOpen = !this.isDropdownOpen;
+        },
+        updateImageClickHandler(){ //그룹이미지 변경하러 이동
+            this.$router.push({
+                name: '/groupimage', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
+        },
+        updateNameClickHandler(){ //그룹명 변경하러 이동
+            this.$router.push({ 
+                name: '/groupname', // 라우터에서 정의한 이름
+                params: { //params로 설정하여 아래의 데이터 전부 전달가능
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            });
+        },
+        deleteGroupClickHandler(){
+            const url = `${this.backURL}/group/${this.groupId}`
+            
+            const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
+            axios.defaults.headers.common["Authorization"] = accessToken;
+            
+            axios.delete(url, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
+                 .then(response => {
+                    alert("그룹이 삭제되었습니다")
+                    location.href = '/groups'
+                 })
+                 .catch(error => {
+                    console.log(error)
+                    alert("그룹이 삭제되지 않았습니다 ")
+                 })
+        },
+        personClickHandler(){
+            this.$router.push({
+                name: '/groupmember',
+                params:{
+                    groupId: this.groupId,
+                    groupName: this.groupName,
+                    leaderNickname: this.leaderNickname
+                }
+            })
+
         }
       });
     },

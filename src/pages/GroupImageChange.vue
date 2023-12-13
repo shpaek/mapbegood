@@ -91,75 +91,71 @@ export default {
     // console.log(groupId, groupName, leaderNickname);
   },
   methods: {
-    b3ClickHandler() {
+    b1ClickHandler() {
       //변경 취소 버튼 클릭 시
       this.$router.go(-1); // 뒤로가기
     },
-    methods: {
-      b1ClickHandler() {
-        //변경 취소 버튼 클릭 시
-        this.$router.go(-1); // 뒤로가기
-      },
-      imageChangeHandler(e) {
-        const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
-        this.image = url; //$('form.signup img.profile').attr('src', url)
+    imageChangeHandler(e) {
+      const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
+      this.image = url; //$('form.signup img.profile').attr('src', url)
 
-        const fileInput = e.target;
-        const file = fileInput.files[0];
+      const fileInput = e.target;
+      const file = fileInput.files[0];
 
-        // 이미지 파일만 허용
-        const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-        if (!allowedTypes.includes(file.type)) {
-          this.fileErrorMsg = "이미지 파일만 허용됩니다.";
-          fileInput.value = ""; // 파일 선택 초기화
-          return;
-        }
+      // 이미지 파일만 허용
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        this.fileErrorMsg = "이미지 파일만 허용됩니다.";
+        fileInput.value = ""; // 파일 선택 초기화
+        return;
+      }
 
-        // 파일 크기 제한 (2MB)
-        const maxSize = 2 * 1024 * 1024; // 2MB
-        if (file.size > maxSize) {
-          this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
-          fileInput.value = ""; // 파일 선택 초기화
-          return;
-        }
+      // 파일 크기 제한 (2MB)
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
+        fileInput.value = ""; // 파일 선택 초기화
+        return;
+      }
 
-        // 유효성 검사를 통과한 경우
-        this.fileErrorMsg = null;
-      },
-      imagechangeFormSubmitHandler(e) {
-        //그룹 생성 버튼 클릭 시
-        //axios로 백 url요청
 
-        const url = `${this.backURL}/group/${this.groupId}/group-image`; //`${this.backURL}/group`
+      // 유효성 검사를 통과한 경우
+      this.fileErrorMsg = null;
+    },
+    imagechangeFormSubmitHandler(e) {
+      //그룹 생성 버튼 클릭 시
+      //axios로 백 url요청
+      const url = `${this.backURL}/group/${this.groupId}/group-image`; //`${this.backURL}/group`
 
-        const fd = new FormData(e.target);
 
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-        axios.defaults.headers.common["Authorization"] = accessToken;
+      const fd = new FormData(e.target);
 
-        axios
-          .put(url, fd, {
-            contentType: false,
-            processData: false,
-            withCredentials: true,
-          })
-          .then((response) => {
-            alert("그룹 이미지가 변경되었습니다");
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
 
-            this.$router.push({
-              name: "/group", // 라우터에서 정의한 이름
-              params: {
-                //params로 설정하여 아래의 데이터 전부 전달가능
-                groupId: this.groupId,
-                groupName: this.name,
-                leaderNickname: this.leaderNickname,
-              },
-            });
-          })
-          .catch((error) => {
-            alert("그룹 이미지를 변경하지 못했습니다");
+      axios
+        .put(url, fd, {
+          contentType: false,
+          processData: false,
+          withCredentials: true,
+        })
+        .then((response) => {
+          alert("그룹 이미지가 변경되었습니다");
+
+          this.$router.push({
+            name: "/group", // 라우터에서 정의한 이름
+            params: {
+              //params로 설정하여 아래의 데이터 전부 전달가능
+              groupId: this.groupId,
+              groupName: this.name,
+              leaderNickname: this.leaderNickname,
+            },
           });
-      },
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("그룹 이미지를 변경하지 못했습니다");
+        });
     },
   },
 };
@@ -182,7 +178,6 @@ div.button-container {
   justify-content: center;
   margin-top: 100px;
 }
-
 img {
   /* 화면에서 보여줄 사이즈로 조정 */
   max-width: 150px;

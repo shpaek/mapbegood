@@ -44,7 +44,7 @@ export default createStore({
     logOut({ commit }) {
       this.commit("logOut");
     },
-    getUserInfo({ commit, dispatch }) {
+    async getUserInfo({ commit, dispatch }) {
       let isToken = localStorage.getItem("mapbegoodToken");
 
       if (isToken != null) {
@@ -54,26 +54,29 @@ export default createStore({
           },
         };
 
-        axios
-          .get("http://localhost:8080/login-info", config, {
-            withCredentials: true,
-          })
-          .then((res) => {
-            if (res.data.message == "The token has expired.") {
-              this.dispatch("getTokenRefresh");
+        try {
+          const res = await axios.get(
+            "http://localhost:8080/login-info",
+            config,
+            {
+              withCredentials: true,
             }
+          );
 
-            let userInfo = {
-              email: res.data.email,
-              nickName: res.data.nickName,
-              profileImage: res.data.profileImage,
-            };
+          if (res.data.message == "The token has expired.") {
+            this.dispatch("getTokenRefresh");
+          }
 
-            this.commit("loginSuccess", userInfo);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+          let userInfo = {
+            email: res.data.email,
+            nickName: res.data.nickName,
+            profileImage: res.data.profileImage,
+          };
+
+          this.commit("loginSuccess", userInfo);
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         this.commit("logOut");
       }
