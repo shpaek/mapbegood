@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.common.response.Response;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.waiting.dto.WaitingDTO;
 import com.kosa.mapbegood.domain.ourmap.waiting.service.WaitingService;
@@ -41,6 +42,14 @@ public class WaitingController {
 		Groups group = new Groups();
 		group.setId(groupId);
 		return ws.findAllWaitingsByGroupId(group);
+	}
+	
+	//사용자를 초대한 그룹 조회
+	@GetMapping(value="", produces="application/json;charset=UTF-8")
+	public List<GroupsDTO> findAllWaitingsByMemberEmail(Authentication authentication) throws FindException{
+		String email = authenticationUtil.getUserEmail(authentication);
+		log.error("email={}", email);
+		return ws.findAllWaitingsByMemberEmail(email);
 	}
 	
 	//그룹장이 그룹에 사람을 초대했을 때 추가

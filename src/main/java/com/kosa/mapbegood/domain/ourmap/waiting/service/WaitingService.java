@@ -14,6 +14,7 @@ import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroupEmbedded;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.repository.MemberGroupRepository;
@@ -91,7 +92,7 @@ public class WaitingService {
 	 * @return 특정 사용자의 수락대기중인 그룹의 이름
 	 * @throws FindException
 	 */
-	public List<GroupsDTO> findAllWaitingByMemberEmail(String memberEmail) throws FindException{
+	public List<GroupsDTO> findAllWaitingsByMemberEmail(String memberEmail) throws FindException{
 		List<GroupsDTO> resultGroupDtoList = new ArrayList();
 		try {
 			List<Waiting> waitingList = wr.findByMemberEmail(memberEmail);
@@ -107,6 +108,24 @@ public class WaitingService {
 					GroupsDTO groupDto = new GroupsDTO();
 					groupDto.setId(group.getId());
 					groupDto.setName(group.getName());
+					
+					List<MemberGroup> mgList = mgr.findByGroupId(group);
+					if(mgList==null) {
+						throw new FindException("초대받은 그룹에 그룹원이 없습니다");
+					}
+					for(int j=0;j<mgList.size();j++) {
+						MemberGroup mg = mgList.get(j);
+						if(mg.getLeader() == 1) {//리더인경우
+							MemberDTO leaderMemberDTO = new MemberDTO();
+							leaderMemberDTO.setNickname(mg.getMemberEmail().getNickname());
+							MemberGroupDTO mgDTO = new MemberGroupDTO();
+							mgDTO.setMember(leaderMemberDTO);
+							mgDTO.setLeader(1);
+							List<MemberGroupDTO> mgDtoList = new ArrayList();
+							mgDtoList.add(mgDTO);
+							groupDto.setMemberGroupList(mgDtoList);
+						}
+					}
 					resultGroupDtoList.add(groupDto);
 				}
 			}
@@ -147,7 +166,6 @@ public class WaitingService {
 	
 	/**
 	 * WaitingDTO로 Waiting이 있는지 조회하고 id값을 받아온다
-	 * 
 	 * @param waitingDto
 	 * @return Waiting(id값)
 	 * @throws FindException
@@ -181,4 +199,5 @@ public class WaitingService {
 			throw new RemoveException("수락대기 삭제 실패"+e.getMessage());
 		}
 	}
+
 }
