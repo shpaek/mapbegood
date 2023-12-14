@@ -14,6 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
+import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 import com.kosa.mapbegood.domain.place.entity.Place;
 
 import lombok.AllArgsConstructor;
@@ -34,9 +35,9 @@ public class Myplace {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "myplace_seq_gener")
 	private Long id;
 	
-//	@ManyToOne
-//	@JoinColumn(name = "thememap_id")
-	private Long thememapId;
+	@ManyToOne
+	@JoinColumn(name = "thememap_id")
+	private ThemeMap thememapId;
 
 	@ManyToOne
 	@JoinColumn(name = "place_id")

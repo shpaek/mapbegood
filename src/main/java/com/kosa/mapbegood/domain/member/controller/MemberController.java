@@ -6,6 +6,8 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 import com.kosa.mapbegood.domain.member.dto.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
