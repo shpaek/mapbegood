@@ -12,6 +12,9 @@ import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroupEmbedded;
+import com.kosa.mapbegood.domain.ourmap.memberGroup.repository.MemberGroupRepository;
 import com.kosa.mapbegood.domain.ourmap.waiting.dto.WaitingDTO;
 import com.kosa.mapbegood.domain.ourmap.waiting.entity.Waiting;
 import com.kosa.mapbegood.domain.ourmap.waiting.repository.WaitingRepository;
@@ -28,6 +31,8 @@ public class WaitingService {
 	private WaitingRepository wr;
 	@Autowired
 	private MemberRepository mr;
+	@Autowired
+	private MemberGroupRepository mgr;
 	
 	/**
 	 * WaitingDTO를 Waiting(엔터티)로 변환한다
@@ -85,15 +90,23 @@ public class WaitingService {
 	 * @throws FindException 
 	 */
 	public void createWaiting(WaitingDTO waitingDto) throws AddException{
-		try {
-			Waiting waiting = findIdByGroupIdAndMemberEmail(waitingDto);
+		MemberGroupEmbedded pk = new MemberGroupEmbedded();
+		pk.setGroupsId(waitingDto.getGroupId());
+		pk.setEmail(waitingDto.getMemberEmail());
+		Optional<MemberGroup> optMg = mgr.findById(pk);
+		if(optMg.isPresent()) {
+			throw new AddException("그룹멤버는 그룹에 초대할 수 없습니다");
+		}else {			
+			try {
+				Waiting waiting = findIdByGroupIdAndMemberEmail(waitingDto);
 //			log.error("waiting={}", waiting.getId());
-			if(waiting != null) {
-				throw new AddException("이미 초대를 요청했습니다");				
+				if(waiting != null) {
+					throw new AddException("이미 초대를 요청했습니다");				
+				}
+			} catch (FindException fe) {
+				Waiting entity = waitingDtoToEntity(waitingDto);
+				wr.save(entity);				
 			}
-		} catch (FindException fe) {
-			Waiting entity = waitingDtoToEntity(waitingDto);
-			wr.save(entity);				
 		}
 	}
 	
