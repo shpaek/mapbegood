@@ -1,3 +1,4 @@
+<!--UpdateGroupMap.vue-->
 <template>
     <div class="bg-gray-50">
       <div class="max-w-md mx-auto my-10 bg-white p-6 rounded-lg shadow">
@@ -37,29 +38,40 @@
       };
     },
     methods: {
-      updateGroupMap() {
-        // groupId와 groupThememapId는 실제로 사용하는 상황에 맞게 적절한 값으로 설정해야 합니다.
-         // $route.params를 사용하여 동적 세그먼트의 값을 가져옴
-        const groupId = this.$route.params.groupId;
-        const groupThememapId = this.$route.params.groupThememapId;
+        updateGroupMap() {
+  // groupId와 groupThememapId는 실제로 사용하는 상황에 맞게 적절한 값으로 설정해야 합니다.
+  const groupId = this.$route.params.groupId;
+  const groupThememapId = this.$route.params.groupThememapId;
   
-        // API 호출 등 특정 로직을 추가할 수 있음
-        axios.put(`http://localhost8080/ourmap/update/${groupId}/${groupThememapId}`, {
-            name: this.groupmapname,
-            color: this.selectedColor,
-            memo: this.groupmapMemo
-          })
-          .then(response => {
-            // 성공적으로 수정되었을 때의 로직
-            console.log('테마맵이 성공적으로 수정되었습니다.', response.data);
-          })
-          .catch(error => {
-            // 오류 발생 시의 로직
-            console.error('테마맵 수정 중 오류 발생:', error);
-          });
-      }
-    }
+  // 로컬 스토리지에서 토큰을 가져옴
+  const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+  
+  // Authorization 헤더에 토큰 추가
+  axios.defaults.headers.common["Authorization"] = accessToken;
+
+  // 수정할 그룹 테마맵 데이터
+  const updatedGroupThememap = {
+    name: this.groupmapname,
+    color: this.selectedColor,
+    memo: this.groupmapMemo
   };
+
+  // API 요청을 통해 그룹 테마맵 수정
+  axios.put(`http://localhost:8080/ourmap/update/${groupId}/${groupThememapId}`, updatedGroupThememap)
+    .then(response => {
+      // 성공적으로 수정되었을 때의 로직
+      console.log('그룹 테마맵이 성공적으로 수정되었습니다.', response.data);
+      alert("그룹 테마맵이 성공적으로 수정되었습니다.");
+      // 수정 후 필요한 동작 수행
+    })
+    .catch(error => {
+      // 오류 발생 시의 로직
+      console.error('그룹 테마맵 수정 중 오류 발생:', error);
+      alert("그룹 테마맵 수정에 실패했습니다.");
+    });
+}
+}
+  }
   </script>
   
   <style>
