@@ -19,7 +19,7 @@
         <textarea v-model="groupmapMemo" id="themeMemo" name="themeMemo" rows="4" class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"></textarea>
   
         <!-- 테마맵 수정 버튼 -->
-        <button @click="updateGroupMap" class="mt-4 p-2 bg-blue-500 text-white rounded-md">테마맵 수정</button>
+        <button @click="updateGroupMap" class="btn btn-primary">테마맵 수정</button>
       </div>
     </div>
   </template>
