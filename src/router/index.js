@@ -85,7 +85,12 @@ const router = createRouter({
     { name: "/groupmember", path: "/groupmember/:groupId/:groupName/:leaderNickname", component: GroupMember },
     { name: "/waiting", path: "/waiting/:groupId/:groupName/:leaderNickname", component: GroupWaiting },
     { path: "/addgroupmap/:groupId", name: 'addgroupmap', component: AddGroupmap },
-    { path: "/detailgroupmap/:groupId/:groupThememapId", name: 'detailgroupmap', component: DetailGroupMap },
+    // { path: "/detailgroupmap/:groupId/:groupThememapId", name: 'detailgroupmap', component: DetailGroupMap },
+    {
+      path: "/detailgroupmap/:groupId/:groupThememapId",
+      name: 'detailgroupmap', // 수정
+      component: DetailGroupMap
+    },
     { path: '/updategroupmap/:groupId/:groupThememapId', name: 'updategroupmap', component: UpdateGroupMapComponent },
 
     {
