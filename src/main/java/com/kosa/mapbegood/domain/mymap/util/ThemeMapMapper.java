@@ -25,7 +25,7 @@ public class ThemeMapMapper {
 		ThemeMapDto dto = new ThemeMapDto();
 		//TODO
 	        // 필요한 경우, 다양한 필드들을 ThemeMap 엔터티에서 가져와 ThemeMapDto에 설정합니다.
-//	        dto.setId(entity.getId());
+	        dto.setId(entity.getId());
 //	        MemberDto memberDto = new MemberDto();
 //	        memberDto.setEmail(entity.getMemberEmail().getEmail());  // 변경된 부분
 //	        dto.setMemberEmail(entity.getMemberEmail());	       
