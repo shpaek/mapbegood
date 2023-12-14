@@ -4,10 +4,10 @@
       <div class="search">
         <input type="text" v-model="keyword" placeholder="장소 검색" @keyup.enter="search"/>
         <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" 
-        class="icon" @click="search"/>
+          class="icon" @click="search"/>
       </div>
       <ul id="placesList">
-        <li v-for="(place, index) in places" :key="index" @click="centerMap(place)" >
+        <li v-for="(place, index) in places" :key="index" @click="selectPlace(place)">
           <img class="markerbg" :src="place.markerImage" />
           <div class="info">
             <h5>{{ place.place_name }}</h5>
@@ -16,7 +16,11 @@
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
-          <button @click="addBookmark(place)">북마크</button>
+          <!-- <button class="bookmark-btn" @click.stop="addBookmark(place)">북마크</button> -->
+          <button @click.stop="customButtonClick">대충버튼</button>
+        
+          <img src="/public/images/bookmark.png"  @click.stop="addBookmark(place)"
+          class = "bookmark" />
         </li>
       </ul>
       <div id="pagination"></div>
@@ -25,7 +29,7 @@
 </template>
 
 <script>
-import axios from "axios";
+ import axios from "axios";
 
 export default {
   name: "Search",
@@ -37,6 +41,8 @@ export default {
       clickedPlaceId: null,
       markers: [], // 지도에 표시되는 마커 리스트
       map: null, // 지도 객체를 저장하기 위한 변수
+      pagination: null,
+
     };
   },
 
@@ -91,60 +97,45 @@ export default {
         alert("Places 서비스가 초기화되지 않았습니다.");
       }
     },
-
-    placesSearchCB(data, status, pagination) {
-      if (status === window.kakao.maps.services.Status.OK) {
-        console.log("Received data:", data);
-
-        this.places = data.map((place, index) => {
-          const placeIndex = (index % 15) + 1;
-          place.markerImage = `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-          console.log(place.markerImage);
-          return place;
-        });
-
-        console.log("Places for Map:", this.places);
-        this.displayPlacesOnMap(this.places);
-
-        this.displayPagination(pagination);
-      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-        alert("검색 결과가 존재하지 않습니다.");
-      } else if (status === window.kakao.maps.services.Status.ERROR) {
-        alert("검색 결과 중 오류가 발생했습니다.");
-      }
-    },
     
+    selectPlace(place) {
+  // 클릭한 장소의 좌표를 가져옵니다.
+  const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
 
-    
-    // handlePlaceClick(place) {
-      // 클릭한 장소의 place_id를 가져옵니다.
-      // const placeId = place.id; 
+  // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
+  this.$emit("center-map", placePosition);
+},
+placesSearchCB(data, status, pagination) {
+    if (status === window.kakao.maps.services.Status.OK) {
+      console.log("Received data:", data);
 
-      // 클릭한 장소의 place_id를 사용할 수 있습니다.
-      // console.log("Clicked place_id:", placeId);
+      this.places = data.map((place, index) => {
+        const placeIndex = (index % 15) + 1;
+        place.markerImage = `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+        console.log(place.markerImage);
+        return place;
+      });
 
-      // 원하는 로직을 수행할 수 있습니다.
-      // 예를 들어, 서버에 해당 place_id를 전송하거나 다른 동작을 수행할 수 있습니다.
+      console.log("Places for Map:", this.places);
 
-      // 이제 클릭한 장소의 정보를 서버로 전송하도록 수정할 수 있습니다.
-    //   this.addBookmark(place);
-    // },
- removeMarkers() {
-    // Ensure that this.markers is defined and is an array
-    if (this.markers && Array.isArray(this.markers)) {
-      this.markers.forEach((marker) => marker.setMap(null));
-      this.markers = [];
+      // 검색 결과를 Map.vue로 전송
+      this.$emit("search-results", this.places);
+
+      this.displayPlacesOnMap(this.places);
+
+      this.pagination = pagination; // pagination을 data에 저장
+
+      this.displayPagination(pagination);
+    } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+      alert("검색 결과가 존재하지 않습니다.");
+    } else if (status === window.kakao.maps.services.Status.ERROR) {
+      alert("검색 결과 중 오류가 발생했습니다.");
     }
   },
-  
-    centerMap(place) {
-      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-      this.$emit("center-map", placePosition);
-      const level = 3; // 원하는 줌 레벨로 설정
-      this.$emit("set-zoom-level", level);
-         this.addMarker(placePosition, place);
+  displayPlacesOnMap(places) {
+      // 이벤트를 통해 전달받은 장소 데이터를 이용하여 지도에 마커를 표시
+      this.$refs.map.displayPlacesOnMap(places);
     },
-
     displayPagination(pagination) {
       const paginationEl = document.getElementById("pagination");
       this.removeAllChildNodes(paginationEl);
@@ -176,78 +167,12 @@ export default {
       }
     },
 
-
-    displayPlacesOnMap(places) {
-  const bounds = new window.kakao.maps.LatLngBounds();
-
-  // 마커를 제거하고 초기화
-  this.removeMarkers();
-
-  // 마커 생성 및 지도에 표시
-  places.forEach((place, index) => {
-    const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-
-    // 마커 생성
-    const marker = this.addMarker(placePosition, index);
-
-    // 지도에 마커 추가
-    marker.setMap(this.map);
-
-    // 마커 클릭 시 이벤트 처리
-    window.kakao.maps.event.addListener(marker, "click", () => {
-      // 클릭한 마커에 대한 로직 추가 (예: 지도 확대 등)
-      this.centerMap(place);
-    });
-
-    // 지도의 확대 영역 설정
-    bounds.extend(placePosition);
-  });
-
-  // 지도의 중심과 확대 레벨 설정
-  this.setMapBounds(bounds);
-},
-
-
-// 마커를 생성하고 지도에 표시하는 함수
-// addMarker(position, idx) {
-//   const imageSize = new window.kakao.maps.Size(36, 37);
-
-//   if (!this.markers || !Array.isArray(this.markers)) {
-//     this.markers = [];
-//   }
-
-//   if (this.places && this.places[idx]) {
-//     const place = this.places[idx];
-//     const placeIndex = (idx % 15) + 1;
-//     const markerImage = new window.kakao.maps.MarkerImage(
-//       `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
-//       imageSize,
-//       {
-//         spriteSize: new window.kakao.maps.Size(36, 691),
-//         spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
-//         offset: new window.kakao.maps.Point(13, 37),
-//       }
-//     );
-
-//     const marker = new window.kakao.maps.Marker({
-//       position: position,
-//       image: markerImage,
-//     });
-
-//     this.markers.push(marker);
-
-//     return marker;
-//   }
-// },
-
-
-
     addBookmark(place) {
       const url = `${this.backURL}/place/${place.id}`;
       axios
         .post(url, {
           placeId: place.id,
-          name: place.place_name /* 기타 정보 */,
+          name: place.place_name,
         })
         .then((response) => {
           console.log("Bookmark added successfully:", response.data);
@@ -259,6 +184,7 @@ export default {
   },
 };
 </script>
+
 
 
 
@@ -475,7 +401,12 @@ export default {
   border-color: #555;
 }
 
-.marker-1 {
+.bookmark {
+  width: 30px;
+  
+}
+
+/* .marker-1 {
   background-position: 0 -10px;
 }
 .marker-2 {
@@ -483,12 +414,11 @@ export default {
 }
 .marker-3 {
   background-position: 0 -110px;
-}
+} */
 /* Add more marker styles as needed */
 </style>
 
 <style>
-/* 전역 스타일 - 컴포넌트 스코프 외부에서도 적용 */
 #pagination {
   margin: 3px 0;
   text-align: center;

@@ -4,7 +4,7 @@
    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
      <symbol id="logo2" viewBox="0 0 118 94" width="100%" height="100%">
  <title></title>
- <image href="/images/logo2.png" width="118" height="94" />
+ <image href="/public/images/logolast.png" width="118" height="94" />
 </symbol>
    <symbol id="Map" viewBox="0 0 16 16">
      <path

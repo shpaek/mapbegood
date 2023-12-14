@@ -20,7 +20,7 @@ app.use(store);
 app.use(vuetify);
 app.config.globalProperties.backURL = "http://localhost:8080";
 app.mixin({
-  beforCreate() {
+  beforeCreate() {
     this.$store.dispatch("getUserInfo");
   },
 });

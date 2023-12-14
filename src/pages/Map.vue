@@ -1,18 +1,15 @@
 <template>
   <div>
     <div id="map"></div>
-    <Search @center-map="centerMap" />
-    <button class="my-location-btn" @click="moveToMyLocation" alt="내위치로이동">
-      <img src="/public/images/mylocation.png"/>
-    </button>
+    <Search @search-results="displayPlacesOnMap" @center-map="centerMap" />
   </div>
 </template>
 
 <script>
-import Search from '@/components/Search.vue';
+import Search from "@/components/Search.vue";
 
 export default {
-  name: 'Map',
+  name: "Map",
   data() {
     return {
       mapContainer: null,
@@ -29,41 +26,42 @@ export default {
     Search,
   },
   mounted() {
-    this.mapContainer = document.getElementById('map');
+    this.mapContainer = document.getElementById("map");
     this.loadScript();
-    
   },
 
   methods: {
     loadScript() {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src =
-        'https://dapi.kakao.com/v2/maps/sdk.js?appkey=872b5a083c1af3f5ac36a2d8e87b0790&libraries=services&autoload=false';
+        "https://dapi.kakao.com/v2/maps/sdk.js?appkey=872b5a083c1af3f5ac36a2d8e87b0790&libraries=services&autoload=false";
       script.onload = () => {
         window.kakao.maps.load(() => this.initialize());
       };
       script.onerror = (error) => {
-        console.error('카카오 지도 SDK 로딩 오류:', error);
+        console.error("카카오 지도 SDK 로딩 오류:", error);
       };
       document.head.appendChild(script);
     },
+
     async initialize() {
-  try {
-    if (!window.kakao || !window.kakao.maps) {
-      throw new Error('Kakao Maps API가 로드되지 않았습니다.');
-    }
+      try {
+        if (!window.kakao || !window.kakao.maps) {
+          throw new Error("Kakao Maps API가 로드되지 않았습니다.");
+        }
 
-    // 이미 services.Places가 초기화되어 있으므로 바로 사용 가능
-    this.ps = window.kakao.maps.services.Places;
-    this.infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 });
+        // 이미 services.Places가 초기화되어 있으므로 바로 사용 가능
+        this.ps = window.kakao.maps.services.Places;
+        this.infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 });
 
-    const userLocation = await this.getCurrentLocation();
-    this.setInitialMap(userLocation.latitude, userLocation.longitude);
-    this.getMyLocation();
-  } catch (error) {
-    console.error('지도 초기화 오류:', error);
-  }
-},
+        const userLocation = await this.getCurrentLocation();
+        this.setInitialMap(userLocation.latitude, userLocation.longitude);
+        this.getMyLocation();
+      } catch (error) {
+        console.error("지도 초기화 오류:", error);
+      }
+    },
+
     getCurrentLocation() {
       return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
@@ -74,15 +72,16 @@ export default {
               resolve({ latitude: lat, longitude: lng });
             },
             (error) => {
-              console.error('현재 위치 가져오기 오류:', error);
+              console.error("현재 위치 가져오기 오류:", error);
               reject(error);
             }
           );
         } else {
-          reject('이 브라우저는 위치 정보를 지원하지 않습니다.');
+          reject("이 브라우저는 위치 정보를 지원하지 않습니다.");
         }
       });
     },
+
     setInitialMap(latitude, longitude) {
       if (!window.kakao.maps.services || !window.kakao.maps.services.Places) {
         window.kakao.maps.load(() => {
@@ -109,15 +108,7 @@ export default {
       const zoomControl = new window.kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
     },
-    
-    showPlaceOnMap(place) {
-  // place를 이용하여 마커를 생성하고 지도에 추가하는 로직을 구현
-  // 예를 들어, addMarker 메서드를 활용할 수 있습니다.
-  const position = new window.kakao.maps.LatLng(place.y, place.x);
-  this.addMarker(position, place);
-},
 
-    
     getMyLocation() {
       this.getCurrentLocation()
         .then((position) => {
@@ -128,22 +119,103 @@ export default {
           this.map.setCenter(myLocation);
         })
         .catch((error) => {
-          console.error('Error getting my location:', error);
-          alert('현재 위치를 가져올 수 없습니다.');
+          console.error("Error getting my location:", error);
+          alert("현재 위치를 가져올 수 없습니다.");
         });
     },
+
     centerMap(placePosition) {
-      console.log('Centering map at:', placePosition);
+      console.log("Centering map at:", placePosition);
       this.map.setCenter(placePosition);
     },
+
     setZoomLevel(level) {
-    if (this.map) {
-      this.map.setLevel(level);
+      if (this.map) {
+        this.map.setLevel(level);
+      }
+    },
+    // ... existing code ...
+
+    removeMarkers() {
+    if (this.markers && this.markers.length > 0) {
+      for (let i = 0; i < this.markers.length; i++) {
+        this.markers[i].setMap(null);
+      }
+      this.markers = [];
     }
-    
   },
-  moveToMyLocation() {
-      this.getMyLocation();
+  setMapBounds(bounds) {
+    // Map 객체의 중심과 확대 레벨을 설정합니다.
+    this.map.setBounds(bounds);
+  },
+
+  displayPlacesOnMap(places) {
+    const bounds = new window.kakao.maps.LatLngBounds();
+
+    // 기존 마커 제거
+    this.removeMarkers();
+
+    // 마커 생성 및 지도에 표시
+    places.forEach((place, index) => {
+      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+      const marker = this.addMarker(placePosition, place, index);
+      marker.setMap(this.map);
+
+      window.kakao.maps.event.addListener(marker, "click", () => {
+        this.centerMap(placePosition);
+      });
+
+      bounds.extend(placePosition);
+    });
+
+    // 지도의 중심 및 확대 레벨 설정
+    this.setMapBounds(bounds);
+  },
+    
+
+addMarker(position, place, markerIndex) {
+  const imageSize = new window.kakao.maps.Size(36, 37);
+
+  if (!this.markers || !Array.isArray(this.markers)) {
+    this.markers = [];
+  }
+
+  if (place) {
+    const placeIndex = (markerIndex % 15) + 1;
+    const markerImage = new window.kakao.maps.MarkerImage(
+      `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
+      imageSize,
+      {
+        spriteSize: new window.kakao.maps.Size(36, 691),
+        spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
+        offset: new window.kakao.maps.Point(13, 37),
+      }
+    );
+
+    const marker = new window.kakao.maps.Marker({
+      position: position,
+      image: markerImage,
+    });
+
+    this.markers.push(marker);
+
+    return marker;
+  }
+},
+
+    addBookmark(place) {
+      const url = `${this.backURL}/place/${place.id}`;
+      axios
+        .post(url, {
+          placeId: place.id,
+          name: place.place_name /* 기타 정보 */,
+        })
+        .then((response) => {
+          console.log("Bookmark added successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error adding bookmark:", error);
+        });
     },
   },
 };
