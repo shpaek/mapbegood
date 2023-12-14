@@ -29,6 +29,7 @@ public class NotificationService {
         return emitter;
     }
 
+    
     /**
      * 서버의 이벤트를 클라이언트에게 보내는 메서드
      * 다른 서비스 로직에서 이 메서드를 사용해 데이터를 Object event에 넣고 전송하면 된다.
@@ -39,9 +40,26 @@ public class NotificationService {
         sendToClient(userEmail, event);
     }
 
+    
+    
+    /**
+     * 그룹초대 알림
+     * @param userEmail
+     * @param groupName
+     * @param leaderNickname
+     */
+    public void notifyGroupInvitation(String userEmail, String groupName, String leaderNickname) {
+        String message = leaderNickname + "님이 " + groupName + "그룹에 초대를 요청했습니다";
+        notify(userEmail, message);
+        
+        //String email = authenticationUtil.getUserEmail(authentication);
+//        notificationService.notify(email, "data");
+    }
+
+    
+    
     /**
      * 클라이언트에게 데이터를 전송
-     *
      * @param userEmail - 데이터를 받을 사용자의 이메일.
      * @param data - 전송할 데이터.
      */
@@ -59,12 +77,15 @@ public class NotificationService {
 
     /**
      * 사용자 아이디를 기반으로 이벤트 Emitter를 생성
-     *
      * @param userEmail - 사용자 이메일.
      * @return SseEmitter - 생성된 이벤트 Emitter.
      */
     private SseEmitter createEmitter(String userEmail) {
-        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+    	SseEmitter emitter = emitterRepository.get(userEmail);
+    	if(emitter == null) {
+    		emitter = new SseEmitter(DEFAULT_TIMEOUT);
+    	}
+//    	SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
         emitterRepository.save(userEmail, emitter);
 
         // Emitter가 완료될 때(모든 데이터가 성공적으로 전송된 상태) Emitter를 삭제한다.
@@ -74,4 +95,6 @@ public class NotificationService {
 
         return emitter;
     }
+    
+    
 }
