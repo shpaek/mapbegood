@@ -16,7 +16,8 @@ import FavoriteList from "../pages/FavoriteList.vue";
 import FavoriteAdd from "../pages/FavoriteAdd.vue";
 import Place from "../pages/Place.vue";
 import MyFeed from "../pages/MyFeed.vue";
-import FeedCreate from "../pages/FeedCreate.vue";
+import MyFeedCreate from "../pages/MyFeedCreate.vue";
+import MyFeedUpdate from "../pages/MyFeedUpdate.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
@@ -74,7 +75,8 @@ const router = createRouter({
     { path: "/map", component: Map },
     { path: "/place", component: Place },
     { path: "/myfeed", component: MyFeed },
-    { path: "/feedcreate", component: FeedCreate },
+    { path: "/myfeedcreate", component: MyFeedCreate },
+    { path: "/myfeedupdate", component: MyFeedUpdate },
     { path: "/members", component: MemberInfo },
 
     { path: "/groupmembers", component: GroupMember },

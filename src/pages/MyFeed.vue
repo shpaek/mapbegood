@@ -1,17 +1,25 @@
 <template>
   <div id="app">
-    <div class="feed-item" v-for="post in posts" :key="post.myplaceId">
-      <img class="avatar" :src="post.memberEmail.profileImage" alt="Avatar">
+    <div class="feed-item" v-show="post" :key="post.myplaceId">
+      <img class="avatar" :src="getProfileImage()" alt="Avatar">
       <div>
         <div class="caption">{{ post.content }}</div>
         <div class="meta">
-          <span class="nickname">{{ post.memberEmail.nickname }}</span>
+          <span class="nickname">{{ getNickname() }}</span>
           <span class="createdAt">{{ post.createdAt }}</span>
         </div>
-        <img class="post-image" :src="post.image" alt="Post Image">
-        
+        <div v-if="feedImgs.length > 0">
+          <div>
+            <img :src="currentImage.url" class="feedImg" :alt="'Image ' + (currentIndex + 1)">
+          </div>
+          <div>
+            <button @click="prevImage" v-show="currentIndex > 0">Previous</button>
+            <button @click="nextImage" v-show="currentIndex < feedImgs.length - 1">Next</button>
+          </div>
+        </div>
+
         <!-- Buttons for Update and Delete -->
-        <button @click="updateFeed(post.myplaceId)">Update</button>
+        <button @click="updateFeed(post)">Update</button>
         <button @click="deleteFeed(post.myplaceId)">Delete</button>
       </div>
     </div>
@@ -25,36 +33,66 @@ export default {
   name: "MyFeed",
   data() {
     return {
-      posts: [],
+      myplaceIdForTesting: 108,
+      feedImgs: [], // Initialize as an empty array
+      currentIndex: 0, // Index of the current image
+      post: {
+        myplaceId: null,
+        content: "",
+        memberEmail: {},
+      },
     };
   },
+  computed: {
+    currentImage() {
+      return this.feedImgs[this.currentIndex] || {};
+    },
+  },
   mounted() {
-    // Fetch feeds on component mount
-    this.fetchFeeds();
+    const backURL = this.$root.backURL;
+
+    axios.get(`${backURL}/feed/download?id=${this.myplaceIdForTesting}&opt=myfeed`)
+      .then(response => {
+        console.log('Response Data:', response.data);
+        if (response.status === 200) {
+          // 이미지 속성 변경
+          this.feedImgs = response.data.map(img => ({
+            url: 'data:' + img.mimeType + ';base64,' + img.data,
+            mimeType: img.mimeType,
+          }));
+          console.log('Feed Images:', this.feedImgs);
+        } else {
+          console.error('Failed to fetch images. Status:', response.status);
+        }
+        this.fetchFeeds();
+      })
+      .catch(error => {
+        console.error('Error fetching images:', error);
+      });
   },
   methods: {
     fetchFeeds() {
-      // Replace 'myplaceId' with your actual value
-      const myplaceId = 102; // Replace with your myplace ID
       const backURL = this.$root.backURL;
 
-      // Make an HTTP GET request to retrieve data from the server
-      axios.get(`${backURL}/myfeed/${myplaceId}`)
+      axios.get(`${backURL}/myfeed/${this.myplaceIdForTesting}`)
         .then(response => {
-          this.posts = [response.data]; // Wrap the response in an array to match the structure
+          this.post = response.data || {}; // Ensure post is an object
         })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
     },
-    updateFeed(myplaceId) {
-      // Implement the update logic here
-      console.log('Update feed with ID:', myplaceId);
-      // You can navigate to an update page or show a modal for update
-      // Example: this.$router.push(`/update-feed/${myplaceId}`);
+    getProfileImage() {
+      return this.post.memberEmail ? this.post.memberEmail.profileImage : '';
+    },
+    getNickname() {
+      return this.post.memberEmail ? this.post.memberEmail.nickname : '';
+    },
+    updateFeed() {
+      this.$router.push({ name: 'MyFeedUpdate' });
     },
     deleteFeed(myplaceId) {
-      const accessToken = "Bearer "+localStorage.getItem("mapbegoodToken")
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
       console.log('Delete feed with ID:', myplaceId);
       // Confirm with the user before proceeding with the delete
@@ -71,49 +109,59 @@ export default {
           });
       }
     },
+    prevImage() {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      }
+    },
+    nextImage() {
+      if (this.currentIndex < this.feedImgs.length - 1) {
+        this.currentIndex++;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #fafafa;
-}
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+  }
 
-#app {
-  max-width: 600px;
-  margin: 20px auto;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  overflow: hidden;
-}
+  #app {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+  }
 
-.feed-item {
-  border-bottom: 1px solid #e0e0e0;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-}
+  .feed-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+  }
 
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
 
-.post-image {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-}
+  .feedImg {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+  }
 
-.caption {
-  margin-top: 10px;
-}
+  .caption {
+    margin-top: 10px;
+  }
 </style>
