@@ -18,7 +18,7 @@
       <textarea v-model="groupmapMemo" id="themeMemo" name="themeMemo" rows="4" class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"></textarea>
 
       <!-- 테마맵 생성 버튼 -->
-      <button @click="CreateGroupMap" class="mt-4 p-2 bg-blue-500 text-white rounded-md">테마맵 생성</button>
+      <button @click="CreateGroupMap" class="btn btn-dark">테마맵 생성</button>
     </div>
   </div>
 </template>
@@ -57,6 +57,7 @@ export default {
 
         // 응답이 정상적으로 오면 성공 메시지 출력 또는 추가 작업 수행
         console.log("Group Theme Map created:", response.data);
+        alert("그룹테마맵이 생성되었습니다.");
       } catch (error) {
         // 오류 처리
         console.error("Error creating Group Theme Map:", error);
