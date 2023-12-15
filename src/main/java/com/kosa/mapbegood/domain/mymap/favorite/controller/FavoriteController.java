@@ -96,11 +96,11 @@ public ResponseEntity<List<FavoriteDto>> selectFavoriteList(Authentication authe
   try {
       String userEmail = AuthenticationUtil.getUserEmail(authentication);
       List<FavoriteDto> favoriteList = favoriteService.getAllFavoritesForUser(userEmail);
-      if (!favoriteList.isEmpty()) {
+//      if (!favoriteList.isEmpty()) {
           return new ResponseEntity<>(favoriteList, HttpStatus.OK);
-      } else {
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
+//      } else {
+//          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//      }
   } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
   }
