@@ -288,9 +288,9 @@ main {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  /* z-index: 1000; */
   background-color: #f2f2f2;
-  /* width: 63px; */
+  width: 63px;
   height: 100vh;
   overflow: visible;
   border-right: 1px solid #ccc; /* 테두리를 통해 다른 컴포넌트와 구분선 생성 */

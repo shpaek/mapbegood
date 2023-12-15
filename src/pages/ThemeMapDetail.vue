@@ -33,7 +33,7 @@ import axios from 'axios';
 
 export default {
   components: {
-    DetailMap,
+    // DetailMap,
   },
   data() {
     return {
