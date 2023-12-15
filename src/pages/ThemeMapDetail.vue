@@ -29,7 +29,7 @@
 
 <script>
 import axios from 'axios';
-// import DetailMap from './Detailmap.vue'; // Update the path accordingly
+import DetailMap from './Detailmap.vue'; // Update the path accordingly
 
 export default {
   components: {
