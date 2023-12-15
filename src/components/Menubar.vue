@@ -2,9 +2,8 @@
   <div class="menubar">
     <!-- SVG 심볼 -->
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-      <symbol id="logo" viewBox="0 0 118 94" width="100%" height="100%">
-        <title></title>
-        <image href="/images/mapbegood_logo2.png" width="118" height="94" />
+      <symbol id="logo" viewBox="0 0 47 47" width="100%" height="100%">
+        <image href="/images/logo.png" width="47" height="47" />
       </symbol>
 
       <symbol id="Map" viewBox="0 0 16 16">
@@ -47,10 +46,9 @@
     <main class="d-flex flex-nowrap">
       <h1 class="visually-hidden">메뉴바</h1>
       <div class="b-example-divider b-example-vr"></div>
-      <!-- 메뉴바 -->
       <div
         class="d-flex flex-column flex-shrink-0 bg-body-tertiary"
-        style="width: 5.5rem; height: 100%"
+        style="width: 63px; height: 100%"
       >
         <!-- 로고 -->
         <a
@@ -60,7 +58,7 @@
           data-bs-toggle="tooltip"
           data-bs-placement="right"
         >
-          <svg class="bi pe-none" width="55" height="55">
+          <svg class="bi pe-none" width="63" height="55">
             <use xlink:href="#logo" />
           </svg>
           <span class="visually-hidden">로고</span>
@@ -77,6 +75,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5;"
             role="img"
             aria-label="Map"
           >
@@ -96,6 +95,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5;"
             role="img"
             aria-label="othersthememap"
           >
@@ -115,12 +115,13 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5;"
             role="img"
             aria-label="thememap"
           >
             <use xlink:href="#thememap" />
           </svg>
-          <span class="menu-text">내 테마지도</span>
+          <span class="menu-text">테마지도</span>
         </router-link>
 
         <router-link
@@ -134,6 +135,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5;"
             role="img"
             aria-label="FavoriteList"
           >
@@ -153,6 +155,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5;"
             role="img"
             aria-label="group"
           >
@@ -163,29 +166,24 @@
 
         <!-- 드롭다운 메뉴 -->
         <div class="mt-auto">
-          <!-- 메뉴를 아래로 밀어내기 위해 mt-auto 사용 -->
-          <div class="dropdown border-top">
+          <div class="dropdown border-end" ref="profileDropdown">
             <a
               href="/"
+              @click.prevent="toggleDropdown"
               class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
             >
               <img
-                src="/images/xfda.jpg"
+                :src="profileImage ? profileImage : '/images/avatar.png'"
                 alt="icon"
                 width="30"
                 height="30"
                 class="rounded-circle"
               />
-              프로필
             </a>
-            <ul class="dropdown-menu text-small shadow">
-              <li><a class="dropdown-item" href="#">새 프로젝트...</a></li>
-              <li><a class="dropdown-item" href="#">설정</a></li>
-              <li><a class="dropdown-item" href="#">프로필</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">로그아웃</a></li>
+            <ul class="dropdown-menu text-small shadow dropdown-menu-end">
+              <li><a @click="profileClickHandler" class="dropdown-item" href="#">프로필</a></li>
+              <!-- <li><hr class="dropdown-divider" /></li> -->
+              <li><a @click="logoutClickHandler" class="dropdown-item" href="#">로그아웃</a></li>
             </ul>
           </div>
         </div>
@@ -201,8 +199,9 @@ export default {
   name: "Menubar",
   data() {
     return {
-      loginedId: "",
-      nickname: "닉네임",
+      email: "",
+      nickname: "",
+      profileImage: ""
     };
   },
   methods: {
@@ -238,10 +237,43 @@ export default {
           alert(error.message);
         });
     },
+    profileClickHandler(){
+      this.$router.push("/nickchange");
+    },
+    toggleDropdown() {
+      const dropdown = this.$refs.profileDropdown;
+
+      if (dropdown) {
+        if (!localStorage.getItem("mapbegoodToken")) {
+          // If the user is not logged in, redirect to the Login.vue component
+          this.$router.push("/login");
+        } else {
+          // If the user is logged in, toggle the dropdown
+          const instance = new bootstrap.Dropdown(dropdown);
+          instance.toggle();
+        }
+      }
+    },
+    getLoginInfo() {
+      axios.get("/login-info")
+        .then(response => {
+          const { email, nickname, profileImage } = response.data;
+          this.email = email;
+          this.nickname = nickname;
+          this.profileImage = profileImage;
+        })
+        .catch(error => {
+          console.error("Error fetching login info:", error);
+        });
+    },
+  },
+  created() {
+    this.getLoginInfo();
   },
 };
 </script>
 <script setup>
+import * as bootstrap from 'bootstrap';
 // 툴팁 초기화 스크립트 코드를 여기에 둡니다.
 var tooltipTriggerList = [].slice.call(
   document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -252,9 +284,20 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 </script>
 
 <style scoped>
-.menubar {
+main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   background-color: #f2f2f2;
-  margin-left: 1px;
+  /* width: 63px; */
+  height: 100vh;
+  overflow: visible;
+  border-right: 1px solid #ccc; /* 테두리를 통해 다른 컴포넌트와 구분선 생성 */
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  /* overflow-x: hidden;
+  overflow-y: hidden; */
 }
 
 .menu-item {
@@ -274,6 +317,14 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   margin-bottom: 1.8rem;
 }
 
+.d-nav-link {
+  padding: 22px 0 !important; /* Set padding to 0 */
+}
+
+.dropdown-menu {
+  min-width: 50px !important; /* Adjust the width as needed */
+}
+
 .dropdown-item {
   font-size: 11px; /* You can adjust the font size as needed */
 }
@@ -282,20 +333,9 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   color: #333;
 }
 
-body {
+body,
+html {
   min-height: 100vh;
   min-height: -webkit-fill-available;
-}
-
-html {
-  height: -webkit-fill-available;
-}
-
-main {
-  height: 200vh;
-  height: -webkit-fill-available;
-  max-height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
 }
 </style>

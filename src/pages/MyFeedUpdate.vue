@@ -1,53 +1,88 @@
 <template>
-    <div id="app">
-      <form @submit.prevent="submitForm">
-        <div class="form-group">
-          <label for="content">Caption:</label>
-          <textarea v-model="feedContent" id="content" required placeholder="Write a caption..."></textarea>
-        </div>
-  
-        <div class="form-group">
-          <label for="image">Image Upload (up to 10 files):</label>
-          <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" multiple>
-        </div>
-  
-        <button type="submit">{{ isUpdateMode ? 'Update' : 'Share' }}</button>
-      </form>
-  
-      <!-- Add your feed display code here if needed -->
-      <div class="feed">
-        <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
-          <img class="avatar" :src="post.memberEmail?.profileImage" alt="Avatar">
-          <div>
-            <div class="caption">{{ post.content }}</div>
-            <div class="meta">
-              <span class="nickname">{{ post.memberEmail?.nickname }}</span>
-              <span class="createdAt">{{ post.createdAt }}</span>
-            </div>
-            <img class="post-image" :src="post.image" alt="Post Image">
+  <div id="app">
+    <div v-if="feedImgs.length > 0">
+      <div>
+        <img :src="currentImage.url" class="feedImg" :alt="'Image ' + (currentIndex + 1)">
+      </div>
+      <div>
+        <button @click="prevImage" v-show="currentIndex > 0">Previous</button>
+        <button @click="nextImage" v-show="currentIndex < feedImgs.length - 1">Next</button>
+      </div>
+    </div>
+    <form @submit.prevent="submitForm">
+      <div class="form-group">
+        <label for="content">Caption:</label>
+        <textarea v-model="feedContent" id="content" required placeholder="Write a caption..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="image">Image Upload (up to 10 files):</label>
+        <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" multiple>
+      </div>
+
+      <button type="submit">{{ isUpdateMode ? 'Update' : 'Share' }}</button>
+    </form>
+
+    <!-- Add your feed display code here if needed -->
+    <div class="feed">
+      <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
+        <img class="avatar" :src="post.memberEmail?.profileImage" alt="Avatar">
+        <div>
+          <div class="caption">{{ post.content }}</div>
+          <div class="meta">
+            <span class="nickname">{{ post.memberEmail?.nickname }}</span>
+            <span class="createdAt">{{ post.createdAt }}</span>
           </div>
+          <img class="post-image" :src="post.image" alt="Post Image">
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: 'FeedCreate',
-    data() {
-      return {
-        myplaceIdForTesting: 108,
-        feedContent: '',
-        feedImages: [],
-        posts: [],
-        isUpdateMode: false,
-      };
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'FeedCreate',
+  data() {
+    return {
+      feedImgs: [],
+      currentIndex: 0, // Add currentIndex to data
+      myplaceIdForTesting: 108,
+      feedContent: '',
+      feedImages: [],
+      posts: [],
+      isUpdateMode: false,
+    };
+  },
+  computed: {
+    currentImage() {
+      return this.feedImgs[this.currentIndex] || {};
     },
+  },
     mounted() {
-      // Fetch existing feed data
-      this.fetchPosts(); // moved fetchPosts to mounted
+
+      const backURL = this.$root.backURL;
+
+axios.get(`${backURL}/feed/download?id=${this.myplaceIdForTesting}&opt=myfeed`)
+  .then(response => {
+    console.log('Response Data:', response.data);
+    if (response.status === 200) {
+      // 이미지 속성 변경
+      this.feedImgs = response.data.map(img => ({
+        url: 'data:' + img.mimeType + ';base64,' + img.data,
+        mimeType: img.mimeType,
+      }));
+      console.log('Feed Images:', this.feedImgs);
+    } else {
+      console.error('Failed to fetch images. Status:', response.status);
+    }
+    this.fetchFeeds();
+  })
+  .catch(error => {
+    console.error('Error fetching images:', error);
+  });
     },
     methods: {
       submitForm() {
@@ -137,6 +172,16 @@
         console.error('Error uploading images:', error);
       });
   },
+  prevImage() {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      }
+    },
+    nextImage() {
+      if (this.currentIndex < this.feedImgs.length - 1) {
+        this.currentIndex++;
+      }
+    },
   handleFileChange(event) {
     // Get an array of files
     const files = event.target.files;
@@ -150,16 +195,22 @@
     }
   },
   fetchPosts() {
-      const backURL = this.$root.backURL;
-      axios.get(`${backURL}/myfeed/${this.myplaceIdForTesting}`)
-        .then(response => {
-          this.posts = [response.data];
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-    },
+    const backURL = this.$root.backURL;
+    axios.get(`${backURL}/myfeed/${this.myplaceIdForTesting}`)
+      .then(response => {
+        const postData = response.data;
+
+        // Set the content to the textarea
+        this.feedContent = postData.content;
+
+        // Update the posts array
+        this.posts = [postData];
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
   },
+},
 };
 </script>
     
@@ -236,7 +287,11 @@
       display: flex;
       align-items: center;
     }
-    
+    .feedImg {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+  }
     .avatar {
       width: 50px;
       height: 50px;
