@@ -27,10 +27,10 @@ export default {
     };
   },
   mounted() {
-  console.log('Component is mounted');
-  const themeMapId = this.$route.params.id;
-  this.loadThemeMapDetail(themeMapId);
-},
+    // 라우터에서 테마맵 ID를 받아와서 상세 정보를 불러옵니다.
+    const themeMapId = this.$route.params.id;
+    this.loadThemeMapDetail(themeMapId);
+  },
   methods: {
     async loadThemeMapDetail(themeMapId) {
       const url = `${this.backURL}/mymap/${themeMapId}`;
