@@ -21,7 +21,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         QMember qm = new QMember("qm");
 
         return queryFactory
-                .select(new QMemberInfoDTO(qm.email, qm.nickname, qm.profileImage))
+                .select(new QMemberInfoDTO(qm.email, qm.nickname, qm.profileImage, qm.status))
                 .from(qm)
                 .where(qm.nickname.contains(nick))
                 .fetch();
