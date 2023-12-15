@@ -34,6 +34,7 @@ import AddGroupmap from "../pages/AddGroupmap.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가
 import UpdateGroupMapComponent from "../pages/UpdateGroupMap.vue";
 import test from "../pages/test.vue";
+import DetailMap from '../pages/Detailmap.vue';
 
 
 const router = createRouter({
@@ -77,6 +78,7 @@ const router = createRouter({
      { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
 
     { path: "/map", component: Map },
+    { path: "/map", component: DetailMap }, //이거 임시
 
     { path: "/place", component: Place },
     { path: "/myfeed", component: MyFeed },
