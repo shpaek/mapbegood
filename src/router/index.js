@@ -23,7 +23,10 @@ import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
 import ThememapCreate from "../pages/ThememapCreate.vue"; // 테마맵 추가
 import ThememapUpdate from "../pages/ThemeMapUpdate.vue" //테마맵 수정
+
 import ThememapDetail from "../pages/ThemeMapDetail.vue" //테마맵 Id로 조회
+
+
 import GroupWaiting from "../pages/GroupWaiting.vue";
 import AddGroupmap from "../pages/AddGroupmap.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가
@@ -70,23 +73,22 @@ const router = createRouter({
     { path: "/thememapcreate", name: 'ThememapCreate', component: ThememapCreate },
     { path: "/favoritelist", component: FavoriteList },
      { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
+
     { path: "/map", component: Map },
+
     { path: "/place", component: Place },
     { path: "/feed", component: Feed },
     { path: "/members", component: MemberInfo },
 
     { path: "/groupmembers", component: GroupMember },
     {path: '/thememapupdate/:id',name: 'thememapupdate',component: ThememapUpdate},
+    
     {path: '/thememapdetail/:id',name: 'thememapdetail',component: ThememapDetail},
+
     { name: "/groupmember", path: "/groupmember/:groupId/:groupName/:leaderNickname", component: GroupMember },
     { name: "/waiting", path: "/waiting/:groupId/:groupName/:leaderNickname", component: GroupWaiting },
     { path: "/addgroupmap/:groupId", name: 'addgroupmap', component: AddGroupmap },
-    // { path: "/detailgroupmap/:groupId/:groupThememapId", name: 'detailgroupmap', component: DetailGroupMap },
-    {
-      path: "/detailgroupmap/:groupId/:groupThememapId",
-      name: 'detailgroupmap', // 수정
-      component: DetailGroupMap
-    },
+    { path: "/detailgroupmap/:groupId/:groupThememapId", name: 'detailgroupmap', component: DetailGroupMap },
     { path: '/updategroupmap/:groupId/:groupThememapId', name: 'updategroupmap', component: UpdateGroupMapComponent },
 
     {

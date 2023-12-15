@@ -17,7 +17,7 @@
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
           <!-- <button class="bookmark-btn" @click.stop="addBookmark(place)">북마크</button> -->
-          <button @click.stop="customButtonClick">대충버튼</button>
+          <button @click.stop="customButtonClick">버튼</button>
         
           <img src="/public/images/bookmark.png"  @click.stop="addBookmark(place)"
           class = "bookmark" />

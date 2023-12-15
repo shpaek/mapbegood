@@ -156,6 +156,7 @@ methods: {
 },
 };
 </script>
+
 <script setup>
 // 툴팁 초기화 스크립트 코드를 여기에 둡니다.
 var tooltipTriggerList = [].slice.call(
@@ -167,10 +168,20 @@ return new bootstrap.Tooltip(tooltipTriggerEl);
 </script>
 
 <style scoped>
+<style scoped>
+
 .menubar {
-background-color: #f2f2f2;
-margin-left: 1px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #f2f2f2;
+  width: 5.5rem;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
 }
+
 
 .menu-item {
 display: flex;
