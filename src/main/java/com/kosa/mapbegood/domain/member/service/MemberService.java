@@ -56,8 +56,9 @@ public class MemberService implements MemberServiceInterface {
 
 		if (!redisService.checkExistsValue(loginInfo)) {
 			Member member = this.findMember(email);
-			this.loginInfoRedisSave(member);
-			return mapper.MemberToMemberInfoDTO(member);
+			MemberInfoDTO memberInfoDto = memberToInfoDto(member);
+			this.loginInfoRedisSave(memberInfoDto);
+			return memberInfoDto;
 		} else {
 			return objectMapper.readValue(loginInfo, MemberInfoDTO.class);
 		}
@@ -92,7 +93,7 @@ public class MemberService implements MemberServiceInterface {
 					member.setProfileImage(imageUrl);
 				}
 				member.setPassword(pwEncoder.encode(member.getPassword()));
-				member.setStatus(1);
+				member.setStatus(1L);
 				repository.save(member);
 			} else {
 				throw new AddException("이미 가입된 계정이 있습니다.");
@@ -142,7 +143,9 @@ public class MemberService implements MemberServiceInterface {
 			Member member = this.findMember(email);
 			member.setNickname(nickName);
 			repository.save(member);
-			this.loginInfoRedisSave(member);
+
+			MemberInfoDTO memberInfoDTO = memberToInfoDto(member);
+			this.loginInfoRedisSave(memberInfoDTO);
 		} catch (Exception e) {
 			log.error("닉네임 수정 Error: " + e.getMessage());
 			throw new ModifyException();
@@ -169,7 +172,9 @@ public class MemberService implements MemberServiceInterface {
 			Member member = this.findMember(email);
 			member.setProfileImage(imageUrl);
 			repository.save(member);
-			this.loginInfoRedisSave(member);
+
+			MemberInfoDTO memberInfoDTO = memberToInfoDto(member);
+			this.loginInfoRedisSave(memberInfoDTO);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			throw new ModifyException();
@@ -219,7 +224,7 @@ public class MemberService implements MemberServiceInterface {
 	public void deleteMember(String email) throws Exception {
 		try {
 			Member member = this.findMember(email);
-			member.setStatus(0);
+			member.setStatus(0L);
 			repository.save(member);
 		} catch (Exception e) {
 			log.error("회원탈퇴 Error: " + e.getMessage());
@@ -227,11 +232,10 @@ public class MemberService implements MemberServiceInterface {
 		}
 	}
 
-	private void loginInfoRedisSave(Member member) throws JsonProcessingException {
+	private void loginInfoRedisSave(MemberInfoDTO memberInfoDto) throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		MemberInfoDTO memberInfoDTO = mapper.MemberToMemberInfoDTO(member);
-		String memberInfoJson = objectMapper.writeValueAsString(memberInfoDTO);
-		redisService.setValues(LOGIN_CACHE + member.getEmail(), memberInfoJson, Duration.ofMillis(DURATION_CACHE));
+		String memberInfoJson = objectMapper.writeValueAsString(memberInfoDto);
+		redisService.setValues(LOGIN_CACHE + memberInfoDto.getEmail(), memberInfoJson, Duration.ofMillis(DURATION_CACHE));
 	}
 
 	private void sendEmail(String email, String title, String authCode, String nickName) throws Exception {
@@ -254,5 +258,9 @@ public class MemberService implements MemberServiceInterface {
 			log.error("인증코드 저장 Error: " + e.getMessage());
 			throw new Exception();
 		}
+	}
+
+	private MemberInfoDTO memberToInfoDto(Member member) {
+		return mapper.MemberToMemberInfoDTO(member);
 	}
 }
