@@ -52,7 +52,7 @@ import Detailmap from './Detailmap.vue';
 export default {
   name: "GroupsView",
   components:{
-    Detailmap
+    Detailmap,
   },
   data() {
     return {
@@ -111,7 +111,7 @@ export default {
   margin-left: 50px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 30px;
-} */
+} 
 
 div.group {
   margin: 50px;
@@ -176,21 +176,21 @@ div.add-group>span.plus{
   font-size: 100px;
   border: 3px solid black;
 }
+*/
 .section-container {
-    display: flex;
-    height: 100vh;
-  }
+  display: flex;
+  height: 100vh;
+}
 
-  div.g-part {
-    position: absolute;
-    width: 390px;
-  }
-
-  div.m-part {
-    position: absolute;
-    left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
-    right: 0; /* 오른쪽에 닿도록 */
-    height: 100%;
-  }
+div.g-part {
+  position: absolute;
+  width: 390px;
+}
+div.m-part {
+  position: absolute;
+  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
+  right: 0; /* 오른쪽에 닿도록 */
+  height: 100%;
+}
 
 </style>
