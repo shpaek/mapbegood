@@ -24,10 +24,10 @@ export default {
 <style scoped>
 .main-container {
   display: flex;
-  height: 100vh; /* 부모 요소를 화면의 100% 높이로 설정 */
+  height: 100vh;
 }
-
 div.section {
-  flex: 1; /* Section이 남은 공간을 모두 차지하도록 설정 */
+  margin-left: 64px;
+  overflow-y: auto; /* 추가: Section이 내용이 넘칠 때 스크롤 표시 */
 }
 </style>
