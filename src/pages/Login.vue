@@ -15,6 +15,7 @@
         color="primary"
         variant="underlined"
         :rules="[rules.email]"
+        :loading="loading"
         clearable
         ref="email"
       ></v-text-field>
@@ -25,6 +26,7 @@
         color="primary"
         variant="underlined"
         :type="'password'"
+        :loading="loading"
         density="compact"
         clearable
         ref="password"
@@ -370,7 +372,7 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "login",
@@ -379,6 +381,7 @@ export default {
       email: "",
       password: "",
       checked: "",
+      loginLoading: false,
       rules: {
         email: (value) => {
           if (value.length >= 1) {
@@ -448,6 +451,16 @@ export default {
 
       tmpAccessToken: "",
     };
+  },
+  computed: {
+    ...mapState(["loading"]),
+  },
+  created() {
+    const savedId = localStorage.getItem("mapbegoodId");
+    if (savedId != null) {
+      this.email = savedId;
+      this.checked = true;
+    }
   },
   methods: {
     ...mapActions(["login"]),
@@ -849,19 +862,12 @@ export default {
       this.password = "";
     },
   },
-  created() {
-    const savedId = localStorage.getItem("mapbegoodId");
-    if (savedId != null) {
-      this.email = savedId;
-      this.checked = true;
-    }
-  },
 };
 </script>
 
 <style scoped>
 .login-container {
-  margin-top: 150px;
+  margin-top: 80px;
 }
 
 .login-logo {

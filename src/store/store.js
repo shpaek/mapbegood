@@ -5,6 +5,7 @@ export default createStore({
   state: {
     userInfo: "",
     isLogin: false,
+    loading: false,
   },
   getters: {
     isLogin({ state }) {
@@ -25,6 +26,8 @@ export default createStore({
   actions: {
     // dispatch 로 부를 수 있다.
     login({ dispatch }, loginObj) {
+      console.log(this.state.loading);
+      this.state.loading = true;
       axios
         .post(loginObj.backUrl + "/auth", loginObj.userInfo, {
           withCredentials: true,
@@ -34,10 +37,12 @@ export default createStore({
           localStorage.setItem("refresh", res.headers.refresh);
 
           this.dispatch("getUserInfo");
+          this.state.loading = false;
           alert("로그인 성공");
-          location.href = "/";
+          // location.href = "/";
         })
         .catch(() => {
+          this.state.loading = false;
           alert("이메일과 비밀번호를 확인해 주세요.");
         });
     },
