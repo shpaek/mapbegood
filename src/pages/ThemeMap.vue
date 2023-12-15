@@ -155,15 +155,13 @@
     font-weight: bold;
     margin-bottom: 1.5rem;
   }
-
   ul.theme-list {
-    list-style-type: none;
-    padding: 0;
-    border: 2px solid #4e4e52; /* Border color for the ul element */
-    border-radius: 10px; /* Border radius for rounded corners */
-    margin: 20px 0; /* Adjust margin as needed */
-  }
-
+  list-style-type: none;
+  padding: 0;
+  border: 2px solid #4e4e52; /* Border color for the ul element */
+  border-radius: 10px; /* Border radius for rounded corners */
+  margin: 20px 0; /* Adjust margin as needed */
+}
   .sticker-btn {
     background-color: #4e4e52; /* Sticker background color */
     border: 1px solid #000000; /* Border for the sticker */

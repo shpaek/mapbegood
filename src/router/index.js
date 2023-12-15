@@ -31,7 +31,7 @@ import GroupWaiting from "../pages/GroupWaiting.vue";
 import AddGroupmap from "../pages/AddGroupmap.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가
 import UpdateGroupMapComponent from "../pages/UpdateGroupMap.vue";
-
+import test from "../pages/test.vue";
 
 
 const router = createRouter({
@@ -101,6 +101,7 @@ const router = createRouter({
       path: "/waiting/:groupId/:groupName/:leaderNickname",
       component: GroupWaiting,
     },
+    { path: "/test", component: test},
 
     //동적라우팅 방법
     // {path: '/members/:id', component: MemberInfo}
