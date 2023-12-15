@@ -17,8 +17,7 @@
           d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
         />
       </svg>
-      <span class="invite">
-        <!-- v-if="isleader"> -->
+      <span class="invite" v-show="isleader">
         <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +77,7 @@
           <span class="delete">
             <!-- v-if="isleader" > -->
             <svg
-              v-show="gm.leader === 0"
+              v-show="gm.leader === 0 && isleader"
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
