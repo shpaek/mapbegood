@@ -68,7 +68,8 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert(error.response.data.msg); // 수정된 부분
+          // alert(error.response.data.msg); // 수정된 부분
+          alert("로그인이 필요한 서비스 입니다.");
           location.href = "/login";
         });
     },

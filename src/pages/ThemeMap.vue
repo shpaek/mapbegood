@@ -128,7 +128,9 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert(error.msg);
+          // alert(error.msg);
+          alert("로그인이 필요한 서비스 입니다.");
+          location.href = "/login";
         });
     },
     //서버에서 테마 맵 목록 가져오는 코드 End------
