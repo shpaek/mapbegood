@@ -330,7 +330,6 @@
       </div>
     </main>
   </div>
-  {{ userInfo }}
 </template>
 <script>
 import axios from "axios";
