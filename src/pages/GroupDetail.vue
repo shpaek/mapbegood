@@ -285,4 +285,5 @@ li.group-member {
 li.group-member svg.bi-person-lines-fill {
   position: absolute;
   left: 92%;
-}</style>.
+}
+</style>.

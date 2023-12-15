@@ -1,19 +1,40 @@
 <template>
-  <div class="content">
-    <h1>테마지도 상세 정보</h1>
-    <div>
-      <h3>태마리스트 이름: {{ mymapdetail.themeMapDto.name }}</h3>
-      <p>태마리스트 내용:{{ mymapdetail.themeMapDto.memo }}</p>
-      <p>태마리스트 아이디: {{ mymapdetail.themeMapDto.id }}</p>
-      <!-- Add other details as needed -->
-    </div>
-  </div>
+     <!-- 전체화면에 맵 표시 -->
+    <DetailMap :mymapdetail="mymapdetail" />
+
+    <div class="theme-map-details">   
+      <h1>{{ mymapdetail.themeMapDto.name }}</h1>
+      <p>내용(없어도될듯): {{ mymapdetail.themeMapDto.memo }}</p>
+      <p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>
+
+      
+      <div class="myplace-list-container">
+        <ul class="myplace-list">
+          <li v-for="myplace in mymapdetail.myplaces" :key="myplace.id" class="myplace-item">
+            <div class="myplace-info">
+              <h5>{{ myplace.placeId.placeName }}</h5>
+              <p>방문 일자: {{ myplace.visitedAt }}</p>
+              <p>주소: {{ myplace.placeId.address }}</p>
+              <!-- 추가적인 Myplace 정보 표시 -->
+            </div>
+            <button class="add-bookmark-btn" @click.stop="addBookmark(myplace.placeId)">
+              <img src="/public/images/bookmark.png" class="bookmark-icon" />
+              북마크
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>  
 </template>
 
 <script>
 import axios from 'axios';
+// import DetailMap from './Detailmap.vue'; // Update the path accordingly
 
 export default {
+  components: {
+    DetailMap,
+  },
   data() {
     return {
       mymapdetail: {
@@ -21,8 +42,8 @@ export default {
           name: '',
           memo: '',
           id: '',
-          // 필요에 따라 다른 속성 추가
         },
+        myplaces: [],
       },
     };
   },
@@ -47,11 +68,108 @@ export default {
         this.mymapdetail = {
           themeMapDto: response.data,
         };
+
+        // 추가: Myplaces 불러오기
+        this.findAllMyPlace(themeMapId);
       } catch (error) {
         console.error(error);
         alert(error.response.data.message || '테마 맵 세부 정보를 불러오지 못했습니다.');
       }
     },
+
+    async findAllMyPlace(themeMapId) {
+      // Myplaces 불러오기
+      const myPlacesUrl = `${this.backURL}/myplace/${themeMapId}`;
+
+      try {
+        const response = await axios.get(myPlacesUrl, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('mapbegoodToken')}`,
+          },
+        });
+
+        // 받은 Myplaces 데이터를 mymapdetail에 추가
+        this.mymapdetail.myplaces = response.data;
+      } catch (error) {
+        console.error(error);
+        alert(error.response.data.message || 'Myplaces를 불러오지 못했습니다.');
+      }
+    },
   },
 };
 </script>
+
+<style scoped>
+.full-screen {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* 스크롤 없애기 */
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  position: relative;
+}
+
+.theme-map-details {
+  position: fixed;
+  top: 0px;
+  left: 90px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 330px;
+  width: 100%;
+  margin: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* 추가된 부분 */
+}
+
+.myplace-list {
+  list-style: none;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.myplace-item {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.myplace-info {
+  flex-grow: 1;
+}
+
+.myplace-list-container {
+  overflow: auto;
+  max-height: 650px; /* 스크롤이 나타날 최대 높이 */
+}
+
+.add-bookmark-btn {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-bookmark-btn:hover {
+  background-color: #45a049;
+}
+
+.bookmark-icon {
+  margin-right: 5px;
+  width: 30px;
+}
+</style>
