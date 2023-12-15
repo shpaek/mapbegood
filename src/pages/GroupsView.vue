@@ -1,4 +1,6 @@
 <template lang="">
+  <div class="main-container">
+  <span class="g-part">
   <h2>내 그룹</h2>
   <div class="icon-container">
     <span class="check-waiting">
@@ -8,9 +10,6 @@
     </span>
   </div>
   <div class="group-container">
-    <div class="add-group">
-      <span class="plus">+</span>
-    </div>
     <div class="group" v-for="group in groupList"
       @click="groupClickHandler(group)">
       <ul>
@@ -40,12 +39,21 @@
         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
       </svg> -->
     </span>
+  </span>
+  <span class="m-part">
+    <Map />
+  </span>
+</div>
 </template>
 <script>
 import axios from "axios";
 // import Waiting from '';
+import Map from './Map.vue';
 export default {
   name: "GroupsView",
+  components:{
+    Map
+  },
   data() {
     return {
       groupList: [],
@@ -173,4 +181,22 @@ div.add-group>span.plus{
   font-size: 100px;
   border: 3px solid black;
 }
+.main-container {
+    display: flex;
+    height: 100vh;
+  }
+
+  span.g-part {
+    position: absolute;
+    margin:0;
+    width: 390px;
+    height: 100%;
+  } 
+
+  span.m-part {
+    position: absolute;
+    left: 479px; 
+    right: 0;
+    height: 100%;
+  }
 </style>
