@@ -1,30 +1,36 @@
 <template>
-     <!-- 전체화면에 맵 표시 -->
-    <DetailMap :mymapdetail="mymapdetail" />
+  <!-- 전체화면에 맵 표시 -->
+  <DetailMap :mymapdetail="mymapdetail" />
 
-    <div class="theme-map-details">   
-      <h1>{{ mymapdetail.themeMapDto.name }}</h1>
-      <p>내용(없어도될듯): {{ mymapdetail.themeMapDto.memo }}</p>
-      <p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>
+  <div class="theme-map-details">
+    <h1>{{ mymapdetail.themeMapDto.name }}</h1>
+    <p>내용(없어도될듯): {{ mymapdetail.themeMapDto.memo }}</p>
+    <p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>
 
-      
-      <div class="myplace-list-container">
-        <ul class="myplace-list">
-          <li v-for="myplace in mymapdetail.myplaces" :key="myplace.id" class="myplace-item">
-            <div class="myplace-info">
-              <h5>{{ myplace.placeId.placeName }}</h5>
-              <p>방문 일자: {{ myplace.visitedAt }}</p>
-              <p>주소: {{ myplace.placeId.address }}</p>
-              <!-- 추가적인 Myplace 정보 표시 -->
-            </div>
-            <button class="add-bookmark-btn" @click.stop="addBookmark(myplace.placeId)">
-              <img src="/public/images/bookmark.png" class="bookmark-icon" />
-              북마크
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>  
+    <div class="myplace-list-container">
+      <ul class="myplace-list">
+        <li
+          v-for="myplace in mymapdetail.myplaces"
+          :key="myplace.id"
+          class="myplace-item"
+        >
+          <div class="myplace-info">
+            <h5>{{ myplace.placeId.placeName }}</h5>
+            <p>방문 일자: {{ myplace.visitedAt }}</p>
+            <p>주소: {{ myplace.placeId.address }}</p>
+            <!-- 추가적인 Myplace 정보 표시 -->
+          </div>
+          <button
+            class="add-bookmark-btn"
+            @click.stop="addBookmark(myplace.placeId)"
+          >
+            <img src="/public/images/bookmark.png" class="bookmark-icon" />
+            북마크
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,15 +39,15 @@ import DetailMap from './Detailmap.vue'; // Update the path accordingly
 
 export default {
   components: {
-    DetailMap,
+    // DetailMap,
   },
   data() {
     return {
       mymapdetail: {
         themeMapDto: {
-          name: '',
-          memo: '',
-          id: '',
+          name: "",
+          memo: "",
+          id: "",
         },
         myplaces: [],
       },
@@ -60,7 +66,7 @@ export default {
         const response = await axios.get(url, {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('mapbegoodToken')}`,
+            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
           },
         });
 
@@ -73,7 +79,10 @@ export default {
         this.findAllMyPlace(themeMapId);
       } catch (error) {
         console.error(error);
-        alert(error.response.data.message || '테마 맵 세부 정보를 불러오지 못했습니다.');
+        alert(
+          error.response.data.message ||
+            "테마 맵 세부 정보를 불러오지 못했습니다."
+        );
       }
     },
 
@@ -85,7 +94,7 @@ export default {
         const response = await axios.get(myPlacesUrl, {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('mapbegoodToken')}`,
+            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
           },
         });
 
@@ -93,7 +102,7 @@ export default {
         this.mymapdetail.myplaces = response.data;
       } catch (error) {
         console.error(error);
-        alert(error.response.data.message || 'Myplaces를 불러오지 못했습니다.');
+        alert(error.response.data.message || "Myplaces를 불러오지 못했습니다.");
       }
     },
   },

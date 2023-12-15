@@ -1,13 +1,9 @@
 <template lang="">
-    <div>
-        닉네임변경입니다
-    </div>
+  <div>닉네임변경입니다</div>
 </template>
 <script>
 export default {
-    name: "NickChange"
-}
+  name: "NickChange",
+};
 </script>
-<style scoped>
-    
-</style>
+<style scoped></style>

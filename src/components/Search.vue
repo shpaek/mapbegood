@@ -4,25 +4,40 @@
   <div>
     <div id="searchContainer" class="bg_white">
       <div class="search">
-        <input type="text" v-model="keyword" placeholder="장소 검색" @keyup.enter="search"/>
-        <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" 
-          class="icon" @click="search"/>
+        <input
+          type="text"
+          v-model="keyword"
+          placeholder="장소 검색"
+          @keyup.enter="search"
+        />
+        <img
+          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+          class="icon"
+          @click="search"
+        />
       </div>
       <ul id="placesList">
         <li v-for="(place, index) in places" :key="index" @click="selectPlace(place, index)">
   <img class="markerbg" :src="getMarkerImageUrl(index)" />
           <div class="info">   
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{place.road_address_name}}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{place.address_name}}</span>
+            <span v-if="place.road_address_name">{{
+              place.road_address_name
+            }}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{
+              place.address_name
+            }}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
           <!-- <button class="bookmark-btn" @click.stop="addBookmark(place)">북마크</button> -->
           <button @click.stop="customButtonClick">버튼</button>
-        
-          <img src="/public/images/bookmark.png"  @click.stop="addBookmark(place)"
-          class = "bookmark" />
+
+          <img
+            src="/public/images/bookmark.png"
+            @click.stop="addBookmark(place)"
+            class="bookmark"
+          />
         </li>
       </ul>
       <div id="pagination"></div>
@@ -44,7 +59,6 @@ export default {
       markers: [], // 지도에 표시되는 마커 리스트
       map: null, // 지도 객체를 저장하기 위한 변수
       pagination: null,
-
     };
   },
 
@@ -252,11 +266,6 @@ removeAllPlacesListItems() {
 };
 </script>
 
-
-
-
-
-
 <style scoped>
 * {
   font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
@@ -411,7 +420,7 @@ removeAllPlacesListItems() {
 }
 
 #placesList li .info .jibun {
-  padding-left: 26px;
+  padding-left  : 26px;
   background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
   opacity: 0.7;
 }
