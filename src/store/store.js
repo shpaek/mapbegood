@@ -36,6 +36,21 @@ export default createStore({
           this.dispatch("getUserInfo");
           alert("로그인 성공");
           location.href = "/";
+          
+          axios
+          .get(
+            loginObj.backUrl + "/notifications/subs/" + this.userInfo.email,
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
         })
         .catch(() => {
           alert("이메일과 비밀번호를 확인해 주세요.");

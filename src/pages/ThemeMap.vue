@@ -6,7 +6,7 @@
     <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
       <ul class="elevated-list mb-4">
         <li>
-          <h3>리스트이름:{{ thememap.themeMapDto.name }}</h3>
+          <h3 @click="detailThememap(thememap.themeMapDto.id)">리스트이름:{{ thememap.themeMapDto.name }}</h3>
           <h5>
             <!-- 공개 여부에 따라 다른 아이콘 표시 -->
             <span v-if="thememap.themeMapDto.show">
@@ -22,13 +22,16 @@
           </h5>
           <div class="text-right">
             <!-- "상세보기" 버튼 -->
-            <button @click="detailThememap(thememap.themeMapDto.id)" class="btn btn-outline-secondary">상세보기</button>
+            <!-- <button @click="detailThememap(thememap.themeMapDto.id)" class="btn btn-outline-secondary">상세보기</button> -->
             <!-- 리스트 수정 버튼 -->
             <button @click="editThememap(thememap.themeMapDto.id)" class="btn btn-outline-secondary">수정</button>
             <!-- 리스트 삭제 버튼 -->
             <button @click="deleteThememap(thememap.themeMapDto.id)" class="btn btn-outline-danger">삭제</button>
             <!-- 리스트 복사 버튼 -->
-            <button @click="copyThememap(thememap.themeMapDto.id)" class="btn btn-outline-secondary">복사</button>
+            <button @click="copyThememap(thememap.themeMapDto.id)" class="btn btn-outline-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill" viewBox="0 0 16 16">
+  <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1h-4z"/>
+</svg></button>
+         
           </div>
         </li>
       </ul>

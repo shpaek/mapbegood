@@ -83,6 +83,42 @@ export default {
 // 검색 메서드 호출
       this.searchThemeMap();
     },
+    
+    
+    //sub호출 메서드 
+    async checkNotifications(){
+      try {
+      // 토큰 가져오기
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      if (!accessToken) {
+        // 토큰이 없으면 로그인되지 않은 상태라고 가정하고 처리
+        console.log("사용자가 로그인하지 않았습니다.");
+        return;
+      }
+     // 로그인된 경우 API에 요청 보내기
+     const url = `${this.backURL}/notifications/subs/${this.userInfo.email}`;
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      const response = await axios.get(url, {
+        withCredentials: true,
+      });
+      
+      console.log(response);
+      console.log();
+    } catch (error) {
+      console.error("알림 확인 중 오류 발생:", error);
+    }
+  },
+ // 메인 화면에서 특정 API에 대한 요청을 실행하는 메서드
+ executeCheckNotifications() {
+    this.checkNotifications();
+  },
+},mounted() {
+  // 컴포넌트가 마운트되면 로그인 여부를 확인하고 알림 API를 호출
+  this.executeCheckNotifications();
+},
+
+
 // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
       try {
@@ -112,8 +148,7 @@ console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
     isInFavorites(themeMapId) {
       return this.themeMaps.some(map => map.id === themeMapId && map.isInFavorites);
     },
-  },
-};
+  }
 </script>
 <style>
 ul.elevated-list {

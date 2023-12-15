@@ -31,7 +31,7 @@
     methods: {
       loadFavoriteList() {
         const url = `${this.backURL}/mymap/list`;
-  2
+  
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
   
