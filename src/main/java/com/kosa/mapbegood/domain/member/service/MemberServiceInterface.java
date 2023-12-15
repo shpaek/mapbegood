@@ -2,6 +2,7 @@ package com.kosa.mapbegood.domain.member.service;
 
 import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberUpdateDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
@@ -75,6 +76,15 @@ public interface MemberServiceInterface {
     void updateProfileImage(String email, MultipartFile profileImage) throws Exception;
 
     /**
+     * 유저 정보 수정
+     * @param email
+     * @param memberUpdateDto
+     * @param updateProfileImage
+     * @throws Exception
+     */
+    void updateMyInfo(String email, MemberUpdateDTO memberUpdateDto, MultipartFile updateProfileImage) throws Exception;
+
+    /**
      * 비밀번호 찾기(이메일 전송)
      * @param email
      * @throws Exception
@@ -90,9 +100,12 @@ public interface MemberServiceInterface {
      */
     boolean verifiedCode(String email, String code) throws Exception;;
 
-    // TODO: 2023-11-30
     /**
      * 사용자 nickname 검색
+     * @param email
+     * @param nickName
+     * @return
+     * @throws Exception
      */
     List<MemberInfoDTO> searchMember(String email, String nickName) throws Exception;
 

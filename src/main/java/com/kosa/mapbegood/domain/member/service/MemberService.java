@@ -6,6 +6,7 @@ import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberInfoDTO;
 import com.kosa.mapbegood.domain.member.dto.MemberSearchResponseDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberUpdateDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.mapper.MemberMapper;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
@@ -100,7 +101,7 @@ public class MemberService implements MemberServiceInterface {
 			}
 		} catch (AddException ae) {
 			log.error(ae.getMessage());
-			throw new AddException();
+			throw ae;
 		} catch (Exception e) {
 			log.error("회원가입 Error: " + e.getMessage());
 			throw new Exception();
@@ -116,7 +117,7 @@ public class MemberService implements MemberServiceInterface {
 			}
 		} catch (AddException ae) {
 			log.error(ae.getMessage());
-			throw new AddException();
+			throw ae;
 		} catch (Exception e) {
 			log.error("닉네임 중복 확인 Error: " + e.getMessage());
 			throw new AddException();
@@ -144,7 +145,7 @@ public class MemberService implements MemberServiceInterface {
 			member.setNickname(nickName);
 			repository.save(member);
 
-			MemberInfoDTO memberInfoDTO = memberToInfoDto(member);
+			MemberInfoDTO memberInfoDTO = this.memberToInfoDto(member);
 			this.loginInfoRedisSave(memberInfoDTO);
 		} catch (Exception e) {
 			log.error("닉네임 수정 Error: " + e.getMessage());
@@ -173,10 +174,38 @@ public class MemberService implements MemberServiceInterface {
 			member.setProfileImage(imageUrl);
 			repository.save(member);
 
-			MemberInfoDTO memberInfoDTO = memberToInfoDto(member);
+			MemberInfoDTO memberInfoDTO = this.memberToInfoDto(member);
 			this.loginInfoRedisSave(memberInfoDTO);
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("프로필 이미지 수정 Error: " + e.getMessage());
+			throw new ModifyException();
+		}
+	}
+
+	@Transactional
+	@Override
+	public void updateMyInfo(String email, MemberUpdateDTO memberUpdateDto, MultipartFile updateProfileImage) throws Exception {
+		try {
+			Member member = this.findMember(email);
+			if (!Objects.isNull(memberUpdateDto.getNickname())) {
+				member.setNickname(memberUpdateDto.getNickname());
+				log.error("nick은 널?: " + Objects.isNull(memberUpdateDto.getNickname()));
+			}
+			if (!Objects.isNull(memberUpdateDto.getPassword())) {
+				member.setPassword(pwEncoder.encode(memberUpdateDto.getPassword()));
+				log.error("pwd: " + member.getPassword());
+			}
+			if (!Objects.isNull(updateProfileImage)) {
+				String imageUrl = awsS3Service.uploadImage(updateProfileImage, profileImageUploadPath);
+				member.setProfileImage(imageUrl);
+				log.error("img: " + member.getProfileImage());
+			}
+			repository.save(member);
+
+			MemberInfoDTO memberInfoDTO = this.memberToInfoDto(member);
+			this.loginInfoRedisSave(memberInfoDTO);
+		} catch (Exception e) {
+			log.error("회원정보 수정 Error: " + e.getMessage());
 			throw new ModifyException();
 		}
 	}
