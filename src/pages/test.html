@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script>
+            console.log("1. created")
+        if(typeof(EventSource) !== "undefined") {
+            console.log("2.created")
+            var source = new EventSource("http://localhost:8080/notifications/subs/e");
+ 
+           source.addEventListener('sse', event => {
+    console.log(event);
+});
+        } else {
+            // document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+            console.log("Sorry, your browser does not support server-sent events...")
+        }
+        console.log("end created")
+        </script>
+    </body>   
+</html>
