@@ -2,9 +2,8 @@
   <div class="menubar">
     <!-- SVG 심볼 -->
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
-      <symbol id="logo" viewBox="0 0 118 94" width="100%" height="100%">
-        <title></title>
-        <image href="/images/logo.jpg" width="118" height="94" />
+      <symbol id="logo" viewBox="0 0 47 47" width="100%" height="100%">
+        <image href="/images/logo.png" width="47" height="47" />
       </symbol>
 
       <symbol id="Map" viewBox="0 0 16 16">
@@ -47,10 +46,9 @@
     <main class="d-flex flex-nowrap">
       <h1 class="visually-hidden">메뉴바</h1>
       <div class="b-example-divider b-example-vr"></div>
-      <!-- 메뉴바 -->
       <div
         class="d-flex flex-column flex-shrink-0 bg-body-tertiary"
-        style="width: 5.5rem; height: 100%"
+        style="width: 63px; height: 100%"
       >
         <!-- 로고 -->
         <a
@@ -60,7 +58,7 @@
           data-bs-toggle="tooltip"
           data-bs-placement="right"
         >
-          <svg class="bi pe-none" width="55" height="55">
+          <svg class="bi pe-none" width="63" height="55">
             <use xlink:href="#logo" />
           </svg>
           <span class="visually-hidden">로고</span>
@@ -77,6 +75,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5"
             role="img"
             aria-label="Map"
           >
@@ -96,6 +95,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5"
             role="img"
             aria-label="othersthememap"
           >
@@ -115,12 +115,13 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5"
             role="img"
             aria-label="thememap"
           >
             <use xlink:href="#thememap" />
           </svg>
-          <span class="menu-text">내 테마지도</span>
+          <span class="menu-text">테마지도</span>
         </router-link>
 
         <router-link
@@ -134,6 +135,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5"
             role="img"
             aria-label="FavoriteList"
           >
@@ -153,6 +155,7 @@
             class="bi pe-none"
             width="24"
             height="24"
+            style="margin: 5"
             role="img"
             aria-label="group"
           >
@@ -163,85 +166,209 @@
 
         <!-- 드롭다운 메뉴 -->
         <div class="mt-auto">
-          <!-- 메뉴를 아래로 밀어내기 위해 mt-auto 사용 -->
-          <div class="dropdown border-top">
+          <div class="dropdown border-end" ref="profileDropdown">
             <a
               href="/"
+              @click.prevent="toggleDropdown"
               class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
             >
+              <!-- :src="profileImage ? profileImage : '/images/avatar.png'" -->
               <img
-                src="/images/xfda.jpg"
+                :src="
+                  profileImage
+                    ? profileImage
+                    : 'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/profile-image/default-profile.jpg'
+                "
                 alt="icon"
                 width="30"
                 height="30"
                 class="rounded-circle"
               />
-              프로필
             </a>
-            <ul class="dropdown-menu text-small shadow">
-              <li><a class="dropdown-item" href="#">새 프로젝트...</a></li>
-              <li><a class="dropdown-item" href="#">설정</a></li>
-              <li><a class="dropdown-item" href="#">프로필</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" href="#">로그아웃</a></li>
+            <ul class="dropdown-menu text-small shadow dropdown-menu-end">
+              <li>
+                <v-dialog v-model="modifyMyInfo" persistent width="500">
+                  <template v-slot:activator="{ props }">
+                    <!-- @click="profileClickHandler" -->
+                    <a class="dropdown-item" v-bind="props" href="#"
+                      >내 정보 수정</a
+                    >
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <img
+                        src="../../public/images/findPwd_logo.png"
+                        alt="mapbegood"
+                        style="width: 200px"
+                      />
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <div class="signup-profile" style="padding-left: 160px">
+                          <!-- <v-file-input
+                            label="File input"
+                            accept="image/*"
+                            v-show="false"
+                            ref="fileInput"
+                            @change="uploadProfileImageHandler"
+                          ></v-file-input>
+
+                          <a href="javascript:void(0)">
+                            <v-avatar
+                              :image="displayImage"
+                              size="100"
+                              @click="clickProfileImageHandler"
+                            ></v-avatar>
+                          </a> -->
+                        </div>
+
+                        <!-- <v-text-field
+                          v-show="showAuthEmail"
+                          v-model="authEmail"
+                          color="primary"
+                          label="Email"
+                          variant="underlined"
+                          :rules="[rules.email]"
+                          :loading="showAuthEmailBtDisable"
+                          ref="authEmail"
+                          style="text-align: right"
+                        ></v-text-field> -->
+
+                        <!-- <v-text-field
+                          v-show="showPassword"
+                          v-model="changePassword"
+                          :type="'password'"
+                          color="primary"
+                          label="Password"
+                          placeholder="Enter your password"
+                          variant="underlined"
+                          :rules="[rules.password]"
+                          ref="changePassword"
+                          style="text-align: right"
+                        ></v-text-field> -->
+
+                        <!-- <v-text-field
+                          v-show="showPassword1"
+                          v-model="changePassword1"
+                          :type="'password'"
+                          color="primary"
+                          label="Password"
+                          placeholder="Enter your password"
+                          variant="underlined"
+                          :rules="[rules.passwordCheck]"
+                          ref="changePassword1"
+                          style="text-align: right"
+                        ></v-text-field> -->
+
+                        <!-- <v-text-field
+                          v-model="signupNickName"
+                          color="primary"
+                          label="Nickname"
+                          variant="underlined"
+                          ref="signupNickName"
+                          @keyup="editNicknameHandler"
+                        ></v-text-field> -->
+
+                        <!-- <v-btn
+                          v-show="!nickduplication"
+                          :disabled="signupNickName.length < 1"
+                          size="small"
+                          color="blue-darken-1"
+                          variant="tonal"
+                          @click="nickNameDuplicationHandler"
+                          style="left: 290px"
+                        >
+                          닉네임 중복확인
+                        </v-btn> -->
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <!-- <v-btn
+                        v-show="showChangePwdBt"
+                        color="blue-darken-1"
+                        @click="sendChangePassword"
+                        :disabled="
+                          changePassword.length < 9 ||
+                          changePassword1.length < 9 ||
+                          changePassword != changePassword1
+                        "
+                      >
+                        변경하기
+                      </v-btn> -->
+                      <!-- <v-btn color="blue-darken-1" @click="initFindPwdHandler">
+                        취소
+                      </v-btn> -->
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                    <br />
+                  </v-card>
+                </v-dialog>
+                <!-- =========================================================== -->
+              </li>
+              <!-- <li><hr class="dropdown-divider" /></li> -->
+              <li>
+                <a @click="logoutClickHandler" class="dropdown-item" href="#"
+                  >로그아웃</a
+                >
+              </li>
             </ul>
           </div>
         </div>
       </div>
     </main>
   </div>
+  {{ userInfo }}
 </template>
 
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Menubar",
   data() {
     return {
-      loginedId: "",
-      nickname: "닉네임",
+      profileImage: "",
+      modifyMyInfo: false,
     };
   },
+  computed: {
+    ...mapActions(["logOut"]),
+    ...mapState(["userInfo"]),
+  },
+  async beforeCreate() {
+    await this.$store.dispatch("getUserInfo");
+    this.profileImage = this.userInfo.profileImage;
+  },
   methods: {
-    logoClickHandler() {
-      //로고img객체 클릭이벤트
+    logoutClickHandler() {
+      this.logOut;
       location.href = "/";
     },
-    logoutClickHandler() {
-      //로그아웃 클릭이벤트
-      const url = `${this.backURL}/refresh`;
+    profileClickHandler() {
+      alert("프로필 수정 모달창");
+      // this.$router.push("/nickchange");
+    },
+    toggleDropdown() {
+      const dropdown = this.$refs.profileDropdown;
 
-      axios.defaults.headers.common["Authorization"] =
-        localStorage.getItem("mapbegoodToken");
-
-      axios.defaults.headers.common["Refresh"] =
-        "Bearer " + localStorage.getItem("refresh");
-
-      axios
-        .delete(url, { withCredentials: true })
-        .then((response) => {
-          delete axios.defaults.headers.common["Authorization"];
-          delete axios.defaults.headers.common["Refresh"];
-
-          localStorage.removeItem("mapbegoodToken");
-          localStorage.removeItem("refresh");
-
-          console.log(response.data);
-          alert("로그아웃 되었습니다.");
-          location.href = "/";
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.message);
-        });
+      if (dropdown) {
+        if (!localStorage.getItem("mapbegoodToken")) {
+          // If the user is not logged in, redirect to the Login.vue component
+          this.$router.push("/login");
+        } else {
+          // If the user is logged in, toggle the dropdown
+          const instance = new bootstrap.Dropdown(dropdown);
+          instance.toggle();
+        }
+      }
     },
   },
 };
 </script>
 <script setup>
+import * as bootstrap from "bootstrap";
 // 툴팁 초기화 스크립트 코드를 여기에 둡니다.
 var tooltipTriggerList = [].slice.call(
   document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -252,9 +379,20 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 </script>
 
 <style scoped>
-.menubar {
+main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   background-color: #f2f2f2;
-  margin-left: 1px;
+  /* width: 63px; */
+  height: 100vh;
+  overflow: visible;
+  border-right: 1px solid #ccc; /* 테두리를 통해 다른 컴포넌트와 구분선 생성 */
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  /* overflow-x: hidden;
+  overflow-y: hidden; */
 }
 
 .menu-item {
@@ -274,6 +412,14 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   margin-bottom: 1.8rem;
 }
 
+.d-nav-link {
+  padding: 22px 0 !important; /* Set padding to 0 */
+}
+
+.dropdown-menu {
+  min-width: 50px !important; /* Adjust the width as needed */
+}
+
 .dropdown-item {
   font-size: 11px; /* You can adjust the font size as needed */
 }
@@ -282,20 +428,9 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   color: #333;
 }
 
-body {
+body,
+html {
   min-height: 100vh;
   min-height: -webkit-fill-available;
-}
-
-html {
-  height: -webkit-fill-available;
-}
-
-main {
-  height: 200vh;
-  height: -webkit-fill-available;
-  max-height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
 }
 </style>

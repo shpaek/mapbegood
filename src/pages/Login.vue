@@ -1,7 +1,9 @@
 <template>
   <div class="login-container">
     <div class="login-logo">
-      <img src="../../public/images/login_logo.png" alt="mapbegood" />
+      <a href="/">
+        <img src="../../public/images/login_logo.png" alt="mapbegood" />
+      </a>
     </div>
     <v-card
       class="mx-auto pa-12 pb-8"
@@ -371,8 +373,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import { mapActions, mapState } from "vuex";
+import axios from "axios";
 
 export default {
   name: "login",
@@ -867,7 +869,7 @@ export default {
 
 <style scoped>
 .login-container {
-  margin-top: 80px;
+  margin-top: 150px;
 }
 
 .login-logo {
@@ -875,7 +877,7 @@ export default {
   margin-bottom: 30px;
 }
 
-.login-logo > img {
+.login-logo > a > img {
   width: 220px;
 }
 

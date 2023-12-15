@@ -1,11 +1,13 @@
 <template lang="">
     <div>
-        피드입니다
+        
     </div>
 </template>
 <script>
+import axios from 'axios';
 export default {
-    name: "Feed"
+    name: 'Waiting',
+
 }
 </script>
 <style scoped>

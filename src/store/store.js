@@ -21,12 +21,13 @@ export default createStore({
     logOut({ state }) {
       this.state.userInfo = "";
       this.state.isLogin = false;
+      localStorage.removeItem("mapbegoodToken");
+      localStorage.removeItem("refresh");
     },
   },
   actions: {
     // dispatch 로 부를 수 있다.
     login({ dispatch }, loginObj) {
-      console.log(this.state.loading);
       this.state.loading = true;
       axios
         .post(loginObj.backUrl + "/auth", loginObj.userInfo, {
@@ -39,7 +40,7 @@ export default createStore({
           this.dispatch("getUserInfo");
           this.state.loading = false;
           alert("로그인 성공");
-          // location.href = "/";
+          location.href = "/";
         })
         .catch(() => {
           this.state.loading = false;
@@ -48,6 +49,7 @@ export default createStore({
     },
     logOut({ commit }) {
       this.commit("logOut");
+      alert("로그아웃 되었습니다.");
     },
     async getUserInfo({ commit, dispatch }) {
       let isToken = localStorage.getItem("mapbegoodToken");
@@ -76,6 +78,7 @@ export default createStore({
             email: res.data.email,
             nickName: res.data.nickName,
             profileImage: res.data.profileImage,
+            status: res.data.status,
           };
 
           this.commit("loginSuccess", userInfo);

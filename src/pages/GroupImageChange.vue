@@ -127,7 +127,6 @@ export default {
       //axios로 백 url요청
       const url = `${this.backURL}/group/${this.groupId}/group-image`; //`${this.backURL}/group`
 
-
       const fd = new FormData(e.target);
 
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
