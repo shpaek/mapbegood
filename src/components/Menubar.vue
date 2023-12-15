@@ -75,7 +75,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="Map"
           >
@@ -95,7 +95,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="othersthememap"
           >
@@ -115,7 +115,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="thememap"
           >
@@ -135,7 +135,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="FavoriteList"
           >
@@ -155,7 +155,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="group"
           >
@@ -172,8 +172,13 @@
               @click.prevent="toggleDropdown"
               class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
             >
+              <!-- :src="profileImage ? profileImage : '/images/avatar.png'" -->
               <img
-                :src="profileImage ? profileImage : '/images/avatar.png'"
+                :src="
+                  profileImage
+                    ? profileImage
+                    : 'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/profile-image/default-profile.jpg'
+                "
                 alt="icon"
                 width="30"
                 height="30"
@@ -181,64 +186,169 @@
               />
             </a>
             <ul class="dropdown-menu text-small shadow dropdown-menu-end">
-              <li><a @click="profileClickHandler" class="dropdown-item" href="#">프로필</a></li>
+              <li>
+                <v-dialog v-model="modifyMyInfo" persistent width="500">
+                  <template v-slot:activator="{ props }">
+                    <!-- @click="profileClickHandler" -->
+                    <a class="dropdown-item" v-bind="props" href="#"
+                      >내 정보 수정</a
+                    >
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <img
+                        src="../../public/images/findPwd_logo.png"
+                        alt="mapbegood"
+                        style="width: 200px"
+                      />
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <div class="signup-profile" style="padding-left: 160px">
+                          <!-- <v-file-input
+                            label="File input"
+                            accept="image/*"
+                            v-show="false"
+                            ref="fileInput"
+                            @change="uploadProfileImageHandler"
+                          ></v-file-input>
+
+                          <a href="javascript:void(0)">
+                            <v-avatar
+                              :image="displayImage"
+                              size="100"
+                              @click="clickProfileImageHandler"
+                            ></v-avatar>
+                          </a> -->
+                        </div>
+
+                        <!-- <v-text-field
+                          v-show="showAuthEmail"
+                          v-model="authEmail"
+                          color="primary"
+                          label="Email"
+                          variant="underlined"
+                          :rules="[rules.email]"
+                          :loading="showAuthEmailBtDisable"
+                          ref="authEmail"
+                          style="text-align: right"
+                        ></v-text-field> -->
+
+                        <!-- <v-text-field
+                          v-show="showPassword"
+                          v-model="changePassword"
+                          :type="'password'"
+                          color="primary"
+                          label="Password"
+                          placeholder="Enter your password"
+                          variant="underlined"
+                          :rules="[rules.password]"
+                          ref="changePassword"
+                          style="text-align: right"
+                        ></v-text-field> -->
+
+                        <!-- <v-text-field
+                          v-show="showPassword1"
+                          v-model="changePassword1"
+                          :type="'password'"
+                          color="primary"
+                          label="Password"
+                          placeholder="Enter your password"
+                          variant="underlined"
+                          :rules="[rules.passwordCheck]"
+                          ref="changePassword1"
+                          style="text-align: right"
+                        ></v-text-field> -->
+
+                        <!-- <v-text-field
+                          v-model="signupNickName"
+                          color="primary"
+                          label="Nickname"
+                          variant="underlined"
+                          ref="signupNickName"
+                          @keyup="editNicknameHandler"
+                        ></v-text-field> -->
+
+                        <!-- <v-btn
+                          v-show="!nickduplication"
+                          :disabled="signupNickName.length < 1"
+                          size="small"
+                          color="blue-darken-1"
+                          variant="tonal"
+                          @click="nickNameDuplicationHandler"
+                          style="left: 290px"
+                        >
+                          닉네임 중복확인
+                        </v-btn> -->
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <!-- <v-btn
+                        v-show="showChangePwdBt"
+                        color="blue-darken-1"
+                        @click="sendChangePassword"
+                        :disabled="
+                          changePassword.length < 9 ||
+                          changePassword1.length < 9 ||
+                          changePassword != changePassword1
+                        "
+                      >
+                        변경하기
+                      </v-btn> -->
+                      <!-- <v-btn color="blue-darken-1" @click="initFindPwdHandler">
+                        취소
+                      </v-btn> -->
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                    <br />
+                  </v-card>
+                </v-dialog>
+                <!-- =========================================================== -->
+              </li>
               <!-- <li><hr class="dropdown-divider" /></li> -->
-              <li><a @click="logoutClickHandler" class="dropdown-item" href="#">로그아웃</a></li>
+              <li>
+                <a @click="logoutClickHandler" class="dropdown-item" href="#"
+                  >로그아웃</a
+                >
+              </li>
             </ul>
           </div>
         </div>
       </div>
     </main>
   </div>
+  {{ userInfo }}
 </template>
 
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Menubar",
   data() {
     return {
-      email: "",
-      nickname: "",
-      profileImage: ""
+      profileImage: "",
+      modifyMyInfo: false,
     };
   },
+  computed: {
+    ...mapActions(["logOut"]),
+    ...mapState(["userInfo"]),
+  },
+  async beforeCreate() {
+    await this.$store.dispatch("getUserInfo");
+    this.profileImage = this.userInfo.profileImage;
+  },
   methods: {
-    logoClickHandler() {
-      //로고img객체 클릭이벤트
+    logoutClickHandler() {
+      this.logOut;
       location.href = "/";
     },
-    logoutClickHandler() {
-      //로그아웃 클릭이벤트
-      const url = `${this.backURL}/refresh`;
-
-      axios.defaults.headers.common["Authorization"] =
-        localStorage.getItem("mapbegoodToken");
-
-      axios.defaults.headers.common["Refresh"] =
-        "Bearer " + localStorage.getItem("refresh");
-
-      axios
-        .delete(url, { withCredentials: true })
-        .then((response) => {
-          delete axios.defaults.headers.common["Authorization"];
-          delete axios.defaults.headers.common["Refresh"];
-
-          localStorage.removeItem("mapbegoodToken");
-          localStorage.removeItem("refresh");
-
-          console.log(response.data);
-          alert("로그아웃 되었습니다.");
-          location.href = "/";
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.message);
-        });
-    },
-    profileClickHandler(){
-      this.$router.push("/nickchange");
+    profileClickHandler() {
+      alert("프로필 수정 모달창");
+      // this.$router.push("/nickchange");
     },
     toggleDropdown() {
       const dropdown = this.$refs.profileDropdown;
@@ -254,26 +364,11 @@ export default {
         }
       }
     },
-    getLoginInfo() {
-      axios.get("/login-info")
-        .then(response => {
-          const { email, nickname, profileImage } = response.data;
-          this.email = email;
-          this.nickname = nickname;
-          this.profileImage = profileImage;
-        })
-        .catch(error => {
-          console.error("Error fetching login info:", error);
-        });
-    },
-  },
-  created() {
-    this.getLoginInfo();
   },
 };
 </script>
 <script setup>
-import * as bootstrap from 'bootstrap';
+import * as bootstrap from "bootstrap";
 // 툴팁 초기화 스크립트 코드를 여기에 둡니다.
 var tooltipTriggerList = [].slice.call(
   document.querySelectorAll('[data-bs-toggle="tooltip"]')

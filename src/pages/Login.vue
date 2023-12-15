@@ -1,7 +1,9 @@
 <template>
   <div class="login-container">
     <div class="login-logo">
-      <img src="../../public/images/login_logo.png" alt="mapbegood" />
+      <a href="/">
+        <img src="../../public/images/login_logo.png" alt="mapbegood" />
+      </a>
     </div>
     <v-card
       class="mx-auto pa-12 pb-8"
@@ -15,6 +17,7 @@
         color="primary"
         variant="underlined"
         :rules="[rules.email]"
+        :loading="loading"
         clearable
         ref="email"
       ></v-text-field>
@@ -25,6 +28,7 @@
         color="primary"
         variant="underlined"
         :type="'password'"
+        :loading="loading"
         density="compact"
         clearable
         ref="password"
@@ -369,8 +373,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 import axios from "axios";
-import { mapActions } from "vuex";
 
 export default {
   name: "login",
@@ -379,6 +383,7 @@ export default {
       email: "",
       password: "",
       checked: "",
+      loginLoading: false,
       rules: {
         email: (value) => {
           if (value.length >= 1) {
@@ -448,6 +453,16 @@ export default {
 
       tmpAccessToken: "",
     };
+  },
+  computed: {
+    ...mapState(["loading"]),
+  },
+  created() {
+    const savedId = localStorage.getItem("mapbegoodId");
+    if (savedId != null) {
+      this.email = savedId;
+      this.checked = true;
+    }
   },
   methods: {
     ...mapActions(["login"]),
@@ -849,13 +864,6 @@ export default {
       this.password = "";
     },
   },
-  created() {
-    const savedId = localStorage.getItem("mapbegoodId");
-    if (savedId != null) {
-      this.email = savedId;
-      this.checked = true;
-    }
-  },
 };
 </script>
 
@@ -869,7 +877,7 @@ export default {
   margin-bottom: 30px;
 }
 
-.login-logo > img {
+.login-logo > a > img {
   width: 220px;
 }
 

@@ -1,6 +1,7 @@
 <template>
   <div class="main-container">
-    <Menubar v-show="menu" />
+    <!-- <Menubar v-show="this.menu" /> -->
+    <Menubar v-if="$route.name !== 'login'" />
     <Section />
   </div>
 </template>
@@ -10,18 +11,12 @@ import Menubar from "./Menubar.vue";
 import Section from "./Section.vue";
 import Search from "./Search.vue";
 
-let menu = true;
-
 export default {
   name: "Main",
   components: {
     Menubar,
     Section,
     Search,
-  },
-  created() {
-    let path = location.pathname.substring(1).toLowerCase();
-    this.menu = path != "login" && path != "signup";
   },
 };
 </script>

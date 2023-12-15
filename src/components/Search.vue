@@ -2,25 +2,44 @@
   <div>
     <div id="searchContainer" class="bg_white">
       <div class="search">
-        <input type="text" v-model="keyword" placeholder="장소 검색" @keyup.enter="search"/>
-        <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" 
-          class="icon" @click="search"/>
+        <input
+          type="text"
+          v-model="keyword"
+          placeholder="장소 검색"
+          @keyup.enter="search"
+        />
+        <img
+          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+          class="icon"
+          @click="search"
+        />
       </div>
       <ul id="placesList">
-        <li v-for="(place, index) in places" :key="index" @click="selectPlace(place)">
+        <li
+          v-for="(place, index) in places"
+          :key="index"
+          @click="selectPlace(place)"
+        >
           <img class="markerbg" :src="place.markerImage" />
           <div class="info">
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{place.road_address_name}}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{place.address_name}}</span>
+            <span v-if="place.road_address_name">{{
+              place.road_address_name
+            }}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{
+              place.address_name
+            }}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
           <!-- <button class="bookmark-btn" @click.stop="addBookmark(place)">북마크</button> -->
           <button @click.stop="customButtonClick">버튼</button>
-        
-          <img src="/public/images/bookmark.png"  @click.stop="addBookmark(place)"
-          class = "bookmark" />
+
+          <img
+            src="/public/images/bookmark.png"
+            @click.stop="addBookmark(place)"
+            class="bookmark"
+          />
         </li>
       </ul>
       <div id="pagination"></div>
@@ -29,7 +48,7 @@
 </template>
 
 <script>
- import axios from "axios";
+import axios from "axios";
 
 export default {
   name: "Search",
@@ -42,7 +61,6 @@ export default {
       markers: [], // 지도에 표시되는 마커 리스트
       map: null, // 지도 객체를 저장하기 위한 변수
       pagination: null,
-
     };
   },
 
@@ -97,42 +115,42 @@ export default {
         alert("Places 서비스가 초기화되지 않았습니다.");
       }
     },
-    
+
     selectPlace(place) {
-  // 클릭한 장소의 좌표를 가져옵니다.
-  const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+      // 클릭한 장소의 좌표를 가져옵니다.
+      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
 
-  // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
-  this.$emit("center-map", placePosition);
-},
-placesSearchCB(data, status, pagination) {
-    if (status === window.kakao.maps.services.Status.OK) {
-      console.log("Received data:", data);
+      // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
+      this.$emit("center-map", placePosition);
+    },
+    placesSearchCB(data, status, pagination) {
+      if (status === window.kakao.maps.services.Status.OK) {
+        console.log("Received data:", data);
 
-      this.places = data.map((place, index) => {
-        const placeIndex = (index % 15) + 1;
-        place.markerImage = `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-        console.log(place.markerImage);
-        return place;
-      });
+        this.places = data.map((place, index) => {
+          const placeIndex = (index % 15) + 1;
+          place.markerImage = `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+          console.log(place.markerImage);
+          return place;
+        });
 
-      console.log("Places for Map:", this.places);
+        console.log("Places for Map:", this.places);
 
-      // 검색 결과를 Map.vue로 전송
-      this.$emit("search-results", this.places);
+        // 검색 결과를 Map.vue로 전송
+        this.$emit("search-results", this.places);
 
-      this.displayPlacesOnMap(this.places);
+        this.displayPlacesOnMap(this.places);
 
-      this.pagination = pagination; // pagination을 data에 저장
+        this.pagination = pagination; // pagination을 data에 저장
 
-      this.displayPagination(pagination);
-    } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-      alert("검색 결과가 존재하지 않습니다.");
-    } else if (status === window.kakao.maps.services.Status.ERROR) {
-      alert("검색 결과 중 오류가 발생했습니다.");
-    }
-  },
-  displayPlacesOnMap(places) {
+        this.displayPagination(pagination);
+      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+        alert("검색 결과가 존재하지 않습니다.");
+      } else if (status === window.kakao.maps.services.Status.ERROR) {
+        alert("검색 결과 중 오류가 발생했습니다.");
+      }
+    },
+    displayPlacesOnMap(places) {
       // 이벤트를 통해 전달받은 장소 데이터를 이용하여 지도에 마커를 표시
       this.$refs.map.displayPlacesOnMap(places);
     },
@@ -184,11 +202,6 @@ placesSearchCB(data, status, pagination) {
   },
 };
 </script>
-
-
-
-
-
 
 <style scoped>
 * {
@@ -403,7 +416,6 @@ placesSearchCB(data, status, pagination) {
 
 .bookmark {
   width: 30px;
-  
 }
 
 /* .marker-1 {
