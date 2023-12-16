@@ -270,7 +270,8 @@
                         <v-text-field
                           v-model="modifyNickName"
                           color="primary"
-                          :label="originNicnName"
+                          label="Nickname"
+                          :placeholder="originNicnName"
                           variant="underlined"
                           ref="modifyNickName"
                           @keyup="editNicknameHandler"

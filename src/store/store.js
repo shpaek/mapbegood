@@ -104,8 +104,7 @@ export default createStore({
         })
         .catch(() => {
           this.commit("logOut");
-          alert("로그아웃 되었습니다.");
-          location.href = "/";
+          location.href = "/ ";
         });
     },
   },
