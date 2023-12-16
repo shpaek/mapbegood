@@ -317,8 +317,7 @@
         </div>
       </div>
     </main>
-  </div>
-  {{ userInfo }}
+  </div>  
 </template>
 
 <script>

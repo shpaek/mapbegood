@@ -1,4 +1,4 @@
-<template lang>
+<template lang="html">
     <div id="app">
       <v-app id="inspire">
         <div>
@@ -21,33 +21,37 @@
           </v-toolbar>
   
           <v-tabs-items v-model="tabs">
-            <!-- <v-tab-item v-for="n in 3" :key="n"> -->
-            <v-tab-item>
+            <v-tab-item v-for="n in 3" :key="n">
               <v-card>
                 <v-card-text>
-                <v-list two-line>
-                  <!-- <v-list-tile v-for="(item, index) in items" :key="index" avatar ripple @click="toggle(index)"> -->
-                    <!-- @click="toggle(items[0])" -->
-                    <v-list-tile avatar ripple >
-                    <v-list-tile-content>
-                        <!-- {{ items[0].title }} -->
-                      <v-list-tile-title> 123 </v-list-tile-title>
-                      <!-- {{ items[0].subtitle }} -->
-                      <v-list-tile-sub-title>234</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <!-- <v-divider v-if="index + 1 < items.length" :key="'divider-' + index"></v-divider> -->
-                  <v-divider ></v-divider>
-                </v-list>
-              </v-card-text>
+                  
+                  <v-list two-line>
+                    <template v-for="(item, index) in items" :key="index">
+                      <v-list-tile avatar ripple @click="toggle(index)" >
+                    
+                          <v-list-tile-content>
+                          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                          <v-list-tile-sub-title>{{
+                            item.subtitle
+                          }}</v-list-tile-sub-title>
+                        </v-list-tile-content>
+                    
+                      </v-list-tile>
+                    
+                      <v-divider
+                        v-if="index + 1 < items.length"
+                        :key="index"
+                      ></v-divider>
+                    </template>
+                  </v-list>
+  
+                </v-card-text>
               </v-card>
             </v-tab-item>
-            
           </v-tabs-items>
         </div>
       </v-app>
     </div>
-
   </template>
   
   <script>
@@ -64,6 +68,7 @@
         userList: [],
         emptyMsg: "",
         tabs: null,
+        n: 3,
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
         items: [
           {
