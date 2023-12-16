@@ -17,6 +17,7 @@ export default createStore({
     loginSuccess({ state }, payload) {
       this.state.userInfo = payload;
       this.state.isLogin = true;
+      console.log("#getLoginInfo Success");
     },
     logOut({ state }) {
       this.state.userInfo = "";
@@ -104,6 +105,8 @@ export default createStore({
         })
         .catch(() => {
           this.commit("logOut");
+          alert("로그아웃 되었습니다.");
+          location.href = "/";
         });
     },
   },
