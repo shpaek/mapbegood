@@ -28,5 +28,6 @@ export default {
 div.section {
   margin-left: 64px;
   overflow-y: auto;
+  height: 100vh;
 }
 </style>
