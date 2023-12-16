@@ -1,7 +1,6 @@
 package com.kosa.mapbegood.domain.mymap.util;
 
 import com.kosa.mapbegood.domain.member.entity.Member;
-import com.kosa.mapbegood.domain.mymap.favorite.dto.MemberDto;
 import com.kosa.mapbegood.domain.mymap.favorite.dto.ThemeMapDto;
 import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
