@@ -1,6 +1,8 @@
 package com.kosa.mapbegood.domain.common.service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,20 +14,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    // 기본 타임아웃 설정
+	
+    private final Map<String, SseEmitter> userEmitters = new HashMap<>();
+
+	// 기본 타임아웃 설정
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
     private final EmitterRepository emitterRepository;
-
+    
     /**
      * 클라이언트가 구독을 위해 호출하는 메서드.
      * @param userEmail - 구독하는 클라이언트의 사용자 이메일.
      * @return SseEmitter - 서버에서 보낸 이벤트 Emitter
      */
-    public SseEmitter subscribe(String userEmail) {
+    public SseEmitter subscribe (String userEmail) {
         SseEmitter emitter = createEmitter(userEmail);
 
-        sendToClient(userEmail, "EventStream Created. [userEmail=" + userEmail + "]");
+//        sendToClient(userEmail,"EventStream Created. [userEmail=" + userEmail + "]");
         return emitter;
     }
 
@@ -39,7 +44,13 @@ public class NotificationService {
     public void notify(String userEmail, Object event) {
         sendToClient(userEmail, event);
     }
-
+    
+    public void inviteUser(String inviterEmail, String inviteeEmail, String groupName) {
+        SseEmitter inviteeEmitter = userEmitters.get(inviteeEmail);
+        if (inviteeEmitter != null) {
+            notify(inviteeEmail, inviterEmail + "님이 그룹 '" + groupName + "'에 초대했습니다.");
+        }
+    }
     
     
     /**
