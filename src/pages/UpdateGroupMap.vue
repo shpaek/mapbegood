@@ -25,62 +25,75 @@
         </div>
 
         <!-- 테마맵 수정 버튼 -->
-        <button @click="updateGroupMap" class="btn btn-dark">테마맵 수정</button>
+        <button @click="updateGroupMap" class="btn btn-dark">그룹테마맵 수정</button>
       </div>
     </div>
   </div>
 </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: "updategroupmap",
-    data() {
-      return {
-        colors: ['red', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink', 'gray', 'black'],
-        selectedColor: '',
-        groupmapMemo: '',
-        groupmapname: ''
-      };
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: "updategroupmap",
+  data() {
+    return {
+      colors: ['red', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink', 'gray', 'black'],
+      selectedColor: '',
+      groupmapMemo: '',
+      groupmapname: '',
+      groupId: null,
+      groupThememapId: null,
+    };
+  },
+  mounted() {
+    this.loadGroupThememapDetails();
+  },
+  methods: {
+    loadGroupThememapDetails() {
+      // Set groupId and groupThememapId based on the route params or any other logic
+      this.groupId = this.$route.params.groupId;
+      this.groupThememapId = this.$route.params.groupThememapId;
+
+      const url = `http://localhost:8080/ourmap/get/${this.groupThememapId}`;
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      axios.get(url)
+        .then(response => {
+          this.groupmapname = response.data.name;
+          this.selectedColor = response.data.color;
+          this.groupmapMemo = response.data.memo;
+        })
+        .catch(error => {
+          console.error(error);
+          alert(error.msg);
+        });
     },
-    methods: {
-        updateGroupMap() {
-  // groupId와 groupThememapId는 실제로 사용하는 상황에 맞게 적절한 값으로 설정해야 합니다.
-  const groupId = this.$route.params.groupId;
-  const groupThememapId = this.$route.params.groupThememapId;
-  
-  // 로컬 스토리지에서 토큰을 가져옴
-  const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-  
-  // Authorization 헤더에 토큰 추가
-  axios.defaults.headers.common["Authorization"] = accessToken;
+    updateGroupMap() {
+      const url = `http://localhost:8080/ourmap/update/${this.groupId}/${this.groupThememapId}`;
+      const updatedGroupThememap = {
+        name: this.groupmapname,
+        color: this.selectedColor,
+        memo: this.groupmapMemo
+      };
 
-  // 수정할 그룹 테마맵 데이터
-  const updatedGroupThememap = {
-    name: this.groupmapname,
-    color: this.selectedColor,
-    memo: this.groupmapMemo
-  };
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
 
-  // API 요청을 통해 그룹 테마맵 수정
-  axios.put(`http://localhost:8080/ourmap/update/${groupId}/${groupThememapId}`, updatedGroupThememap)
-    .then(response => {
-      // 성공적으로 수정되었을 때의 로직
-      console.log('그룹 테마맵이 성공적으로 수정되었습니다.', response.data);
-      alert("그룹 테마맵이 성공적으로 수정되었습니다.");
-      // 수정 후 필요한 동작 수행
-    })
-    .catch(error => {
-      // 오류 발생 시의 로직
-      console.error('그룹 테마맵 수정 중 오류 발생:', error);
-      alert("그룹 테마맵 수정에 실패했습니다.");
-    });
-}
-}
-  }
-  </script>
-  
-  <style>
-  /* 스타일링이 필요한 경우 추가 */
-  </style>
+      axios.put(url, updatedGroupThememap)
+        .then(response => {
+          console.log(response.data);
+          alert("그룹테마맵이 성공적으로 수정되었습니다.");
+        })
+        .catch(error => {
+          console.error(error);
+          alert("그룹테마맵 수정에 실패했습니다.");
+        });
+    },
+  },
+};
+</script>
+<style>
+
+</style>
