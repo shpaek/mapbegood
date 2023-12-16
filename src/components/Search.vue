@@ -1,8 +1,6 @@
-2차Search.vue
-
 <template>
-  <div>
-    <div id="searchContainer" class="bg_white">
+  <div>  
+    <div id="searchContainer" class="bg_white">    
       <div class="search">
         <input
           type="text"
@@ -16,40 +14,71 @@
           @click="search"
         />
       </div>
+
+      <!-- 장소 목록 -->
       <ul id="placesList">
-        <li v-for="(place, index) in places" :key="index" @click="selectPlace(place, index)">
-  <img class="markerbg" :src="getMarkerImageUrl(index)" />
+        <!-- @click="selectPlace(place, index)" -->
+        <li v-for="(place, index) in places" :key="index" >
+          <img class="markerbg" :src="getMarkerImageUrl(index)" />
           <div class="info">   
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{
-              place.road_address_name
-            }}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{
-              place.address_name
-            }}</span>
+            <span v-if="place.road_address_name">{{ place.road_address_name }}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{ place.address_name }}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
-          <!-- <button class="bookmark-btn" @click.stop="addBookmark(place)">북마크</button> -->
-          <button @click.stop="customButtonClick">버튼</button>
-
           <img
             src="/public/images/bookmark.png"
-            @click.stop="addBookmark(place)"
+            @click="openModal(place)"
             class="bookmark"
           />
+          <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="currentColor"
+          class="bi bi-person-add"
+          viewBox="0 0 16 16"
+          @click="openModal"
+        >
+          <path
+            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
+          />
+          <path
+            d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"
+          />
+        </svg>          
         </li>
       </ul>
+
+      <!-- 페이지네이션 -->
       <div id="pagination"></div>
     </div>
+
+    <!-- 모달 창 구조 -->
+    <div class="modal-container">
+    <!-- 모달창 -->
+    <AddBookmark
+      :isModalOpen="isModalOpen"
+      :groupId="groupId"
+      @close-modal="closeModal"
+    />
+  </div>
   </div>
 </template>
 
+
 <script>
 import axios from "axios";
+import AddBookmark from "../pages/AddBookmark.vue";
 
 export default {
   name: "Search",
+
+  components: {
+    AddBookmark,
+  },
+
   data() {
     return {
       ps: null, // Kakao Places Service
@@ -59,6 +88,7 @@ export default {
       markers: [], // 지도에 표시되는 마커 리스트
       map: null, // 지도 객체를 저장하기 위한 변수
       pagination: null,
+      isModalOpen: false,
     };
   },
 
@@ -262,6 +292,16 @@ removeAllPlacesListItems() {
     //       console.error("Error adding bookmark:", error);
     //     });
     // },
+
+    openModal(place) {
+      // 모달 창 열기
+      this.isModalOpen = true;
+      // 선택된 장소(place) 정보를 이용하여 모달 창 내용 업데이트 가능
+    },
+    closeModal() {
+      // 모달 창 닫기
+      this.isModalOpen = false;
+    },
   },
 };
 </script>

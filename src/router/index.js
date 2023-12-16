@@ -25,6 +25,8 @@ import GroupImageChange from "../pages/GroupImageChange.vue";
 import ThememapCreate from "../pages/ThememapCreate.vue"; // 테마맵 추가
 import ThememapUpdate from "../pages/ThemeMapUpdate.vue"; //테마맵 수정
 
+import Thememaptest from "../pages/thememaptest.vue"; 
+
 import ThememapDetail from "../pages/ThemeMapDetail.vue"; //테마맵 Id로 조회
 
 import GroupWaiting from "../pages/GroupWaiting.vue";
@@ -80,6 +82,12 @@ const router = createRouter({
     },
     { path: "/favoritelist", component: FavoriteList },
     { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
+
+    {
+      path: "/thememaptest",
+      name: "thememaptest",
+      component: Thememaptest,
+    },
 
     { path: "/map", component: Map },
     { path: "/map", component: DetailMap }, //이거 임시
