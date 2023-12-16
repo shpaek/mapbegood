@@ -45,29 +45,32 @@
     <hr>
     <div class="group-thememap-list">
       <div class="new-thememap cursor-pointer btn btn-outline-dark" @click="addnewgroupclickHandler">
-        <!-- 그룹추가버튼 -->
+        <!-- 그룹 테마지도 추가버튼 -->
         <span class="new">
           <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
           </svg>
         </span>&nbsp;&nbsp;
-        <span class="text">새 테마지도 추가</span>
+        <span class="text">테마지도 추가</span>
       </div>
       <ul class="list-group">
-        <li v-for="thememap in groupThememaps" :key="thememap.id" class="list-group-item">
-          <span>{{ thememap.name }}</span>
-          <span>{{ thememap.memo }}</span>
-          <div class="btn-group" role="group" aria-label="Theme Map Actions">
-            <button type="button" class="btn btn-primary" @click="goToDetailGroupMap(thememap.id)">
-              상세보기
-            </button>
-            <button type="button" class="btn btn-secondary" @click="editGroupmap(thememap.id)">
-              수정
-            </button>
-            <button type="button" class="btn btn-danger" @click="deleteGroupmap(thememap.id)">
-              삭제
-            </button>
+        <li v-for="thememap in groupThememaps" :key="thememap.id" class="thememap">
+          <div class="info" @click="goToDetailGroupMap(thememap.id)">
+                <div class="name">{{ thememap.name }}</div>
+                <div class="memo">{{ thememap.memo }}</div>
           </div>
+          <!-- 더보기 버튼 -->
+          <div class="btn-group" role="group">
+            <button type="button" class="more" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+              </svg>
+            </button>
+            <ul class="dropdown-menu">
+              <li @click="editGroupmap(thememap.id)">수정</li>
+              <li @click="deleteGroupmap(thememap.id)">삭제</li>
+            </ul>
+          </div>            
         </li>
       </ul>
     </div>
@@ -225,6 +228,9 @@ export default {
 
 </script>
 <style scoped>
+*{
+  font-family: 'Noto Sans KR', sans-serif;
+}
 div.group-info {
   margin-left: 25px;
   margin-top: 30px;
@@ -238,6 +244,9 @@ ul {
 li.img {
   position: relative;
   height: 150px;
+}
+li.img>img{
+  border-radius: 5px;
 }
 
 li.img svg.bi-gear {
@@ -289,13 +298,54 @@ div.group-thememap-list>div.new-thememap{
 }
 div.group-thememap-list>div.new-thememap>span{
   line-height: 33px;
-  height: 50px;
 }
 
 div.group-thememap-list>ul.list-group>li{
-  margin-top: 15px;
+  margin-top: 10px;
 }
-/*
+div.group-thememap-list>ul.list-group>li:hover{
+  background-color: rgba(0, 112, 192, 0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
+}
+li.thememap{
+ display: flex;
+ border: 1px solid grey;
+ border-radius: 5px;
+ height: 60px;
+ width: 330px;
+ vertical-align: baseline;
+}
+li.thememap>div.info{
+  margin-top:auto;
+  margin-bottom:auto;
+  margin-left: 13px;
+  width: 280px;
+}
+li.thememap>div.info>div.name{
+  font-size: 18px;
+  font-weight: bold;
+}
+li.thememap>div.info>div.memo{
+  font-size:13px;
+  color: grey;
+  max-width: 250px;
+  overflow-x: hidden;
+}
+.dropdown-menu {
+  min-width: 45px;
+  min-height: 50px; 
+}
+
+.dropdown-menu li {
+  font-size: 12px;
+  text-align: center;
+}
+
+.dropdown-menu li:hover {
+  background-color: rgb(211, 211, 211);
+  /* color:white; */
+  cursor: pointer;
+}
+
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown {
   position: absolute;
   font-size: 12px;
@@ -316,18 +366,18 @@ div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li {
 }
 
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li:hover {
-  text-decoration: underline;
   cursor: pointer;
+  background-color: rgb(211, 211, 211);
 }
 
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
   position: absolute;
   top: 32px;
-  left: 93%;
+  left: 92%;
   transform: translateX(-93%);
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-bottom: 12px solid rgb(240, 240, 240);
 }
-*/
+
 </style>

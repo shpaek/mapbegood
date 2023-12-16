@@ -28,7 +28,6 @@ export default {
 
 <style scoped>
 .main-container {
-  display: flex;
   height: 100vh;
 }
 div.section {
