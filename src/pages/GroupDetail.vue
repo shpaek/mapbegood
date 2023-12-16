@@ -92,7 +92,7 @@
 import axios from 'axios';
 import { mapState, mapActions } from "vuex";
 import Detailmap from './Detailmap.vue';
-import GroupImageChange from './groupImageChange.vue';
+import GroupImageChange from './GroupImageChange.vue';
 import GroupNameChange from './GroupNameChange.vue';
 export default {
   name: "GroupDetail",
