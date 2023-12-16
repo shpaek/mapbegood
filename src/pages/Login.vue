@@ -317,7 +317,7 @@
                     label="Password"
                     placeholder="Enter your password"
                     variant="underlined"
-                    :rules="[rules.passwordCheck]"
+                    :rules="[rules.passwordCheck1]"
                     ref="changePassword1"
                     style="text-align: right"
                   ></v-text-field>
@@ -330,8 +330,8 @@
                   color="blue-darken-1"
                   @click="sendChangePassword"
                   :disabled="
-                    changePassword.length < 9 ||
-                    changePassword1.length < 9 ||
+                    changePassword.length < 8 ||
+                    changePassword1.length < 8 ||
                     changePassword != changePassword1
                   "
                 >
@@ -402,8 +402,11 @@ export default {
           }
         },
         passwordCheck: (value) => {
-          if (value == this.signupPassword || value == this.changePassword)
-            return true;
+          if (value == this.signupPassword) return true;
+          return "Incorrect Password";
+        },
+        passwordCheck1: (value) => {
+          if (value == this.changePassword) return true;
           return "Incorrect Password";
         },
       },
@@ -577,7 +580,7 @@ export default {
       });
 
       let formData = new FormData();
-      formData.append("signUpDto", blobSignupUser);
+      formData.append("memberSignUpDto", blobSignupUser);
       formData.append("profileImage", this.signupProfileImage);
 
       const config = {
