@@ -23,11 +23,11 @@ export default {
 
 <style scoped>
 .main-container {
-  display: flex;
+  /* display: flex; */
   height: 100vh;
 }
 div.section {
   margin-left: 64px;
-  overflow-y: auto; /* 추가: Section이 내용이 넘칠 때 스크롤 표시 */
+  overflow-y: auto;
 }
 </style>
