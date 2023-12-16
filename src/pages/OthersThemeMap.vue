@@ -47,17 +47,33 @@
 
 <script>
 import axios from 'axios';
+import { mapState, mapActions } from "vuex";
 
 export default {
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+  beforeCreate() {
+    // this.$store.dispatch("getUserInfo").then() //=> {
+      // 사용자 정보가 설정되면 이메일 값을 콘솔에 출력합니다.
+      // console.log("이메일:", this.userInfo.email);
+    // });
+    this.$store.dispatch("getUserInfo").then(()=>{
+    //구독 메서드 호출
+      this.checkNotifications();
+    })
+        
+  },
+  
   data() {
     return {
-// 검색어와 테마맵 목록을 담는 데이터
+      // 검색어와 테마맵 목록을 담는 데이터
       searchTerm: "",
       themeMaps: [],
     };
   },
   methods: {
-// 테마맵 검색 메서드
+    // 테마맵 검색 메서드
     async searchThemeMap() {
       try {
         const url = `${this.backURL}/maplist/search`;
@@ -80,23 +96,66 @@ export default {
       }
     },
     executeSearch() {
-// 검색 메서드 호출
+      // 검색 메서드 호출
       this.searchThemeMap();
+      //구독 메서드 호출
+      this.checkNotifications();
     },
-// 즐겨찾기에 추가 메서드
+    
+    // sub 호출 메서드 
+    async checkNotifications() {
+      try {
+        // 토큰 먼저 가져오는지 보기 
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        if (!accessToken) {
+          console.log("사용자가 로그인하지 않았습니다.");
+          return;
+        }
+
+        // 로그인되면 구독 하기
+        const url = `${this.backURL}/notifications/subs/${this.userInfo.email}`;
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        // const response = await axios.get(url,{
+        //   withCredentials:true,
+        // });
+
+        this.$sse.create({url:url, withCredentials: true})
+        .on('sse', (data) => {
+          console.log('Message:', data);
+          console.log('데이터 타입',data.type,data.type !=='Created');
+          //로그인 상태에서 구독했을때에도 알림창이 띄어지는데, 급한대로 이름으로 무시하기, 만들때는 data.type 꼭 주자. 
+          alert('알림:' + data);
+
+        //  // data.type이 정의되어 있을 때만 알림창 띄우기
+        //  if (data.type !== undefined && data.type !== 'Created') {
+        //     alert('알림:' + data);
+        // }
+    })
+        .on('error', (err) => console.error('Failed to parse or lost connection:', err))
+        .connect()
+        .catch((err) => console.error('Failed make initial connection:', err));
+       
+      }catch(error){
+        console.log("알림 확인 중 오류 발생 :",error)
+      }
+  
+    },
+
+    // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
       try {
         const url = `${this.backURL}/favorite/create/${themeMapId}`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
 
-console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
+        console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
         const response = await axios.post(url);
         console.log(response.data); // 성공하면 콘솔에 출력
         // 추가 성공 메시지
         alert("추가되었습니다");
 
-// Update the isInFavorites property after successfully adding to favorites
+        // Update the isInFavorites property after successfully adding to favorites
         const updatedThemeMaps = this.themeMaps.map(map => {
           if (map.id === themeMapId) {
             return { ...map, isInFavorites: true };
@@ -108,7 +167,8 @@ console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
         console.error("즐겨찾기 추가 중 오류 발생:", error);
       }
     },
-// themeMapId가 현재 사용자의 즐겨찾기 목록에 있는지 확인
+
+    // themeMapId가 현재 사용자의 즐겨찾기 목록에 있는지 확인
     isInFavorites(themeMapId) {
       return this.themeMaps.some(map => map.id === themeMapId && map.isInFavorites);
     },

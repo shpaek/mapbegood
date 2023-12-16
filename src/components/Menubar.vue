@@ -75,7 +75,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="Map"
           >
@@ -95,7 +95,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="othersthememap"
           >
@@ -115,7 +115,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="thememap"
           >
@@ -135,7 +135,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="FavoriteList"
           >
@@ -155,7 +155,7 @@
             class="bi pe-none"
             width="24"
             height="24"
-            style="margin: 5;"
+            style="margin: 5"
             role="img"
             aria-label="group"
           >
@@ -172,8 +172,13 @@
               @click.prevent="toggleDropdown"
               class="d-flex align-items-center justify-content-center p-3 link-body-emphasis text-decoration-none dropdown-toggle"
             >
+              <!-- :src="profileImage ? profileImage : '/images/avatar.png'" -->
               <img
-                :src="profileImage ? profileImage : '/images/avatar.png'"
+                :src="
+                  profileImage
+                    ? profileImage
+                    : 'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/profile-image/default-profile.jpg'
+                "
                 alt="icon"
                 width="30"
                 height="30"
@@ -181,9 +186,144 @@
               />
             </a>
             <ul class="dropdown-menu text-small shadow dropdown-menu-end">
-              <li><a @click="profileClickHandler" class="dropdown-item" href="#">프로필</a></li>
+              <li>
+                <v-dialog v-model="modifyMyInfoDialog" persistent width="500">
+                  <template v-slot:activator="{ props }">
+                    <!-- @click="profileClickHandler" -->
+                    <a class="dropdown-item" v-bind="props" href="#"
+                      >내 정보 수정</a
+                    >
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <img
+                        src="../../public/images/modify_userInfo.png"
+                        alt="mapbegood"
+                        style="width: 200px"
+                      />
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <div class="modify-profile" style="padding-left: 160px">
+                          <v-file-input
+                            label="File input"
+                            accept="image/*"
+                            v-show="false"
+                            ref="fileInput"
+                            @change="uploadProfileImageHandler"
+                          ></v-file-input>
+
+                          <a href="javascript:void(0)">
+                            <v-avatar
+                              :image="displayImage"
+                              size="100"
+                              @click="clickProfileImageHandler"
+                            ></v-avatar>
+                          </a>
+                        </div>
+
+                        <v-text-field
+                          v-model="userInfo.email"
+                          color="primary"
+                          label="Email"
+                          variant="underlined"
+                          disabled
+                        ></v-text-field>
+
+                        <v-btn
+                          v-show="!showUpdatePassword && userInfo.status == 1"
+                          size="small"
+                          color="blue-darken-1"
+                          variant="tonal"
+                          @click="showUpdatePassword = true"
+                          style="left: 277px"
+                        >
+                          비밀번호 변경하기
+                        </v-btn>
+
+                        <v-text-field
+                          v-show="showUpdatePassword"
+                          v-model="modifyPassword"
+                          :type="'password'"
+                          color="primary"
+                          label="Password"
+                          placeholder="Enter your password"
+                          variant="underlined"
+                          :rules="[rules.password]"
+                          ref="modifyPassword"
+                          style="text-align: right"
+                        ></v-text-field>
+
+                        <v-text-field
+                          v-show="showUpdatePassword"
+                          v-model="modifyPassword1"
+                          :type="'password'"
+                          color="primary"
+                          label="Password"
+                          placeholder="Enter your password"
+                          variant="underlined"
+                          :rules="[rules.passwordCheck]"
+                          ref="modifyPassword1"
+                          style="text-align: right"
+                        ></v-text-field>
+
+                        <v-text-field
+                          v-model="modifyNickName"
+                          color="primary"
+                          :label="originNicnName"
+                          variant="underlined"
+                          ref="modifyNickName"
+                          @keyup="editNicknameHandler"
+                        ></v-text-field>
+
+                        <v-btn
+                          v-show="!nickduplication"
+                          :disabled="
+                            modifyNickName == null || modifyNickName.length < 1
+                          "
+                          size="small"
+                          color="blue-darken-1"
+                          variant="tonal"
+                          @click="nickNameDuplicationHandler"
+                          style="left: 290px"
+                        >
+                          닉네임 중복확인
+                        </v-btn>
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue-darken-1"
+                        @click="updateMyInfoHandler"
+                        :disabled="
+                          modifyProfileImage == null &&
+                          modifyPassword == null &&
+                          modifyPassword1 == null &&
+                          !nickduplication
+                        "
+                      >
+                        변경하기
+                      </v-btn>
+                      <v-btn
+                        color="blue-darken-1"
+                        @click="closeModifyMyInfoHandler"
+                      >
+                        취소
+                      </v-btn>
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                    <br />
+                  </v-card>
+                </v-dialog>
+                <!-- =========================================================== -->
+              </li>
               <!-- <li><hr class="dropdown-divider" /></li> -->
-              <li><a @click="logoutClickHandler" class="dropdown-item" href="#">로그아웃</a></li>
+              <li>
+                <a @click="logoutClickHandler" class="dropdown-item" href="#"
+                  >로그아웃</a
+                >
+              </li>
             </ul>
           </div>
         </div>
@@ -191,55 +331,62 @@
     </main>
   </div>
 </template>
-
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Menubar",
   data() {
     return {
-      email: "",
-      nickname: "",
-      profileImage: ""
+      profileImage: "",
+      displayImage: "",
+      modifyProfileImage: null,
+      modifyMyInfoDialog: false,
+
+      showUpdatePassword: false,
+      modifyPassword: null,
+      modifyPassword1: null,
+
+      nickduplication: false,
+      originNicnName: "",
+      modifyNickName: null,
+
+      rules: {
+        password: (value) => {
+          if (value != null) {
+            const pattern =
+              /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/;
+            return (
+              pattern.test(value) || "영문, 숫자, 특수기호 조합 8자리 이상."
+            );
+          }
+        },
+        passwordCheck: (value) => {
+          if (value == this.modifyPassword) return true;
+          return "Incorrect Password";
+        },
+      },
     };
   },
+  computed: {
+    ...mapActions(["logOut"]),
+    ...mapState(["userInfo"]),
+  },
+  async beforeCreate() {
+    await this.$store.dispatch("getUserInfo");
+    this.profileImage = this.userInfo.profileImage;
+    this.displayImage = this.userInfo.profileImage;
+    this.originNicnName = this.userInfo.nickName;
+  },
   methods: {
-    logoClickHandler() {
-      //로고img객체 클릭이벤트
-      location.href = "/";
-    },
     logoutClickHandler() {
-      //로그아웃 클릭이벤트
-      const url = `${this.backURL}/refresh`;
-
-      axios.defaults.headers.common["Authorization"] =
-        localStorage.getItem("mapbegoodToken");
-
-      axios.defaults.headers.common["Refresh"] =
-        "Bearer " + localStorage.getItem("refresh");
-
-      axios
-        .delete(url, { withCredentials: true })
-        .then((response) => {
-          delete axios.defaults.headers.common["Authorization"];
-          delete axios.defaults.headers.common["Refresh"];
-
-          localStorage.removeItem("mapbegoodToken");
-          localStorage.removeItem("refresh");
-
-          console.log(response.data);
-          alert("로그아웃 되었습니다.");
-          location.href = "/";
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error.message);
-        });
+      if (confirm("로그아웃 하겠습니까?") == true) {
+        this.logOut;
+        location.href = "/";
+      }
     },
-    profileClickHandler(){
-      this.$router.push("/nickchange");
-    },
+
     toggleDropdown() {
       const dropdown = this.$refs.profileDropdown;
 
@@ -254,26 +401,123 @@ export default {
         }
       }
     },
-    getLoginInfo() {
-      axios.get("/login-info")
-        .then(response => {
-          const { email, nickname, profileImage } = response.data;
-          this.email = email;
-          this.nickname = nickname;
-          this.profileImage = profileImage;
+
+    closeModifyMyInfoHandler() {
+      this.modifyMyInfoDialog = false;
+      this.displayImage = this.profileImage;
+      this.modifyProfileImage = null;
+
+      this.showUpdatePassword = false;
+      this.modifyPassword = null;
+      this.modifyPassword1 = null;
+
+      this.nickduplication = false;
+      this.modifyNickName = null;
+    },
+
+    clickProfileImageHandler() {
+      this.$refs.fileInput.click();
+    },
+
+    uploadProfileImageHandler(e) {
+      if (e != null && e.target.files[0].type.indexOf("image") < 0) {
+        alert("이미지 파일만 업로드 가능합니다.");
+        return;
+      }
+      this.modifyProfileImage = e.target.files[0];
+      this.displayImage = window.URL.createObjectURL(this.modifyProfileImage);
+    },
+
+    editNicknameHandler() {
+      this.nickduplication = false;
+    },
+
+    nickNameDuplicationHandler() {
+      if (this.modifyNickName == "") {
+        alert("닉네임을 입력하세요.");
+        this.$refs.modifyNickName.focus();
+        return;
+      }
+
+      const params = {
+        nickName: this.modifyNickName,
+      };
+
+      axios
+        .get(`${this.backURL}/name`, { params })
+        .then((res) => {
+          alert(res.data.message);
+          this.nickduplication = true;
         })
-        .catch(error => {
-          console.error("Error fetching login info:", error);
+        .catch((err) => {
+          alert(err.response.data.message);
+          this.$refs.modifyNickName.focus();
         });
     },
-  },
-  created() {
-    this.getLoginInfo();
+
+    updateMyInfoHandler() {
+      if (this.modifyPassword != null || this.modifyPassword1 != null) {
+        if (this.rules.password(this.modifyPassword) != true) {
+          alert("비밀번호 규칙에 맞지 않습니다.");
+          this.$refs.modifyPassword.select();
+          return;
+        } else if (this.modifyPassword != this.modifyPassword1) {
+          alert("비밀번호가 다릅니다.");
+          this.$refs.modifyPassword.select();
+          return;
+        }
+      }
+      if (this.modifyNickName != null && this.nickduplication != true) {
+        alert("닉네임 중복확인이 필요합니다.");
+        this.$refs.modifyNickName.focus();
+        return;
+      } else if (this.modifyProfileImage != null) {
+        if (this.modifyProfileImage.type.indexOf("image") < 0) {
+          alert("이미지 파일만 업로드 가능합니다.");
+          return;
+        }
+      }
+      console.log(this.modifyNickName != null);
+      console.log(this.nickduplication != true);
+
+      const updateUser = {
+        password: this.modifyPassword,
+        nickname: this.modifyNickName,
+      };
+
+      const blobUpdateUser = new Blob([JSON.stringify(updateUser)], {
+        type: "application/json",
+      });
+
+      let formData = new FormData();
+      formData.append("memberUpdateDto", blobUpdateUser);
+      formData.append("updateProfileImage", this.modifyProfileImage);
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + localStorage.getItem("mapbegoodToken"),
+        },
+      };
+
+      axios
+        .put(`${this.backURL}/update-myinfo`, formData, config)
+        .then((res) => {
+          alert(res.data.message);
+          this.closeModifyMyInfoHandler();
+          location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err.response.data.message);
+          this.closeModifyMyInfoHandler();
+        });
+    },
   },
 };
 </script>
 <script setup>
-import * as bootstrap from 'bootstrap';
+import * as bootstrap from "bootstrap";
 // 툴팁 초기화 스크립트 코드를 여기에 둡니다.
 var tooltipTriggerList = [].slice.call(
   document.querySelectorAll('[data-bs-toggle="tooltip"]')
