@@ -318,7 +318,6 @@
       </div>
     </main>
   </div>
-  {{ userInfo }}
 </template>
 
 <script>
