@@ -145,7 +145,7 @@
   
   <style scoped>
   /* 기존 스타일 */
-  
+
   h2 {
     color: #600;
     font-size: 1.5rem;
@@ -173,16 +173,12 @@
     border-radius: 8px; /* Border radius for rounded corners */
     cursor: pointer;
     transition: background-color 0.3s ease; /* Add a smooth transition effect */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Set a higher z-index to ensure it's above other elements */
   }
-  ul.elevated-list {
-  list-style-type: none;
-  padding: 0;
-  border: 2px solid #4e4e52;
-  border-radius: 10px;
-  margin: 20px 0;
-  background-color: #f8f9fa; /* Background color for the ul element */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
-}
+
   .sticker-btn:hover {
     background-color: #e2e6e8; /* Change background color on hover */
   }
@@ -190,6 +186,16 @@
   button {
     margin-right: 10px;
     margin-bottom: 0;
+  }
+
+  ul.elevated-list {
+    list-style-type: none;
+    padding: 0;
+    border: 2px solid #4e4e52;
+    border-radius: 10px;
+    margin: 20px 0;
+    background-color: #f8f9fa; /* Background color for the ul element */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
   }
 
   ul {
@@ -229,7 +235,6 @@
   }
 
   .content {
-    margin-left: 200px;
+    margin-left: 100px;
   }
 </style>
-  
