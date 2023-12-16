@@ -24,9 +24,7 @@ import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
 import ThememapCreate from "../pages/ThememapCreate.vue"; // 테마맵 추가
 import ThememapUpdate from "../pages/ThemeMapUpdate.vue"; //테마맵 수정
-
 import ThememapDetail from "../pages/ThemeMapDetail.vue"; //테마맵 Id로 조회
-
 import GroupWaiting from "../pages/GroupWaiting.vue";
 import AddGroupmap from "../pages/AddGroupmap.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가

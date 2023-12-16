@@ -78,16 +78,28 @@
   <div class="m-part">
         <Detailmap />
   </div>
+  <div class="modal-container">
+    <!-- 모달창 -->
+    <SearchMember
+      :isModalOpen="isModalOpen"
+      :groupId="groupId"
+      @close-modal="closeModal"
+    />
+  </div>
 </div>
 </template>
 <script>
 import axios from 'axios';
 import { mapState, mapActions } from "vuex";
 import Detailmap from './Detailmap.vue';
+import GroupImageChange from './groupImageChange.vue';
+import GroupNameChange from './GroupNameChange.vue';
 export default {
   name: "GroupDetail",
   components: {
     Detailmap,
+    GroupImageChange,
+    GroupNameChange,
   },
   computed: {
     ...mapState(["userInfo", "isLogin"]),
@@ -105,6 +117,9 @@ export default {
       groupThememaps: [],
       groupMemo: '',
       isleader: false,
+      isImageChangeOpen: false,
+      isNameChangeOpen: false,
+      isGroupMemberOpen: false,
     };
   },
   async created() {
@@ -143,24 +158,24 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     updateImageClickHandler() {
-      this.$router.push({
-        name: '/groupimage',
-        params: {
-          groupId: this.groupId,
-          groupName: this.groupName,
-          leaderNickname: this.leaderNickname
-        }
-      });
+      // this.$router.push({
+      //   name: '/groupimage',
+      //   params: {
+      //     groupId: this.groupId,
+      //     groupName: this.groupName,
+      //     leaderNickname: this.leaderNickname
+      //   }
+      // });
     },
     updateNameClickHandler() {
-      this.$router.push({
-        name: '/groupname',
-        params: {
-          groupId: this.groupId,
-          groupName: this.groupName,
-          leaderNickname: this.leaderNickname
-        }
-      });
+      // this.$router.push({
+      //   name: '/groupname',
+      //   params: {
+      //     groupId: this.groupId,
+      //     groupName: this.groupName,
+      //     leaderNickname: this.leaderNickname
+      //   }
+      // });
     },
     deleteGroupClickHandler() {
       const url = `${this.backURL}/group/${this.groupId}`
@@ -301,7 +316,7 @@ div.group-thememap-list>div.new-thememap>span{
 }
 
 div.group-thememap-list>ul.list-group>li{
-  margin-top: 10px;
+  margin-top: 15px;
 }
 div.group-thememap-list>ul.list-group>li:hover{
   background-color: rgba(0, 112, 192, 0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
