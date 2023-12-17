@@ -173,7 +173,7 @@ public class GroupThemeMapService {
 //	  }
  
 	  // 그룹 테마지도 엔터티를 DTO로 변환
-	    private GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
+	   public GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
 	        return GroupThememapDTO.builder()
 	                .id(groupThememap.getId())
 	                .groupId(groupThememap.getGroupId().getId())
@@ -185,7 +185,7 @@ public class GroupThemeMapService {
 	    }
 
 	    // 그룹 테마지도 DTO를 엔터티로 변환 
-	    private GroupThememap mapGroupThememapDTOToEntity(GroupThememapDTO groupThememapDTO) {
+	    public GroupThememap mapGroupThememapDTOToEntity(GroupThememapDTO groupThememapDTO) {
 	    	Groups group = new Groups();
 	    	group.setId(groupThememapDTO.getGroupId());
 	        GroupThememap groupThememap = new GroupThememap();

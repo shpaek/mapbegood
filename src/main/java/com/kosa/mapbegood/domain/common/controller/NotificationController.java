@@ -29,7 +29,7 @@ public class NotificationController {
 //    	String email = authenticationUtil.getUserEmail(authentication);
 //        return notificationService.subscribe(email);
 //    }
-//a
+// 
 //    @PostMapping("/send-data")
 //    public void sendData(Authentication authentication) {
 //    	String email = authenticationUtil.getUserEmail(authentication);
@@ -42,12 +42,13 @@ public class NotificationController {
 //    	notificationService.get
         return notificationService.subscribe(email);
     }
+   
     //2.그룹초대메세지,보내는 처리,알림메시지가 가는 controller
     @GetMapping("/send/{email}/{data}")
     public void sendData(@PathVariable String email, @PathVariable String data) {
     	System.out.println(email + ":" + data);
     	notificationService.notify(email,data);
     }
-   
+    //3. 
     
 }
