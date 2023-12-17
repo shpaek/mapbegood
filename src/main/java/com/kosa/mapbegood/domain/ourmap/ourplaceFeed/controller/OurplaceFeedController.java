@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
-import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.service.MemberGroupService;
 import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
-import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.dto.OurplaceFeedDTO;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.entity.OurplaceFeedEmbedded;
 import com.kosa.mapbegood.domain.ourmap.ourplaceFeed.service.OurplaceFeedService;
@@ -133,8 +131,8 @@ public class OurplaceFeedController {
 		}
     }
 
-    //DELETE	/ourfeed/{groupId}/{ourplaceId}/{memberNickname}
-    @DeleteMapping("/{groupId}/{ourplaceId}/{memberNickname}")
+    //DELETE	/ourfeed/{groupId}/{ourplaceId}/{memberEmail}
+    @DeleteMapping("/{groupId}/{ourplaceId}/{memberEmail}")
     public ResponseEntity<?> delete(Authentication authentication, @PathVariable Long ourplaceId) throws RemoveException, FindException {
         String email = authenticationUtil.getUserEmail(authentication);
         OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
