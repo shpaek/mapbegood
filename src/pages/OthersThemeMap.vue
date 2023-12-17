@@ -89,11 +89,11 @@ export default {
     // console.log("이메일:", this.userInfo.email);
     // });
     // console.log("OthersThemeMap 에서 호출");
-    // this.$store.dispatch("getUserInfo").then(() => {
-    //   //구독 메서드 호출
-    //   this.checkNotifications();
-    // });
-    this.checkNotifications();
+    this.$store.dispatch("getUserInfo").then(() => {
+      //구독 메서드 호출
+      this.checkNotifications();
+    });
+    // this.checkNotifications();
   },
 
   data() {
