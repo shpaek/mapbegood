@@ -1,48 +1,44 @@
 <template lang="">
-    <form class="groupcreate" @submit.prevent="groupcreateFormSubmitHandler">
-        <!-- 그룹 생성입니다 -->
-        <h2>새 그룹 생성</h2>
-        <div class="fill">
-            <div class="img">
-                <label for="i">그룹 이미지 선택</label>
-                <br>
-                <img class="img" :src="image" alt="그룹이미지">
-                <br>
-                <input type="file" name="image" id="i" required
-                @change="imageChangeHandler"/>
-                <div v-if="fileErrorMsg">{{ fileErrorMsg }}</div>
-            </div>
-            <hr>
-            <label for="n">그룹명</label>&nbsp;
-            <input type="text" name="name" id="n" v-model="name" maxlength="20"
-                   placeholder="20자 이내로 입력하세요" required/>
-            <br>
-            <button type="button" id="b3" @click="b3ClickHandler">중복 확인</button>
-            <!-- <label for="m">멤버 초대</label>&nbsp;
-            <button>검색</button>
-            <br>
-            <label for="ms">초대할 멤버</label>&nbsp;
-            <span>초대할 멤버 목록</span> <br> -->
-            <!-- 원래는 미리 초대할 멤버를 정하기로 했는데 그러면 groupid생성 전이라 waiting에 추가하기 복잡해져서
-                 그룹을 만들고 수정할 때 바꾸도록 하는 게 나을 듯 -->
-        </div>
-        <div class="button-container">
-            <button type="submit" class="create" id="b1" v-show="isDupchkOk">그룹 생성</button>&nbsp;&nbsp;&nbsp;
-            <button type="button" class="cancel" id="b2" @click="b2ClickHandler">생성 취소</button>
-        </div>
-    </form>
+    <div v-show="isCreateOpen" class="modal" @click="backClickHandler">
+        <v-sheet :elevation="18" :height="500" :width="400" rounded @click.stop>
+            <form class="groupcreate" @submit.prevent="groupcreateFormSubmitHandler">
+                <div class="space"><span>새 그룹 생성</span></div>
+                <div class="fill">
+                    <div class="img">
+                        <img class="img" :src="image" alt="그룹이미지">
+                        <br>
+                        <input type="file" name="image" id="i" required
+                              @change="imageChangeHandler"/>
+                        <div class="errorMsg" v-show="fileErrorMsg.length>1"><span>{{ fileErrorMsg }}</span></div>
+                    </div>
+                    <br>
+                    <div class="groupName" v-show="fileErrorMsg.length<1">
+                        <label for="n">그룹명</label>&nbsp;
+                        <input type="text" name="name" id="n" v-model="name" maxlength="20"
+                            placeholder="20자 이내로 입력하세요" required/>
+                        <button type="button" class="btn btn-outline-dark" id="b3" @click="b3ClickHandler">중복확인</button>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button type="button" class="cancel" id="b2" @click="b2ClickHandler">생성 취소</button>
+                    <button type="submit" class="create" id="b1" v-show="isDupchkOk">그룹 생성</button>
+                </div>
+            </form>
+        </v-sheet>
+    </div>
 </template>
 <script>
 import axios from 'axios';
 export default {
     name: "GroupCreate",
+    props:{
+        isCreateOpen: Boolean,
+    },
     data() {
         return {
             image: '../../../public/images/defaultGroupProfile.jpg',
             name: '',
-            // memberlist: [],  
-            // member: '',
-            fileErrorMsg: null,
+            fileErrorMsg: '',
             isDupchkOk: false,
         }
     },
@@ -88,7 +84,7 @@ export default {
             }
 
             // 유효성 검사를 통과한 경우
-            this.fileErrorMsg = null;
+            this.fileErrorMsg = '';
         },
         b2ClickHandler() { //생성 취소 버튼 클릭 시
             alert("그룹 생성을 취소합니다")
@@ -114,35 +110,69 @@ export default {
 }
 </script>
 <style scoped>
-div.fill {
-    margin-top: 100px;
-    margin-bottom: 100px;
-    margin-left: 100px;
-    border: 1px solid lightgrey;
-    padding: 25px;
-    width: 500px;
+*{
+  font-family: 'Noto Sans KR', sans-serif;
 }
-
-div.fill>label {
-    font-size: 15px;
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
 }
-
-div.fill>div.img>label {
-    font-size: 15px;
+div.space{
+    display: flex;
 }
-
+div.errorMsg{
+    display: flex;
+}
+div.errorMsg>span{
+    margin-left: auto;
+    margin-right: auto;
+    color:red;
+}
+div.space>span{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom:40px;
+    font-size: 18px;
+    font-weight: bold;
+}
 div.fill>div.img>img.img {
-    /* 화면에서 보여줄 사이즈로 조정 */
+    display:flex;
+    margin-left: auto;
+    margin-right:auto;
     max-width: 200px;
     max-height: 200px;
     min-height: 200px;
     min-width: 200px;
-    
 }
-
-div.button-container {
-    /* display: flex;
-    justify-content: center; */
-    margin-left: 235px;
+div.fill>div.img>input{
+    margin-left: 25px;
+}
+div.fill>div.groupName>label{
+    padding-left: 25px;
+}
+div.fill>div.groupName>button{
+    padding:0;
+    margin-left:10px;
+    width:80px;
+}
+div.button-container{
+    display: flex;
+    margin-top:50px;
+}
+div.button-container>button{
+    margin-left: auto;
+    margin-right:auto;
+}
+div.button-container>button:hover{
+    font-weight: bold;
 }
 </style>

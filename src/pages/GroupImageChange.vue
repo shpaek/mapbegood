@@ -1,74 +1,30 @@
 <template lang="">
-  <form class="imagechange" @submit.prevent="imagechangeFormSubmitHandler">
-    <h2>그룹이미지 변경</h2>
-    <div class="fill">
-      <div class="before">
-        <ul class="before">
-          <li><label>기존 이미지:</label>&nbsp;</li>
-          <li>
-            <!-- <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+this.groupId+'_groupImage.jpg'" alt="기존이미지"> -->
-            <img
-              :src="
-                'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
-                this.groupId +
-                '_groupImage.jpg?' +
-                new Date().getTime()
-              "
-              alt="기존이미지"
-            />
-          </li>
-        </ul>
-      </div>
-      <div class="svg">
-        <!-- 화살표 -->
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="25"
-          height="25"
-          fill="currentColor"
-          class="bi bi-arrow-right"
-          viewBox="0 0 16 16"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-          />
-        </svg>
-      </div>
-      <div class="after">
-        <ul class="after">
-          <li class="for-gap"><label for="i">변경할 이미지:</label>&nbsp;</li>
-          <li>
-            <img class="img" :src="image" alt="변경할이미지" />
-          </li>
-          <li>
-            <input
-              type="file"
-              name="image"
-              id="i"
-              required
-              @change="imageChangeHandler"
-            />
-            <!-- <v-file-input label="변경할 이미지:"></v-file-input> -->
-          </li>
-          <li>
-            <div v-if="fileErrorMsg">{{ fileErrorMsg }}</div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <br />
-    <div class="button-container">
-      <button type="button" id="b1" @click="b1ClickHandler">돌아가기</button
-      >&nbsp;&nbsp;&nbsp;
-      <button type="submit" id="b2">변경하기</button>
-    </div>
-  </form>
+  <div v-show="isImageChangeOpen" class="modal" @click="backClickHandler">
+    <v-sheet :elevation="18" :height="500" :width="400" rounded @click.stop>
+      <form class="imagechange" @submit.prevent="imagechangeFormSubmitHandler">
+        <h2>그룹이미지 변경</h2>
+        <div class="fill">
+          <img class="img" :src="image" alt="변경할이미지" />
+          <input type="file" name="image" id="i"
+            required @change="imageChangeHandler" />
+          <div class="errorMsg" v-show="fileErrorMsg">{{ fileErrorMsg }}</div>
+        </div>
+        <div class="button-container">
+          <button type="button" id="b1" @click="b1ClickHandler">돌아가기</button>
+          <button type="submit" id="b2">변경하기</button>
+        </div>
+      </form>
+    </v-sheet>
+  </div>
 </template>
 <script>
 import axios from "axios";
 export default {
   name: "GroupImageChange",
+  props:{
+    isImageChangeOpen: Boolean,
+    groupId: Number,
+  },
   data() {
     return {
       groupId: 0,
@@ -160,10 +116,21 @@ export default {
 };
 </script>
 <style scoped>
-div.fill {
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+/* div.fill {
   display: flex;
   align-items: center;
-  /* 세로 방향 가운데 정렬 추가 */
   margin-top: 100px;
   border: 1px solid lightgray;
   width: 730px;
@@ -178,7 +145,6 @@ div.button-container {
   margin-top: 100px;
 }
 img {
-  /* 화면에서 보여줄 사이즈로 조정 */
   max-width: 150px;
   max-height: 150px;
   min-height: 150px;
@@ -197,5 +163,5 @@ ul.after {
 
 .svg {
   margin-left: 100px;
-}
+} */
 </style>
