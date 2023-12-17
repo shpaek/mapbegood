@@ -1,32 +1,40 @@
 <template lang="">
-    <form class="namechange" @submit.prevent="namechageFromSubmitHandler">
-        <h2>그룹명 변경</h2>
-        <div class="fill">
-            <ul>
-                <li class="before">
-                    <label for=bn>기존 그룹명:</label>&nbsp;
-                    <span id="bn">{{groupName}}</span>
-                </li>
-                <li class="after">
-                    <label for="an">변경할 그룹명:</label>&nbsp;
-                    <input type="text" name="name" id="an" v-model="name" maxlength="20"
-                           placeholder="20자 이내로 입력하세요" required
-                           @focus="inputPocusHandler" />&nbsp;&nbsp;&nbsp;
-                    <button type="button" id="b1" @click="b1ClickHandler">중복 확인</button>
-                </li>
-            </ul>
-        </div>
-        <br>
-        <div class="button-container">
-            <button type="button" id="b3" @click="b3ClickHandler">돌아가기</button>&nbsp;&nbsp;&nbsp;
-            <button type="submit" id="b2" v-show="isDupchkOk">변경하기</button>
-        </div>
-    </form>
+    <div v-show="isNameChangeOpen" class="modal" @click="backClickHandler">
+        <v-sheet :elevation="18" :height="400" :width="550" rounded @click.stop>
+            <form class="namechange" @submit.prevent="namechageFromSubmitHandler">
+                <h2>그룹명 변경</h2>
+                <div class="fill">
+                    <ul>
+                        <li class="before">
+                            <label for=bn>기존 그룹명:</label>&nbsp;
+                            <span id="bn">{{groupName}}</span>
+                        </li>
+                        <li class="after">
+                            <label for="an">변경할 그룹명:</label>&nbsp;
+                            <input type="text" name="name" id="an" v-model="name" maxlength="20"
+                                placeholder="20자 이내로 입력하세요" required
+                                @focus="inputPocusHandler" />&nbsp;&nbsp;&nbsp;
+                            <button type="button" id="b1" @click="b1ClickHandler">중복 확인</button>
+                        </li>
+                    </ul>
+                </div>
+                <br>
+                <div class="button-container">
+                    <button type="button" id="b3" @click="b3ClickHandler">돌아가기</button>&nbsp;&nbsp;&nbsp;
+                    <button type="submit" id="b2" v-show="isDupchkOk">변경하기</button>
+                </div>
+            </form>
+        </v-sheet>
+    </div>
 </template>
 <script>
 import axios from 'axios';
 export default {
     name: 'GroupNameChange',
+    props:{
+    isNameChangeOpen: Boolean,
+    groupId: Number,
+    },
     data() {
         return {
             name: '',
@@ -101,10 +109,21 @@ export default {
 }
 </script>
 <style scoped>
-div.fill {
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+/* div.fill {
     display: flex;
     align-items: center;
-    /* 세로 방향 가운데 정렬 추가 */
     margin-top: 100px;
     border: 1px solid lightgray;
     width: 600px;
@@ -122,5 +141,5 @@ div.button-container {
     display: flex;
     justify-content: center;
     margin-top: 100px;
-}
+} */
 </style>
