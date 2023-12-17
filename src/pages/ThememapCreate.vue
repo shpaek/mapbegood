@@ -83,12 +83,9 @@
          // Thememap.vue로 자동으로 이동
         this.$router.push({ name: 'FavoriteList' });
     })
-
-        
-
         .catch(error => {
-          console.error(error);
-          alert("thememap 생성에 실패했습니다.다시 시도하세요.")
+          // console.error(error);
+          // alert(error);
         });
     },
   },
@@ -97,5 +94,5 @@
   
   <style scoped>
   /* Additional styles go here */
-  font-family: 'Open+Sans', sans-serif;
+  /* font-family : 'Open+Sans', sans-serif; */
 </style>
