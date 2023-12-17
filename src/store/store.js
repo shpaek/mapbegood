@@ -42,7 +42,6 @@ export default createStore({
           this.state.loading = false;
           alert("로그인 성공");
           location.href = "/";
-          
         })
         .catch(() => {
           this.state.loading = false;
@@ -55,7 +54,7 @@ export default createStore({
     },
     async getUserInfo({ commit, dispatch }) {
       let isToken = localStorage.getItem("mapbegoodToken");
-
+      console.log("getUserInfo 호출");
       if (isToken != null) {
         let config = {
           headers: {
@@ -63,32 +62,52 @@ export default createStore({
           },
         };
 
+        // try {
+        //   const res = await axios.get(
+        //     "http://localhost:8080/login-info",
+        //     config,
+        //     {
+        //       withCredentials: true,
+        //     }
+        //   );
+
+        //   if (res.data.message == "The token has expired.") {
+        //     this.dispatch("getTokenRefresh");
+        //   }
+
+        //   let userInfo = {
+        //     email: res.data.email,
+        //     nickName: res.data.nickName,
+        //     profileImage: res.data.profileImage,
+        //     status: res.data.status,
+        //   };
+
+        //   this.commit("loginSuccess", userInfo);
+
         try {
-          const res = await axios.get(
-            "http://localhost:8080/login-info",
-            config,
-            {
+          await axios
+            .get("http://localhost:8080/login-info", config, {
               withCredentials: true,
-            }
-          );
+            })
+            .then((res) => {
+              if (res.data.message == "The token has expired.") {
+                this.dispatch("getTokenRefresh");
+              }
 
-          if (res.data.message == "The token has expired.") {
-            this.dispatch("getTokenRefresh");
-          }
+              let userInfo = {
+                email: res.data.email,
+                nickName: res.data.nickName,
+                profileImage: res.data.profileImage,
+                status: res.data.status,
+              };
 
-          let userInfo = {
-            email: res.data.email,
-            nickName: res.data.nickName,
-            profileImage: res.data.profileImage,
-            status: res.data.status,
-          };
-
-          this.commit("loginSuccess", userInfo);
+              this.commit("loginSuccess", userInfo);
+            });
         } catch (error) {
           console.log(error);
         }
       } else {
-        this.commit("logOut");
+        this.dispatch("logOut");
       }
     },
     getTokenRefresh() {
@@ -104,8 +123,8 @@ export default createStore({
           location.reload();
         })
         .catch(() => {
-          this.commit("logOut");
-          location.href = "/ ";
+          this.dispatch("logOut");
+          // location.href = "/ ";
         });
     },
   },
