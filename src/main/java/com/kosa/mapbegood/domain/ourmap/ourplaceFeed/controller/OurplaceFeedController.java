@@ -109,7 +109,7 @@ public class OurplaceFeedController {
             service.createOurFeed(feedDto);
 
             return ResponseEntity.ok("작성완료");
-        } catch (AddException e) {
+        } catch (Exception e) {
         	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작성 실패: " + e.getMessage());
         }
     }
@@ -118,12 +118,11 @@ public class OurplaceFeedController {
     //PUT	/ourfeed/{groupId}/{ourplaceId}/{memberEmail}
     @PutMapping(value = "/{groupId}/{ourplaceId}/{memberEmail}", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> update(Authentication authentication, @RequestBody OurplaceFeedDTO feedDto) throws ModifyException, FindException {
-        String email = authenticationUtil.getUserEmail(authentication);
-        MemberDTO member = new MemberDTO();
-        member.setEmail(email);
-        feedDto.setMemberEmail(member);
-
 		try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            MemberDTO member = new MemberDTO();
+            member.setEmail(email);
+            feedDto.setMemberEmail(member);
 	        service.updateOurFeed(feedDto);
 			return ResponseEntity.ok("수정 완료");
 		} catch (Exception e) {
@@ -134,10 +133,9 @@ public class OurplaceFeedController {
     //DELETE	/ourfeed/{groupId}/{ourplaceId}/{memberEmail}
     @DeleteMapping("/{groupId}/{ourplaceId}/{memberEmail}")
     public ResponseEntity<?> delete(Authentication authentication, @PathVariable Long ourplaceId) throws RemoveException, FindException {
-        String email = authenticationUtil.getUserEmail(authentication);
-        OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
-
 		try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            OurplaceFeedDTO feedDto = setOurfeedEmId(ourplaceId, email);
 	        service.deleteOurFeed(service.getOurFeedEmId(feedDto));
 			return ResponseEntity.ok("삭제 완료");
 		} catch (Exception e) {

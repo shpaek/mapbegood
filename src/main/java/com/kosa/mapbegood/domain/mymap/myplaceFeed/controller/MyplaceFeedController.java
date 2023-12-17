@@ -63,7 +63,7 @@ public class MyplaceFeedController {
 			service.createMyFeed(feedDto);
 
 			return ResponseEntity.ok("작성완료");
-		} catch (AddException e) {
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("작성 실패: " + e.getMessage());
 		}
 	}

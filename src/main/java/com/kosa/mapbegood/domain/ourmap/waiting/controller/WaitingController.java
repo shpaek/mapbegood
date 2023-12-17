@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.ourmap.waiting.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +53,14 @@ public class WaitingController {
 	
 	//사용자를 초대한 그룹 조회
 	@GetMapping(value="", produces="application/json;charset=UTF-8")
-	public List<GroupsDTO> findAllWaitingsByMemberEmail(Authentication authentication) throws FindException{
-		String email = authenticationUtil.getUserEmail(authentication);
-		log.error("email={}", email);
-		return ws.findAllWaitingsByMemberEmail(email);
+	public List<GroupsDTO> findAllWaitingsByMemberEmail(Authentication authentication) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			log.error("email={}", email);
+			return ws.findAllWaitingsByMemberEmail(email);
+		} catch (Exception e) {
+			return new ArrayList<>();
+		}
 	}
 	
 	/**
@@ -99,7 +104,7 @@ public class WaitingController {
 //			log.error("groupId={}, memberEmail={}", waitingDto.getGroupId(), waitingDto.getMemberEmail());
 			ws.deleteWaiting(waitingDto);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(RemoveException e) {
+		}catch(Exception e) {
 			log.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

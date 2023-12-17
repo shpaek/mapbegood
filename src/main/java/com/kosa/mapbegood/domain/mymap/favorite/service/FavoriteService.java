@@ -1,11 +1,10 @@
 package com.kosa.mapbegood.domain.mymap.favorite.service;
 
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,7 @@ import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 
+@Slf4j
 //@RequiredArgsConstructor
 @Service
 public class FavoriteService {
@@ -110,54 +110,58 @@ public class FavoriteService {
     /*
      * 멤버의 이메일과 thememap의 id를 사용해서 즐겨찾기에 추가한 것 조회.
      * **/
-    public List<FavoriteDto> getAllFavoritesForUser(String userEmail) {
+    public List<FavoriteDto> getAllFavoritesForUser(String userEmail) throws Exception {
         try {
             Member member = memberrepository.findByEmail(userEmail)
                     .orElseThrow(() -> new FindException("멤버를 찾을 수 없습니다."));
 
             List<Favorite> favorites = favoriteRepository.findByMemberEmail(member);
 
-            return favorites.stream()
-                    .map(this::mapFavoriteEntityToDto)
-                    .collect(Collectors.toList());
+            if (!Objects.isNull(favorites)) {
+                return favorites.stream()
+                        .map(this::mapFavoriteEntityToDto)
+                        .collect(Collectors.toList());
+            } else {
+                return new ArrayList<>();
+            }
         } catch (FindException e) {
-            e.printStackTrace();
-            // 필요에 따라 예외 처리
-            return Collections.emptyList();
+            log.error("getAllFavoritesForUser Error: " + e.getMessage());
+            new FindException();
+        }
+        return new ArrayList<>();
+    }
+    
+
+    private FavoriteDto mapFavoriteEntityToDto(Favorite favorite) {
+        FavoriteDto favoriteDto = new FavoriteDto();
+
+        // ThemeMap 엔터티를 DTO로 매핑하는 mapThemeMapEntityToDto 메서드가 있다고 가정합니다.
+        ThemeMapDto themeMapDto = mapThemeMapEntityToDto(favorite.getThememapId());
+
+        // FavoriteDto에 ThemeMapDto 설정
+        favoriteDto.setThemeMapDto(themeMapDto);
+
+        // 다른 속성 설정
+
+        return favoriteDto;
+    }
+
+    private ThemeMapDto mapThemeMapEntityToDto(ThemeMap themeMap) {
+        if (themeMap != null) {
+            ThemeMapDto themeMapDto = new ThemeMapDto();
+            // ThemeMapDto 반환될 값 설정
+            themeMapDto.setId(themeMap.getId());
+            themeMapDto.setName(themeMap.getName());//
+            themeMapDto.setMemo(themeMap.getMemo());
+            themeMapDto.setColor(themeMap.getColor());
+            themeMapDto.setMainmap(themeMap.getMainmap());
+            // 나머지 속성들도 필요에 따라 추가
+
+            return themeMapDto;
+        } else {
+            return null; // 혹은 빈 ThemeMapDto를 반환하거나, 예외 처리를 할 수 있습니다.
         }
     }
-    
-
-private FavoriteDto mapFavoriteEntityToDto(Favorite favorite) {
-    FavoriteDto favoriteDto = new FavoriteDto();
-    
-    // ThemeMap 엔터티를 DTO로 매핑하는 mapThemeMapEntityToDto 메서드가 있다고 가정합니다.
-    ThemeMapDto themeMapDto = mapThemeMapEntityToDto(favorite.getThememapId());
-
-    // FavoriteDto에 ThemeMapDto 설정
-    favoriteDto.setThemeMapDto(themeMapDto);
-    
-    // 다른 속성 설정
-    
-    return favoriteDto;
-}
-
-private ThemeMapDto mapThemeMapEntityToDto(ThemeMap themeMap) {
-    if (themeMap != null) {
-        ThemeMapDto themeMapDto = new ThemeMapDto();
-        // ThemeMapDto 반환될 값 설정 
-        themeMapDto.setId(themeMap.getId());
-        themeMapDto.setName(themeMap.getName());//
-        themeMapDto.setMemo(themeMap.getMemo());
-        themeMapDto.setColor(themeMap.getColor());
-        themeMapDto.setMainmap(themeMap.getMainmap());
-        // 나머지 속성들도 필요에 따라 추가
-
-        return themeMapDto;
-    } else {
-        return null; // 혹은 빈 ThemeMapDto를 반환하거나, 예외 처리를 할 수 있습니다.
-    }
-}
 }
  
 
