@@ -4,62 +4,13 @@
       <form class="imagechange" @submit.prevent="imagechangeFormSubmitHandler">
         <h2>그룹이미지 변경</h2>
         <div class="fill">
-          <div class="before">
-            <ul class="before">
-              <li><label>기존 이미지:</label>&nbsp;</li>
-              <li>
-                <img
-                  :src="
-                    'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
-                    this.groupId +
-                    '_groupImage.jpg?' +
-                    new Date().getTime()
-                  "
-                  alt="기존이미지"
-                />
-              </li>
-            </ul>
-          </div>
-          <div class="svg">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              fill="currentColor"
-              class="bi bi-arrow-right"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-              />
-            </svg>
-          </div>
-          <div class="after">
-            <ul class="after">
-              <li class="for-gap"><label for="i">변경할 이미지:</label>&nbsp;</li>
-              <li>
-                <img class="img" :src="image" alt="변경할이미지" />
-              </li>
-              <li>
-                <input
-                  type="file"
-                  name="image"
-                  id="i"
-                  required
-                  @change="imageChangeHandler"
-                />
-              </li>
-              <li>
-                <div v-if="fileErrorMsg">{{ fileErrorMsg }}</div>
-              </li>
-            </ul>
-          </div>
+          <img class="img" :src="image" alt="변경할이미지" />
+          <input type="file" name="image" id="i"
+            required @change="imageChangeHandler" />
+          <div class="errorMsg" v-show="fileErrorMsg">{{ fileErrorMsg }}</div>
         </div>
-        <br />
         <div class="button-container">
-          <button type="button" id="b1" @click="b1ClickHandler">돌아가기</button
-          >&nbsp;&nbsp;&nbsp;
+          <button type="button" id="b1" @click="b1ClickHandler">돌아가기</button>
           <button type="submit" id="b2">변경하기</button>
         </div>
       </form>
@@ -177,10 +128,9 @@ export default {
     align-items: center;
     z-index: 999;
 }
-div.fill {
+/* div.fill {
   display: flex;
   align-items: center;
-  /* 세로 방향 가운데 정렬 추가 */
   margin-top: 100px;
   border: 1px solid lightgray;
   width: 730px;
@@ -195,7 +145,6 @@ div.button-container {
   margin-top: 100px;
 }
 img {
-  /* 화면에서 보여줄 사이즈로 조정 */
   max-width: 150px;
   max-height: 150px;
   min-height: 150px;
@@ -214,5 +163,5 @@ ul.after {
 
 .svg {
   margin-left: 100px;
-}
+} */
 </style>

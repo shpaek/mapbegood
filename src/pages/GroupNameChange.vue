@@ -121,10 +121,9 @@ export default {
     align-items: center;
     z-index: 999;
 }
-div.fill {
+/* div.fill {
     display: flex;
     align-items: center;
-    /* 세로 방향 가운데 정렬 추가 */
     margin-top: 100px;
     border: 1px solid lightgray;
     width: 600px;
@@ -142,5 +141,5 @@ div.button-container {
     display: flex;
     justify-content: center;
     margin-top: 100px;
-}
+} */
 </style>
