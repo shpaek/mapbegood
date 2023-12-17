@@ -69,7 +69,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 			memberGroupDto.setMember(m);
 			mgs.createMemberGroup(memberGroupDto);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(AddException e) {
+		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -82,7 +82,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 			String email = authenticationUtil.getUserEmail(authentication);
 			mgs.deleteMemberGroup(memberGroupDto);
 			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(RemoveException e) {
+		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

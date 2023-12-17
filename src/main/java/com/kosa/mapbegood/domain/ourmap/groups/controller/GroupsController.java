@@ -1,6 +1,7 @@
 
 package com.kosa.mapbegood.domain.ourmap.groups.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -47,9 +48,13 @@ public class GroupsController {
 		//ㄴRequestBody로 보내야 응답결과를 json으로 반환이 가능함
 		//ㄴㄴRequestBody -> "memberEmail":"사용자의 이메일값"이라는 객체가 받아지기 때문에 Map<>으로 받음
 		//ㄴㄴㄴ따라서 메서드에 변수를 넣어줄 때 아래와 같이 넣어줘야함
-		String email = authenticationUtil.getUserEmail(authentication);
-		log.error("email={}", email);
-		return gs.findAllGroupsByMemberEmail(email);
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			log.error("email={}", email);
+			return gs.findAllGroupsByMemberEmail(email);
+		} catch (Exception e) {
+			return new ArrayList<>();
+		}
 	}
 	
 	//그룹생성
@@ -60,22 +65,22 @@ public class GroupsController {
 		//프론트에서 파일테이터를 back으로 보내면 formdata형태로 보내게 된다
 		//formdata를 받을때는 @RequestBody를 못쓰고(아니니까) 위의 메서드처럼 데이터를 하나씩 받아야 한다
 		MemberGroupDTO memberGroupDto = new MemberGroupDTO();
-		String email = authenticationUtil.getUserEmail(authentication);
-		log.error("email={}", email);
-		MemberDTO memberDto = new MemberDTO();
-		memberDto.setEmail(email); //토큰에서 받은 이메일로 멤버설정
-		memberGroupDto.setMember(memberDto); //그룹멤버로 멤버세팅
-		GroupsDTO groupDto = new GroupsDTO();
-		groupDto.setName(name); //그룹명을 그룹에 세팅
-		memberGroupDto.setGroups(groupDto); //그룹멤버에 그룹세팅
 		try{
-			if(image==null&&image.getSize()<0) {				
+			String email = authenticationUtil.getUserEmail(authentication);
+			log.error("email={}", email);
+			MemberDTO memberDto = new MemberDTO();
+			memberDto.setEmail(email); //토큰에서 받은 이메일로 멤버설정
+			memberGroupDto.setMember(memberDto); //그룹멤버로 멤버세팅
+			GroupsDTO groupDto = new GroupsDTO();
+			groupDto.setName(name); //그룹명을 그룹에 세팅
+			memberGroupDto.setGroups(groupDto); //그룹멤버에 그룹세팅
+			if(image==null&&image.getSize()<0) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
 			}else {
 				gs.createGroup(memberGroupDto, image); //그룹생성, 그룹멤버의 멤버로 그룹장 자동 추가			
 				return new ResponseEntity<>(HttpStatus.OK); //그룹생성성공			
 			}
-		}catch(AddException e) {
+		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //그룹생성실패
 		}
 	}
