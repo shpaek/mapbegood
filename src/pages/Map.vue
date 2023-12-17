@@ -4,7 +4,8 @@
     <Search
       @search-results="displayPlacesOnMap"
       @center-map="centerMap"
-      @place-selected="onPlaceSelected"
+      @place-selected="handlePlaceSelected"
+      :get-marker-image-url="getMarkerImageUrl"
     />
   </div>
 </template>
@@ -23,7 +24,6 @@ export default {
       infowindow: null,
       keywordInput: null,
       placesList: null,
-      pagination: null,
       selectedPlaces: [],
     };
   },
@@ -131,7 +131,7 @@ export default {
 
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
-        for (let i = 1; i < this.markers.length; i++) {
+        for (let i = 0; i < this.markers.length; i++) {
           this.markers[i].setMap(null);
         }
         this.markers = [];
@@ -144,71 +144,69 @@ export default {
     },
 
     displayPlacesOnMap(places) {
-      const bounds = new window.kakao.maps.LatLngBounds();
+  const bounds = new window.kakao.maps.LatLngBounds();
 
-      // 기존 마커 및 목록 제거
-      this.removeMarkers();
+  // 기존 마커 및 목록 제거
+  this.removeMarkers();
 
-      // 마커 생성 및 지도에 표시
-      places.forEach((place, index) => {
-        const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-        const marker = this.addMarker(placePosition, place, index);
-        marker.setMap(this.map);
+  // 마커 생성 및 지도에 표시
+  places.forEach((place, index) => {
+    const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+    const marker = this.addMarker(placePosition, place, index);
+    marker.setMap(this.map);
 
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          this.centerMap(placePosition);
-        });
+    window.kakao.maps.event.addListener(marker, "click", () => {
+      this.centerMap(placePosition);
+    });
 
-        bounds.extend(placePosition);
-      });
+    bounds.extend(placePosition);
+    console.log(
+      "Index:",
+      index,
+      "Place Index:",
+      (index % 15) + 1,
+      "Marker URL:",
+      this.getMarkerImageUrl(index)
+    );
+  });
 
-      // 지도의 중심 및 확대 레벨 설정
-      this.setMapBounds(bounds);
-    },
+  // 지도의 중심 및 확대 레벨 설정
+  this.setMapBounds(bounds);
+},
 
-    addMarker(position, place, index) {
-      const imageSize = new window.kakao.maps.Size(36, 37);
+addMarker(position, place, index) {
+  const imageSize = new window.kakao.maps.Size(36, 37);
 
-      if (!this.markers || !Array.isArray(this.markers)) {
-        this.markers = [];
-      }
+  if (!this.markers || !Array.isArray(this.markers)) {
+    this.markers = [];
+  }
 
-      if (place) {
-        const placeIndex = (index % 15) + 1;
-        // const placeIndex = index % 15;
-        const markerImage = new window.kakao.maps.MarkerImage(
-          `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
-          imageSize,
-          {
-            spriteSize: new window.kakao.maps.Size(36, 691),
-            spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
-            offset: new window.kakao.maps.Point(13, 37),
-          }
-        );
+  if (place) {
+    const markerImage = this.getMarkerImage(index);
+    const marker = new window.kakao.maps.Marker({
+      position: position,
+      image: markerImage,
+    });
 
-        const marker = new window.kakao.maps.Marker({
-          position: position,
-          image: markerImage,
-        });
+    this.markers.push(marker);
 
-        this.markers.push(marker);
+    // Custom code to handle marker click event
+    window.kakao.maps.event.addListener(marker, "click", () => {
+      // You can customize the behavior when a marker is clicked
+      console.log("Marker clicked:", place);
+      // For example, center the map on the clicked marker
+      this.centerMap(position);
+    });
 
-        // Custom code to handle marker click event
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          // You can customize the behavior when a marker is clicked
-          console.log("Marker clicked:", place);
-          // For example, center the map on the clicked marker
-          this.centerMap(position);
-        });
+    return marker;
+  }
+},
 
-        return marker;
-      }
-    },
+getMarkerImageUrl(index) {
+  const placeIndex = (index % 15) + 1;
+  return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+},
 
-    getMarkerImageUrl(index) {
-      const placeIndex = (index % 15) + 1;
-      return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-    },
 
     addBookmark(place) {
       const url = `${this.backURL}/place/${place.id}`;
@@ -226,14 +224,36 @@ export default {
     },
 
     onPlaceSelected({ place, index }) {
-  // Assuming you want to store the selected places
-  this.selectedPlaces.push(place);
+      // Assuming you want to store the selected places
+      this.selectedPlaces.push(place);
 
-  // Emit a custom event with the selected place, index, and marker image URL
-  const markerImage = this.getMarkerImageUrl(index);
-  this.$emit("place-selected", { place, index, markerImage });
-},
+      // Emit a custom event with the selected place, index, and marker image URL
+      const markerImage = this.getMarkerImageUrl(index);
+      this.$emit("place-selected", { place, index, markerImage });
+    },
+    handlePlaceSelected({ place, index, markerImage }) {
+      // Store the selected place information in the parent component
+      this.selectedPlaces.push({ place, index, markerImage });
+
+      // You can perform any other logic here if needed
+
+      // Log the selected places for demonstration
+      console.log("Selected Places:", this.selectedPlaces);
+    },
+    getMarkerImage(index) {
+    const placeIndex = (index % 15);
+    const imageSize = new window.kakao.maps.Size(36, 37);
+    return new window.kakao.maps.MarkerImage(
+      `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
+      imageSize,
+      {
+        spriteSize: new window.kakao.maps.Size(36, 691),
+        spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
+        offset: new window.kakao.maps.Point(13, 37),
+      }
+    );
   },
+}
 };
 </script>
 
@@ -250,16 +270,17 @@ export default {
   position: absolute;
   bottom: 510px;
   right: 0px;
-  z-index: 2; /* 맵 보다 위에 나타나도록 설정 */
-  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  z-index: 2;
+  cursor: pointer;
   border: none;
   background: none;
 }
-.my-location-btn img {
-  user-drag: none; /* 드래그 비활성화 */
-  -webkit-user-drag: none; /* 웹킷 브라우저 지원 */
-  width: 30px; /* 원하는 너비로 조절하세요 */
-  height: 30px; /* 원하는 높이로 조절하세요 */
-}
-</style>
 
+.my-location-btn img {
+  user-drag: none;
+  -webkit-user-drag: none;
+  width: 30px;
+  height: 30px;
+}
+
+</style>
