@@ -576,6 +576,11 @@ main {
   font-size: 11px; /* You can adjust the font size as needed */
 }
 
+.dropdown-item:hover {
+  background-color: #56cee3; /* Change this to the desired hover color */
+  color: #fff; /* Change this to the desired text color on hover */
+}
+
 .nav-link {
   color: #333;
 }
