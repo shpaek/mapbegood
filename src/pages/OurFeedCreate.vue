@@ -52,9 +52,8 @@
       </div>
       <button type="submit">Share</button>
     </form>
-    <!-- Add your feed display code here if needed -->
     <div class="feed">
-      <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
+      <div v-for="post in posts" :key="post.ourplaceId" class="feed-item">
         <img
           class="avatar"
           :src="post.memberEmail?.profileImage"
@@ -67,14 +66,21 @@
 
 <script>
 import axios from "axios";
-
+import { mapState } from "vuex";
 export default {
-  name: "MyFeedCreate",
+  name: "ourfeedCreate",
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+  beforeCreate() {
+    this.$store.dispatch("getUserInfo");
+  },
   data() {
     return {
       feedImgs: [],
-      currentIndex: 0, // Add currentIndex to data
-      myplaceId: "",
+      currentIndex: 0,
+      groupId: null,
+      ourplaceId: null,
       feedContent: "",
       posts: [],
       image: null,
@@ -82,49 +88,53 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("getUserInfo").then(() => {
-      this.myplaceId = this.$route.params.myplaceId;
-    });
+    this.ourplaceId = this.$route.params.ourplaceId;
+    this.groupId = this.$route.params.groupId;
   },
   methods: {
     submitForm() {
-      this.createFeed(this.myplaceId);
+      const ourplaceId = 109;
+      this.createFeed(ourplaceId);
     },
-    createFeed(myplaceId) {
+    createFeed(ourplaceId) {
       const backURL = this.$root.backURL;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
-
+      const memberEmail = this.userInfo.email;
       // Create feed
       const createData = {
-        myplaceId: myplaceId,
+        ourplaceId: {
+          id: this.ourplaceId,
+        },
+        groupId: this.groupId,
         content: this.feedContent,
-        // Add other properties as needed
       };
 
       axios
-        .post(`${backURL}/myfeed/${myplaceId}`, createData)
+        .post(
+          `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${memberEmail}`,
+          createData
+        )
         .then((response) => {
           console.log("Feed created successfully:", response.data);
 
           // Upload images if selected
           if (this.feedImgs.length > 0) {
-            this.uploadImages(myplaceId);
+            this.uploadImages(this.ourplaceId);
           }
-          this.$router.push({ name: 'myfeed', params: { myplaceId: myplaceId } });
         })
         .catch((error) => {
           console.error("Error creating feed:", error);
         });
     },
 
-    uploadImages(myplaceId) {
+    uploadImages(ourplaceId) {
       const backURL = this.$root.backURL;
-
+      const memberEmail = this.userInfo.email;
       // Upload images
       const formData = new FormData();
-      formData.append("id", myplaceId);
-      formData.append("opt", "myfeed"); // Add your image option here
+      formData.append("id", this.ourplaceId + memberEmail);
+      formData.append("opt", "ourfeed"); // Add your image option here
       this.feedImgs.forEach((file, index) => {
         formData.append("files", file.file); // Use "file" instead of "files"
       });

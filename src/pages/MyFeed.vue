@@ -33,14 +33,11 @@ export default {
   name: "MyFeed",
   data() {
     return {
-      myplaceIdForTesting: 108,
       feedImgs: [], // Initialize as an empty array
       currentIndex: 0, // Index of the current image
       post: {
-        myplaceId: null,
-        content: "",
-        memberEmail: {},
       },
+      memberEmail: ""
     };
   },
   computed: {
@@ -50,8 +47,12 @@ export default {
   },
   mounted() {
     const backURL = this.$root.backURL;
-
-    axios.get(`${backURL}/feed/download?id=${this.myplaceIdForTesting}&opt=myfeed`)
+    this.$store.dispatch("getUserInfo").then(() => {
+    // Make sure to set this.myplaceId here
+    this.myplaceId = this.$route.params.myplaceId;
+    // Rest of your code...
+    
+    axios.get(`${backURL}/feed/download?id=${this.myplaceId}&opt=myfeed`)
       .then(response => {
         console.log('Response Data:', response.data);
         if (response.status === 200) {
@@ -69,12 +70,13 @@ export default {
       .catch(error => {
         console.error('Error fetching images:', error);
       });
+    });
   },
   methods: {
     fetchFeeds() {
       const backURL = this.$root.backURL;
 
-      axios.get(`${backURL}/myfeed/${this.myplaceIdForTesting}`)
+      axios.get(`${backURL}/myfeed/${this.myplaceId}`)
         .then(response => {
           this.post = response.data || {}; // Ensure post is an object
         })
@@ -89,7 +91,7 @@ export default {
       return this.post.memberEmail ? this.post.memberEmail.nickname : '';
     },
     updateFeed() {
-      this.$router.push({ name: 'MyFeedUpdate' });
+      this.$router.push({ name: 'myfeedupdate', params: { myplaceId: this.myplaceId } });
     },
     deleteFeed(myplaceId) {
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -98,7 +100,7 @@ export default {
       // Confirm with the user before proceeding with the delete
       if (window.confirm('Are you sure you want to delete this feed?')) {
         const backURL = this.$root.backURL;
-        axios.delete(`${backURL}/myfeed/${myplaceId}`)
+        axios.delete(`${backURL}/myfeed/${this.myplaceId}`)
           .then(response => {
             console.log('Feed deleted successfully:', response.data);
             // Fetch updated feeds after deletion
@@ -160,6 +162,7 @@ export default {
     max-height: 400px;
     object-fit: cover;
   }
+
 
   .caption {
     margin-top: 10px;
