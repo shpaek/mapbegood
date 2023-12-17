@@ -24,5 +24,5 @@ public class Member extends AuditEntity {
 	
 	private String password;
 
-	private int status;
+	private Long status;
 }

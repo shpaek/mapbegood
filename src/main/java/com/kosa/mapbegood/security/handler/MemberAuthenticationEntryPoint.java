@@ -18,8 +18,8 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         Exception exception = (Exception) request.getAttribute("exception");
-        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, null);
-        logExceptionMessage(authException, exception);
+        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "");
+        this.logExceptionMessage(authException, exception);
     }
 
     private void logExceptionMessage(AuthenticationException authException, Exception exception) {

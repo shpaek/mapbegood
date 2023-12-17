@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.kosa.mapbegood.domain.member.dto.*;
 
+import com.kosa.mapbegood.exception.ModifyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,10 +63,10 @@ public class MemberController {
 
 	// 회원 가입
 	@PostMapping("/signup")
-	public ResponseEntity create(@Valid @RequestPart MemberSignUpDTO signUpDto,
-									   @RequestPart(required = false) MultipartFile profileImage) {
+	public ResponseEntity create(@Valid @RequestPart MemberSignUpDTO memberSignUpDto,
+								 @RequestPart(required = false) MultipartFile profileImage) {
 		try {
-				Member member = mapper.MemberDTOPostToMember(signUpDto);
+				Member member = mapper.MemberDTOPostToMember(memberSignUpDto);
 				service.createMember(member, profileImage);
 		} catch (AddException ae) {
 			return new ResponseEntity<>(new Response(0, "이미 가입된 계정이 있습니다."), HttpStatus.BAD_REQUEST);
@@ -136,6 +137,19 @@ public class MemberController {
 			return new ResponseEntity<>(new Response(0, "프로필 사진 변경이 실패했습니다."), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(new Response(1, "프로필 사진이 변경되었습니다."), HttpStatus.OK);
+	}
+
+	@PutMapping("/update-myinfo")
+	public ResponseEntity updateMyInfo(Authentication authentication,
+									   @Valid @RequestPart(required = false) MemberUpdateDTO memberUpdateDto,
+									   @RequestPart(required = false) MultipartFile updateProfileImage) {
+		try {
+			String email = authenticationUtil.getUserEmail(authentication);
+			service.updateMyInfo(email, memberUpdateDto, updateProfileImage);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Response(0, "내 정보 수정이 실패했습니다."), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(new Response(1, "내 정보가 수정되었습니다."), HttpStatus.OK);
 	}
 
 	// 이메일 인증

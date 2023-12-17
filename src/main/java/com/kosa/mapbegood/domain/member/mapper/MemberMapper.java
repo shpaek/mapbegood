@@ -30,7 +30,8 @@ public interface MemberMapper {
             return new MemberInfoDTO(
                     member.getEmail(),
                     member.getNickname(),
-                    member.getProfileImage()
+                    member.getProfileImage(),
+                    member.getStatus()
             );
         }
     }
