@@ -1,5 +1,6 @@
 package com.kosa.mapbegood.domain.mymap.thememap.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,15 @@ public class ThemeMapController {
     @PostMapping("/create")
     public ThemeMapDto createThemeMap(Authentication authentication,
     								  @RequestBody ThemeMapDto themeMapDto) {
-    	String email = authenticationUtil.getUserEmail(authentication);
     	//-------------------------
 //    	Member m = new Member();
 //    	m.setEmail("test@mail.com");
     	//-----------------------------
 //    	themeMapDto.setMemberEmail(m);
     	try {
+    	    String email = authenticationUtil.getUserEmail(authentication);
 			return themeMapService.createThemeMap(email, themeMapDto);
-		} catch (FindException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
     	return null;
@@ -63,7 +64,7 @@ public class ThemeMapController {
             String email = authenticationUtil.getUserEmail(authentication);
             ThemeMapDto copiedThemeMap = themeMapService.copyThemeMap(email, themeMapId);
             return ResponseEntity.ok(copiedThemeMap);
-        } catch (FindException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -73,17 +74,18 @@ public class ThemeMapController {
     @DeleteMapping("/delete/{themeMapId}")
     public ResponseEntity<String> deleteThemeMap(Authentication authentication,
     						@PathVariable Long themeMapId) throws FindException {
-    	
-    		String email = authenticationUtil.getUserEmail(authentication);
-    		log.error("email은 갖고옴"+email);
-    		log.error("thememap은?"+themeMapId);
-    		//두개는 갖고오는데 sql이 오류가 뜨는데 왜 favorite 테이블이 오류나는지 
-    		
-    		themeMapService.deleteThemeMap(email, themeMapId);
-		
-    		return ResponseEntity.ok("삭제 성공");
-//    }catch(FindException e){
-//    		return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+    	try {
+            String email = authenticationUtil.getUserEmail(authentication);
+            log.error("email은 갖고옴" + email);
+            log.error("thememap은?" + themeMapId);
+            //두개는 갖고오는데 sql이 오류가 뜨는데 왜 favorite 테이블이 오류나는지
+
+            themeMapService.deleteThemeMap(email, themeMapId);
+
+            return ResponseEntity.ok("삭제 성공");
+        } catch (Exception e) {
+            return new ResponseEntity<>("삭제 실패", HttpStatus.BAD_REQUEST);
+        }
     }
     
    //테마맵 수정 o
@@ -95,7 +97,7 @@ public class ThemeMapController {
             String email = authenticationUtil.getUserEmail(authentication);
             ThemeMapDto updatedThemeMap = themeMapService.updateThemeMap(email, themeMapId, themeMapDto);
             return ResponseEntity.ok(updatedThemeMap);
-        } catch (FindException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -107,20 +109,20 @@ public class ThemeMapController {
             String email = authenticationUtil.getUserEmail(authentication);
             ThemeMapDto addedThemeMap = themeMapService.addToMyThemeMapList(email, themeMapId);
             return ResponseEntity.ok(addedThemeMap);
-        } catch (FindException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
     // 테마맵 조회 o
     @GetMapping("/list")
     public ResponseEntity<List<ThemeMapDto>> getAllThemeMaps(Authentication authentication) {
-    	String email = authenticationUtil.getUserEmail(authentication);
     	 try {
+             String email = authenticationUtil.getUserEmail(authentication);
              List<ThemeMapDto> themeMapDtos = themeMapService.getAllThemeMaps(email);
              return ResponseEntity.ok(themeMapDtos);
-         } catch (FindException e) {
-        	 e.printStackTrace();
-             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+         } catch (Exception e) {
+             log.error("getAllThemeMaps Err: " + e.getMessage());
+             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
          }
      }
     
@@ -132,7 +134,7 @@ public class ThemeMapController {
             String email = authenticationUtil.getUserEmail(authentication);
             ThemeMapDto themeMapDto = themeMapService.getThemeMapById(email, themeMapId);
             return ResponseEntity.ok(themeMapDto);
-        } catch (FindException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

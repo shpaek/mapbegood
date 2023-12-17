@@ -112,26 +112,26 @@ public class ThemeMapService {
      * **/
     // 모든 테마맵 조회 o
     public List<ThemeMapDto> getAllThemeMaps(String email) throws FindException {
-    	Optional<Member> optMember = memberRepository.findById(email);
-    	  if (optMember.isPresent()) {
-              Member member = optMember.get();
-              List<ThemeMap> themeMaps = themeMapRepository.findByMemberEmail(member);
+        Optional<Member> optMember = memberRepository.findById(email);
+        if (optMember.isPresent()) {
+            Member member = optMember.get();
+            List<ThemeMap> themeMaps = themeMapRepository.findByMemberEmail(member);
 
-              // ThemeMap을 ThemeMapDto로 변환
-              List<ThemeMapDto> themeMapDtos = themeMaps.stream()
-                      .map(ThemeMapMapper::toDto)
-                      .collect(Collectors.toList());
+            // ThemeMap을 ThemeMapDto로 변환
+            List<ThemeMapDto> themeMapDtos = themeMaps.stream()
+                .map(ThemeMapMapper::toDto)
+                .collect(Collectors.toList());
 
-              return themeMapDtos;
-          } else {
-              // 회원을 찾을 수 없는 경우 예외 처리 또는 빈 리스트 반환
-              throw new FindException("회원을 찾을 수 없습니다.");
-          }
+                return themeMapDtos;
+            } else {
+            // 회원을 찾을 수 없는 경우 예외 처리 또는 빈 리스트 반환
+                throw new FindException("회원을 찾을 수 없습니다.");
+            }
     	
     	
     }
     
- // 검색한 리스트 중 한개를 나의 테마맵으로 추가
+    // 검색한 리스트 중 한개를 나의 테마맵으로 추가
     public ThemeMapDto addToMyThemeMapList(String email, Long themeMapId) throws FindException {
         // 특정 ID의 테마맵 DTO 얻어오기
         ThemeMapDto themeMapDtoToAdd = getThemeMapDtoById(themeMapId);
