@@ -23,6 +23,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.dto.GroupThememapDTO;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
+import com.kosa.mapbegood.domain.ourmap.groupThememap.service.GroupThemeMapService;
 import com.kosa.mapbegood.domain.ourmap.groups.dto.GroupsDTO;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository;
@@ -47,6 +50,8 @@ public class GroupsService {
 	private GroupsRepository gr;
 	@Autowired
 	private MemberGroupRepository mgr;
+	@Autowired
+	private GroupThemeMapService gtmService;
 	
 	/**
 	 * GroupsDTO를 Groups(엔터티)로 변환한다
@@ -87,7 +92,13 @@ public class GroupsService {
 				groupDTO.setId(group.getId());
 				groupDTO.setName(group.getName());
 //				groupDTO.setGroupImage(group.getGroupImage()); //그룹이미지
-				
+				List<GroupThememap> groupThememapList = group.getGroupThememapList();
+				List<GroupThememapDTO> groupThememapListDto = new ArrayList<>();
+				for(GroupThememap groupThememap: groupThememapList) {
+					GroupThememapDTO groupThememapDto = gtmService.mapGroupThememapEntityToDTO(groupThememap);
+					groupThememapListDto.add(groupThememapDto);
+				}
+				groupDTO.setGroupThememapList(groupThememapListDto);
 				List<MemberGroup>members = group.getMemberGroupList(); //각 그룹의 멤버들
 				for(MemberGroup mg: members) {
 					if(mg.getLeader() == 1) { //리더인 경우
