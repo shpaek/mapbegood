@@ -96,7 +96,6 @@ export default {
                 groups: {
                     id: group.id
                 },
-                leader: 0
             }
             console.log("----START-----")
             console.log(group.id)

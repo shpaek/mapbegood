@@ -84,12 +84,12 @@
     <GroupImageChange
       :isImageChangeOpen="isImageChangeOpen"
       :groupId="groupId"
-      @close-modal="closeImageChange"
+      @close-Image="closeImageChange"
     />
     <GroupNameChange
       :isNameChangeOpen="isNameChangeOpen"
       :groupId="groupId"
-      @close-modal="closeNameChange"/>
+      @close-Name="closeNameChange"/>
   </div>
 </div>
 </template>
@@ -138,7 +138,7 @@ export default {
     if (this.$store.state.userInfo.nickName == this.leaderNickname) {
       this.isleader = true;
     }
-    console.log(this.userInfo.nickName)
+    console.log(this.$store.state.userInfo.nickName)
     console.log(this.leaderNickname)
     console.log(this.isleader)
   },
@@ -158,26 +158,10 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     updateImageClickHandler() {
-      // this.$router.push({
-      //   name: '/groupimage',
-      //   params: {
-      //     groupId: this.groupId,
-      //     groupName: this.groupName,
-      //     leaderNickname: this.leaderNickname
-      //   }
-      // });
       this.isImageChangeOpen=true;
       console.log(this.isImageChangeOpen)
     },
     updateNameClickHandler() {
-      // this.$router.push({
-      //   name: '/groupname',
-      //   params: {
-      //     groupId: this.groupId,
-      //     groupName: this.groupName,
-      //     leaderNickname: this.leaderNickname
-      //   }
-      // }); openImageChange(){
       this.isNameChangeOpen = true;
       console.log(this.isNameChangeOpen)
     },
@@ -242,10 +226,10 @@ export default {
         });
     },
     closeImageChange(){
-      this.iscloseChangeOpen = false;
+      this.isImageChangeOpen = false;
     },
     closeNameChange(){
-      this.isImageChangeOpen=false;
+      this.isNameChangeOpen=false;
     }
   }
 }
@@ -269,9 +253,14 @@ ul {
 li.img {
   position: relative;
   height: 150px;
+  width: 150px;
 }
 li.img>img{
   border-radius: 5px;
+  min-height: 150px;
+  max-height: 150px;
+  min-width: 150px;
+  max-width: 150px;
 }
 
 li.img svg.bi-gear {
@@ -374,9 +363,8 @@ li.thememap>div.info>div.memo{
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown {
   position: absolute;
   font-size: 12px;
-  left: 94.7%;
-  transform: translateX(-94.7%);
-  top: 42px;
+  left: 268px;
+  top: 35px;
   width: 75px;
   height: 55px;
   text-align: center;
@@ -397,9 +385,8 @@ div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown>ul>li:hover 
 
 div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
   position: absolute;
-  top: 32px;
-  left: 92%;
-  transform: translateX(-93%);
+  top: 26px;
+  left: 323px;
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-bottom: 12px solid rgb(240, 240, 240);

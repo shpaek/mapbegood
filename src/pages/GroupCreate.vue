@@ -57,7 +57,7 @@ export default {
                     location.href = "/groups"
                 })
                 .catch(error => {
-                    alert(error.message)
+                    alert("그룹이 생성되지 않았습니다")
                 })
         },
         imageChangeHandler(e) {
@@ -87,12 +87,11 @@ export default {
             this.fileErrorMsg = '';
         },
         b2ClickHandler() { //생성 취소 버튼 클릭 시
-            alert("그룹 생성을 취소합니다")
-            location.href = "/groups"
+            console.log('b2ClickHandler');
+            this.$emit('close-create');
         },
         b3ClickHandler() { //중복확인 버튼 클릭 시
             if (this.name.trim().length > 0) {
-
                 const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`
                 axios.get(url)
                     .then(response => {
@@ -134,6 +133,7 @@ div.errorMsg{
 div.errorMsg>span{
     margin-left: auto;
     margin-right: auto;
+    margin-top:35px;
     color:red;
 }
 div.space>span{
@@ -143,6 +143,9 @@ div.space>span{
     margin-bottom:40px;
     font-size: 18px;
     font-weight: bold;
+}
+div.fill{
+    height:310px;
 }
 div.fill>div.img>img.img {
     display:flex;
