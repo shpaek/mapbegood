@@ -24,10 +24,4 @@ app.use(VueSSE);
 
 app.config.globalProperties.backURL = "http://localhost:8080";
 
-app.mixin({
-  beforeCreate() {
-    this.$store.dispatch("getUserInfo");
-  },
-});
-
 app.mount("#app");

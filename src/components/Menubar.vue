@@ -270,7 +270,8 @@
                         <v-text-field
                           v-model="modifyNickName"
                           color="primary"
-                          :label="originNicnName"
+                          label="Nickname"
+                          :placeholder="originNicnName"
                           variant="underlined"
                           ref="modifyNickName"
                           @keyup="editNicknameHandler"
@@ -374,6 +375,7 @@ export default {
     ...mapState(["userInfo"]),
   },
   async beforeCreate() {
+    console.log("menu bar 에서 호출");
     await this.$store.dispatch("getUserInfo");
     this.profileImage = this.userInfo.profileImage;
     this.displayImage = this.userInfo.profileImage;
@@ -528,8 +530,8 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 </script>
 
 <style scoped>
-*{
-  font-family: 'Noto Sans KR', sans-serif;
+* {
+  font-family: "Noto Sans KR", sans-serif;
 }
 main {
   position: fixed;
@@ -574,6 +576,11 @@ main {
 
 .dropdown-item {
   font-size: 11px; /* You can adjust the font size as needed */
+}
+
+.dropdown-item:hover {
+  background-color: #56cee3; /* Change this to the desired hover color */
+  color: #fff; /* Change this to the desired text color on hover */
 }
 
 .nav-link {

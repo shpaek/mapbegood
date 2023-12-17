@@ -3,31 +3,75 @@
     <div class="g-part">
       <div class="icon-container">
         <span class="title">그룹 목록</span>
-        <span class="check-waiting" v-if="emptyMsg.length<1" @click="openModal">
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+        <span
+          class="check-waiting"
+          v-if="emptyMsg.length < 1"
+          @click="openModal"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-envelope"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"
+            />
           </svg>
         </span>
       </div>
       <div class="group-container">
         <!-- 그룹 추가버튼 -->
-        <div class="add-group" @click="addgroupClickHandler" v-if="emptyMsg.length < 1">
-          <div class="new-group cursor-pointer btn btn-outline-dark" 
-              @click="addnewgroupclickHandler" >
+        <div
+          class="add-group"
+          @click="addgroupClickHandler"
+          v-if="emptyMsg.length < 1"
+        >
+          <div
+            class="new-group cursor-pointer btn btn-outline-dark"
+            @click="addnewgroupclickHandler"
+          >
             <span class="new">
-              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-              </svg>
-            </span>&nbsp;&nbsp;
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="19"
+                height="19"
+                fill="currentColor"
+                class="bi bi-plus-circle-fill"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
+                />
+              </svg> </span
+            >&nbsp;&nbsp;
             <span class="text">그룹 추가</span>
           </div>
         </div>
-        <div class="group" v-for="group in groupList" @click="groupClickHandler(group)">
-          <img id="i" alt="그룹이미지" class="img-size" :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' + group.id +'_groupImage.jpg?' +new Date().getTime()"/>
+        <div
+          class="group"
+          v-for="group in groupList"
+          @click="groupClickHandler(group)"
+        >
+          <img
+            id="i"
+            alt="그룹이미지"
+            class="img-size"
+            :src="
+              'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
+              group.id +
+              '_groupImage.jpg?' +
+              new Date().getTime()
+            "
+          />
           <ul>
-            <li>  
+            <li>
               <div class="group-info">{{ group.name }}</div>
-              <div class="group-mem-info">{{group.memberGroupList[0].member.nickname}}</div>
+              <div class="group-mem-info">
+                {{ group.memberGroupList[0].member.nickname }}
+              </div>
             </li>
           </ul>
         </div>
@@ -55,7 +99,7 @@ import GroupInvite from './GroupInvite.vue';
 import GroupCreate from './GroupCreate.vue';
 export default {
   name: "GroupsView",
-  components:{
+  components: {
     Detailmap,
     GroupInvite,
     GroupCreate,
@@ -127,39 +171,39 @@ export default {
 };
 </script>
 <style scoped>
-*{
-  font-family: 'Noto Sans KR', sans-serif;
+* {
+  font-family: "Noto Sans KR", sans-serif;
 }
-div.g-part>div.empty-msg{
+div.g-part > div.empty-msg {
   padding: 70px;
 }
-div.icon-container{
+div.icon-container {
   display: flex;
 }
-div.icon-container>span.title{
+div.icon-container > span.title {
   margin-left: 30px;
-  margin-top:25px;
+  margin-top: 25px;
   font-size: 25px;
   font-weight: bold;
 }
-div.icon-container>span.check-waiting { 
+div.icon-container > span.check-waiting {
   margin-left: 200px;
-  margin-top:25px;
+  margin-top: 25px;
   margin-bottom: 30px;
 }
 
-div.add-group>div.new-group{
+div.add-group > div.new-group {
   margin-top: 10px;
-  margin-bottom:20px;
-  margin-left:auto;
-  margin-right:auto;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
   width: 330px;
   height: 50px;
   border: 1px solid grey;
   border-radius: 5px;
   display: flex;
 }
-div.add-group>div.new-group>span{
+div.add-group > div.new-group > span {
   line-height: 33px;
 }
 div.group {
@@ -167,9 +211,9 @@ div.group {
   border: 1px solid grey;
   border-radius: 5px;
   width: 330px;
-  margin-left:auto;
+  margin-left: auto;
   margin-right: auto;
-  margin-top:15px;
+  margin-top: 15px;
   height: 70px;
 }
 div.group > ul {
@@ -177,27 +221,27 @@ div.group > ul {
   padding-left: 0px;
 }
 div.group-container > div.group > img.img-size {
-    max-width: 50px;
-    max-height: 50px;
-    min-width: 50px;
-    min-height: 50px;
-    border-radius: 5px;
-    margin-top: auto;
-    margin-bottom:auto;
-    margin-left:10px;
-}
-div.group-container > div.group >ul{
+  max-width: 50px;
+  max-height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  border-radius: 5px;
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 10px;
 }
-div.group-container > div.group >ul>li>div.group-info{
+div.group-container > div.group > ul {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
+}
+div.group-container > div.group > ul > li > div.group-info {
   font-size: 18px;
   font-weight: bold;
   width: 200px;
   overflow-x: hidden;
 }
-div.group-container > div.group >ul>li>div.group-mem-info{
+div.group-container > div.group > ul > li > div.group-mem-info {
   font-size: 13px;
   width: 200px;
   overflow-x: hidden;
