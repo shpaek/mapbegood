@@ -224,6 +224,7 @@ export default {
         },
       };
       console.log(myplaceWrapperDto);
+      
       const url = `${this.backURL}/myplace`;
 
       // Making the POST request to create Myplace
@@ -238,6 +239,7 @@ export default {
           console.error("Error creating Myplace:", error);
         });
     },
+
     handleItemClick(item) {
       if (this.tabs === "personal") {
         this.addMyplace(item.themeMapDto.id);
