@@ -79,12 +79,7 @@ const router = createRouter({
     },
     { path: "/favoritelist", component: FavoriteList },
     { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
-
-    {
-      path: "/thememaptest",
-      name: "thememaptest",
-      component: Thememaptest,
-    },
+   
 
     { path: "/map", component: Map },
     { path: "/map", component: DetailMap }, //이거 임시
