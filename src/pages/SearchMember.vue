@@ -139,7 +139,9 @@ button.close{
     left: 50%;
     transform: translateX(-50%);
 }
-
+button.close:hover{
+   font-weight: bold;
+}
 img.profileImage {
     min-width: 42px;
     min-height: 40px;

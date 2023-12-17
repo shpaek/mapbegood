@@ -17,6 +17,9 @@ import Place from "../pages/Place.vue";
 import MyFeed from "../pages/MyFeed.vue";
 import MyFeedCreate from "../pages/MyFeedCreate.vue";
 import MyFeedUpdate from "../pages/MyFeedUpdate.vue";
+import OurFeed from "../pages/OurFeed.vue";
+import OurFeedCreate from "../pages/OurFeedCreate.vue";
+import OurFeedUpdate from "../pages/OurFeedUpdate.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
@@ -24,12 +27,7 @@ import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
 import ThememapCreate from "../pages/ThememapCreate.vue"; // 테마맵 추가
 import ThememapUpdate from "../pages/ThemeMapUpdate.vue"; //테마맵 수정
-
- 
-
-
 import ThememapDetail from "../pages/ThemeMapDetail.vue"; //테마맵 Id로 조회
-
 import GroupWaiting from "../pages/GroupWaiting.vue";
 import AddGroupmap from "../pages/AddGroupmap.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가
@@ -88,9 +86,32 @@ const router = createRouter({
     { path: "/map", component: DetailMap }, //이거 임시
 
     { path: "/place", component: Place },
-    { path: "/myfeed", component: MyFeed },
-    { path: "/myfeedcreate", component: MyFeedCreate },
-    { path: "/myfeedupdate", component: MyFeedUpdate },
+    {
+      path: '/myfeed/:myplaceId',
+      name: 'myfeed',
+      component: MyFeed,
+    },
+    {
+      path: '/myfeedcreate/:myplaceId',
+      name: 'myfeedcreate',
+      component: MyFeedCreate,
+    },
+    {
+      path: '/myfeedupdate/:myplaceId',
+      name: 'myfeedupdate',
+      component: MyFeedUpdate,
+    },
+    {
+      path: '/ourfeed/:groupId/:ourplaceId/:memberNickname',
+      name: 'ourfeed',
+      component: OurFeed,
+    },
+    { path: "/ourfeedcreate/:groupId/:ourplaceId",
+      name: 'ourfeedcreate',
+      component: OurFeedCreate },
+    { path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
+      name: 'ourfeedupdate',
+      component: OurFeedUpdate },
     { path: "/members", component: MemberInfo },
 
     { path: "/groupmembers", component: GroupMember },

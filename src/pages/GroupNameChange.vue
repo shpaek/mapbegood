@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         namechageFromSubmitHandler() {
-            const url = `http://localhost:8080/group/${this.groupId}`
+            const url = `${this.backURL}/group/${this.groupId}`
             // 필요한 데이터 추가
             const requestBody = {
                 name: this.name,
