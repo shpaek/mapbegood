@@ -71,7 +71,7 @@ const router = createRouter({
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
-    { path: "/thememap", component: ThemeMap },
+    { name: "thememap", path: "/thememap", component: ThemeMap },
     {
       path: "/thememapcreate",
       name: "ThememapCreate",
@@ -85,31 +85,35 @@ const router = createRouter({
 
     { path: "/place", component: Place },
     {
-      path: '/myfeed/:myplaceId',
-      name: 'myfeed',
+      path: "/myfeed/:myplaceId",
+      name: "myfeed",
       component: MyFeed,
     },
     {
-      path: '/myfeedcreate/:myplaceId',
-      name: 'myfeedcreate',
+      path: "/myfeedcreate/:myplaceId",
+      name: "myfeedcreate",
       component: MyFeedCreate,
     },
     {
-      path: '/myfeedupdate/:myplaceId',
-      name: 'myfeedupdate',
+      path: "/myfeedupdate/:myplaceId",
+      name: "myfeedupdate",
       component: MyFeedUpdate,
     },
     {
-      path: '/ourfeed/:groupId/:ourplaceId/:memberNickname',
-      name: 'ourfeed',
+      path: "/ourfeed/:groupId/:ourplaceId/:memberNickname",
+      name: "ourfeed",
       component: OurFeed,
     },
-    { path: "/ourfeedcreate/:groupId/:ourplaceId",
-      name: 'ourfeedcreate',
-      component: OurFeedCreate },
-    { path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
-      name: 'ourfeedupdate',
-      component: OurFeedUpdate },
+    {
+      path: "/ourfeedcreate/:groupId/:ourplaceId",
+      name: "ourfeedcreate",
+      component: OurFeedCreate,
+    },
+    {
+      path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
+      name: "ourfeedupdate",
+      component: OurFeedUpdate,
+    },
     { path: "/members", component: MemberInfo },
 
     { path: "/groupmembers", component: GroupMember },
