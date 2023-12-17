@@ -55,7 +55,7 @@ public class FavoriteController {
 	        favoriteService.createFavorite(thememapId, userEmail);
 	        return new ResponseEntity<>("즐겨찾기 생성 되었습니다.", HttpStatus.CREATED);
 	    } catch (Exception e) {
-	        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	    }
  }
  	//중복 확인
@@ -84,7 +84,7 @@ public class FavoriteController {
          favoriteService.deleteFavorite(themeMapId, userEmail);
          return new ResponseEntity<>("즐겨찾기가 삭제되었습니다.", HttpStatus.OK);
      } catch (Exception e) {
-         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
      }
  }
  
@@ -96,13 +96,14 @@ public ResponseEntity<List<FavoriteDto>> selectFavoriteList(Authentication authe
   try {
       String userEmail = AuthenticationUtil.getUserEmail(authentication);
       List<FavoriteDto> favoriteList = favoriteService.getAllFavoritesForUser(userEmail);
-      if (!favoriteList.isEmpty()) {
+//      if (!favoriteList.isEmpty()) {
           return new ResponseEntity<>(favoriteList, HttpStatus.OK);
-      } else {
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
+//      } else {
+//          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//      }
   } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      log.error("/favorite/list Error: " + e.getMessage());
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   }
 }
  }

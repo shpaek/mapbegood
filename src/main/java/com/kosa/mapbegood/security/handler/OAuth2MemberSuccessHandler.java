@@ -78,7 +78,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .password(RandomStringUtils.randomAlphanumeric(50))
                 .nickname(nickname)
                 .profileImage(profileImage)
-                .status(2)
+                .status(2L)
                 .build();
 
         return repository.save(member);

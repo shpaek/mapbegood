@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.kosa.mapbegood.domain.common.service.AwsS3Service;
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
+import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.dto.GroupThememapDTO;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.service.GroupThemeMapService;
@@ -32,6 +33,7 @@ import com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.entity.MemberGroup;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.repository.MemberGroupRepository;
+import com.kosa.mapbegood.domain.ourmap.waiting.dto.WaitingDTO;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
 import com.kosa.mapbegood.exception.ModifyException;
@@ -52,6 +54,8 @@ public class GroupsService {
 	private MemberGroupRepository mgr;
 	@Autowired
 	private GroupThemeMapService gtmService;
+	@Autowired
+	private MemberRepository mr;
 	
 	/**
 	 * GroupsDTO를 Groups(엔터티)로 변환한다
@@ -104,7 +108,7 @@ public class GroupsService {
 					if(mg.getLeader() == 1) { //리더인 경우
 						//String leaderNickName = members.get(0).getMemberEmail().getNickname();
 						MemberDTO leaderMemberDTO = new MemberDTO();
-						leaderMemberDTO.setNickname( members.get(0).getMemberEmail().getNickname());
+						leaderMemberDTO.setNickname(members.get(0).getMemberEmail().getNickname());
 		
 						MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
 						memberGroupDTO.setMember(leaderMemberDTO);
@@ -126,6 +130,39 @@ public class GroupsService {
 		}
 	}
 	
+	
+	//그룹 id로 그룹검색
+	public GroupsDTO findGroupByGroupId(WaitingDTO waitingDto) throws FindException{
+		Optional<Groups> optGroup = gr.findById(waitingDto.getGroupId());
+		GroupsDTO resultGroupDto = new GroupsDTO();
+		if(optGroup.isPresent()) {
+			Groups group = optGroup.get();
+			List<MemberGroup> mgList = mgr.findByGroupId(group);
+			if(mgList == null) {
+				throw new FindException("그룹의 멤버가 한 명도 없습니다");
+			}
+			for(int i=0; i<mgList.size(); i++) {
+				MemberGroup mg = mgList.get(i);
+				if(mg.getLeader()==1) {
+					Optional<Member> optM = mr.findByEmail(mg.getMemberEmail().getEmail());
+					if(optM.isPresent()) {
+						Member m = optM.get();
+						MemberDTO mDto = new MemberDTO();
+						mDto.setNickname(m.getNickname());
+						mDto.setEmail(m.getEmail());
+						
+						MemberGroupDTO mgDto = new MemberGroupDTO();
+						mgDto.setMember(mDto);
+						List<MemberGroupDTO> mgDtoList = new ArrayList();
+						mgDtoList.add(mgDto);
+						resultGroupDto.setMemberGroupList(mgDtoList);
+					}
+				}
+			}
+			resultGroupDto.setName(group.getName());
+		}
+		return resultGroupDto;
+	}
 	
 	
 	/**
