@@ -42,6 +42,7 @@ export default createStore({
           this.state.loading = false;
           alert("로그인 성공");
           location.href = "/";
+          
         })
         .catch(() => {
           this.state.loading = false;
