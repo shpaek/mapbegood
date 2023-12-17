@@ -63,11 +63,11 @@ export default {
       axios
         .get(url, { withCredentials: true })
         .then((response) => {
-          const list = response.data;
-          this.favoriteList = list;
+          this.favoriteList = response.data;
+          console.log(this.favoriteList);
         })
         .catch((error) => {
-          console.error(error);
+          // console.error(error);
           // alert(error.response.data.msg); // 수정된 부분
           alert("로그인이 필요한 서비스 입니다.");
           location.href = "/login";
