@@ -25,28 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/feed")
 public class FeedImageController {
 
-//	@PostMapping("/upload")
-//	@ResponseBody
-//	public String upload(@RequestParam String id, @RequestParam String opt, @RequestParam List<MultipartFile> files) throws IOException {
-//	    for (MultipartFile mf : files) {
-//	        if (mf != null && mf.getSize() > 0) {
-//	            String fileName = id + "_" + opt + "_" + mf.getOriginalFilename();
-//	            File targetFile2 = new File("C:\\kosa202307\\attaches", fileName);
-//	            FileCopyUtils.copy(mf.getBytes(), targetFile2);
-//	        } else {
-//	            return "upload FAIL";
-//	        }
-//	    }
-//	    return "upload OK";
-//	}
-
 	@PostMapping("/upload")
 	@ResponseBody
 	public String upload(@RequestParam String id, @RequestParam String opt, @RequestParam List<MultipartFile> files) throws IOException {
 	    String attachesDir = "C:\\kosa202307\\attaches";
 	    String fileNamePrefix = id + "_" + opt + "_";
 
-	    // List to keep track of files that are uploaded in the current request
 	    List<String> uploadedFiles = new ArrayList<>();
 
 	    for (MultipartFile mf : files) {
@@ -54,23 +38,19 @@ public class FeedImageController {
 	            String fileName = fileNamePrefix + mf.getOriginalFilename();
 	            File targetFile = new File(attachesDir, fileName);
 
-	            // Save the new file
 	            FileCopyUtils.copy(mf.getBytes(), targetFile);
 	            
-	            // Add the file name to the list of uploaded files
 	            uploadedFiles.add(fileName);
 	        } else {
 	            return "upload FAIL";
 	        }
 	    }
 
-	    // Delete files that were not part of the current upload
 	    File[] existingFiles = new File(attachesDir).listFiles();
 	    if (existingFiles != null) {
 	        for (File existingFile : existingFiles) {
 	            String existingFileName = existingFile.getName();
 	            if (existingFileName.startsWith(fileNamePrefix) && !uploadedFiles.contains(existingFileName)) {
-	                // Delete the file if it exists and was not part of the current upload
 	                existingFile.delete();
 	            }
 	        }
@@ -78,51 +58,6 @@ public class FeedImageController {
 
 	    return "upload OK";
 	}
-
-
-//	@GetMapping("/download")
-//	@ResponseBody
-////	@CrossOrigin(origins = "http://localhost:5173")
-//	public ResponseEntity<List<Map<String, Object>>> download(@RequestParam String id, @RequestParam String opt) throws IOException {
-//	    String attachesDir = "C:\\KOSA202307\\attaches";
-//	    File dir = new File(attachesDir);
-//
-//	    String fileName = id + "_" + opt + "_";
-//
-//	    // Debugging: Print directory contents
-//	    File[] files = dir.listFiles();
-//	    if (files != null) {
-//	        List<Map<String, Object>> images = new ArrayList<>();
-//
-//	        for (File f : files) {
-//	            String existFileName = f.getName();
-//	            // Check if the file has a valid extension (e.g., ".jpg" or ".png")
-//	            if (existFileName.startsWith(fileName) && (existFileName.endsWith(".jpg") || existFileName.endsWith(".png"))) {
-//	                // Set the MIME type directly
-//	                String contentType = Files.probeContentType(f.toPath());
-//	                System.out.println("File MIME Type: " + contentType);
-//
-//	                byte[] bArr = FileCopyUtils.copyToByteArray(f);
-//
-//	                // Add MIME type information to the image data
-//	                Map<String, Object> image = new HashMap<>();
-//	                image.put("data", bArr);
-//	                image.put("mimeType", contentType);
-//
-//	                images.add(image);
-//	            }
-//	        }
-//
-//	        if (!images.isEmpty()) {
-//	            return ResponseEntity.ok(images);
-//	        }
-//	    }
-//
-//	    // If no matching files found, return a not found response
-//	    HttpStatus status = HttpStatus.NOT_FOUND;
-//	    ResponseEntity<?> entity = new ResponseEntity<>("프로필 썸네일 파일이 없거나 올바른 형식이 아닙니다", status);
-//	    return (ResponseEntity<List<Map<String, Object>>>) entity;
-//	}
 	
     @GetMapping("/download")
     @ResponseBody
@@ -132,23 +67,18 @@ public class FeedImageController {
 
         String fileName = id + "_" + opt + "_";
 
-        // Debugging: Print directory contents
         File[] files = dir.listFiles();
         if (files != null) {
             List<Map<String, Object>> images = new ArrayList<>();
 
             for (File f : files) {
                 String existFileName = f.getName();
-                // Check if the file has a valid extension (e.g., ".jpg" or ".png")
                 if (existFileName.startsWith(fileName) && (existFileName.endsWith(".jpg") || existFileName.endsWith(".png"))) {
-                    // Set the MIME type directly
                     String contentType = Files.probeContentType(f.toPath());
                     System.out.println("File MIME Type: " + contentType);
 
-                    // Provide the base64 encoded data instead of raw byte array
                     String base64Data = Base64.getEncoder().encodeToString(Files.readAllBytes(f.toPath()));
 
-                    // Add MIME type information to the image data
                     Map<String, Object> image = new HashMap<>();
                     image.put("data", base64Data); // Provide base64 encoded data
                     image.put("mimeType", contentType);
@@ -162,7 +92,6 @@ public class FeedImageController {
             }
         }
 
-	    // If no matching files found, return a not found response
 	    HttpStatus status = HttpStatus.NOT_FOUND;
 	    ResponseEntity<?> entity = new ResponseEntity<>("프로필 썸네일 파일이 없거나 올바른 형식이 아닙니다", status);
 	    return (ResponseEntity<List<Map<String, Object>>>) entity;
