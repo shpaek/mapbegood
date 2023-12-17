@@ -1,13 +1,12 @@
 package com.kosa.mapbegood.domain.mymap.myplaceFeed.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
-import com.kosa.mapbegood.domain.mymap.myplace.repository.MyplaceRepository;
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.dto.MyplaceFeedDTO;
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
 import com.kosa.mapbegood.domain.mymap.myplaceFeed.mapper.MyplaceFeedMapper;
@@ -41,6 +40,14 @@ public class MyplaceFeedService {
             }
     }
 
+    /**
+     * 공개 테마지도의 피드를 조회할 수 있다
+     * @return 피드
+     */
+//    public List<MyplaceFeed> findMyPlaceFeedsWithShowStatus() {
+//        return mfr.findByMyPlace_ThemeMap_Show(true); // 1은 show=1을 의미
+//    }
+    
     /**
      * 내 피드를 생성할 수 있다
      * @param feedDto 피드
