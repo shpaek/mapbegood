@@ -77,8 +77,25 @@
 
 <script>
 import axios from "axios";
+import { mapState, mapActions } from "vuex";
 
 export default {
+  computed: {
+    ...mapState(["userInfo"]),
+  },
+  created() {
+    // this.$store.dispatch("getUserInfo").then() //=> {
+    // 사용자 정보가 설정되면 이메일 값을 콘솔에 출력합니다.
+    // console.log("이메일:", this.userInfo.email);
+    // });
+    // console.log("OthersThemeMap 에서 호출");
+    this.$store.dispatch("getUserInfo").then(() => {
+      //구독 메서드 호출
+      this.checkNotifications();
+    });
+    // this.checkNotifications();
+  },
+
   data() {
     return {
       // 검색어와 테마맵 목록을 담는 데이터
@@ -112,7 +129,53 @@ export default {
     executeSearch() {
       // 검색 메서드 호출
       this.searchThemeMap();
+      //구독 메서드 호출
+      this.checkNotifications();
     },
+
+    // sub 호출 메서드
+    async checkNotifications() {
+      try {
+        // 토큰 먼저 가져오는지 보기
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        if (!accessToken) {
+          console.log("사용자가 로그인하지 않았습니다.");
+          return;
+        }
+
+        // 로그인되면 구독 하기
+        const url = `${this.backURL}/notifications/subs/${this.userInfo.email}`;
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        // const response = await axios.get(url,{
+        //   withCredentials:true,
+        // });
+
+        this.$sse
+          .create({ url: url, withCredentials: true })
+          .on("sse", (data) => {
+            console.log("Message:", data);
+            console.log("데이터 타입", data.type, data.type !== "Created");
+            //로그인 상태에서 구독했을때에도 알림창이 띄어지는데, 급한대로 이름으로 무시하기, 만들때는 data.type 꼭 주자.
+            alert("알림:" + data);
+
+            //  // data.type이 정의되어 있을 때만 알림창 띄우기
+            //  if (data.type !== undefined && data.type !== 'Created') {
+            //     alert('알림:' + data);
+            // }
+          })
+          .on("error", (err) =>
+            console.error("Failed to parse or lost connection:", err)
+          )
+          .connect()
+          .catch((err) =>
+            console.error("Failed make initial connection:", err)
+          );
+      } catch (error) {
+        console.log("알림 확인 중 오류 발생 :", error);
+      }
+    },
+
     // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
       try {
@@ -138,6 +201,7 @@ export default {
         console.error("즐겨찾기 추가 중 오류 발생:", error);
       }
     },
+
     // themeMapId가 현재 사용자의 즐겨찾기 목록에 있는지 확인
     isInFavorites(themeMapId) {
       return this.themeMaps.some(

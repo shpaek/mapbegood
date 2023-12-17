@@ -1,143 +1,139 @@
 <template>
   <div id="app">
     <span class="image-label">{{ feedImgs.length }}/10</span>
+    <div v-if="feedImgs.length > 0" class="image-container">
+      <div
+        class="arrow-icon-container prev"
+        @click="prevImage"
+        v-show="currentIndex > 0"
+      >
+        <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
+      </div>
+
+      <div class="centered-image">
+        <img
+          :src="currentImage.url"
+          class="feedImg"
+          :alt="'Image ' + (currentIndex + 1)"
+        />
+      </div>
+
+      <div
+        class="arrow-icon-container next"
+        @click="nextImage"
+        v-show="currentIndex < feedImgs.length - 1"
+      >
+        <img src="/images/next.png" alt="Next" class="arrow-icon" />
+      </div>
+    </div>
 
     <form @submit.prevent="submitForm">
-      <div class="image-container">
-        <div
-          class="arrow-icon-container prev"
-          @click="prevImage"
-          v-show="currentIndex > 0"
-        >
-          <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
-        </div>
-        <div class="form-group" @click="triggerFileInput">
-          <div class="imageUpload">
-            <div v-if="feedImgs.length > 0" class="image-preview-container">
-              <div class="centered-image">
-                <img
-                  :src="feedImgs[currentIndex].base64Data"
-                  alt="Preview"
-                  style="max-width: 300px; max-height: 300px"
-                />
-              </div>
-            </div>
-            <img v-else src="/images/photo.png" alt="photo" class="photo" />
-            <input
-              type="file"
-              ref="fileInput"
-              @change="handleFileChange"
-              accept="image/*"
-              multiple
-              style="display: none"
-            />
-          </div>
-        </div>
-        <div
-          class="arrow-icon-container next"
-          @click="nextImage"
-          v-show="currentIndex < feedImgs.length - 1"
-        >
-          <img src="/images/next.png" alt="Next" class="arrow-icon" />
-        </div>
-      </div>
       <div class="form-group">
-        <label for="content"></label>
+        <label for="content">Content:</label>
         <textarea
           v-model="feedContent"
           id="content"
           required
-          placeholder="내용을 작성하세요"
+          placeholder="Enter your content here"
         ></textarea>
       </div>
-      <button type="submit">Share</button>
+      <button type="submit">Update</button>
     </form>
-    <!-- Add your feed display code here if needed -->
-    <div class="feed">
-      <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
-        <img
-          class="avatar"
-          :src="post.memberEmail?.profileImage"
-          alt="Avatar"
-        />
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
-  name: "MyFeedCreate",
+  name: "OurFeed",
   data() {
     return {
+      groupId: null,
+      ourplaceId: null,
       feedImgs: [],
-      currentIndex: 0, // Add currentIndex to data
-      myplaceId: "",
+      currentIndex: 0,
       feedContent: "",
       posts: [],
-      image: null,
-      imageList: [],
+      memberEmail: "",
     };
   },
-  created() {
+  computed: {
+    currentImage() {
+      return this.feedImgs[this.currentIndex] || {};
+    },
+    ...mapState(['userInfo'])
+  },
+  mounted() {
+    console.log("OurPlaceId:", this.$route.params.ourplaceId);
     this.$store.dispatch("getUserInfo").then(() => {
-      this.myplaceId = this.$route.params.myplaceId;
+      console.log("UserInfo:", this.userInfo);
+      this.memberEmail = this.userInfo.email; // Set memberEmail here
+      this.groupId = this.$route.params.groupId;
+      this.ourplaceId = this.$route.params.ourplaceId;
+
+      const backURL = this.$root.backURL;
+      const id = `${this.ourplaceId}${this.memberEmail}`;
+      axios
+        .get(`${backURL}/feed/download?id=${id}&opt=ourfeed`)
+        .then((response) => {
+          console.log("Response Data:", response.data);
+          if (response.status === 200) {
+            // 이미지 속성 변경
+            this.feedImgs = response.data.map((img) => ({
+              url: "data:" + img.mimeType + ";base64," + img.data,
+              mimeType: img.mimeType,
+            }));
+            console.log("Feed Images:", this.feedImgs);
+          } else {
+            console.error("Failed to fetch images. Status:", response.status);
+          }
+          this.fetchPosts();
+        })
+        .catch((error) => {
+          console.error("Error fetching images:", error);
+        });
     });
   },
   methods: {
     submitForm() {
-      this.createFeed(this.myplaceId);
+      this.updateFeed(this.ourplaceId)
+          const { groupId, ourplaceId, memberNickname } = this.$route.params;
+          this.$router.push({
+            name: "ourfeed",
+            params: {
+              groupId,
+              ourplaceId,
+              memberNickname,
+            },
+          });
     },
-    createFeed(myplaceId) {
+    updateFeed(ourplaceId) {
       const backURL = this.$root.backURL;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
-      // Create feed
-      const createData = {
-        myplaceId: myplaceId,
+      // Update feed
+      const updateData = {
+        ourplaceId: {
+          id: this.ourplaceId,
+        },
+        groupId: this.groupId,
         content: this.feedContent,
-        // Add other properties as needed
       };
 
       axios
-        .post(`${backURL}/myfeed/${myplaceId}`, createData)
+        .put(`${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.memberEmail}`, updateData)
         .then((response) => {
-          console.log("Feed created successfully:", response.data);
-
-          // Upload images if selected
-          if (this.feedImgs.length > 0) {
-            this.uploadImages(myplaceId);
-          }
-          this.$router.push({ name: 'myfeed', params: { myplaceId: myplaceId } });
+          console.log("Feed updated successfully:", response.data);
+          this.fetchPosts();
         })
         .catch((error) => {
-          console.error("Error creating feed:", error);
+          console.error("Error updating feed:", error);
         });
     },
 
-    uploadImages(myplaceId) {
-      const backURL = this.$root.backURL;
-
-      // Upload images
-      const formData = new FormData();
-      formData.append("id", myplaceId);
-      formData.append("opt", "myfeed"); // Add your image option here
-      this.feedImgs.forEach((file, index) => {
-        formData.append("files", file.file); // Use "file" instead of "files"
-      });
-
-      axios
-        .post(`${backURL}/feed/upload`, formData)
-        .then((response) => {
-          console.log("Images uploaded successfully:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error uploading images:", error);
-        });
-    },
     prevImage() {
       if (this.currentIndex > 0) {
         this.currentIndex--;
@@ -148,29 +144,24 @@ export default {
         this.currentIndex++;
       }
     },
+    fetchPosts() {
+      const backURL = this.$root.backURL;
+      const accessToken = `Bearer ${localStorage.getItem("mapbegoodToken")}`;
+      axios.defaults.headers.common["Authorization"] = accessToken;
+      axios
+        .get(`${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.memberEmail}`)
+        .then((response) => {
+          const postData = response.data;
 
-    triggerFileInput() {
-      this.$refs.fileInput.click();
-    },
-    async handleFileChange(event) {
-      const files = event.target.files;
-      const maxFiles = Math.min(files.length, 10);
-      this.feedImgs = [];
-      console.log("Selected Files:", files);
-      for (let i = 0; i < maxFiles; i++) {
-        const base64Data = await this.readFileAsync(files[i]);
-        this.feedImgs.push({ file: files[i], base64Data });
-      }
-      this.currentIndex = 0; // Reset currentIndex when new images are added
-    },
+          // Set the content to the textarea
+          this.feedContent = postData.content;
 
-    readFileAsync(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+          // Update the posts array
+          this.posts = [postData];
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
     },
   },
 };
