@@ -1,3 +1,5 @@
+2차Search.vue
+
 <template>
   <div>
     <div id="searchContainer" class="bg_white">

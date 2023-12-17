@@ -1,6 +1,7 @@
 <template>
   <div class="main-container">
-    <Menubar v-show="menu" />
+    <!-- <Menubar v-show="this.menu" /> -->
+    <Menubar v-if="$route.name !== 'login'" />
     <Section />
   </div>
 </template>
@@ -10,8 +11,6 @@ import Menubar from "./Menubar.vue";
 import Section from "./Section.vue";
 import Search from "./Search.vue";
 
-let menu = true;
-
 export default {
   name: "Main",
   components: {
@@ -19,20 +18,16 @@ export default {
     Section,
     Search,
   },
-  created() {
-    let path = location.pathname.substring(1).toLowerCase();
-    this.menu = path != "login" && path != "signup";
-  },
 };
 </script>
 
 <style scoped>
 .main-container {
-  display: flex;
-  height: 100vh; /* 부모 요소를 화면의 100% 높이로 설정 */
+  height: 100vh;
 }
-
 div.section {
-  flex: 1; /* Section이 남은 공간을 모두 차지하도록 설정 */
+  margin-left: 64px;
+  overflow-y: auto;
+  height: 100vh;
 }
 </style>
