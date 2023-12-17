@@ -1,6 +1,6 @@
 <!--thememaptest.vue-->
 <template>
-    <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
+    <div v-for="thememap in myThememapList" :key="thememap.themeMapDto.id">
  
         <h3>리스트이름:{{ thememap.themeMapDto.name }}</h3>
       <!-- 여기에 세부 정보를 표시하는 코드 추가 -->
@@ -11,10 +11,10 @@
 import axios from "axios"; //axios를 사용하기 위해서는 import를 해야한다.
 
 export default {
-  name: "FavoriteList",
+  name: "myThememapList",
   data() {
     return {
-      favoriteList: [], // 테마 맵 목록을 저장할 배열
+      myThememapList: [], // 테마 맵 목록을 저장할 배열
       themeMapId: null,
     };
   },
@@ -32,9 +32,9 @@ export default {
       axios
         .get(url, { withCredentials: true })
         .then((response) => {
-          // 받은 데이터를 처리하고 favoriteList 배열을 채운다.
+          // 받은 데이터를 처리하고 myThememapList 배열을 채운다.
           const themeMapList = response.data;
-          this.favoriteList = themeMapList.map((themeMap) => {
+          this.myThememapList = themeMapList.map((themeMap) => {
             return {
               themeMapDto: themeMap,
             };

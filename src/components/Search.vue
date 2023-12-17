@@ -1,6 +1,6 @@
 <template>
-  <div>  
-    <div id="searchContainer" class="bg_white">    
+  <div>
+    <div id="searchContainer" class="bg_white">
       <div class="search">
         <input
           type="text"
@@ -18,12 +18,16 @@
       <!-- 장소 목록 -->
       <ul id="placesList">
         <!-- @click="selectPlace(place, index)" -->
-        <li v-for="(place, index) in places" :key="index" >
+        <li v-for="(place, index) in places" :key="index">
           <img class="markerbg" :src="getMarkerImageUrl(index)" />
-          <div class="info">   
+          <div class="info">
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{ place.road_address_name }}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{ place.address_name }}</span>
+            <span v-if="place.road_address_name">{{
+              place.road_address_name
+            }}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{
+              place.address_name
+            }}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
@@ -33,21 +37,21 @@
             class="bookmark"
           />
           <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          fill="currentColor"
-          class="bi bi-person-add"
-          viewBox="0 0 16 16"
-          @click="openModal"
-        >
-          <path
-            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
-          />
-          <path
-            d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"
-          />
-        </svg>          
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-person-add"
+            viewBox="0 0 16 16"
+            @click="openModal"
+          >
+            <path
+              d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
+            />
+            <path
+              d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"
+            />
+          </svg>
         </li>
       </ul>
 
@@ -57,16 +61,17 @@
 
     <!-- 모달 창 구조 -->
     <div class="modal-container">
-    <!-- 모달창 -->
-    <AddBookmark
-      :isModalOpen="isModalOpen"
-      :groupId="groupId"
-      @close-modal="closeModal"
-    />
-  </div>
+      <!-- 모달창 -->
+      <AddBookmark
+    :isModalOpen="isModalOpen"
+    @close-modal="closeModal"
+    @add-myplace="addMyplace"
+    :groupId="groupId"
+    :place="selectedPlace"
+  />
+    </div>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -143,108 +148,107 @@ export default {
         alert("Places 서비스가 초기화되지 않았습니다.");
       }
     },
-    
+
     selectPlace(place, index) {
-  // 클릭한 장소의 좌표를 가져옵니다.
-  const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+      // 클릭한 장소의 좌표를 가져옵니다.
+      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
 
-  // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
-  this.$emit("center-map", placePosition);
+      // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
+      this.$emit("center-map", placePosition);
 
-  // Emit a custom event with the selected place, index, and marker image URL
-  const markerImageUrl = this.getMarkerImageUrl(index);
-  this.$emit("place-selected", { place, index, markerImageUrl });
-},
+      // Emit a custom event with the selected place, index, and marker image URL
+      const markerImageUrl = this.getMarkerImageUrl(index);
+      this.$emit("place-selected", { place, index, markerImageUrl });
+    },
 
-getMarkerImageUrl(markerIndex) {
-  const placeIndex = (markerIndex % 15) + 1;
-  return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-},
+    getMarkerImageUrl(markerIndex) {
+      const placeIndex = (markerIndex % 15) + 1;
+      return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+    },
 
+    placesSearchCB(data, status, pagination) {
+      if (status === window.kakao.maps.services.Status.OK) {
+        this.places = data.map((place, index) => {
+          const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
+          return { ...place, markerImage };
+        });
 
-placesSearchCB(data, status, pagination) {
-  if (status === window.kakao.maps.services.Status.OK) {
-    this.places = data.map((place, index) => {
-      const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
-      return { ...place, markerImage };
-    });
+        // 검색 결과를 Map.vue로 전송
+        this.$emit("search-results", this.places);
 
-    // 검색 결과를 Map.vue로 전송
-    this.$emit("search-results", this.places);
+        this.pagination = pagination; // pagination을 data에 저장
 
-    this.pagination = pagination; // pagination을 data에 저장
-
-    this.displayPagination(pagination);
-  } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-    alert("검색 결과가 존재하지 않습니다.");
-  } else if (status === window.kakao.maps.services.Status.ERROR) {
-    alert("검색 결과 중 오류가 발생했습니다.");
-  }
-},
+        this.displayPagination(pagination);
+      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+        alert("검색 결과가 존재하지 않습니다.");
+      } else if (status === window.kakao.maps.services.Status.ERROR) {
+        alert("검색 결과 중 오류가 발생했습니다.");
+      }
+    },
 
     displayPlacesOnMap(places) {
-  const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-  // 기존 마커 및 목록 제거
-  this.removeMarkers();
-  this.removeAllPlacesListItems();
+      // 기존 마커 및 목록 제거
+      this.removeMarkers();
+      this.removeAllPlacesListItems();
 
-  // 마커 생성 및 지도에 표시
-  places.forEach((place, index) => {
-  const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-  const marker = this.addMarker(placePosition, place, index);
-  marker.setMap(this.map);
+      // 마커 생성 및 지도에 표시
+      places.forEach((place, index) => {
+        const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+        const marker = this.addMarker(placePosition, place, index);
+        marker.setMap(this.map);
 
-  window.kakao.maps.event.addListener(marker, "click", () => {
-    this.centerMap(placePosition);
-  });
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          this.centerMap(placePosition);
+        });
 
-    bounds.extend(placePosition);
+        bounds.extend(placePosition);
 
-    // 목록에 추가
-    this.displayListItem(place);  // 주석처리 되어 있지 않음
-  });
+        // 목록에 추가
+        this.displayListItem(place); // 주석처리 되어 있지 않음
+      });
 
-  // 지도의 중심 및 확대 레벨 설정
-  this.setMapBounds(bounds);
-},
+      // 지도의 중심 및 확대 레벨 설정
+      this.setMapBounds(bounds);
+    },
 
-displayListItem(place) {
-  const listEl = document.getElementById("placesList");
-  const itemEl = this.getListItem(place);
+    displayListItem(place) {
+      const listEl = document.getElementById("placesList");
+      const itemEl = this.getListItem(place);
 
-  listEl.appendChild(itemEl);
-},
+      listEl.appendChild(itemEl);
+    },
 
-getListItem(place) {
-  const el = document.createElement("li");
-  const itemStr = `<span class="markerbg marker_1"></span>
+    getListItem(place) {
+      const el = document.createElement("li");
+      const itemStr = `<span class="markerbg marker_1"></span>
     <div class="info">
       <h5>${place.place_name}</h5>
       <span>${place.road_address_name}</span>
       <span class="jibun gray">${place.address_name}</span>
       <span class="tel">${place.phone}</span>
     </div>`;
-  
-  el.innerHTML = itemStr;
-  el.className = "item";
 
-  // 이벤트 리스너 추가
-  el.addEventListener("mouseover", () => {
-    this.displayInfowindow(place);
-  });
+      el.innerHTML = itemStr;
+      el.className = "item";
 
-  el.addEventListener("mouseout", () => {
-    this.infowindow.close();
-  });
+      // 이벤트 리스너 추가
+      el.addEventListener("mouseover", () => {
+        this.displayInfowindow(place);
+      });
 
-  return el;
-},
+      el.addEventListener("mouseout", () => {
+        this.infowindow.close();
+      });
 
-removeAllPlacesListItems() {
-  const listEl = document.getElementById("placesList");
-  listEl.innerHTML = "";
-},
+      return el;
+    },
+
+    removeAllPlacesListItems() {
+      const listEl = document.getElementById("placesList");
+      listEl.innerHTML = "";
+    },
 
     displayPagination(pagination) {
       const paginationEl = document.getElementById("pagination");
@@ -270,7 +274,6 @@ removeAllPlacesListItems() {
 
       paginationEl.appendChild(fragment);
     },
-    
 
     removeAllChildNodes(el) {
       while (el.firstChild) {
@@ -297,6 +300,7 @@ removeAllPlacesListItems() {
       // 모달 창 열기
       this.isModalOpen = true;
       // 선택된 장소(place) 정보를 이용하여 모달 창 내용 업데이트 가능
+      this.selectedPlace = place;
     },
     closeModal() {
       // 모달 창 닫기
@@ -340,7 +344,6 @@ removeAllPlacesListItems() {
   align-items: center;
   padding: 7px;
 }
-
 
 #placesList li .markerbg {
   width: 20px;
@@ -400,21 +403,51 @@ removeAllPlacesListItems() {
   margin-right: 5px;
 }
 
-#placesList li .marker_1 { background-position: 0 -10px; }
-#placesList li .marker_2 { background-position: 0 -56px; }
-#placesList li .marker_3 { background-position: 0 -102px; }
-#placesList li .marker_4 { background-position: 0 -148px; }
-#placesList li .marker_5 { background-position: 0 -194px; }
-#placesList li .marker_6 { background-position: 0 -240px; }
-#placesList li .marker_7 { background-position: 0 -286px; }
-#placesList li .marker_8 { background-position: 0 -332px; }
-#placesList li .marker_9 { background-position: 0 -378px; }
-#placesList li .marker_10 { background-position: 0 -423px; }
-#placesList li .marker_11 { background-position: 0 -470px; }
-#placesList li .marker_12 { background-position: 0 -516px; }
-#placesList li .marker_13 { background-position: 0 -562px; }
-#placesList li .marker_14 { background-position: 0 -608px; }
-#placesList li .marker_15 { background-position: 0 -654px; }
+#placesList li .marker_1 {
+  background-position: 0 -10px;
+}
+#placesList li .marker_2 {
+  background-position: 0 -56px;
+}
+#placesList li .marker_3 {
+  background-position: 0 -102px;
+}
+#placesList li .marker_4 {
+  background-position: 0 -148px;
+}
+#placesList li .marker_5 {
+  background-position: 0 -194px;
+}
+#placesList li .marker_6 {
+  background-position: 0 -240px;
+}
+#placesList li .marker_7 {
+  background-position: 0 -286px;
+}
+#placesList li .marker_8 {
+  background-position: 0 -332px;
+}
+#placesList li .marker_9 {
+  background-position: 0 -378px;
+}
+#placesList li .marker_10 {
+  background-position: 0 -423px;
+}
+#placesList li .marker_11 {
+  background-position: 0 -470px;
+}
+#placesList li .marker_12 {
+  background-position: 0 -516px;
+}
+#placesList li .marker_13 {
+  background-position: 0 -562px;
+}
+#placesList li .marker_14 {
+  background-position: 0 -608px;
+}
+#placesList li .marker_15 {
+  background-position: 0 -654px;
+}
 
 #placesList {
   list-style: none;
@@ -438,8 +471,6 @@ removeAllPlacesListItems() {
 
 #placesList li .info {
   flex-grow: 1;
-
-  
 }
 
 #placesList li h5,
@@ -460,8 +491,9 @@ removeAllPlacesListItems() {
 }
 
 #placesList li .info .jibun {
-  padding-left  : 26px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+  padding-left: 26px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
   opacity: 0.7;
 }
 
@@ -529,7 +561,6 @@ removeAllPlacesListItems() {
 .bookmark {
   width: 30px;
 }
-
 </style>
 
 <style>
