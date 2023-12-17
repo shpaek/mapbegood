@@ -81,11 +81,15 @@
   </div>
   <div class="modal-container">
     <!-- 모달창 -->
-    <SearchMember
-      :isModalOpen="isModalOpen"
+    <GroupImageChange
+      :isImageChangeOpen="isImageChangeOpen"
       :groupId="groupId"
-      @close-modal="closeModal"
+      @close-modal="closeImageChange"
     />
+    <GroupNameChange
+      :isNameChangeOpen="isNameChangeOpen"
+      :groupId="groupId"
+      @close-modal="closeNameChange"/>
   </div>
 </div>
 </template>
@@ -162,6 +166,8 @@ export default {
       //     leaderNickname: this.leaderNickname
       //   }
       // });
+      this.isImageChangeOpen=true;
+      console.log(this.isImageChangeOpen)
     },
     updateNameClickHandler() {
       // this.$router.push({
@@ -171,7 +177,9 @@ export default {
       //     groupName: this.groupName,
       //     leaderNickname: this.leaderNickname
       //   }
-      // });
+      // }); openImageChange(){
+      this.isNameChangeOpen = true;
+      console.log(this.isNameChangeOpen)
     },
     deleteGroupClickHandler() {
       const url = `${this.backURL}/group/${this.groupId}`
@@ -233,6 +241,12 @@ export default {
           alert("그룹 테마지도를 삭제하지 못했습니다.");
         });
     },
+    closeImageChange(){
+      this.iscloseChangeOpen = false;
+    },
+    closeNameChange(){
+      this.isImageChangeOpen=false;
+    }
   }
 }
 

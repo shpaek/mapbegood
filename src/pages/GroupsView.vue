@@ -43,22 +43,29 @@
     :isModalOpen="isModalOpen"
     @close-modal="closeModal"
   />
+  <GroupCreate
+    :isCreateOpen="isCreateOpen"
+    @close-modal="closeCreate"
+  />
 </template>
 <script>
 import axios from "axios";
 import Detailmap from './Detailmap.vue';
 import GroupInvite from './GroupInvite.vue';
+import GroupCreate from './GroupCreate.vue';
 export default {
   name: "GroupsView",
   components:{
     Detailmap,
-    GroupInvite
+    GroupInvite,
+    GroupCreate,
   },
   data() {
     return {
       groupList: [],
       emptyMsg: "",
       isModalOpen: false,
+      isCreateOpen: false,
     };
   },
   created() {
@@ -87,8 +94,8 @@ export default {
   },
   methods: {
     addgroupClickHandler() {
-      //그룹추가 페이지로 이동
-      location.href = "/groupcreate";
+      this.isCreateOpen = true;
+      console.log(this.isCreateOpen);
     },
     groupClickHandler(group) {
       //그룹의 테마그룹 List보여주는 탭으로 주소이동시키기
@@ -112,6 +119,9 @@ export default {
     },
     closeModal() {
       this.isModalOpen = false;
+    },
+    closeCreate() {
+      this.isCreateOpen = false;
     },
   },
 };

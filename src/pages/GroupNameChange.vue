@@ -1,5 +1,5 @@
 <template lang="">
-    <form class="namechange" @submit.prevent="namechageFromSubmitHandler">
+    <!-- <form class="namechange" @submit.prevent="namechageFromSubmitHandler">
         <h2>그룹명 변경</h2>
         <div class="fill">
             <ul>
@@ -21,12 +21,16 @@
             <button type="button" id="b3" @click="b3ClickHandler">돌아가기</button>&nbsp;&nbsp;&nbsp;
             <button type="submit" id="b2" v-show="isDupchkOk">변경하기</button>
         </div>
-    </form>
+    </form> -->
 </template>
 <script>
 import axios from 'axios';
 export default {
     name: 'GroupNameChange',
+    props:{
+    isNameChangeOpen: Boolean,
+    groupId: Number,
+    },
     data() {
         return {
             name: '',

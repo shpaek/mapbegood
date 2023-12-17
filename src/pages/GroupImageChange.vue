@@ -1,12 +1,11 @@
 <template lang="">
-  <form class="imagechange" @submit.prevent="imagechangeFormSubmitHandler">
+  <!-- <form class="imagechange" @submit.prevent="imagechangeFormSubmitHandler">
     <h2>그룹이미지 변경</h2>
     <div class="fill">
       <div class="before">
         <ul class="before">
           <li><label>기존 이미지:</label>&nbsp;</li>
           <li>
-            <!-- <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+this.groupId+'_groupImage.jpg'" alt="기존이미지"> -->
             <img
               :src="
                 'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
@@ -20,7 +19,6 @@
         </ul>
       </div>
       <div class="svg">
-        <!-- 화살표 -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="25"
@@ -49,7 +47,6 @@
               required
               @change="imageChangeHandler"
             />
-            <!-- <v-file-input label="변경할 이미지:"></v-file-input> -->
           </li>
           <li>
             <div v-if="fileErrorMsg">{{ fileErrorMsg }}</div>
@@ -63,12 +60,16 @@
       >&nbsp;&nbsp;&nbsp;
       <button type="submit" id="b2">변경하기</button>
     </div>
-  </form>
+  </form> -->
 </template>
 <script>
 import axios from "axios";
 export default {
   name: "GroupImageChange",
+  props:{
+    isImageChangeOpen: Boolean,
+    groupId: Number,
+  },
   data() {
     return {
       groupId: 0,
