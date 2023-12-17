@@ -25,6 +25,9 @@ import GroupImageChange from "../pages/GroupImageChange.vue";
 import ThememapCreate from "../pages/ThememapCreate.vue"; // 테마맵 추가
 import ThememapUpdate from "../pages/ThemeMapUpdate.vue"; //테마맵 수정
 
+ 
+
+
 import ThememapDetail from "../pages/ThemeMapDetail.vue"; //테마맵 Id로 조회
 
 import GroupWaiting from "../pages/GroupWaiting.vue";
@@ -46,7 +49,7 @@ const router = createRouter({
     { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
     // { name: 'groupThemeMapList', path: "/groupthememaplist/:groupId/:groupName/:leaderNickname", component: GroupThemeMapList },
-
+  
     {
       name: "/group",
       path: "/group/:groupId/:groupName/:leaderNickname",
