@@ -18,6 +18,9 @@ import Place from "../pages/Place.vue";
 import MyFeed from "../pages/MyFeed.vue";
 import MyFeedCreate from "../pages/MyFeedCreate.vue";
 import MyFeedUpdate from "../pages/MyFeedUpdate.vue";
+import OurFeed from "../pages/OurFeed.vue";
+import OurFeedCreate from "../pages/OurFeedCreate.vue";
+import OurFeedUpdate from "../pages/OurFeedUpdate.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
 import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
@@ -74,9 +77,32 @@ const router = createRouter({
      { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
     { path: "/map", component: Map },
     { path: "/place", component: Place },
-    { path: "/myfeed", component: MyFeed },
-    { path: "/myfeedcreate", component: MyFeedCreate },
-    { path: "/myfeedupdate", component: MyFeedUpdate },
+    {
+      path: '/myfeed/:myplaceId',
+      name: 'myfeed',
+      component: MyFeed,
+    },
+    {
+      path: '/myfeedcreate/:myplaceId',
+      name: 'myfeedcreate',
+      component: MyFeedCreate,
+    },
+    {
+      path: '/myfeedupdate/:myplaceId',
+      name: 'myfeedupdate',
+      component: MyFeedUpdate,
+    },
+    {
+      path: '/ourfeed/:groupId/:ourplaceId/:memberNickname',
+      name: 'ourfeed',
+      component: OurFeed,
+    },
+    { path: "/ourfeedcreate/:groupId/:ourplaceId",
+      name: 'ourfeedcreate',
+      component: OurFeedCreate },
+    { path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
+      name: 'ourfeedupdate',
+      component: OurFeedUpdate },
     { path: "/members", component: MemberInfo },
 
     { path: "/groupmembers", component: GroupMember },
