@@ -1,46 +1,29 @@
 <template>
   <!-- 전체화면에 맵 표시 -->
-  <DetailMap :mymapdetail="mymapdetail" :places="mymapdetail.myplaces" />
+  <DetailMap ref="detailMap" :mymapdetail="mymapdetail" :places="mymapdetail.myplaces" />
 
   <div class="theme-map-details">
-    <h2 class="mb-1" text-warning>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
-        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-      </svg>
-      {{ mymapdetail.themeMapDto.name }}
-    </h2>
-    
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title" text-warning>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
-            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-          </svg>
-          내용:
-        </h5>
-        <p class="card-text">{{ mymapdetail.themeMapDto.memo }}</p>
-      </div>
-    </div>
-  <!--<p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>-->
+    <h1>{{ mymapdetail.themeMapDto.name }}</h1>
+    <p>내용(없어도될듯): {{ mymapdetail.themeMapDto.memo }}</p>
+    <p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>
 
     <div class="myplace-list-container">
-      <ul class="myplace-list">
-        <li
-          v-for="myplace in mymapdetail.myplaces"
-          :key="myplace.id"
-          class="myplace-item"
-        >
-          <div class="myplace-info">
+        <ul class="myplace-list">
+          <li
+            v-for="myplace in mymapdetail.myplaces"
+            :key="myplace.id"
+            class="myplace-item"
+          >
+            <div class="myplace-info">
             <h5>{{ myplace.placeId.placeName }}</h5>
             <p>방문 일자: {{ myplace.visitedAt }}</p>
             <p>주소: {{ myplace.placeId.address }}</p>
             <!-- 추가적인 Myplace 정보 표시 -->
           </div>
-          <button
-            class="add-bookmark-btn"
-            @click.stop="addBookmark(myplace.placeId)"
-          >
+            <button
+              class="add-bookmark-btn"
+              @click.stop="addBookmark(myplace.placeId)"
+            >
             <img src="/public/images/bookmark.png" class="bookmark-icon" />
             북마크
           </button>
@@ -75,42 +58,30 @@ export default {
     const themeMapId = this.$route.params.id;
     this.loadThemeMapDetail(themeMapId);
   },
-
   methods: {
-
-    
     async loadThemeMapDetail(themeMapId) {
-  const url = `${this.backURL}/mymap/${themeMapId}`;
-
-  try {
-    const response = await axios.get(url, {
-      withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
-      },
-    });
-
-    // 받은 데이터를 처리하고 mymapdetail 객체를 채웁니다.
-    this.mymapdetail = {
-      themeMapDto: response.data,
-      myplaces: response.data.myplaces, // 추가: myplaces 데이터를 할당
-    };
-
-    // 추가: Myplaces 불러오기
-    this.findAllMyPlace(themeMapId);
-  } catch (error) {
-    console.error(error);
-    alert(
-      error.response.data.message ||
-        "테마 맵 세부 정보를 불러오지 못했습니다."
-    );
-  }
-},
-
+      const url = `${this.backURL}/mymap/${themeMapId}`;
+      try {
+        const response = await axios.get(url, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+          },
+        });
+        this.mymapdetail = {
+          themeMapDto: response.data,
+        };
+        this.findAllMyPlace(themeMapId);
+      } catch (error) {
+        console.error(error);
+        alert(
+          error.response.data.message ||
+            "테마 맵 세부 정보를 불러오지 못했습니다."
+        );
+      }
+    },
     async findAllMyPlace(themeMapId) {
-      // Myplaces 불러오기
       const myPlacesUrl = `${this.backURL}/myplace/${themeMapId}`;
-
       try {
         const response = await axios.get(myPlacesUrl, {
           withCredentials: true,
@@ -118,9 +89,9 @@ export default {
             Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
           },
         });
-
-        // 받은 Myplaces 데이터를 mymapdetail에 추가
         this.mymapdetail.myplaces = response.data;
+        // Call the method in the child component
+        this.$refs.detailMap.displayPlacesOnMap(response.data);
       } catch (error) {
         console.error(error);
         alert(error.response.data.message || "Myplaces를 불러오지 못했습니다.");
