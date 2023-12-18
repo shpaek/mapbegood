@@ -17,7 +17,8 @@
           d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
         />
       </svg>
-      <span class="invite" v-show="isleader">
+      <span class="invite"> 
+      <!-- v-show="isleader"> -->
         <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -110,16 +111,12 @@
 </template>
 <script>
 import axios from "axios";
-import { mapState, mapActions } from "vuex";
 import SearchMember from "../pages/SearchMember.vue";
 
 export default {
   name: "GroupMember",
   components: {
     SearchMember,
-  },
-  computed: {
-    ...mapState(["userInfo", "isLogin"]),
   },
   data() {
     return {
@@ -136,7 +133,6 @@ export default {
     };
   },
   async created() {
-    await this.$store.dispatch("getUserInfo");
     //$router.parmas를 통해 전달된 파라미터 확인
     const groupId = this.$route.params.groupId;
     const groupName = this.$route.params.groupName;
@@ -149,7 +145,7 @@ export default {
     console.log(groupId, groupName, leaderNickname);
 
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
-    if (this.userInfo.nickName == this.leaderNickname) {
+    if (this.$store.state.userInfo.nickName == this.leaderNickname) {
       this.isleader = true;
     }
     // axios로 back에 그룹 멤버 명단 요청
@@ -259,10 +255,7 @@ div.member-list {
   margin-left: auto;
   margin-right: auto;
 }
-/* div.guide{
-    display: flex;
-    justify-content: space-between;
-} */
+
 div.info {
   display: flex;
   justify-content: space-between;
