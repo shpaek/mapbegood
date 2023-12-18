@@ -1,7 +1,26 @@
 <template>
   <div class="section-container">
     <div class="g-part">
+      <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
+
+      <div class="header-container">
       <h1 class="theme-list">나의 테마지도리스트</h1>
+           <!-- "테마맵 추가" 버튼 -->
+           <button
+          @click="addNewThememap"
+          class="sticker-btn btn btn-outline-secondary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="23"
+            height="23"
+            fill="currentColor"
+            class="bi bi-file-earmark-plus-fill"
+            viewBox="0 0 16 16"
+          >
+        </svg>
+        </button>
+      </div>
 
       <!-- 각 테마맵에 대한 반복문 -->
       <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
@@ -53,23 +72,14 @@
         </ul>
       </div>
     </div>
-    <!-- "테마맵 추가" 버튼 -->
-    <button
-      @click="addNewThememap"
-      class="sticker-btn btn btn-outline-secondary"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="23"
-        height="23"
-        fill="currentColor"
-        class="bi bi-file-earmark-plus-fill"
-        viewBox="0 0 16 16"
-      >
-        <!-- ... -->
-      </svg>
-    </button>
   </div>
+    <div class="m-part">
+    <Detailmap />
+  </div>
+
+   
+  </div>
+ 
 </template>
 
 <script>
@@ -174,6 +184,33 @@ export default {
 };
 </script>
 <style scoped>
+
+.search-wrapper {
+  /* position: absolute; */
+  /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
+  /* right: 0; 오른쪽에 닿도록 */
+  /* height: 100%; */
+
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.m-part {
+  position: absolute;
+  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
+  right: 0; /* 오른쪽에 닿도록 */
+  height: 100%;
+}
+
+.list-button-container {
+  display: flex;
+  justify-content: space-between; /* Adjust as needed */
+  align-items: center; /* Adjust as needed */
+}
+
 /* 기존 스타일 */
 div.g-part > div.empty-msg {
   padding: 70px;
@@ -210,6 +247,9 @@ ul.theme-list {
   top: 20px;
   right: 20px;
   z-index: 1000; /* Set a higher z-index to ensure it's above other elements */
+  position: relative;
+  top: 0; /* Adjust as needed */
+  right: 0; /* Adjust as needed */
 }
 
 .sticker-btn:hover {
