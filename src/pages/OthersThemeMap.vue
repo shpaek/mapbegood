@@ -73,15 +73,22 @@
       <p class="mb-0">검색 결과가 없습니다.</p>
     </div>
   </div>
+  <div class="m-part">
+    <Detailmap />
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { mapState, mapActions } from "vuex";
+import Detailmap from "./Detailmap.vue";
 
 export default {
   computed: {
     ...mapState(["userInfo"]),
+  },
+  components: {
+    Detailmap,
   },
   created() {
     // this.$store.dispatch("getUserInfo").then() //=> {
@@ -212,6 +219,26 @@ export default {
 };
 </script>
 <style>
+.search-wrapper {
+  /* position: absolute; */
+  /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
+  /* right: 0; 오른쪽에 닿도록 */
+  /* height: 100%; */
+
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.m-part {
+  position: absolute;
+  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
+  right: 0; /* 오른쪽에 닿도록 */
+  height: 100%;
+}
+
 ul.elevated-list {
   list-style-type: none;
   padding: 0;

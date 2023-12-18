@@ -1,48 +1,51 @@
 <!--favoriteList.vue-->
 <!-- favoriteList.vue -->
 <template>
-  <div>
-    <div class="addfavorite">
-      <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
-    </div>
-    <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-      <h1>favoriteList 목록</h1>
-      <ul class="elevated-list">
-        <li v-for="favorite in favoriteList" :key="favorite.themeMapDto.id">
-          <h2>{{ favorite.themeMapDto.name }}</h2>
-          <!-- <p>{{ favorite.themeMapDto.memo }}</p> -->
-          <!-- <p>ID: {{ favorite.themeMapDto.id }}</p> -->
-          <button
-            @click="deleteFavorite(favorite.themeMapDto.id)"
-            class="btn btn-dark"
+  <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
+  <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
+    <h1>favoriteList 목록</h1>
+    <ul class="elevated-list">
+      <li v-for="favorite in favoriteList" :key="favorite.themeMapDto.id">
+        <h2>{{ favorite.themeMapDto.name }}</h2>
+        <!-- <p>{{ favorite.themeMapDto.memo }}</p> -->
+        <!-- <p>ID: {{ favorite.themeMapDto.id }}</p> -->
+        <button
+          @click="deleteFavorite(favorite.themeMapDto.id)"
+          class="btn btn-dark"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            class="bi bi-x-square"
+            viewBox="0 0 16 16"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="currentColor"
-              class="bi bi-x-square"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
-              />
-              <path
-                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
-              />
-            </svg>
-          </button>
-        </li>
-      </ul>
-    </div>
+            <path
+              d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+            />
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </div>
+  <div class="m-part">
+    <Detailmap />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Detailmap from "./Detailmap.vue";
 
 export default {
   name: "FavoriteList",
+  components: {
+    Detailmap,
+  },
 
   data() {
     return {
@@ -126,6 +129,27 @@ p {
   font-size: 1rem;
   margin-bottom: 0;
 }
+
+.search-wrapper {
+  /* position: absolute; */
+  /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
+  /* right: 0; 오른쪽에 닿도록 */
+  /* height: 100%; */
+
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.m-part {
+  position: absolute;
+  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
+  right: 0; /* 오른쪽에 닿도록 */
+  height: 100%;
+}
+
 ul.elevated-list {
   list-style-type: none;
   padding: 0;
