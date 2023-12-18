@@ -109,42 +109,45 @@ export default {
     // },
 
     displayPlacesOnMap() {
-  const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-  // Remove existing markers
-  this.removeMarkers();
+      // Remove existing markers
+      this.removeMarkers();
 
-  // Check if myplaces is an array and not empty
-  if (Array.isArray(this.mymapdetail.myplaces) && this.mymapdetail.myplaces.length > 0) {
-    // Display markers on the map
-    this.mymapdetail.myplaces.forEach((place) => {
-      if (place.placeId && place.placeId.x && place.placeId.y) {
-        const placePosition = new window.kakao.maps.LatLng(
-          place.placeId.y,
-          place.placeId.x
-        );
+      // Check if myplaces is an array and not empty
+      if (
+        Array.isArray(this.mymapdetail.myplaces) &&
+        this.mymapdetail.myplaces.length > 0
+      ) {
+        // Display markers on the map
+        this.mymapdetail.myplaces.forEach((place) => {
+          if (place.placeId && place.placeId.x && place.placeId.y) {
+            const placePosition = new window.kakao.maps.LatLng(
+              place.placeId.y,
+              place.placeId.x
+            );
 
-        const marker = new window.kakao.maps.Marker({
-          position: placePosition,
+            const marker = new window.kakao.maps.Marker({
+              position: placePosition,
+            });
+
+            marker.setMap(this.map);
+
+            window.kakao.maps.event.addListener(marker, "click", () => {
+              this.centerMap(placePosition);
+            });
+
+            bounds.extend(placePosition);
+            this.markers.push(marker);
+          }
         });
-
-        marker.setMap(this.map);
-
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          this.centerMap(placePosition);
-        });
-
-        bounds.extend(placePosition);
-        this.markers.push(marker);
+      } else {
+        console.warn("No places to display on the map.");
       }
-    });
-  } else {
-    console.warn("No places to display on the map.");
-  }
 
-  // Set the map bounds even if there are no markers
-  this.map.setBounds(bounds);
-},
+      // Set the map bounds even if there are no markers
+      this.map.setBounds(bounds);
+    },
 
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
@@ -166,6 +169,4 @@ export default {
   overflow: hidden;
   z-index: 1;
 }
-
-
 </style>
