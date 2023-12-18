@@ -6,9 +6,14 @@
 //import com.kosa.mapbegood.domain.member.dto.QMemberSearchResponseDTO;
 //import com.kosa.mapbegood.domain.member.entity.Member;
 //import com.kosa.mapbegood.domain.member.entity.QMember;
+//import com.kosa.mapbegood.domain.mymap.favorite.dto.QRecommendThemeMapDto;
+//import com.kosa.mapbegood.domain.mymap.favorite.dto.RecommendThemeMapDto;
+//import com.kosa.mapbegood.domain.mymap.favorite.entity.QFavorite;
 //import com.kosa.mapbegood.domain.mymap.thememap.dto.QThemeMapResponseDTO;
 //import com.kosa.mapbegood.domain.mymap.thememap.dto.ThemeMapResponseDTO;
 //import com.kosa.mapbegood.domain.mymap.thememap.entity.QThemeMap;
+//import com.querydsl.core.types.Projections;
+//import com.querydsl.jpa.impl.JPAQuery;
 //import com.querydsl.jpa.impl.JPAQueryFactory;
 //import lombok.extern.slf4j.Slf4j;
 //import org.junit.jupiter.api.DisplayName;
@@ -69,7 +74,7 @@
 //		String nick = "test1";
 //		String email = "test1@mail.com";
 //		String pwd = "test1";
-//		int status = 1;
+//		Long status = 1L;
 //
 //		Member m = Member.builder()
 //				.email(email)
@@ -197,7 +202,7 @@
 //		QMember qm = new QMember("qm");
 //
 //		List<MemberInfoDTO> memList = queryFactory
-//				.select(new QMemberInfoDTO(qm.email, qm.nickname, qm.profileImage))
+//				.select(new QMemberInfoDTO(qm.email, qm.nickname, qm.profileImage, qm.status))
 //				.from(qm)
 //				.where(qm.nickname.contains("test"))
 //				.fetch();
@@ -264,4 +269,48 @@
 //		}
 //	}
 //
+//    @Test
+//    public void favoriteThemeMapTest() {
+//        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+//
+//        QThemeMap qtm = new QThemeMap("qtm");
+//        QFavorite qf = new QFavorite("qf");
+//		QMember qm = new QMember("qm");
+//
+//		List<RecommendThemeMapDto> qrtmList = queryFactory
+//				.select(new QRecommendThemeMapDto(qf.count(), qtm.id, qtm.name, qtm.memo, qm.nickname))
+//				.from(qf)
+//				.join(qtm).on(qf.thememapId.eq(qtm))
+//				.join(qm).on(qtm.memberEmail.eq(qm))
+//				.groupBy(qtm.id, qtm.name, qtm.memo, qm.nickname)
+//				.orderBy(qf.count().desc())
+//				.offset(-1)
+//				.limit(1)
+//				.fetch();
+//
+//		for (RecommendThemeMapDto rtm : qrtmList) {
+//			log.error("=".repeat(10));
+//			log.error(rtm.toString());
+//		}
+//
+////		JPAQuery<RecommendThemeMapDto> qrtmDto = queryFactory
+////                .select(new QRecommendThemeMapDto(qtm.id, qtm.name, qtm.memo, qm.nickname))
+////				.from(qf)
+////				.join(qtm).on(qf.thememapId.eq(qtm))
+////				.join(qm).on(qtm.memberEmail.eq(qm))
+////				.groupBy(qf.thememapId)
+////				.orderBy(qf.count().desc())
+////				.offset(1)
+////				.limit(5);
+//
+////		Object ob = queryFactory
+////				.select(qf.count().as("count"), qf.thememapId.id)
+////				.from(qf)
+////				.leftJoin(qtm)
+////				.on(qf.thememapId.eq(qtm))
+////				.groupBy(qf.thememapId)
+////				.orderBy(qf.count().desc());
+//
+////		log.error(qrtmDto.toString());
+//    }
 //}
