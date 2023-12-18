@@ -69,7 +69,9 @@ export default {
         // 응답이 정상적으로 오면 성공 메시지 출력 또는 추가 작업 수행
         console.log("Group Theme Map created:", response.data);
         alert("그룹테마맵이 생성되었습니다.");
- 
+        
+        //자동으로 GroupDetail.vue로 이동
+        this.$router.push({name:"group"});
 
       } catch (error) {
         // 오류 처리
