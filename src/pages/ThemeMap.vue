@@ -1,6 +1,10 @@
+thememap.vue
+
 <template>
-  <div class="content">
-    <h1 class="theme-list">나의 테마지도리스트</h1>
+  <div class="section-contaioner">
+    <div class="g-part">
+    
+      <h1 class="theme-list">나의 테마지도리스트</h1>
 
     <!-- 각 테마맵에 대한 반복문 -->
     <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
@@ -73,6 +77,7 @@
         </li>
       </ul>
     </div>
+    </div>
     <!-- "테마맵 추가" 버튼 -->
     <!-- <button @click="addNewThememap" class="sticker-btn btn btn-outline-secondary">리스트 생성</button> -->
     <button
@@ -97,15 +102,20 @@
 
 <script>
 import axios from "axios"; //axios를 사용하기 위해서는 import를 해야한다.
+import Detailmap from './Detailmap.vue';
 
 export default {
   name: "FavoriteList",
+  conponents:{
+    Detailmap,
+  },
   data() {
     return {
       favoriteList: [], // 테마 맵 목록을 저장할 배열
       themeMapId: null,
     };
   },
+
   mounted() {
     this.loadMymapList();
   },
@@ -197,6 +207,9 @@ export default {
 
 <style scoped>
 /* 기존 스타일 */
+div.g-part > div.empty-msg {
+  padding: 70px;
+}
 
 h2 {
   color: #600;
@@ -245,9 +258,10 @@ ul.elevated-list {
   padding: 0;
   border: 2px solid #4e4e52;
   border-radius: 10px;
-  margin: 20px 0;
+  margin: 5px 0;
   background-color: #f8f9fa; /* Background color for the ul element */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
+  max-width: 400px;
 }
 
 ul {

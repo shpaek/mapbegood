@@ -2,9 +2,12 @@
 <!-- favoriteList.vue -->
 <template>
   <div>
-    <div class="addfavorite">
+    <div class="section-contaioner">
+      <div class="g-part">
+      <div class="icon-container">
+        
       <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
-    </div>
+ 
     <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
       <h1>favoriteList 목록</h1>
       <ul class="elevated-list">
@@ -35,15 +38,25 @@
         </li>
       </ul>
     </div>
+    <div class="m-part">
+      <Detailmap />
+    </div>  
   </div>
+  </div>
+  </div>
+  </div>
+  
 </template>
 
 <script>
 import axios from "axios";
+import Detailmap from './Detailmap.vue';
 
 export default {
   name: "FavoriteList",
-
+  components: {
+    Detailmap,
+    },
   data() {
     return {
       favoriteList: [],
@@ -134,6 +147,8 @@ ul.elevated-list {
   margin: 20px 0;
   background-color: #f8f9fa; /* Background color for the ul element */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
+  max-width: 400px;
+
 }
 .sidebar {
   /*사이드바에서 사용하는 것이고 위치 설정해두기*/
