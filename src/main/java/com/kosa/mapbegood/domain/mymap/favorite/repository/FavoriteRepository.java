@@ -10,7 +10,7 @@ import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.mymap.favorite.entity.Favorite;
 import com.kosa.mapbegood.domain.mymap.favorite.entity.FavoriteEmbedded;
 
-public interface FavoriteRepository extends JpaRepository<Favorite, FavoriteEmbedded> {
+public interface FavoriteRepository extends JpaRepository<Favorite, FavoriteEmbedded>, FavoriteCustomRepository {
 
 	List<Favorite> findByMemberEmail(Member member);
 
