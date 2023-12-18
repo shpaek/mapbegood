@@ -282,20 +282,20 @@ export default {
       }
     },
 
-    // addBookmark(place) {
-    //   const url = `${this.backURL}/place/${place.id}`;
-    //   axios
-    //     .post(url, {
-    //       placeId: place.id,
-    //       name: place.place_name,
-    //     })
-    //     .then((response) => {
-    //       console.log("Bookmark added successfully:", response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error adding bookmark:", error);
-    //     });
-    // },
+    addBookmark(place) {
+      const url = `${this.backURL}/place/${place.id}`;
+      axios
+        .post(url, {
+          placeId: place.id,
+          name: place.place_name,
+        })
+        .then((response) => {
+          console.log("Bookmark added successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error adding bookmark:", error);
+        });
+    },
 
     openModal(place) {
       // 모달 창 열기

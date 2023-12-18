@@ -1,7 +1,7 @@
 <template>
   <!-- 전체화면에 맵 표시 -->
   <DetailMap ref="detailMap" :mymapdetail="mymapdetail" :places="mymapdetail.myplaces" />
-
+  <!-- <Map /> -->
   <div class="theme-map-details">
     <h1>{{ mymapdetail.themeMapDto.name }}</h1>
     <p>내용(없어도될듯): {{ mymapdetail.themeMapDto.memo }}</p>
@@ -22,11 +22,11 @@
           </div>
             <button
               class="add-bookmark-btn"
-              @click.stop="addBookmark(myplace.placeId)"
+              @click="cancelBookmark(myplace.id)"
             >
             <img src="/public/images/bookmark.png" class="bookmark-icon" />
-            북마크
-          </button>
+            북마크취소
+        </button>
         </li>
       </ul>
     </div>
@@ -36,10 +36,11 @@
 <script>
 import axios from "axios";
 import DetailMap from "./Detailmap.vue"; 
-
+// import Map from "./Map.vue";
 export default {
   components: {
     DetailMap,
+    // Map
   },
   data() {
     return {
@@ -97,6 +98,25 @@ export default {
         alert(error.response.data.message || "Myplaces를 불러오지 못했습니다.");
       }
     },
+
+    async cancelBookmark(myplaceId) {
+      const url = `${this.backURL}/myplace/${myplaceId}`;
+      try {
+        await axios.delete(url, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+          },
+        });
+        // After successful deletion, you might want to refresh the data
+        this.findAllMyPlace(this.mymapdetail.themeMapDto.id);
+      } catch (error) {
+        console.error(error);
+        alert(
+          error.response.data.message || "북마크를 취소하지 못했습니다."
+        );
+      }
+    },
   },
 };
 </script>
@@ -116,7 +136,7 @@ export default {
 
 .theme-map-details {
   position: fixed;
-  top: 0px;
+  top: 100px;
   left: 90px;
   z-index: 2;
   background: rgba(255, 255, 255, 0.8);
@@ -173,4 +193,46 @@ export default {
   margin-right: 5px;
   width: 30px;
 }
+
+.search {
+    position: relative;
+    width: calc(100% - 40px);
+    margin: 0 auto 10px;
+  }
+  
+  .search input {
+    width: 100%;
+    border: 2px solid #bbb;
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+  
+  .search img {
+    user-drag: none;
+    -webkit-user-drag: none;
+    position: absolute;
+    width: 17px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    pointer-events: none;
+  }
+  
+  .search img.icon {
+    pointer-events: auto;
+  }
+  
+  .search img:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .search input:focus {
+    outline: none;
+    border-color: #555;
+  }
 </style>
