@@ -1,7 +1,7 @@
 <template>
   <!-- 전체화면에 맵 표시 -->
-  <DetailMap :mymapdetail="mymapdetail" />
-
+  <DetailMap ref="detailMap" :mymapdetail="mymapdetail" :places="mymapdetail.myplaces" />
+  <!-- <Map /> -->
   <div class="theme-map-details">
     <h2 class="display-4"   style="font-size:2rem; fonr-weight:bold;">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
@@ -25,25 +25,25 @@
   <!--<p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>-->
 
     <div class="myplace-list-container">
-      <ul class="myplace-list">
-        <li
-          v-for="myplace in mymapdetail.myplaces"
-          :key="myplace.id"
-          class="myplace-item"
-        >
-          <div class="myplace-info">
+        <ul class="myplace-list">
+          <li
+            v-for="myplace in mymapdetail.myplaces"
+            :key="myplace.id"
+            class="myplace-item"
+          >
+            <div class="myplace-info">
             <h5>{{ myplace.placeId.placeName }}</h5>
             <p>방문 일자: {{ myplace.visitedAt }}</p>
             <p>주소: {{ myplace.placeId.address }}</p>
             <!-- 추가적인 Myplace 정보 표시 -->
           </div>
-          <button
-            class="add-bookmark-btn"
-            @click.stop="addBookmark(myplace.placeId)"
-          >
+            <button
+              class="add-bookmark-btn"
+              @click="cancelBookmark(myplace.id)"
+            >
             <img src="/public/images/bookmark.png" class="bookmark-icon" />
-            북마크
-          </button>
+            북마크취소
+        </button>
         </li>
       </ul>
     </div>
@@ -52,11 +52,12 @@
 
 <script>
 import axios from "axios";
-import DetailMap from "./Detailmap.vue"; // Update the path accordingly
-
+import DetailMap from "./Detailmap.vue"; 
+// import Map from "./Map.vue";
 export default {
   components: {
     DetailMap,
+    // Map
   },
   data() {
     return {
@@ -78,7 +79,6 @@ export default {
   methods: {
     async loadThemeMapDetail(themeMapId) {
       const url = `${this.backURL}/mymap/${themeMapId}`;
-
       try {
         const response = await axios.get(url, {
           withCredentials: true,
@@ -86,13 +86,9 @@ export default {
             Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
           },
         });
-
-        // 받은 데이터를 처리하고 mymapdetail 객체를 채웁니다.
         this.mymapdetail = {
           themeMapDto: response.data,
         };
-
-        // 추가: Myplaces 불러오기
         this.findAllMyPlace(themeMapId);
       } catch (error) {
         console.error(error);
@@ -102,11 +98,8 @@ export default {
         );
       }
     },
-
     async findAllMyPlace(themeMapId) {
-      // Myplaces 불러오기
       const myPlacesUrl = `${this.backURL}/myplace/${themeMapId}`;
-
       try {
         const response = await axios.get(myPlacesUrl, {
           withCredentials: true,
@@ -114,12 +107,31 @@ export default {
             Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
           },
         });
-
-        // 받은 Myplaces 데이터를 mymapdetail에 추가
         this.mymapdetail.myplaces = response.data;
+        // Call the method in the child component
+        this.$refs.detailMap.displayPlacesOnMap(response.data);
       } catch (error) {
         console.error(error);
         alert(error.response.data.message || "Myplaces를 불러오지 못했습니다.");
+      }
+    },
+
+    async cancelBookmark(myplaceId) {
+      const url = `${this.backURL}/myplace/${myplaceId}`;
+      try {
+        await axios.delete(url, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+          },
+        });
+        // After successful deletion, you might want to refresh the data
+        this.findAllMyPlace(this.mymapdetail.themeMapDto.id);
+      } catch (error) {
+        console.error(error);
+        alert(
+          error.response.data.message || "북마크를 취소하지 못했습니다."
+        );
       }
     },
   },
@@ -141,7 +153,7 @@ export default {
 
 .theme-map-details {
   position: fixed;
-  top: 0px;
+  top: 100px;
   left: 90px;
   z-index: 2;
   background: rgba(255, 255, 255, 0.8);
@@ -198,4 +210,46 @@ export default {
   margin-right: 5px;
   width: 30px;
 }
+
+.search {
+    position: relative;
+    width: calc(100% - 40px);
+    margin: 0 auto 10px;
+  }
+  
+  .search input {
+    width: 100%;
+    border: 2px solid #bbb;
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+  
+  .search img {
+    user-drag: none;
+    -webkit-user-drag: none;
+    position: absolute;
+    width: 17px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    pointer-events: none;
+  }
+  
+  .search img.icon {
+    pointer-events: auto;
+  }
+  
+  .search img:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .search input:focus {
+    outline: none;
+    border-color: #555;
+  }
 </style>

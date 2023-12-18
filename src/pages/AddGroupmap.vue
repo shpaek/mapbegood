@@ -1,5 +1,6 @@
+<!--AddGroupmap.vue-->
 <template>
-    <div v-if="isCreateGroupMapModalOpen" class="bg-gray-50">
+  <div class="bg-gray-50">
     <div class="container my-10">
       <div class="card bg-white p-6 rounded-lg shadow">
         <h1 class="text-2xl font-semibold mb-4">그룹테마지도 생성하기</h1>
@@ -26,8 +27,8 @@
 
         <!-- 테마맵 생성 버튼 -->
         <button @click="CreateGroupMap" class="btn btn-dark">테마맵 생성</button>
-        <!-- 모달 닫기 버튼 -->
-        <button @click="closeCreateGroupMapModal" class="btn btn-outline-dark">모달 닫기</button>
+        <button @click="cancelCreateGroupMap" class="btn btn-light">취소</button>
+
       </div>
     </div>
   </div>
@@ -37,15 +38,6 @@
 import axios from 'axios';
 
 export default {
-  computed: {
-    isCreateGroupMapModalOpen: {
-      get() {
-        return this.$store.state.isCreateGroupMapModalOpen;
-      },
-      set(value) {
-        this.$store.commit(value ? 'openCreateGroupMapModal' : 'closeCreateGroupMapModal');
-      }
-    },
   name: "addgroupmap",
   data() {
     return {
@@ -77,18 +69,45 @@ export default {
         // 응답이 정상적으로 오면 성공 메시지 출력 또는 추가 작업 수행
         console.log("Group Theme Map created:", response.data);
         alert("그룹테마맵이 생성되었습니다.");
+ 
+
       } catch (error) {
         // 오류 처리
-        console.error("Error creating Group Theme Map:", error);
+        console.error("생성실패:", error);
       }
     },
-    closeCreateGroupMapModal() {
-      this.isCreateGroupMapModalOpen = false;
+    cancelCreateGroupMap() {
+       
+      this.$router.go(-1); // Go back one step in the history stack
     }
   }
-
-  }
 };
+  
+
     
 
 </script>
+<style scoped>
+  /* ... existing styles ... */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+  .modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999; /* Adjust the z-index value as needed */
+  }
+
+  /* ... existing styles ... */
+</style>
