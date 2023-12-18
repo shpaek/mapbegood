@@ -35,18 +35,18 @@
   <div class="m-part">
     <Detailmap />
   </div>
+
 </template>
 
 <script>
 import axios from "axios";
-import Detailmap from "./Detailmap.vue";
+import Detailmap from './Detailmap.vue';
 
 export default {
   name: "FavoriteList",
   components: {
     Detailmap,
-  },
-
+    },
   data() {
     return {
       favoriteList: [],
@@ -158,6 +158,8 @@ ul.elevated-list {
   margin: 20px 0;
   background-color: #f8f9fa; /* Background color for the ul element */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
+  max-width: 400px;
+
 }
 .sidebar {
   /*사이드바에서 사용하는 것이고 위치 설정해두기*/
