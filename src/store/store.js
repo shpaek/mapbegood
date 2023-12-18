@@ -107,7 +107,7 @@ export default createStore({
           console.log(error);
         }
       } else {
-        this.dispatch("logOut");
+        this.commit("logOut");
       }
     },
     getTokenRefresh() {
@@ -123,7 +123,7 @@ export default createStore({
           location.reload();
         })
         .catch(() => {
-          this.dispatch("logOut");
+          this.commit("logOut");
           // location.href = "/ ";
         });
     },
