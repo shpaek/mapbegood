@@ -169,6 +169,7 @@ export default {
     placesSearchCB(data, status, pagination) {
       if (status === window.kakao.maps.services.Status.OK) {
         this.places = data.map((place, index) => {
+          console.log(data);
           const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
           return { ...place, markerImage };
         });
@@ -281,20 +282,20 @@ export default {
       }
     },
 
-    // addBookmark(place) {
-    //   const url = `${this.backURL}/place/${place.id}`;
-    //   axios
-    //     .post(url, {
-    //       placeId: place.id,
-    //       name: place.place_name,
-    //     })
-    //     .then((response) => {
-    //       console.log("Bookmark added successfully:", response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error adding bookmark:", error);
-    //     });
-    // },
+    addBookmark(place) {
+      const url = `${this.backURL}/place/${place.id}`;
+      axios
+        .post(url, {
+          placeId: place.id,
+          name: place.place_name,
+        })
+        .then((response) => {
+          console.log("Bookmark added successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error adding bookmark:", error);
+        });
+    },
 
     openModal(place) {
       // 모달 창 열기

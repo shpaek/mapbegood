@@ -53,7 +53,7 @@
                               }}</v-list-tile-title>
                               <v-list-tile-title
                                 v-else
-                                >{{ item.name }}</v-list-tile-title
+                                >{{ item.name  }}</v-list-tile-title
                               >
                             </div>
                             <div v-if="tabs === 'personal'">
@@ -62,9 +62,13 @@
                               }}</v-list-tile-sub-title>
                             </div>
                             <div v-else>
-                              <v-list-tile-sub-title v-for="groupItem in item.groupThememapList" :key="groupItem.id">
-                  {{ groupItem.name }}
+                              
+                              <v-list-tile-sub-title v-for="groupItem in item.groupThememapList" :key="groupItem.id"  @click="addOurPlace(item.groupThememapList[0].id)">
+                                <span style="display: block;">
+                                {{ groupItem.name }}
+                              </span>
         </v-list-tile-sub-title>
+      
                             </div>
                           </v-list-tile-content>
                         </v-list-tile>
@@ -86,7 +90,7 @@
                 type="button"
                 class="close"
                 id="b2"
-                @click="b2ClickHandler"
+                @click="backClickHandler"
               >
                 닫기
               </button>
@@ -203,7 +207,7 @@ export default {
         console.error("No place information provided.");
         return;
       }
-
+      const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
       // Assuming you have the necessary data to create the request payload
       const myplaceWrapperDto = {
         myplaceDto: {
@@ -220,7 +224,7 @@ export default {
           address: this.place.address_name,
           x: this.place.x,
           y: this.place.y,
-          category: "음식점", // Update with the actual category
+          category: category, // Update with the actual category
         },
       };
       console.log(myplaceWrapperDto);
@@ -250,6 +254,44 @@ export default {
         this.clickedGroupItem = item;
       }
     },
+    addOurPlace(groupThememapId) {
+    // Make sure you have access to the clickedThemeMapId and place information
+    const clickedThemeMapId = this.clickedThemeMapId;
+    const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
+    // Assuming you have the necessary data to create the request payload
+    const ourplaceWrapperDto = {
+      ourplaceDto: {
+        groupThememapId : groupThememapId,
+        placeId : {
+          id: this.place.id
+        }
+      },
+      placeDto: {
+        id: this.place.id,
+          placeName: this.place.place_name,
+          address: this.place.address_name,
+          x: this.place.x,
+          y: this.place.y,
+          category: category, // Update with the actual category
+      },
+    };
+
+    // Make the API request to create Ourplace
+    const url = `${this.backURL}/ourplace`;
+    axios
+      .post(url, ourplaceWrapperDto)
+      .then((response) => {
+        // Handle the success response
+        console.log("Ourplace created successfully:", response.data);
+
+        // Now you can handle any additional logic if needed
+        // For example, you can close the modal or update the UI
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error creating Ourplace:", error);
+      });
+  },
   },
 };
 </script>
@@ -282,4 +324,7 @@ button.close {
   left: 50%;
   transform: translateX(-50%);
 }
+
+
+
 </style>

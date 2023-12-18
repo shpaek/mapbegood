@@ -18,6 +18,32 @@
             내용: </h5>
         <p class="card-text">{{ thememap.memo }}</p>
       </div>
+
+      
+      <div class="theme-map-details">
+        <div class="myplace-list-container">
+          <ul class="myplace-list">
+            <li
+              v-for="ourplace in thememap.ourplaceList"
+              :key="ourplace.id"
+              class="myplace-item"
+            >
+              <div class="myplace-info">
+                <h5>{{ ourplace.placeId.placeName }}</h5>
+                <p>방문 일자: {{ ourplace.visitedAt }}</p>
+                <p>주소: {{ ourplace.placeId.address }}</p>
+                <!-- 추가적인 Myplace 정보 표시 -->
+              </div>
+            </li>
+          </ul>
+        </div>
+  </div>
+
+
+
+
+
+
     </div>
   </div>
 </template>
@@ -39,6 +65,7 @@ export default {
       .then(response => {
         // API로부터 받은 데이터를 컴포넌트의 데이터에 저장
         this.thememap = response.data;
+        console.log(response.data)
       })
       .catch(error => {
         console.error('Error fetching theme map data:', error);
