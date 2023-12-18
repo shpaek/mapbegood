@@ -3,9 +3,26 @@
   <DetailMap :mymapdetail="mymapdetail" />
 
   <div class="theme-map-details">
-    <h1>{{ mymapdetail.themeMapDto.name }}</h1>
-    <p>내용(없어도될듯): {{ mymapdetail.themeMapDto.memo }}</p>
-    <p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>
+    <h2 class="mb-1" text-warning>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+      </svg>
+      {{ mymapdetail.themeMapDto.name }}
+    </h2>
+    
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title" text-warning>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chat-left-text" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+          내용:
+        </h5>
+        <p class="card-text">{{ mymapdetail.themeMapDto.memo }}</p>
+      </div>
+    </div>
+  <!--<p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>-->
 
     <div class="myplace-list-container">
       <ul class="myplace-list">
@@ -39,7 +56,7 @@ import DetailMap from "./Detailmap.vue"; // Update the path accordingly
 
 export default {
   components: {
-    // DetailMap,
+    DetailMap,
   },
   data() {
     return {
