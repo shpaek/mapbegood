@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50">
+    <div v-if="isCreateGroupMapModalOpen" class="bg-gray-50">
     <div class="container my-10">
       <div class="card bg-white p-6 rounded-lg shadow">
         <h1 class="text-2xl font-semibold mb-4">그룹테마지도 생성하기</h1>
@@ -26,6 +26,8 @@
 
         <!-- 테마맵 생성 버튼 -->
         <button @click="CreateGroupMap" class="btn btn-dark">테마맵 생성</button>
+        <!-- 모달 닫기 버튼 -->
+        <button @click="closeCreateGroupMapModal" class="btn btn-outline-dark">모달 닫기</button>
       </div>
     </div>
   </div>
@@ -35,6 +37,15 @@
 import axios from 'axios';
 
 export default {
+  computed: {
+    isCreateGroupMapModalOpen: {
+      get() {
+        return this.$store.state.isCreateGroupMapModalOpen;
+      },
+      set(value) {
+        this.$store.commit(value ? 'openCreateGroupMapModal' : 'closeCreateGroupMapModal');
+      }
+    },
   name: "addgroupmap",
   data() {
     return {
@@ -70,7 +81,12 @@ export default {
         // 오류 처리
         console.error("Error creating Group Theme Map:", error);
       }
+    },
+    closeCreateGroupMapModal() {
+      this.isCreateGroupMapModalOpen = false;
     }
+  }
+
   }
 };
     
