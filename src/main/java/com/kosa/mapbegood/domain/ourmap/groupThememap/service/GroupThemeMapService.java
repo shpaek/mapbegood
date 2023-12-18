@@ -1,6 +1,7 @@
 package com.kosa.mapbegood.domain.ourmap.groupThememap.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,6 +14,9 @@ import com.kosa.mapbegood.domain.ourmap.groupThememap.entity.GroupThememap;
 import com.kosa.mapbegood.domain.ourmap.groupThememap.repository.GroupThememapRepository;
 import com.kosa.mapbegood.domain.ourmap.groups.entity.Groups;
 import com.kosa.mapbegood.domain.ourmap.groups.repository.GroupsRepository;
+import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
+import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
+import com.kosa.mapbegood.domain.ourmap.ourplace.mapper.OurplaceMapper;
 import com.kosa.mapbegood.exception.FindException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,9 @@ public class GroupThemeMapService {
 	private GroupsRepository groupsRepository;
 	@Autowired
     private GroupThememapRepository groupThememapRepository;
+	
+	@Autowired
+	private OurplaceMapper opMapper;
 	
 	 /**
      * 그룹테마지도 생성o
@@ -174,13 +181,20 @@ public class GroupThemeMapService {
  
 	  // 그룹 테마지도 엔터티를 DTO로 변환
 	    public GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
-	        return GroupThememapDTO.builder()
+   	
+	    	List<Ourplace> opList = groupThememap.getOurplaceList();
+	    	List<OurplaceDTO> opDtoList = new ArrayList<>();
+	    	for(Ourplace op: opList) {
+	    		OurplaceDTO opDto = opMapper.entityToDto(op);
+	    		opDtoList.add(opDto);
+	    	}
+	    	return GroupThememapDTO.builder()
 	                .id(groupThememap.getId())
 	                .groupId(groupThememap.getGroupId().getId())
 	                .name(groupThememap.getName())
 	                .color(groupThememap.getColor())
 	                .memo(groupThememap.getMemo())
-               
+	                .ourplaceList(opDtoList)
 	                .build();
 	    }
 
