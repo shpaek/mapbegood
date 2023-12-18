@@ -1,56 +1,65 @@
 <template>
-    <div>
-      <div id="map"></div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "Map",
-    data() {
-      return {
-        mapContainer: null,
-        markers: [],
-        map: null,
-        ps: null,
-        infowindow: null,
+  <div>
+    <div id="map"></div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "DetailMap",
+  props: {
+    mymapdetail: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      mapContainer: null,
+      markers: [],
+      map: null,
+      ps: null,
+      infowindow: null,
+    };
+  },
+  mounted() {
+    this.mapContainer = document.getElementById("map");
+    this.loadScript();
+  },
+
+  methods: {
+    loadScript() {
+      const script = document.createElement("script");
+      script.src =
+        "https://dapi.kakao.com/v2/maps/sdk.js?appkey=872b5a083c1af3f5ac36a2d8e87b0790&libraries=services&autoload=false";
+      script.onload = () => {
+        window.kakao.maps.load(() => this.initialize());
       };
+      script.onerror = (error) => {
+        console.error("카카오 지도 SDK 로딩 오류:", error);
+      };
+      document.head.appendChild(script);
     },
-    mounted() {
-      this.mapContainer = document.getElementById("map");
-      this.loadScript();
-    },
-  
-    methods: {
-      loadScript() {
-        const script = document.createElement("script");
-        script.src =
-          "https://dapi.kakao.com/v2/maps/sdk.js?appkey=872b5a083c1af3f5ac36a2d8e87b0790&libraries=services&autoload=false";
-        script.onload = () => {
-          window.kakao.maps.load(() => this.initialize());
-        };
-        script.onerror = (error) => {
-          console.error("카카오 지도 SDK 로딩 오류:", error);
-        };
-        document.head.appendChild(script);
-      },
-  
-      async initialize() {
-        try {
-          if (!window.kakao || !window.kakao.maps) {
-            throw new Error("Kakao Maps API가 로드되지 않았습니다.");
-          }
-  
-          this.ps = window.kakao.maps.services.Places;
-          this.infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 });
-  
-          const userLocation = await this.getCurrentLocation();
-          this.setInitialMap(userLocation.latitude, userLocation.longitude);
-          this.getMyLocation();
-        } catch (error) {
-          console.error("지도 초기화 오류:", error);
+
+    async initialize() {
+      try {
+        if (!window.kakao || !window.kakao.maps) {
+          throw new Error("Kakao Maps API가 로드되지 않았습니다.");
         }
-      },
+
+        this.ps = window.kakao.maps.services.Places;
+        this.infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 });
+
+        const userLocation = await this.getCurrentLocation();
+        this.setInitialMap(userLocation.latitude, userLocation.longitude);
+        this.getMyLocation();
+
+        // 여러 장소의 마커를 표시
+        this.displayPlacesOnMap(places);
+      } catch (error) {
+        console.error("지도 초기화 오류:", error);
+      }
+    },
   
       getCurrentLocation() {
       return new Promise((resolve, reject) => {
@@ -139,59 +148,68 @@
     this.map.setBounds(bounds);
   },
 
-  displayPlacesOnMap(places) {
-    const bounds = new window.kakao.maps.LatLngBounds();
+ // 여러 장소의 마커를 표시
+ displayPlacesOnMap(places) {
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-    // 기존 마커 제거
-    this.removeMarkers();
+      // 기존 마커 및 목록 제거
+      this.removeMarkers();
 
-    // 마커 생성 및 지도에 표시
-    places.forEach((place, index) => {
-      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-      const marker = this.addMarker(placePosition, place, index);
-      marker.setMap(this.map);
+      // 마커 생성 및 지도에 표시
+      places.forEach((place, index) => {
+        const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+        const marker = this.addMarker(placePosition, place, index);
+        marker.setMap(this.map);
 
-      window.kakao.maps.event.addListener(marker, "click", () => {
-        this.centerMap(placePosition);
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          this.centerMap(placePosition);
+        });
+
+        bounds.extend(placePosition);
       });
 
-      bounds.extend(placePosition);
-    });
+      // 지도의 중심 및 확대 레벨 설정
+      this.setMapBounds(bounds);
+    },
 
-    // 지도의 중심 및 확대 레벨 설정
-    this.setMapBounds(bounds);
-  },
-    
+    addMarker(position, place, index) {
+      const imageSize = new window.kakao.maps.Size(36, 37);
 
-addMarker(position, place, markerIndex) {
-  const imageSize = new window.kakao.maps.Size(36, 37);
-
-  if (!this.markers || !Array.isArray(this.markers)) {
-    this.markers = [];
-  }
-
-  if (place) {
-    const placeIndex = (markerIndex % 15) + 1;
-    const markerImage = new window.kakao.maps.MarkerImage(
-      `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
-      imageSize,
-      {
-        spriteSize: new window.kakao.maps.Size(36, 691),
-        spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
-        offset: new window.kakao.maps.Point(13, 37),
+      if (!this.markers || !Array.isArray(this.markers)) {
+        this.markers = [];
       }
-    );
 
-    const marker = new window.kakao.maps.Marker({
-      position: position,
-      image: markerImage,
-    });
+      if (place) {
+        const placeIndex = (index % 15) + 1;
+        // const placeIndex = index % 15;
+        const markerImage = new window.kakao.maps.MarkerImage(
+          `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
+          imageSize,
+          {
+            spriteSize: new window.kakao.maps.Size(36, 691),
+            spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
+            offset: new window.kakao.maps.Point(13, 37),
+          }
+        );
 
-    this.markers.push(marker);
+        const marker = new window.kakao.maps.Marker({
+          position: position,
+          image: markerImage,
+        });
 
-    return marker;
-  }
-},
+        this.markers.push(marker);
+
+        // Custom code to handle marker click event
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          // You can customize the behavior when a marker is clicked
+          console.log("Marker clicked:", place);
+          // For example, center the map on the clicked marker
+          this.centerMap(position);
+        });
+
+        return marker;
+      }
+    },
 
     addBookmark(place) {
       const url = `${this.backURL}/place/${place.id}`;

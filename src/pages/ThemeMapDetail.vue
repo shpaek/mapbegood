@@ -1,6 +1,6 @@
 <template>
   <!-- 전체화면에 맵 표시 -->
-  <DetailMap :mymapdetail="mymapdetail" />
+  <DetailMap :mymapdetail="mymapdetail" :places="mymapdetail.myplaces" />
 
   <div class="theme-map-details">
     <h1>{{ mymapdetail.themeMapDto.name }}</h1>
@@ -35,11 +35,11 @@
 
 <script>
 import axios from "axios";
-import DetailMap from "./Detailmap.vue"; // Update the path accordingly
+import DetailMap from "./Detailmap.vue"; 
 
 export default {
   components: {
-    // DetailMap,
+    DetailMap,
   },
   data() {
     return {
@@ -58,33 +58,37 @@ export default {
     const themeMapId = this.$route.params.id;
     this.loadThemeMapDetail(themeMapId);
   },
+
   methods: {
+
+    
     async loadThemeMapDetail(themeMapId) {
-      const url = `${this.backURL}/mymap/${themeMapId}`;
+  const url = `${this.backURL}/mymap/${themeMapId}`;
 
-      try {
-        const response = await axios.get(url, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
-          },
-        });
+  try {
+    const response = await axios.get(url, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+      },
+    });
 
-        // 받은 데이터를 처리하고 mymapdetail 객체를 채웁니다.
-        this.mymapdetail = {
-          themeMapDto: response.data,
-        };
+    // 받은 데이터를 처리하고 mymapdetail 객체를 채웁니다.
+    this.mymapdetail = {
+      themeMapDto: response.data,
+      myplaces: response.data.myplaces, // 추가: myplaces 데이터를 할당
+    };
 
-        // 추가: Myplaces 불러오기
-        this.findAllMyPlace(themeMapId);
-      } catch (error) {
-        console.error(error);
-        alert(
-          error.response.data.message ||
-            "테마 맵 세부 정보를 불러오지 못했습니다."
-        );
-      }
-    },
+    // 추가: Myplaces 불러오기
+    this.findAllMyPlace(themeMapId);
+  } catch (error) {
+    console.error(error);
+    alert(
+      error.response.data.message ||
+        "테마 맵 세부 정보를 불러오지 못했습니다."
+    );
+  }
+},
 
     async findAllMyPlace(themeMapId) {
       // Myplaces 불러오기

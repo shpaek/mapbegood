@@ -169,6 +169,7 @@ export default {
     placesSearchCB(data, status, pagination) {
       if (status === window.kakao.maps.services.Status.OK) {
         this.places = data.map((place, index) => {
+          console.log(data);
           const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
           return { ...place, markerImage };
         });

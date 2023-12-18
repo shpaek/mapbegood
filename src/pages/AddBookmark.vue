@@ -53,7 +53,7 @@
                               }}</v-list-tile-title>
                               <v-list-tile-title
                                 v-else
-                                >{{ item.name }}</v-list-tile-title
+                                >{{ item.name  }}</v-list-tile-title
                               >
                             </div>
                             <div v-if="tabs === 'personal'">
