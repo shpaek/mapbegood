@@ -12,17 +12,17 @@ import javax.print.DocFlavor;
 @ToString
 public class RecommendThemeMapDto {
     private Long cnt;
-    private Long themeMapId;
-    private String themeMapName;
-    private String themeMapMemo;
-    private String memberNickName;
+    private Long id;
+    private String name;
+    private String memo;
+    private String nickname;
 
     @QueryProjection
-    public RecommendThemeMapDto(Long cnt, Long themeMapId, String themeMapName, String themeMapMemo, String memberNickName) {
+    public RecommendThemeMapDto(Long cnt, Long id, String name, String memo, String nickname) {
         this.cnt = cnt;
-        this.themeMapId = themeMapId;
-        this.themeMapName = themeMapName;
-        this.themeMapMemo = themeMapMemo;
-        this.memberNickName = memberNickName;
+        this.id = id;
+        this.name = name;
+        this.memo = memo;
+        this.nickname = nickname;
     }
 }
