@@ -51,10 +51,9 @@
                               <v-list-tile-title v-if="tabs === 'personal'">{{
                                 item.themeMapDto.name
                               }}</v-list-tile-title>
-                              <v-list-tile-title
-                                v-else
-                                >{{ item.name  }}</v-list-tile-title
-                              >
+                              <v-list-tile-title v-else>{{
+                                item.name
+                              }}</v-list-tile-title>
                             </div>
                             <div v-if="tabs === 'personal'">
                               <v-list-tile-sub-title>{{
@@ -62,13 +61,17 @@
                               }}</v-list-tile-sub-title>
                             </div>
                             <div v-else>
-                              
-                              <v-list-tile-sub-title v-for="groupItem in item.groupThememapList" :key="groupItem.id"  @click="addOurPlace(item.groupThememapList[0].id)">
-                                <span style="display: block;">
-                                {{ groupItem.name }}
-                              </span>
-        </v-list-tile-sub-title>
-      
+                              <v-list-tile-sub-title
+                                v-for="groupItem in item.groupThememapList"
+                                :key="groupItem.id"
+                                @click="
+                                  addOurPlace(item.groupThememapList[0].id)
+                                "
+                              >
+                                <span style="display: block">
+                                  {{ groupItem.name }}
+                                </span>
+                              </v-list-tile-sub-title>
                             </div>
                           </v-list-tile-content>
                         </v-list-tile>
@@ -133,8 +136,8 @@ export default {
         this.tabs === "personal"
           ? this.myThememapList[index]
           : this.groupList[index];
-      this.clickedThemeMapId = 
-      this.tabs === "personal"
+      this.clickedThemeMapId =
+        this.tabs === "personal"
           ? clickedItem.themeMapDto.id
           : clickedItem.groupThememapList.id;
       console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
@@ -183,7 +186,7 @@ export default {
         .then((response) => {
           const list = response.data;
           this.groupList = list;
-          console.log(this.groupList)
+          console.log(this.groupList);
           if (this.groupList.length < 1) {
             this.emptyMsg = "소속된 그룹이 없습니다";
           }
@@ -203,16 +206,20 @@ export default {
       }
     },
     addMyplace(clickedThemeMapId) {
+      console.log(clickedThemeMapId);
+      console.log(this.place);
       if (!this.place) {
         console.error("No place information provided.");
         return;
       }
-      const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
+      const category = this.place.category_group_name
+        ? this.place.category_group_name
+        : "음식점";
       // Assuming you have the necessary data to create the request payload
       const myplaceWrapperDto = {
         myplaceDto: {
           thememapId: {
-            id: clickedThemeMapId,
+            id: this.clickedThemeMapId,
           },
           placeId: {
             id: this.place.id, // Use the place ID from the prop
@@ -228,7 +235,7 @@ export default {
         },
       };
       console.log(myplaceWrapperDto);
-      
+
       const url = `${this.backURL}/myplace`;
 
       // Making the POST request to create Myplace
@@ -255,43 +262,45 @@ export default {
       }
     },
     addOurPlace(groupThememapId) {
-    // Make sure you have access to the clickedThemeMapId and place information
-    const clickedThemeMapId = this.clickedThemeMapId;
-    const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
-    // Assuming you have the necessary data to create the request payload
-    const ourplaceWrapperDto = {
-      ourplaceDto: {
-        groupThememapId : groupThememapId,
-        placeId : {
-          id: this.place.id
-        }
-      },
-      placeDto: {
-        id: this.place.id,
+      // Make sure you have access to the clickedThemeMapId and place information
+      const clickedThemeMapId = this.clickedThemeMapId;
+      const category = this.place.category_group_name
+        ? this.place.category_group_name
+        : "음식점";
+      // Assuming you have the necessary data to create the request payload
+      const ourplaceWrapperDto = {
+        ourplaceDto: {
+          groupThememapId: groupThememapId,
+          placeId: {
+            id: this.place.id,
+          },
+        },
+        placeDto: {
+          id: this.place.id,
           placeName: this.place.place_name,
           address: this.place.address_name,
           x: this.place.x,
           y: this.place.y,
           category: category, // Update with the actual category
-      },
-    };
+        },
+      };
 
-    // Make the API request to create Ourplace
-    const url = `${this.backURL}/ourplace`;
-    axios
-      .post(url, ourplaceWrapperDto)
-      .then((response) => {
-        // Handle the success response
-        console.log("Ourplace created successfully:", response.data);
+      // Make the API request to create Ourplace
+      const url = `${this.backURL}/ourplace`;
+      axios
+        .post(url, ourplaceWrapperDto)
+        .then((response) => {
+          // Handle the success response
+          console.log("Ourplace created successfully:", response.data);
 
-        // Now you can handle any additional logic if needed
-        // For example, you can close the modal or update the UI
-      })
-      .catch((error) => {
-        // Handle errors
-        console.error("Error creating Ourplace:", error);
-      });
-  },
+          // Now you can handle any additional logic if needed
+          // For example, you can close the modal or update the UI
+        })
+        .catch((error) => {
+          // Handle errors
+          console.error("Error creating Ourplace:", error);
+        });
+    },
   },
 };
 </script>
@@ -324,7 +333,4 @@ button.close {
   left: 50%;
   transform: translateX(-50%);
 }
-
-
-
 </style>
