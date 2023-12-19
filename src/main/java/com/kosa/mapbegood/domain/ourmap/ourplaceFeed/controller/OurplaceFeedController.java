@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.mymap.favorite.dto.MemberDto;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.dto.MemberGroupDTO;
 import com.kosa.mapbegood.domain.ourmap.memberGroup.service.MemberGroupService;
 import com.kosa.mapbegood.domain.ourmap.ourplace.dto.OurplaceDTO;
