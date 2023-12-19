@@ -44,9 +44,7 @@ public class MyplaceController {
 		}
 		
 	}
-	
-	
-	
+
 	/**
 	 * Myplace에 저장된 장소 정보 조회
 	 * @param themeMapId
