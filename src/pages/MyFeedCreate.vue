@@ -16,6 +16,7 @@
             <div v-if="feedImgs.length > 0" class="image-preview-container">
               <div class="centered-image">
                 <img
+                  class="feedImg"
                   :src="feedImgs[currentIndex].base64Data"
                   alt="Preview"
                   style="max-width: 300px; max-height: 300px"
@@ -24,13 +25,13 @@
             </div>
             <img v-else src="/images/photo.png" alt="photo" class="photo" />
             <input
-              type="file"
-              ref="fileInput"
-              @change="handleFileChange"
-              accept="image/*"
-              multiple
-              style="display: none"
-            />
+  type="file"
+  ref="fileInput"
+  @change="handleFileChange"
+  accept=".jpg, .jpeg, .png"
+  multiple
+  style="display: none"
+/>
           </div>
         </div>
         <div
@@ -158,6 +159,14 @@ export default {
       this.feedImgs = [];
       console.log("Selected Files:", files);
       for (let i = 0; i < maxFiles; i++) {
+        const file = files[i];
+
+        // Check file extension before processing
+        if (!this.isValidFileExtension(file)) {
+          alert('Invalid file format. Please select only JPG or PNG files.');
+          return;
+        }
+
         const base64Data = await this.readFileAsync(files[i]);
         this.feedImgs.push({ file: files[i], base64Data });
       }
@@ -171,6 +180,11 @@ export default {
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    },
+    isValidFileExtension(file) {
+      const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+      const fileName = file.name.toLowerCase();
+      return allowedExtensions.some(ext => fileName.endsWith(ext));
     },
   },
 };
@@ -264,9 +278,10 @@ button:hover {
   align-items: center;
 }
 .feedImg {
-  max-width: 100%; /* 이미지가 부모 너비를 초과하지 않도록 조정 */
-  max-height: 400px;
-  object-fit: contain; /* 원본 비율을 유지한 채로 조절 */
+  width: 400px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  object-position: center; /* Center the image within the container */
   margin: 0 auto;
 }
 .avatar {

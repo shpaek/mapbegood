@@ -67,13 +67,13 @@
                               }}</v-list-tile-sub-title>
                             </div>
                             <div v-else>
-                              
-                              <v-list-tile-sub-title v-for="groupItem in item.groupThememapList" :key="groupItem.id"  @click="addOurPlace(item.groupThememapList[0].id)">
-                                <span style="display: block;">
-                                {{ groupItem.name }}
-                              </span>
-        </v-list-tile-sub-title>
-      
+                              <v-list-tile-sub-title
+    v-for="groupItem in item.groupThememapList"
+    :key="groupItem.id"
+    @click="addOurPlace(groupItem.id)"
+  >
+    <span style="display: block">{{ groupItem.name }}</span>
+  </v-list-tile-sub-title>
                             </div>
                           </v-list-tile-content>
                         </v-list-tile>
@@ -276,7 +276,7 @@ export default {
     addOurPlace(groupThememapId) {
     // Make sure you have access to the clickedThemeMapId and place information
     const clickedThemeMapId = this.clickedThemeMapId;
-    const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
+    const category = this.place.category_group_name ? this.place.category_group_name : "기타";
     // Assuming you have the necessary data to create the request payload
     const ourplaceWrapperDto = {
       ourplaceDto: {

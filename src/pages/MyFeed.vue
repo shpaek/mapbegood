@@ -27,15 +27,16 @@
       </div>
     </div>
     <div class="contentSection">
-    <div class="caption">{{ post.content }}</div>
-    <span class="nickname">{{ post.memberEmail?.nickname }}</span>
-    <span class="createdAt">{{ post.createdAt }}</span>
-
-  </div>
-  <router-link :to="{ name: 'myfeedupdate', params: { myplaceId: post.myplaceId } }">
-        <button>Update</button>
-      </router-link>
-        <button @click="deleteFeed(post.myplaceId)">Delete</button>
+      <div class="caption">{{ post.content }}</div>
+      <span class="nickname">{{ post.memberEmail?.nickname }}</span>
+      <span class="createdAt">{{ post.createdAt }}</span>
+    </div>
+    <router-link
+      :to="{ name: 'myfeedupdate', params: { myplaceId: post.myplaceId } }"
+    >
+      <button>Update</button>
+    </router-link>
+    <button @click="deleteFeed(post.myplaceId)">Delete</button>
   </div>
 </template>
 
@@ -121,8 +122,10 @@ export default {
           .delete(`${backURL}/myfeed/${this.myplaceId}`)
           .then((response) => {
             console.log("Feed deleted successfully:", response.data);
-            // Fetch updated feeds after deletion
-            this.fetchFeeds();
+            this.$router.push({
+              name: "thememapdetail",
+              params: { id: response.data.thememapId }, // Replace with the correct property
+            });
           })
           .catch((error) => {
             console.error("Error deleting feed:", error);

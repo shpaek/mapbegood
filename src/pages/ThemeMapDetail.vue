@@ -44,6 +44,28 @@
             <img src="/public/images/bookmark.png" class="bookmark-icon" />
             북마크취소
         </button>
+        <router-link v-if="myplace.feed"
+        :to="{
+          name: 'myfeed',
+          params: {
+            myplaceId: myplace.id,
+            id: themeMapId
+          },
+        }"
+      >
+        <button>피드보기</button>
+      </router-link>
+      <router-link v-else
+        :to="{
+          name: 'myfeedcreate',
+          params: {
+            myplaceId: myplace.id,
+            id: themeMapId
+          },
+        }"
+      >
+        <button>피드생성</button>
+      </router-link>
         </li>
       </ul>
     </div>
@@ -108,7 +130,7 @@ export default {
           },
         });
         this.mymapdetail.myplaces = response.data;
-        // Call the method in the child component
+
         this.$refs.detailMap.displayPlacesOnMap(response.data);
       } catch (error) {
         console.error(error);
