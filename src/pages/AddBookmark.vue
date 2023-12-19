@@ -129,6 +129,7 @@ export default {
   },
   mounted() {
     this.loadMymapList();
+    this.setTab("personal");
   },
   methods: {
     toggle(index) {
@@ -140,7 +141,7 @@ export default {
         this.tabs === "personal"
           ? clickedItem.themeMapDto.id
           : clickedItem.groupThememapList.id;
-      console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
+      // console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
       const i = this.selected.indexOf(index);
       if (i > -1) {
         this.selected.splice(i, 1);
@@ -186,7 +187,7 @@ export default {
         .then((response) => {
           const list = response.data;
           this.groupList = list;
-          console.log(this.groupList);
+          // console.log(this.groupList);
           if (this.groupList.length < 1) {
             this.emptyMsg = "소속된 그룹이 없습니다";
           }
@@ -207,7 +208,6 @@ export default {
     },
     addMyplace(clickedThemeMapId) {
       console.log(clickedThemeMapId);
-      console.log(this.place);
       if (!this.place) {
         console.error("No place information provided.");
         return;
@@ -219,7 +219,7 @@ export default {
       const myplaceWrapperDto = {
         myplaceDto: {
           thememapId: {
-            id: this.clickedThemeMapId,
+            id: clickedThemeMapId,
           },
           placeId: {
             id: this.place.id, // Use the place ID from the prop

@@ -144,69 +144,68 @@ export default {
     },
 
     displayPlacesOnMap(places) {
-  const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-  // 기존 마커 및 목록 제거
-  this.removeMarkers();
+      // 기존 마커 및 목록 제거
+      this.removeMarkers();
 
-  // 마커 생성 및 지도에 표시
-  places.forEach((place, index) => {
-    const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-    const marker = this.addMarker(placePosition, place, index);
-    marker.setMap(this.map);
+      // 마커 생성 및 지도에 표시
+      places.forEach((place, index) => {
+        const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+        const marker = this.addMarker(placePosition, place, index);
+        marker.setMap(this.map);
 
-    window.kakao.maps.event.addListener(marker, "click", () => {
-      this.centerMap(placePosition);
-    });
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          this.centerMap(placePosition);
+        });
 
-    bounds.extend(placePosition);
-    console.log(
-      "Index:",
-      index,
-      "Place Index:",
-      (index % 15) + 1,
-      "Marker URL:",
-      this.getMarkerImageUrl(index)
-    );
-  });
+        bounds.extend(placePosition);
+        // console.log(
+        //   "Index:",
+        //   index,
+        //   "Place Index:",
+        //   (index % 15) + 1,
+        //   "Marker URL:",
+        //   this.getMarkerImageUrl(index)
+        // );
+      });
 
-  // 지도의 중심 및 확대 레벨 설정
-  this.setMapBounds(bounds);
-},
+      // 지도의 중심 및 확대 레벨 설정
+      this.setMapBounds(bounds);
+    },
 
-addMarker(position, place, index) {
-  const imageSize = new window.kakao.maps.Size(36, 37);
+    addMarker(position, place, index) {
+      const imageSize = new window.kakao.maps.Size(36, 37);
 
-  if (!this.markers || !Array.isArray(this.markers)) {
-    this.markers = [];
-  }
+      if (!this.markers || !Array.isArray(this.markers)) {
+        this.markers = [];
+      }
 
-  if (place) {
-    const markerImage = this.getMarkerImage(index);
-    const marker = new window.kakao.maps.Marker({
-      position: position,
-      image: markerImage,
-    });
+      if (place) {
+        const markerImage = this.getMarkerImage(index);
+        const marker = new window.kakao.maps.Marker({
+          position: position,
+          image: markerImage,
+        });
 
-    this.markers.push(marker);
+        this.markers.push(marker);
 
-    // Custom code to handle marker click event
-    window.kakao.maps.event.addListener(marker, "click", () => {
-      // You can customize the behavior when a marker is clicked
-      console.log("Marker clicked:", place);
-      // For example, center the map on the clicked marker
-      this.centerMap(position);
-    });
+        // Custom code to handle marker click event
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          // You can customize the behavior when a marker is clicked
+          console.log("Marker clicked:", place);
+          // For example, center the map on the clicked marker
+          this.centerMap(position);
+        });
 
-    return marker;
-  }
-},
+        return marker;
+      }
+    },
 
-getMarkerImageUrl(index) {
-  const placeIndex = (index % 15) + 1;
-  return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-},
-
+    getMarkerImageUrl(index) {
+      const placeIndex = (index % 15) + 1;
+      return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+    },
 
     addBookmark(place) {
       const url = `${this.backURL}/place/${place.id}`;
@@ -241,19 +240,19 @@ getMarkerImageUrl(index) {
       console.log("Selected Places:", this.selectedPlaces);
     },
     getMarkerImage(index) {
-    const placeIndex = (index % 15);
-    const imageSize = new window.kakao.maps.Size(36, 37);
-    return new window.kakao.maps.MarkerImage(
-      `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
-      imageSize,
-      {
-        spriteSize: new window.kakao.maps.Size(36, 691),
-        spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
-        offset: new window.kakao.maps.Point(13, 37),
-      }
-    );
+      const placeIndex = index % 15;
+      const imageSize = new window.kakao.maps.Size(36, 37);
+      return new window.kakao.maps.MarkerImage(
+        `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`,
+        imageSize,
+        {
+          spriteSize: new window.kakao.maps.Size(36, 691),
+          spriteOrigin: new window.kakao.maps.Point(0, placeIndex * 46 + 10),
+          offset: new window.kakao.maps.Point(13, 37),
+        }
+      );
+    },
   },
-}
 };
 </script>
 
@@ -282,5 +281,4 @@ getMarkerImageUrl(index) {
   width: 30px;
   height: 30px;
 }
-
 </style>
