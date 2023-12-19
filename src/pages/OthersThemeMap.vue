@@ -60,8 +60,10 @@
       >
         <!-- 각 테마맵에 대한 목록 -->
         <li class="list-group-item">
-          <div style="display: inline-block; width: 240px">
-            <h5 class="mb-1">{{ themeMap.name }}</h5>
+          <div style="display: inline-block; width: 265px">
+            <h5 class="mb-1">
+              <b>{{ themeMap.name }}</b>
+            </h5>
             <p class="mb-1">{{ themeMap.memo }}</p>
             <p v-show="themeMap.memo == null" class="mb-1">&nbsp;</p>
             <!-- <small>{{ themeMap.id }}</small> -->
@@ -72,7 +74,7 @@
             class="btn btn-dark"
             style="position: absolute; margin-top: 8px"
           >
-            추가하기
+            추가
           </button>
         </li>
       </ul>

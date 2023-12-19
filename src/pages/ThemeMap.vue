@@ -150,9 +150,9 @@
             >
               <li>
                 <div style="display: inline-block; width: 240px">
-                  <h3 @click="detailThememap(thememap.themeMapDto.id)">
-                    {{ thememap.themeMapDto.name }}
-                  </h3>
+                  <h5 @click="detailThememap(thememap.themeMapDto.id)">
+                    <b>{{ thememap.themeMapDto.name }}</b>
+                  </h5>
                   <p>{{ thememap.themeMapDto.memo }}</p>
                   <p v-show="thememap.themeMapDto.memo == null">&nbsp;</p>
                 </div>
