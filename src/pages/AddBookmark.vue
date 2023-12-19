@@ -3,9 +3,9 @@
     <v-sheet :elevation="11" height="400" width="500" rounded @click.stop>
       <v-app id="inspire" style="overflow: hidden">
         <v-container fluid fill-height>
-          <v-row justify="center" align="center" style="height: 100%">
+          <v-row justify="center" align="center" style="height: 0%">
             <v-col>
-              <v-toolbar color="blue" dark tabs>
+              <v-toolbar color="sky blue" dark tabs>
                 <v-text-field
                   class="mx-3"
                   flat
@@ -16,16 +16,14 @@
 
                 <template v-slot:extension>
                   <v-tabs
-                    v-model="tabs"
-                    centered
-                    color="black"
-                    slider-color="white"
-                  >
-                    <v-tab key="personal" @click="setTab('personal')"
-                      >개인</v-tab
-                    >
-                    <v-tab key="group" @click="setTab('group')">그룹</v-tab>
-                  </v-tabs>
+    v-model="tabs"
+    centered
+    color="black"
+    slider-color="white"
+  >
+    <v-tab key="personal" @click="setTab('personal')" :class="{ 'active-tab': tabs === 'personal' }">개인</v-tab>
+    <v-tab key="group" @click="setTab('group')" :class="{ 'active-tab': tabs === 'group' }">그룹</v-tab>
+  </v-tabs>
                 </template>
               </v-toolbar>
 
@@ -45,15 +43,23 @@
                           : groupList"
                         :key="index"
                       >
-                        <v-list-tile avatar ripple @click="toggle(index)">
+                      <v-list-tile
+  avatar
+  ripple
+  @mouseenter="highlightListItem(index)"
+  @mouseleave="resetHighlight()"
+  @click="toggle(index)"
+  :class="{ 'selected-list-item': index === selectedListItemIndex, 'hovered-list-item': index === hoveredListItemIndex }"
+>
                           <v-list-tile-content @click="handleItemClick(item)">
                             <div>
                               <v-list-tile-title v-if="tabs === 'personal'">{{
                                 item.themeMapDto.name
                               }}</v-list-tile-title>
-                              <v-list-tile-title v-else>{{
-                                item.name
-                              }}</v-list-tile-title>
+                              <v-list-tile-title
+                                v-else
+                                >{{ item.name  }}</v-list-tile-title
+                              >
                             </div>
                             <div v-if="tabs === 'personal'">
                               <v-list-tile-sub-title>{{
@@ -103,6 +109,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
   name: "AddBookmark",
   props: {
@@ -117,36 +124,48 @@ export default {
       myThememapList: [],
       groupList: [],
       emptyMsg: "",
-      tabs: "personal", // Set a default tab
-      // text: " do eiusmodquip ex ea commodo consequat.",
-      selected: [], // Added selected array
+      tabs: "personal",
+      selected: [],
       clickedThemeMapId: null,
+          selectedListItemIndex: null,
+
     };
   },
+
+  watch: {
+    isModalOpen(newVal) {
+      if (newVal) {
+        this.tabs = "personal";
+        this.loadMymapList();
+      }
+    },
+  },
+
+
   mounted() {
     this.loadMymapList();
-    this.setTab("personal");
   },
+
   methods: {
     toggle(index) {
-      const clickedItem =
-        this.tabs === "personal"
-          ? this.myThememapList[index]
-          : this.groupList[index];
-      this.clickedThemeMapId =
-        this.tabs === "personal"
-          ? clickedItem.themeMapDto.id
-          : clickedItem.groupThememapList.id;
-      // console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
-      const i = this.selected.indexOf(index);
-      if (i > -1) {
-        this.selected.splice(i, 1);
-      } else {
-        this.selected.push(index);
-      }
-      this.$emit("add-myplace");
-    },
-
+  const clickedItem =
+    this.tabs === "personal"
+      ? this.myThememapList[index]
+      : this.groupList[index];
+  this.clickedThemeMapId = 
+    this.tabs === "personal"
+      ? clickedItem.themeMapDto.id
+      : clickedItem.groupThememapList.id;
+  console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
+  const i = this.selected.indexOf(index);
+  if (i > -1) {
+    this.selected.splice(i, 1);
+  } else {
+    this.selected.push(index);
+  }
+  alert("클릭되었습니다!");
+  this.$emit("add-myplace");
+},
     backClickHandler() {
       this.$emit("close-modal");
     },
@@ -183,7 +202,7 @@ export default {
         .then((response) => {
           const list = response.data;
           this.groupList = list;
-          // console.log(this.groupList);
+          console.log(this.groupList)
           if (this.groupList.length < 1) {
             this.emptyMsg = "소속된 그룹이 없습니다";
           }
@@ -203,14 +222,11 @@ export default {
       }
     },
     addMyplace(clickedThemeMapId) {
-      console.log(clickedThemeMapId);
       if (!this.place) {
         console.error("No place information provided.");
         return;
       }
-      const category = this.place.category_group_name
-        ? this.place.category_group_name
-        : "음식점";
+      const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
       // Assuming you have the necessary data to create the request payload
       const myplaceWrapperDto = {
         myplaceDto: {
@@ -231,7 +247,7 @@ export default {
         },
       };
       console.log(myplaceWrapperDto);
-
+      
       const url = `${this.backURL}/myplace`;
 
       // Making the POST request to create Myplace
@@ -276,26 +292,35 @@ export default {
           x: this.place.x,
           y: this.place.y,
           category: category, // Update with the actual category
-        },
-      };
+      },
+    };
 
-      // Make the API request to create Ourplace
-      const url = `${this.backURL}/ourplace`;
-      axios
-        .post(url, ourplaceWrapperDto)
-        .then((response) => {
-          // Handle the success response
-          console.log("Ourplace created successfully:", response.data);
+    // Make the API request to create Ourplace
+    const url = `${this.backURL}/ourplace`;
+    axios
+      .post(url, ourplaceWrapperDto)
+      .then((response) => {
+        // Handle the success response
+        console.log("Ourplace created successfully:", response.data);
 
-          // Now you can handle any additional logic if needed
-          // For example, you can close the modal or update the UI
-        })
-        .catch((error) => {
-          // Handle errors
-          console.error("Error creating Ourplace:", error);
-        });
-    },
+        // Now you can handle any additional logic if needed
+        // For example, you can close the modal or update the UI
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error creating Ourplace:", error);
+      });
   },
+  highlightListItem(index) {
+    this.selectedListItemIndex = index;
+  },
+
+  resetHighlight() {
+    this.selectedListItemIndex = null;
+  },
+  
+  },
+  
 };
 </script>
 
@@ -323,8 +348,33 @@ export default {
 
 button.close {
   position: absolute;
-  margin-top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 25px;
+  right: 25px;
+  z-index: 1000;
 }
+.active-tab {
+  background-color: #39ff8c; /* 활성화된 탭에 적용할 배경색 */
+  color: #333333; /* 활성화된 탭에 적용할 텍스트 색상 */
+}
+
+.selected-list-item {
+  background-color: #3498db;
+  color: #3e65e7;
+  font-weight: bold; 
+}
+
+.hovered-list-item {
+  background-color: #ecf0f1;
+  color: #333333;
+  font-weight: bold; 
+ 
+}
+
+.hovered-list-item:hover {
+  background-color: #aed6f1;
+  color: #2c3e50;
+  font-weight: bold; 
+ 
+}
+
 </style>

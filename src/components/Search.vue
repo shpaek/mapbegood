@@ -18,7 +18,7 @@
       <!-- 장소 목록 -->
       <ul id="placesList">
         <!-- @click="selectPlace(place, index)" -->
-        <li v-for="(place, index) in places" :key="index">
+        <li v-for="(place, index) in places" :key="index" @click="centerMap(place)">
           <img class="markerbg" :src="getMarkerImageUrl(index)" />
           <div class="info">
             <h5>{{ place.place_name }}</h5>
@@ -143,6 +143,13 @@ export default {
       return `https://example.com/markers/${markerColors[placeIndex]}.png`;
     },
 
+    centerMap(place) {
+      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+      this.$emit("center-map", placePosition);
+      const level = 3; // 원하는 줌 레벨로 설정
+      this.$emit("set-zoom-level", level);
+    },
+
     async initialize() {
       try {
         if (!window.kakao || !window.kakao.maps) {
@@ -175,7 +182,7 @@ export default {
     },
 
     selectPlace(place, index) {
-      // 클릭한 장소의 좌표를 가져옵니다.
+      console.log("선택한 장소:", place, "인덱스:", index);
       const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
 
       // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
