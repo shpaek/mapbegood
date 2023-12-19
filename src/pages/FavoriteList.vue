@@ -3,10 +3,14 @@
 <template>
   <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <h1>favoriteList 목록</h1>
+    <a href="/thememap" style="color: #000; text-decoration: none">
+      <h2 class="theme-list" style="margin-left: 10px">즐겨찾기 목록</h2></a
+    >
+
     <ul class="elevated-list">
       <li v-for="favorite in favoriteList" :key="favorite.themeMapDto.id">
-        <h2>{{ favorite.themeMapDto.name }}</h2>
+        <h2>제목:{{ favorite.themeMapDto.name }}</h2>
+        <p>내용:{{ favorite.themeMapDto.memo }}</p>
         <!-- <p>{{ favorite.themeMapDto.memo }}</p> -->
         <!-- <p>ID: {{ favorite.themeMapDto.id }}</p> -->
         <button
@@ -35,18 +39,17 @@
   <div class="m-part">
     <Detailmap />
   </div>
-
 </template>
 
 <script>
 import axios from "axios";
-import Detailmap from './Detailmap.vue';
+import Detailmap from "./Detailmap.vue";
 
 export default {
   name: "FavoriteList",
   components: {
     Detailmap,
-    },
+  },
   data() {
     return {
       favoriteList: [],
@@ -100,11 +103,8 @@ export default {
 
 <style scoped>
 /* 기존 스타일 */
-
 h2 {
-  color: #600;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 12px 0px 8px;
 }
 
 ul {
@@ -159,7 +159,6 @@ ul.elevated-list {
   background-color: #f8f9fa; /* Background color for the ul element */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
   max-width: 400px;
-
 }
 .sidebar {
   /*사이드바에서 사용하는 것이고 위치 설정해두기*/

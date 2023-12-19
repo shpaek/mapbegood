@@ -77,6 +77,7 @@ export default {
       feedList: [], // List to store fetched feeds
       currentIndex: 0,
       memberList: [], // List to store member emails
+      groupThememapId: null
     };
   },
   computed: {
@@ -92,7 +93,7 @@ export default {
       this.email = this.userInfo.email;
       this.groupId = this.$route.params.groupId;
       this.ourplaceId = this.$route.params.ourplaceId;
-
+      this.groupThememapId = this.$route.params.groupThememapId;
       // Fetch feeds for the current user
       this.fetchFeedsByEmail(this.email);
     });
@@ -195,7 +196,7 @@ export default {
         const backURL = this.$root.backURL;
         axios
           .delete(
-            `${backURL}/ourfeed/${this.groupId}/${ourplaceId}/${this.email}`
+            `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.email}`
           )
           .then((response) => {
             console.log("Feed deleted successfully:", response.data);
@@ -203,6 +204,11 @@ export default {
             this.feedList = this.feedList.filter(
               (feed) => feed.ourplaceId !== ourplaceId
             );
+
+            this.$router.push({
+              name: "detailgroupmap",
+              params: {groupId: this.groupId, groupThememapId: this.groupThememapId }, // Replace with the correct property
+            });
           })
           .catch((error) => {
             console.error("Error deleting feed:", error);

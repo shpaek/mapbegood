@@ -3,7 +3,12 @@
     <div class="g-part">
       <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
         <div class="header-container">
-          <h1 class="theme-list">나의 테마지도 리스트</h1>
+          <a href="/thememap" style="color: #000; text-decoration: none">
+            <h2 class="theme-list" style="margin-left: 10px">
+              나의 테마지도
+            </h2></a
+          >
+
           <v-dialog v-model="themeMapAddDialog" persistent width="500">
             <template v-slot:activator="{ props }">
               <!-- "테마맵 추가" 버튼 -->
@@ -129,12 +134,23 @@
         </div>
 
         <!-- 각 테마맵에 대한 반복문 -->
-        <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
+        <div
+          v-for="thememap in favoriteList"
+          :key="thememap.themeMapDto.id"
+          style="
+            position: absolute;
+            width: 390px;
+            height: 85vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+          "
+        >
           <ul class="elevated-list mb-4">
             <li>
               <h3 @click="detailThememap(thememap.themeMapDto.id)">
                 {{ thememap.themeMapDto.name }}
               </h3>
+              <p>{{ thememap.themeMapDto.memo }}</p>
               <h5>
                 <!-- 공개 여부에 따라 다른 아이콘 표시 -->
                 <span v-if="thememap.themeMapDto.show">
@@ -350,7 +366,7 @@ export default {
     };
   },
 
-  mounted() {
+  created() {
     this.loadMymapList();
   },
 
@@ -364,6 +380,8 @@ export default {
       axios
         .get(url, { withCredentials: true })
         .then((response) => {
+          console.log("123");
+          console.log(response.data);
           const themeMapList = response.data;
           this.favoriteList = themeMapList.map((themeMap) => {
             return {
@@ -553,8 +571,8 @@ export default {
   position: absolute;
   width: 390px;
   height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* overflow-x: hidden;
+  overflow-y: auto; */
 }
 
 .m-part {
@@ -576,9 +594,7 @@ div.g-part > div.empty-msg {
 }
 
 h2 {
-  color: #600;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 12px 0px 8px;
 }
 
 h1.list-heading {

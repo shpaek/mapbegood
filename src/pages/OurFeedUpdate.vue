@@ -103,9 +103,7 @@ export default {
           this.$router.push({
             name: "ourfeed",
             params: {
-              groupId,
-              ourplaceId,
-              memberNickname,
+              ourplaceId
             },
           });
     },

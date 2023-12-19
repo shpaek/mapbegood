@@ -39,23 +39,6 @@
       </div>
       <button type="submit">Update</button>
     </form>
-    <!-- Add your feed display code here if needed -->
-    <div class="feed">
-      <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
-        <img
-          class="avatar"
-          :src="post.memberEmail?.profileImage"
-          alt="Avatar"
-        />
-
-        <div>
-          <div class="meta">
-            <span class="nickname">{{ post.memberEmail?.nickname }}</span>
-            <span class="createdAt">{{ post.createdAt }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -191,7 +174,7 @@ form {
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin: 15px 0;
   position: relative;
   display: flex;
   align-items: center; /* Center items vertically */
@@ -253,9 +236,10 @@ button:hover {
   align-items: center;
 }
 .feedImg {
-  max-width: 100%; /* 이미지가 부모 너비를 초과하지 않도록 조정 */
-  max-height: 400px;
-  object-fit: contain; /* 원본 비율을 유지한 채로 조절 */
+  width: 400px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  object-position: center; /* Center the image within the container */
   margin: 0 auto;
 }
 .avatar {
