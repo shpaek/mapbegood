@@ -53,8 +53,8 @@ public class Myplace {
 	
 //	private String category;
 	
-//	@OneToOne(mappedBy = "myplace", cascade = CascadeType.REMOVE)
-//	private MyplaceFeed feed;
+	@OneToOne(mappedBy = "myplace", cascade = CascadeType.REMOVE)
+	private MyplaceFeed feed;
 
 //	@OneToMany(cascade = CascadeType.REMOVE)
 //	private List<Place> placeList;

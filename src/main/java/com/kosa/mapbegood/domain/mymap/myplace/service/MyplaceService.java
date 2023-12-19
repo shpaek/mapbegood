@@ -13,6 +13,9 @@ import com.kosa.mapbegood.domain.mymap.myplace.dto.MyplaceDTO;
 import com.kosa.mapbegood.domain.mymap.myplace.entity.Myplace;
 import com.kosa.mapbegood.domain.mymap.myplace.mapper.MyplaceMapper;
 import com.kosa.mapbegood.domain.mymap.myplace.repository.MyplaceRepository;
+import com.kosa.mapbegood.domain.mymap.myplaceFeed.dto.MyplaceFeedDTO;
+import com.kosa.mapbegood.domain.mymap.myplaceFeed.entity.MyplaceFeed;
+import com.kosa.mapbegood.domain.mymap.myplaceFeed.mapper.MyplaceFeedMapper;
 import com.kosa.mapbegood.domain.mymap.thememap.repository.ThemeMapRepository;
 import com.kosa.mapbegood.exception.AddException;
 import com.kosa.mapbegood.exception.FindException;
@@ -29,6 +32,9 @@ public class MyplaceService {
 
 	@Autowired
 	private MyplaceMapper mapper;
+	
+	@Autowired
+	private MyplaceFeedMapper mfMapper;
 
 	/**
 	 * 내 테마지도에 저장된 마이플레이스를 조회한다
@@ -39,7 +45,11 @@ public class MyplaceService {
 		List<Myplace> myplaceList = mpr.findByThememapId_Id(themeMapId);
 		List<MyplaceDTO> myplaceDtoList = new ArrayList<MyplaceDTO>();
 		for(Myplace myplace: myplaceList) {
-			myplaceDtoList.add(mapper.entityToDto(myplace));
+			MyplaceDTO myplaceDto = mapper.entityToDto(myplace);
+			MyplaceFeed myfeed = myplace.getFeed();
+			MyplaceFeedDTO myfeedDto = mfMapper.entityToDto(myfeed);
+			myplaceDto.setFeed(myfeedDto);
+			myplaceDtoList.add(myplaceDto);
 		}
 		return myplaceDtoList;
 	}
