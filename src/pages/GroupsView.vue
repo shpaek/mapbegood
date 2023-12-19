@@ -50,9 +50,9 @@
 </template>
 <script>
 import axios from "axios";
-import Detailmap from './Detailmap.vue';
-import GroupInvite from './GroupInvite.vue';
-import GroupCreate from './GroupCreate.vue';
+import Detailmap from "./Detailmap.vue";
+import GroupInvite from "./GroupInvite.vue";
+import GroupCreate from "./GroupCreate.vue";
 export default {
   name: "GroupsView",
   components: {

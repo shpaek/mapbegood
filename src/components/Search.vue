@@ -1,55 +1,77 @@
-2차Search.vue
-
 <template>
   <div>
     <div id="searchContainer" class="bg_white">
       <div class="search">
-        <input
-          type="text"
-          v-model="keyword"
-          placeholder="장소 검색"
-          @keyup.enter="search"
-        />
-        <img
-          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
-          class="icon"
-          @click="search"
-        />
+        <input type="text" v-model="keyword" placeholder="장소 검색" @keyup.enter="search"/>
+        <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" 
+          class="icon" @click="search"/>
       </div>
+
+      <!-- 장소 목록 -->
       <ul id="placesList">
-        <li v-for="(place, index) in places" :key="index" @click="selectPlace(place, index)">
-  <img class="markerbg" :src="getMarkerImageUrl(index)" />
-          <div class="info">   
+        <!-- @click="selectPlace(place, index)" -->
+        <li v-for="(place, index) in places" :key="index">
+          <img class="markerbg" :src="getMarkerImageUrl(index)" />
+          <div class="info">
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{
-              place.road_address_name
-            }}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{
-              place.address_name
-            }}</span>
+            <span v-if="place.road_address_name">{{place.road_address_name}}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{place.address_name}}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
-          <!-- <button class="bookmark-btn" @click.stop="addBookmark(place)">북마크</button> -->
-          <button @click.stop="customButtonClick">버튼</button>
-
           <img
             src="/public/images/bookmark.png"
-            @click.stop="addBookmark(place)"
+            @click="openModal(place)"
             class="bookmark"
           />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-person-add"
+            viewBox="0 0 16 16"
+            @click="openModal"
+          >
+            <path
+              d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
+            />
+            <path
+              d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"
+            />
+          </svg>
         </li>
       </ul>
+
+      <!-- 페이지네이션 -->
       <div id="pagination"></div>
+    </div>
+
+    <!-- 모달 창 구조 -->
+    <div class="modal-container">
+      <!-- 모달창 -->
+      <AddBookmark
+        :isModalOpen="isModalOpen"
+        @close-modal="closeModal"
+        @add-myplace="addMyplace"
+        :groupId="groupId"
+        :place="selectedPlace"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import AddBookmark from "../pages/AddBookmark.vue";
 
 export default {
   name: "Search",
+
+  components: {
+    AddBookmark,
+  },
+
   data() {
     return {
       ps: null, // Kakao Places Service
@@ -59,9 +81,12 @@ export default {
       markers: [], // 지도에 표시되는 마커 리스트
       map: null, // 지도 객체를 저장하기 위한 변수
       pagination: null,
+      isModalOpen: false,
     };
   },
-
+  props: {
+    getMarkerImageUrl: Function, // Receive the method as a prop
+  },
   methods: {
     async loadAndInitializeMap() {
       // Kakao 지도 스크립트 로드
@@ -83,6 +108,13 @@ export default {
       });
     },
 
+    getMarkerImageUrl(index) {
+      // 마커 이미지 URL을 설정하는 부분을 수정
+      const markerColors = ["blue", "red", "yellow", "green", "purple", "gray", "orange", "pink", "cyan", "brown", "navy", "olive", "lime", "teal", "indigo"];
+      const placeIndex = index % markerColors.length;
+      return `https://example.com/markers/${markerColors[placeIndex]}.png`;
+    },
+    
     async initialize() {
       try {
         if (!window.kakao || !window.kakao.maps) {
@@ -113,108 +145,108 @@ export default {
         alert("Places 서비스가 초기화되지 않았습니다.");
       }
     },
-    
+
     selectPlace(place, index) {
-  // 클릭한 장소의 좌표를 가져옵니다.
-  const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+      // 클릭한 장소의 좌표를 가져옵니다.
+      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
 
-  // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
-  this.$emit("center-map", placePosition);
+      // 클릭한 장소의 좌표를 기준으로 지도를 중심으로 이동합니다.
+      this.$emit("center-map", placePosition);
 
-  // Emit a custom event with the selected place, index, and marker image URL
-  const markerImageUrl = this.getMarkerImageUrl(index);
-  this.$emit("place-selected", { place, index, markerImageUrl });
-},
+      // Emit a custom event with the selected place, index, and marker image URL
+      const markerImageUrl = this.getMarkerImageUrl(index);
+      this.$emit("place-selected", { place, index, markerImageUrl });
+    },
 
-getMarkerImageUrl(markerIndex) {
-  const placeIndex = (markerIndex % 15) + 1;
-  return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-},
+    getMarkerImageUrl(markerIndex) {
+      const placeIndex = (markerIndex % 15) + 1;
+      return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+    },
 
+    placesSearchCB(data, status, pagination) {
+      if (status === window.kakao.maps.services.Status.OK) {
+        this.places = data.map((place, index) => {
+          console.log(data);
+          const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
+          return { ...place, markerImage };
+        });
 
-placesSearchCB(data, status, pagination) {
-  if (status === window.kakao.maps.services.Status.OK) {
-    this.places = data.map((place, index) => {
-      const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
-      return { ...place, markerImage };
-    });
+        // 검색 결과를 Map.vue로 전송
+        this.$emit("search-results", this.places);
 
-    // 검색 결과를 Map.vue로 전송
-    this.$emit("search-results", this.places);
+        this.pagination = pagination; // pagination을 data에 저장
 
-    this.pagination = pagination; // pagination을 data에 저장
-
-    this.displayPagination(pagination);
-  } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-    alert("검색 결과가 존재하지 않습니다.");
-  } else if (status === window.kakao.maps.services.Status.ERROR) {
-    alert("검색 결과 중 오류가 발생했습니다.");
-  }
-},
+        this.displayPagination(pagination);
+      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+        alert("검색 결과가 존재하지 않습니다.");
+      } else if (status === window.kakao.maps.services.Status.ERROR) {
+        alert("검색 결과 중 오류가 발생했습니다.");
+      }
+    },
 
     displayPlacesOnMap(places) {
-  const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-  // 기존 마커 및 목록 제거
-  this.removeMarkers();
-  this.removeAllPlacesListItems();
+      // 기존 마커 및 목록 제거
+      this.removeMarkers();
+      this.removeAllPlacesListItems();
 
-  // 마커 생성 및 지도에 표시
-  places.forEach((place, index) => {
-  const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-  const marker = this.addMarker(placePosition, place, index);
-  marker.setMap(this.map);
+      // 마커 생성 및 지도에 표시
+      places.forEach((place, index) => {
+        const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
+        const marker = this.addMarker(placePosition, place, index);
+        marker.setMap(this.map);
 
-  window.kakao.maps.event.addListener(marker, "click", () => {
-    this.centerMap(placePosition);
-  });
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          this.centerMap(placePosition);
+        });
 
-    bounds.extend(placePosition);
+        bounds.extend(placePosition);
 
-    // 목록에 추가
-    this.displayListItem(place);  // 주석처리 되어 있지 않음
-  });
+        // 목록에 추가
+        this.displayListItem(place); // 주석처리 되어 있지 않음
+      });
 
-  // 지도의 중심 및 확대 레벨 설정
-  this.setMapBounds(bounds);
-},
+      // 지도의 중심 및 확대 레벨 설정
+      this.setMapBounds(bounds);
+    },
 
-displayListItem(place) {
-  const listEl = document.getElementById("placesList");
-  const itemEl = this.getListItem(place);
+    displayListItem(place) {
+      const listEl = document.getElementById("placesList");
+      const itemEl = this.getListItem(place);
 
-  listEl.appendChild(itemEl);
-},
+      listEl.appendChild(itemEl);
+    },
 
-getListItem(place) {
-  const el = document.createElement("li");
-  const itemStr = `<span class="markerbg marker_1"></span>
+    getListItem(place) {
+      const el = document.createElement("li");
+      const itemStr = `<span class="markerbg marker_1"></span>
     <div class="info">
       <h5>${place.place_name}</h5>
       <span>${place.road_address_name}</span>
       <span class="jibun gray">${place.address_name}</span>
       <span class="tel">${place.phone}</span>
     </div>`;
-  
-  el.innerHTML = itemStr;
-  el.className = "item";
 
-  // 이벤트 리스너 추가
-  el.addEventListener("mouseover", () => {
-    this.displayInfowindow(place);
-  });
+      el.innerHTML = itemStr;
+      el.className = "item";
 
-  el.addEventListener("mouseout", () => {
-    this.infowindow.close();
-  });
+      // 이벤트 리스너 추가
+      el.addEventListener("mouseover", () => {
+        this.displayInfowindow(place);
+      });
 
-  return el;
-},
+      el.addEventListener("mouseout", () => {
+        this.infowindow.close();
+      });
 
-removeAllPlacesListItems() {
-  const listEl = document.getElementById("placesList");
-  listEl.innerHTML = "";
-},
+      return el;
+    },
+
+    removeAllPlacesListItems() {
+      const listEl = document.getElementById("placesList");
+      listEl.innerHTML = "";
+    },
 
     displayPagination(pagination) {
       const paginationEl = document.getElementById("pagination");
@@ -240,7 +272,6 @@ removeAllPlacesListItems() {
 
       paginationEl.appendChild(fragment);
     },
-    
 
     removeAllChildNodes(el) {
       while (el.firstChild) {
@@ -248,34 +279,47 @@ removeAllPlacesListItems() {
       }
     },
 
-    // addBookmark(place) {
-    //   const url = `${this.backURL}/place/${place.id}`;
-    //   axios
-    //     .post(url, {
-    //       placeId: place.id,
-    //       name: place.place_name,
-    //     })
-    //     .then((response) => {
-    //       console.log("Bookmark added successfully:", response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error adding bookmark:", error);
-    //     });
-    // },
+    addBookmark(place) {
+      const url = `${this.backURL}/place/${place.id}`;
+      axios
+        .post(url, {
+          placeId: place.id,
+          name: place.place_name,
+        })
+        .then((response) => {
+          console.log("Bookmark added successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error adding bookmark:", error);
+        });
+    },
+
+    openModal(place) {
+      // 모달 창 열기
+      this.isModalOpen = true;
+      // 선택된 장소(place) 정보를 이용하여 모달 창 내용 업데이트 가능
+      this.selectedPlace = place;
+    },
+    closeModal() {
+      // 모달 창 닫기
+      this.isModalOpen = false;
+    },
   },
 };
 </script>
+
+
+
 
 <style scoped>
 * {
   font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
 }
+
 .markerbg {
   display: inline-block;
   width: 20px;
   height: 20px;
-  /* background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
-    no-repeat; */
   background-size: 36px 320px;
   text-indent: -9999px;
   margin-right: 5px;
@@ -295,111 +339,14 @@ removeAllPlacesListItems() {
   border-bottom: 1px solid #888;
   overflow: hidden;
   cursor: pointer;
-  min-height: 65px;
+  min-height: 50px;
   display: flex;
   align-items: center;
-  padding: 7px;
-}
-
-
-#placesList li .markerbg {
-  width: 20px;
-  height: 202px;
-  /* background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
-    no-repeat; */
-  background-size: 27px 320px;
-  text-indent: -9999px;
-  margin-right: 5px;
+  padding: 0ppx;
 }
 
 #placesList li .info {
   flex-grow: 1;
-}
-
-#placesList li h5,
-#placesList li .info {
-  font-size: 12px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  margin: 1;
-}
-
-#placesList li .info h5 {
-  font-weight: bold; /* h5 요소에 굵은 텍스트를 적용합니다. */
-}
-
-#placesList li .info .gray {
-  color: #8a8a8a;
-}
-
-#placesList li .info .jibun {
-  padding-left: 26px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
-    no-repeat;
-  opacity: 0.7; /* 흐릿한 효과를 위해 투명도를 조절합니다. */
-}
-#placesList li .info .tel {
-  color: #009900;
-}
-
-#placesList li .markerbg,
-#placesList li h5,
-#placesList li .info,
-#placesList li .info .gray,
-#placesList li .info .jibun,
-#placesList li .info .tel {
-  display: block;
-}
-.markerbg {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-size: 36px 320px;
-  text-indent: -9999px;
-  margin-right: 5px;
-}
-
-#placesList li .marker_1 { background-position: 0 -10px; }
-#placesList li .marker_2 { background-position: 0 -56px; }
-#placesList li .marker_3 { background-position: 0 -102px; }
-#placesList li .marker_4 { background-position: 0 -148px; }
-#placesList li .marker_5 { background-position: 0 -194px; }
-#placesList li .marker_6 { background-position: 0 -240px; }
-#placesList li .marker_7 { background-position: 0 -286px; }
-#placesList li .marker_8 { background-position: 0 -332px; }
-#placesList li .marker_9 { background-position: 0 -378px; }
-#placesList li .marker_10 { background-position: 0 -423px; }
-#placesList li .marker_11 { background-position: 0 -470px; }
-#placesList li .marker_12 { background-position: 0 -516px; }
-#placesList li .marker_13 { background-position: 0 -562px; }
-#placesList li .marker_14 { background-position: 0 -608px; }
-#placesList li .marker_15 { background-position: 0 -654px; }
-
-#placesList {
-  list-style: none;
-  padding: 0;
-  cursor: pointer;
-  margin-top: 10px;
-  overflow-y: auto;
-  max-height: 560px;
-}
-
-#placesList li {
-  position: relative;
-  border-bottom: 1px solid #888;
-  overflow: hidden;
-  cursor: pointer;
-  min-height: 65px;
-  display: flex;
-  align-items: center;
-  padding: 7px;
-}
-
-#placesList li .info {
-  flex-grow: 1;
-
-  
 }
 
 #placesList li h5,
@@ -420,7 +367,7 @@ removeAllPlacesListItems() {
 }
 
 #placesList li .info .jibun {
-  padding-left  : 26px;
+  padding-left: 26px;
   background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
   opacity: 0.7;
 }
@@ -490,6 +437,255 @@ removeAllPlacesListItems() {
   width: 30px;
 }
 
+</style>
+
+<style scoped>
+* {
+  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+}
+.markerbg {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  /* background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat; */
+  background-size: 36px 320px;
+  text-indent: -9999px;
+  margin-right: 5px;
+}
+
+#placesList {
+  list-style: none;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 10px;
+  overflow-y: auto;
+  max-height: 560px;
+}
+
+#placesList li {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  padding: 7px;
+}
+
+#placesList li .markerbg {
+  width: 20px;
+  height: 202px;
+  /* background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat; */
+  background-size: 27px 320px;
+  text-indent: -9999px;
+  margin-right: 5px;
+}
+
+#placesList li .info {
+  flex-grow: 1;
+}
+
+#placesList li h5,
+#placesList li .info {
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 1;
+}
+
+#placesList li .info h5 {
+  font-weight: bold; /* h5 요소에 굵은 텍스트를 적용합니다. */
+}
+
+#placesList li .info .gray {
+  color: #8a8a8a;
+}
+
+#placesList li .info .jibun {
+  padding-left: 26px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
+  opacity: 0.7; /* 흐릿한 효과를 위해 투명도를 조절합니다. */
+}
+#placesList li .info .tel {
+  color: #009900;
+}
+
+#placesList li .markerbg,
+#placesList li h5,
+#placesList li .info,
+#placesList li .info .gray,
+#placesList li .info .jibun,
+#placesList li .info .tel {
+  display: block;
+}
+/* .markerbg {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: 36px 320px;
+  text-indent: -9999px;
+  margin-right: 5px;
+} */
+
+#placesList li .marker_1 {
+  background-position: 0 -10px;
+}
+#placesList li .marker_2 {
+  background-position: 0 -56px;
+}
+#placesList li .marker_3 {
+  background-position: 0 -102px;
+}
+#placesList li .marker_4 {
+  background-position: 0 -148px;
+}
+#placesList li .marker_5 {
+  background-position: 0 -194px;
+}
+#placesList li .marker_6 {
+  background-position: 0 -240px;
+}
+#placesList li .marker_7 {
+  background-position: 0 -286px;
+}
+#placesList li .marker_8 {
+  background-position: 0 -332px;
+}
+#placesList li .marker_9 {
+  background-position: 0 -378px;
+}
+#placesList li .marker_10 {
+  background-position: 0 -423px;
+}
+#placesList li .marker_11 {
+  background-position: 0 -470px;
+}
+#placesList li .marker_12 {
+  background-position: 0 -516px;
+}
+#placesList li .marker_13 {
+  background-position: 0 -562px;
+}
+#placesList li .marker_14 {
+  background-position: 0 -608px;
+}
+#placesList li .marker_15 {
+  background-position: 0 -654px;
+}
+
+#placesList {
+  list-style: none;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 10px;
+  overflow-y: auto;
+  max-height: 560px;
+}
+
+#placesList li {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  padding: 7px;
+}
+
+#placesList li .info {
+  flex-grow: 1;
+}
+
+#placesList li h5,
+#placesList li .info {
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 1;
+}
+
+#placesList li .info h5 {
+  font-weight: bold;
+}
+
+#placesList li .info .gray {
+  color: #8a8a8a;
+}
+
+#placesList li .info .jibun {
+  padding-left: 26px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
+  opacity: 0.7;
+}
+
+#placesList li .info .tel {
+  color: #009900;
+}
+
+#searchContainer {
+  position: fixed;
+  top: 0px;
+  left: 90px;
+  z-index: 2;
+  max-width: 330px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.search {
+  position: relative;
+  width: calc(100% - 40px);
+  margin: 0 auto 10px;
+}
+
+.search input {
+  width: 100%;
+  border: 2px solid #bbb;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.search img {
+  user-drag: none;
+  -webkit-user-drag: none;
+  position: absolute;
+  width: 17px;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.search img.icon {
+  pointer-events: auto;
+}
+
+.search img:hover {
+  background-color: #f2f2f2;
+}
+
+.search input:focus {
+  outline: none;
+  border-color: #555;
+}
+
+.bookmark {
+  width: 30px;
+}
 </style>
 
 <style>
