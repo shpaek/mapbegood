@@ -1,26 +1,26 @@
 <template lang="">
     <div v-show="isNameChangeOpen" class="modal" @click="backClickHandler">
-        <v-sheet :elevation="18" :height="400" :width="550" rounded @click.stop>
+        <v-sheet :elevation="18" :height="240" :width="500" rounded @click.stop>
             <form class="namechange" @submit.prevent="namechageFromSubmitHandler">
-                <h2>그룹명 변경</h2>
+                <div class="space"><span>그룹명 변경</span></div>
                 <div class="fill">
                     <ul>
                         <li class="before">
-                            <label for=bn>기존 그룹명:</label>&nbsp;
+                            <label for=bn>기존 그룹명 :</label>&nbsp;
                             <span id="bn">{{groupName}}</span>
                         </li>
                         <li class="after">
-                            <label for="an">변경할 그룹명:</label>&nbsp;
+                            <label for="an">변경할 그룹명 :</label>&nbsp;
                             <input type="text" name="name" id="an" v-model="name" maxlength="20"
                                 placeholder="20자 이내로 입력하세요" required
-                                @focus="inputPocusHandler" />&nbsp;&nbsp;&nbsp;
-                            <button type="button" id="b1" @click="b1ClickHandler">중복 확인</button>
+                                @focus="inputPocusHandler" />
+                            <button type="button" class="btn btn-outline-dark" id="b1" @click="b1ClickHandler">중복 확인</button>
                         </li>
                     </ul>
                 </div>
                 <br>
                 <div class="button-container">
-                    <button type="button" id="b3" @click="b3ClickHandler">돌아가기</button>&nbsp;&nbsp;&nbsp;
+                    <button type="button" id="b3" @click="b3ClickHandler">돌아가기</button>
                     <button type="submit" id="b2" v-show="isDupchkOk">변경하기</button>
                 </div>
             </form>
@@ -33,7 +33,6 @@ export default {
     name: 'GroupNameChange',
     props:{
     isNameChangeOpen: Boolean,
-    groupId: Number,
     },
     data() {
         return {
@@ -45,7 +44,6 @@ export default {
         }
     },
     created() {
-        // $route.params를 통해 전달된 파라미터 확인
         const groupId = this.$route.params.groupId;
         const groupName = this.$route.params.groupName;
         const leaderNickname = this.$route.params.leaderNickname;
@@ -68,18 +66,18 @@ export default {
 
             axios.put(url, requestBody, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
                 .then(response => {
-                    alert("그룹명이 변경되었습니다")
-                    //그룹 상세보기 페이지로 이동
+                    this.$emit('close-Name');
                     this.$router.push({
-                        name: '/group', // 라우터에서 정의한 이름
-                        params: { //params로 설정하여 아래의 데이터 전부 전달가능
-                            groupId: this.groupId,
-                            groupName: this.name,
-                            leaderNickname: this.leaderNickname
-                        }
+                        name: "/group", 
+                        params: {
+                        groupId: this.groupId,
+                        groupName: this.name,
+                        leaderNickname: this.leaderNickname,
+                        },
                     });
                 })
                 .catch(error => {
+                    console.log(error)
                     alert("그룹명 변경에 실패했습니다")
                 })
         },
@@ -100,7 +98,7 @@ export default {
             }
         },
         b3ClickHandler() { //변경 취소 버튼 클릭 시
-            this.$router.go(-1); // 뒤로가기
+            this.$emit('close-Name');
         },
         inputPocusHandler() {
             this.isDupchkOk = false
@@ -121,25 +119,41 @@ export default {
     align-items: center;
     z-index: 999;
 }
-/* div.fill {
+div.space{
     display: flex;
-    align-items: center;
-    margin-top: 100px;
-    border: 1px solid lightgray;
-    width: 600px;
-    height: 200px;
+}
+div.space>span{
     margin-left: auto;
     margin-right: auto;
+    margin-top: 15px;
+    margin-bottom:40px;
+    font-size: 18px;
+    font-weight: bold;
 }
-
-ul {
+div.fill{
+  height: 20px;
+}
+ul{
     list-style: none;
-    padding-left: 95px;
 }
-
-div.button-container {
+label{
+    padding-left: 10px;
+    font-weight: bold;
+}
+div.fill>ul>li>button{
+    padding:0;
+    margin-left:25px;
+    width:80px;
+}
+div.button-container{
     display: flex;
-    justify-content: center;
-    margin-top: 100px;
-} */
+    margin-top:50px;
+}
+div.button-container>button{
+    margin-left: auto;
+    margin-right:auto;
+}
+div.button-container>button:hover{
+    font-weight: bold;
+}
 </style>
