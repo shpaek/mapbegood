@@ -11,7 +11,7 @@
       </div>
       <div class="group-container">
         <!-- 그룹 추가버튼 -->
-        <div class="add-group" @click="addgroupClickHandler" v-if="emptyMsg.length < 1">
+        <div class="add-group" @click="addgroupClickHandler">
           <div class="new-group cursor-pointer btn btn-outline-dark"
             @click="addnewgroupclickHandler">
             <span class="new">
