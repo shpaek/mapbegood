@@ -42,7 +42,7 @@
 <script>
 import axios from "axios";
 import Detailmap from './Detailmap.vue';
-
+import Swal from "sweetalert2";
 export default {
   name: "FavoriteList",
   components: {
@@ -73,8 +73,15 @@ export default {
         .catch((error) => {
           // console.error(error);
           // alert(error.response.data.msg); // 수정된 부분
-          alert("로그인이 필요한 서비스 입니다.");
-          location.href = "/login";
+          Swal.fire({
+            text: "로그인이 필요한 서비스 입니다.",
+            icon: "warning",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.href = "/login";
+            }
+          });
         });
     },
 
@@ -83,17 +90,40 @@ export default {
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
-      axios
+      Swal.fire({
+        title: "삭제",
+        text: "정말로 삭제하시겠습니까?",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        denyButtonText: "취소"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const backURL = this.$root.backURL;
+          axios
         .delete(url, { withCredentials: true })
         .then((response) => {
-          alert(response.data);
+          // alert(response.data);
           // 삭제 후에 목록 다시 불러오기
           this.loadFavoriteList();
         })
         .catch((error) => {
           console.error(error);
-          alert(error.response.data.msg); // 수정된 부분
+          // alert(error.response.data.msg); // 수정된 부분
         });
+          Swal.fire({
+            title: "즐겨찾기 삭제",
+            text: "삭제되었습니다",
+            icon: "success",
+          });
+        }
+      });
+
+
+
+      
     },
   },
 };
