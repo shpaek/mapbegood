@@ -1,13 +1,13 @@
 <template lang="">
   <div v-show="isImageChangeOpen" class="modal" @click="backClickHandler">
-    <v-sheet :elevation="18" :height="500" :width="400" rounded @click.stop>
+    <v-sheet :elevation="18" :height="450" :width="400" rounded @click.stop>
       <form class="imagechange" @submit.prevent="imagechangeFormSubmitHandler">
-        <h2>그룹이미지 변경</h2>
+        <div class="space"><span>그룹이미지 변경</span></div>
         <div class="fill">
           <img class="img" :src="image" alt="변경할이미지" />
           <input type="file" name="image" id="i"
             required @change="imageChangeHandler" />
-          <div class="errorMsg" v-show="fileErrorMsg">{{ fileErrorMsg }}</div>
+          <div class="errorMsg" v-show="fileErrorMsg"><span>{{ fileErrorMsg }}</span></div>
         </div>
         <div class="button-container">
           <button type="button" id="b1" @click="b1ClickHandler">돌아가기</button>
@@ -23,7 +23,6 @@ export default {
   name: "GroupImageChange",
   props:{
     isImageChangeOpen: Boolean,
-    groupId: Number,
   },
   data() {
     return {
@@ -32,6 +31,7 @@ export default {
       leaderNickname: "",
       image: "../../../public/images/defaultGroupProfile.jpg",
       groupImage: "",
+      fileErrorMsg: '',
     };
   },
   created() {
@@ -43,13 +43,10 @@ export default {
     this.groupName = groupName;
     this.leaderNickname = leaderNickname;
 
-    // 확인한 값들을 사용하거나 로그에 출력
-    // console.log(groupId, groupName, leaderNickname);
   },
   methods: {
     b1ClickHandler() {
-      //변경 취소 버튼 클릭 시
-      this.$router.go(-1); // 뒤로가기
+      this.$emit('close-Image');
     },
     imageChangeHandler(e) {
       const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
@@ -67,13 +64,12 @@ export default {
       }
 
       // 파일 크기 제한 (2MB)
-      const maxSize = 2 * 1024 * 1024; // 2MB
+      const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
+        this.fileErrorMsg = "파일 크기는 5MB를 초과할 수 없습니다.";
         fileInput.value = ""; // 파일 선택 초기화
         return;
       }
-
 
       // 유효성 검사를 통과한 경우
       this.fileErrorMsg = null;
@@ -95,17 +91,8 @@ export default {
           withCredentials: true,
         })
         .then((response) => {
-          alert("그룹 이미지가 변경되었습니다");
-
-          this.$router.push({
-            name: "/group", // 라우터에서 정의한 이름
-            params: {
-              //params로 설정하여 아래의 데이터 전부 전달가능
-              groupId: this.groupId,
-              groupName: this.name,
-              leaderNickname: this.leaderNickname,
-            },
-          });
+          location.reload();
+          this.$emit('close-Image');
         })
         .catch((error) => {
           console.log(error);
@@ -128,40 +115,51 @@ export default {
     align-items: center;
     z-index: 999;
 }
-/* div.fill {
-  display: flex;
-  align-items: center;
-  margin-top: 100px;
-  border: 1px solid lightgray;
-  width: 730px;
-  height: 350px;
-  margin-left: auto;
-  margin-right: auto;
+div.space{
+    display: flex;
 }
-
-div.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 100px;
+div.errorMsg{
+    display: flex;
 }
-img {
-  max-width: 150px;
-  max-height: 150px;
-  min-height: 150px;
-  min-width: 150px;
+div.errorMsg>span{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:18px;
+    color:red;
 }
-
-ul {
-  list-style-type: none;
-  padding-left: 100px;
-  margin: 0;
+div.space>span{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    margin-bottom:40px;
+    font-size: 18px;
+    font-weight: bold;
 }
-
-ul.after {
-  padding-top: 27px;
+div.fill{
+  height: 260px;
 }
-
-.svg {
-  margin-left: 100px;
-} */
+div.fill>img.img {
+    display:flex;
+    margin-left: auto;
+    margin-right:auto;
+    max-width: 200px;
+    max-height: 200px;
+    min-height: 200px;
+    min-width: 200px;
+    margin-bottom: 10px;
+}
+div.fill>input{
+    margin-left: 25px;
+}
+div.button-container{
+    display: flex;
+    margin-top:50px;
+}
+div.button-container>button{
+    margin-left: auto;
+    margin-right:auto;
+}
+div.button-container>button:hover{
+    font-weight: bold;
+}
 </style>

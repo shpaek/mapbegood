@@ -2,9 +2,17 @@
   <div>
     <div id="searchContainer" class="bg_white">
       <div class="search">
-        <input type="text" v-model="keyword" placeholder="장소 검색" @keyup.enter="search"/>
-        <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" 
-          class="icon" @click="search"/>
+        <input
+          type="text"
+          v-model="keyword"
+          placeholder="장소 검색"
+          @keyup.enter="search"
+        />
+        <img
+          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+          class="icon"
+          @click="search"
+        />
       </div>
 
       <!-- 장소 목록 -->
@@ -14,8 +22,12 @@
           <img class="markerbg" :src="getMarkerImageUrl(index)" />
           <div class="info">
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{place.road_address_name}}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{place.address_name}}</span>
+            <span v-if="place.road_address_name">{{
+              place.road_address_name
+            }}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{
+              place.address_name
+            }}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
@@ -31,7 +43,7 @@
             fill="currentColor"
             class="bi bi-person-add"
             viewBox="0 0 16 16"
-            @click="openModal"
+            @click="openModal(place)"
           >
             <path
               d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
@@ -110,11 +122,27 @@ export default {
 
     getMarkerImageUrl(index) {
       // 마커 이미지 URL을 설정하는 부분을 수정
-      const markerColors = ["blue", "red", "yellow", "green", "purple", "gray", "orange", "pink", "cyan", "brown", "navy", "olive", "lime", "teal", "indigo"];
+      const markerColors = [
+        "blue",
+        "red",
+        "yellow",
+        "green",
+        "purple",
+        "gray",
+        "orange",
+        "pink",
+        "cyan",
+        "brown",
+        "navy",
+        "olive",
+        "lime",
+        "teal",
+        "indigo",
+      ];
       const placeIndex = index % markerColors.length;
       return `https://example.com/markers/${markerColors[placeIndex]}.png`;
     },
-    
+
     async initialize() {
       try {
         if (!window.kakao || !window.kakao.maps) {
@@ -166,7 +194,7 @@ export default {
     placesSearchCB(data, status, pagination) {
       if (status === window.kakao.maps.services.Status.OK) {
         this.places = data.map((place, index) => {
-          console.log(data);
+          // console.log(data);
           const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
           return { ...place, markerImage };
         });
@@ -308,9 +336,6 @@ export default {
 };
 </script>
 
-
-
-
 <style scoped>
 * {
   font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
@@ -368,7 +393,8 @@ export default {
 
 #placesList li .info .jibun {
   padding-left: 26px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png)
+    no-repeat;
   opacity: 0.7;
 }
 
@@ -436,7 +462,6 @@ export default {
 .bookmark {
   width: 30px;
 }
-
 </style>
 
 <style scoped>

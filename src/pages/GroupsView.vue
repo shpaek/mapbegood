@@ -3,67 +3,31 @@
     <div class="g-part">
       <div class="icon-container">
         <span class="title">그룹 목록</span>
-        <span class="check-waiting" @click="openModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            fill="currentColor"
-            class="bi bi-envelope"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"
-            />
+        <span class="check-waiting" v-show="emptyMsg.length < 1" @click="openModal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
           </svg>
         </span>
       </div>
       <div class="group-container">
         <!-- 그룹 추가버튼 -->
         <div class="add-group" @click="addgroupClickHandler">
-          <div
-            class="new-group cursor-pointer btn btn-outline-dark"
-            @click="addnewgroupclickHandler"
-          >
+          <div class="new-group cursor-pointer btn btn-outline-dark"
+            @click="addnewgroupclickHandler">
             <span class="new">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="19"
-                height="19"
-                fill="currentColor"
-                class="bi bi-plus-circle-fill"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
-                />
-              </svg> </span
-            >&nbsp;&nbsp;
+              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+              </svg> 
+            </span>&nbsp;&nbsp;
             <span class="text">그룹 추가</span>
           </div>
         </div>
-        <div
-          class="group"
-          v-for="group in groupList"
-          @click="groupClickHandler(group)"
-        >
-          <img
-            id="i"
-            alt="그룹이미지"
-            class="img-size"
-            :src="
-              'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
-              group.id +
-              '_groupImage.jpg?' +
-              new Date().getTime()
-            "
-          />
+        <div class="group" v-for="group in groupList" @click="groupClickHandler(group)">
+          <img id="i" alt="그룹이미지" class="img-size" :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/'+group.id +'_groupImage.jpg?'+new Date().getTime()"/>
           <ul>
             <li>
               <div class="group-info">{{ group.name }}</div>
-              <div class="group-mem-info">
-                {{ group.memberGroupList[0].member.nickname }}
-              </div>
+              <div class="group-mem-info">{{ group.memberGroupList[0].member.nickname }}</div>
             </li>
           </ul>
         </div>
@@ -75,8 +39,14 @@
     </div>
   </div>
   <!-- 모달창 -->
-  <GroupInvite :isModalOpen="isModalOpen" @close-modal="closeModal" />
-  <GroupCreate :isCreateOpen="isCreateOpen" @close-modal="closeCreate" />
+  <GroupInvite
+    :isModalOpen="isModalOpen"
+    @close-modal="closeModal"
+  />
+  <GroupCreate
+    :isCreateOpen="isCreateOpen"
+    @close-create="closeCreate"
+  />
 </template>
 <script>
 import axios from "axios";
@@ -130,8 +100,6 @@ export default {
     groupClickHandler(group) {
       //그룹의 테마그룹 List보여주는 탭으로 주소이동시키기
       console.log(group.id);
-      // loaction.href=`/groupthememaplist/${group.id}`
-      // this.$router.push(`/groupthememaplist/${group.id}`);
       this.$router.push({
         name: "/group", // 라우터에서 정의한 이름
         params: {
@@ -252,8 +220,8 @@ div.g-part {
 }
 div.m-part {
   position: absolute;
-  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
-  right: 0; /* 오른쪽에 닿도록 */
+  left: 454px;
+  right: 0; 
   height: 100%;
 }
 </style>
