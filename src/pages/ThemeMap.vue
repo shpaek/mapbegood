@@ -7,7 +7,7 @@
       <h1 class="theme-list">나의 테마지도리스트</h1>
            <!-- "테마맵 추가" 버튼 -->
            <button
-          @click="addNewThememap"
+          @click="openCreate"
           class="sticker-btn btn btn-outline-secondary"
         >
           <svg
@@ -76,25 +76,35 @@
     <div class="m-part">
     <Detailmap />
   </div>
-
+</div>
+<div class="modal-container">
+  <ThememapCreate
+      :isCreateOpen="isCreateOpen"
+      @close-create="closeCreate"
+      />
+      <!-- :groupId="groupMapId" -->
+ </div>
    
-  </div>
+   
  
 </template>
 
 <script>
 import axios from "axios";
 import Detailmap from "./Detailmap.vue";
+import ThememapCreate from "./ThememapCreate.vue";
 
 export default {
   name: "FavoriteList",
   components: {
     Detailmap,
-  },
+    ThememapCreate
+},
   data() {
     return {
       favoriteList: [],
       themeMapId: null, // 초기값 추가
+      isCreateOpen: false
     };
   },
 
@@ -179,9 +189,31 @@ export default {
           console.error(error);
           alert("삭제 실패");
         });
+    },  addNewThememap() {
+      this.showThememapCreateModal = true;
+      // Set the groupMapId if needed
+      // this.groupMapId = ...;
     },
+
+    // Add this method to close the ThememapCreate modal
+    closeThememapCreateModal() {
+      this.showThememapCreateModal = false;
+      // Reset the groupMapId if needed
+      // this.groupMapId = null;
+    },
+    openCreate(){
+      this.isCreateOpen = true;
+      console.log(this.isCreateOpen)
+    },
+    closeCreate(){
+      this.isCreateOpen = false;
+      console.log(this.isCreateOpen)
+    }
   },
 };
+  
+  
+ 
 </script>
 <style scoped>
 
