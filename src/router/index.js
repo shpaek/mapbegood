@@ -35,9 +35,13 @@ import UpdateGroupMapComponent from "../pages/UpdateGroupMap.vue";
 import test from "../pages/test.vue";
 import DetailMap from "../pages/Detailmap.vue";
 
+import chat from "../pages/chat_tmp.vue";
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    { path: "/chat", component: chat },
+
     { path: "/", component: OthersThemeMap }, // /일때 뭘 보여줄지 고민, 로그인 전-추천리스트 로그인 후-대표지도
     { name: "login", path: "/login", component: Login },
     { path: "/oauth", component: Oauth },
@@ -48,12 +52,6 @@ const router = createRouter({
     { path: "/groupcreate", component: GroupCreate },
     // { name: 'groupThemeMapList', path: "/groupthememaplist/:groupId/:groupName/:leaderNickname", component: GroupThemeMapList },
 
-    {
-      name: "/group",
-      path: "/group/:groupId/:groupName/:leaderNickname",
-      component: GroupDetail,
-    },
-    // { name: 'group', path: "/group/:groupId/:groupName/:leaderNickname", component: GroupDetail },
     {
       name: "/group",
       path: "/group/:groupId/:groupName/:leaderNickname",
@@ -81,6 +79,7 @@ const router = createRouter({
     },
     { path: "/favoritelist", component: FavoriteList },
     { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
+   
 
     { path: "/map", component: Map },
     { path: "/map", component: DetailMap }, //이거 임시
