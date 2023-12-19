@@ -75,24 +75,31 @@ public class GroupThemeMapService {
 	 * @throws FindException 
 	     * */     
 	 
-	  public GroupThememapDTO updateGroupThememap(Long groupId,Long groupThememapId,GroupThememapDTO groupthemeMapDto ) throws FindException {
-		  try {
-		        // Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findById(groupId);
+	  public GroupThememapDTO updateGroupThememap(Long groupId, Long groupThememapId, GroupThememapDTO groupthemeMapDto) throws FindException {
+		    try {
 		        Optional<Groups> optionalGroup = groupsRepository.findById(groupId);
 
 		        if (optionalGroup.isPresent()) {
 		            Groups group = optionalGroup.get();
 
-		            // 업데이트할 그룹 테마지도를 찾기 위해 groupId와 groupThememapId를 활용
 		            Optional<GroupThememap> optionalGroupThememap = groupThememapRepository.findById(groupThememapId);
 
 		            if (optionalGroupThememap.isPresent()) {
 		                GroupThememap groupThememap = optionalGroupThememap.get();
-		                // 업데이트할 내용을 DTO에서 가져와서 엔터티에 설정
+
+		                // 여기서 opList가 null이 아닌 경우에만 iterator를 호출
+		                List<Ourplace> opList = groupThememap.getOurplaceList();
+		                if (opList != null) {
+		                    for (Ourplace op : opList) {
+		                        // 필요한 작업 수행
+		                    }
+		                }
+
+		                // 나머지 업데이트 로직은 그대로 유지
 		                groupThememap.setName(groupthemeMapDto.getName());
 		                groupThememap.setColor(groupthemeMapDto.getColor());
 		                groupThememap.setMemo(groupthemeMapDto.getMemo());
-		                // 엔터티 저장한 다음 업데이트된 엔터리 반환
+
 		                GroupThememap updatedGroupThememap = groupThememapRepository.save(groupThememap);
 		                return mapGroupThememapEntityToDTO(updatedGroupThememap);
 		            } else {
@@ -105,7 +112,6 @@ public class GroupThemeMapService {
 		        throw new FindException("그룹 테마지도를 찾을 수 없습니다");
 		    }
 		}
-	  
 	  /**
 	   * 
 	   * 모든그룹테미지도 조회 o
@@ -180,13 +186,17 @@ public class GroupThemeMapService {
 //	  }
  
 	  // 그룹 테마지도 엔터티를 DTO로 변환
+//	   public GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
 	    public GroupThememapDTO mapGroupThememapEntityToDTO(GroupThememap groupThememap) {
    	
 	    	List<Ourplace> opList = groupThememap.getOurplaceList();
 	    	List<OurplaceDTO> opDtoList = new ArrayList<>();
+	    	
+	    	if (opList != null) {
 	    	for(Ourplace op: opList) {
 	    		OurplaceDTO opDto = opMapper.entityToDto(op);
 	    		opDtoList.add(opDto);
+	    	}
 	    	}
 	    	return GroupThememapDTO.builder()
 	                .id(groupThememap.getId())
@@ -199,7 +209,7 @@ public class GroupThemeMapService {
 	    }
 
 	    // 그룹 테마지도 DTO를 엔터티로 변환 
-	    private GroupThememap mapGroupThememapDTOToEntity(GroupThememapDTO groupThememapDTO) {
+	    public GroupThememap mapGroupThememapDTOToEntity(GroupThememapDTO groupThememapDTO) {
 	    	Groups group = new Groups();
 	    	group.setId(groupThememapDTO.getGroupId());
 	        GroupThememap groupThememap = new GroupThememap();
