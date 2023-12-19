@@ -1,11 +1,12 @@
 <template>
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <h2 class="mt-3">테마맵 이름을 검색하세요</h2>
+    <h2 class="mt-3">추천 테마지도</h2>
     <div class="input-group mb-3">
       <input
         v-model="searchTerm"
-        placeholder="검색어를 입력하세요"
+        placeholder="테마지도 검색하기"
         class="form-control"
+        @keyup.enter="executeSearch"
       />
       <div class="input-group-append">
         <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
@@ -31,13 +32,13 @@
 
     <div v-if="themeMaps.length > 0">
       <!-- 검색 결과가 있는 경우 -->
-      <ul class="elevated-list search-results-list mb-4">
+      <ul
+        class="elevated-list search-results-list mb-4"
+        v-for="themeMap in themeMaps"
+        :key="themeMap.id"
+      >
         <!-- 각 테마맵에 대한 목록 -->
-        <li
-          v-for="themeMap in themeMaps"
-          :key="themeMap.id"
-          class="list-group-item"
-        >
+        <li class="list-group-item">
           <div>
             <h5 class="mb-1">{{ themeMap.name }}</h5>
             <p class="mb-1">{{ themeMap.memo }}</p>
@@ -80,7 +81,7 @@
 
 <script>
 import axios from "axios";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import Detailmap from "./Detailmap.vue";
 
 export default {
@@ -95,12 +96,12 @@ export default {
     // 사용자 정보가 설정되면 이메일 값을 콘솔에 출력합니다.
     // console.log("이메일:", this.userInfo.email);
     // });
-    // console.log("OthersThemeMap 에서 호출");
     this.$store.dispatch("getUserInfo").then(() => {
       //구독 메서드 호출
       this.checkNotifications();
     });
-    // this.checkNotifications();
+
+    this.recommend(this.recommendPageNum);
   },
 
   data() {
@@ -108,6 +109,7 @@ export default {
       // 검색어와 테마맵 목록을 담는 데이터
       searchTerm: "",
       themeMaps: [],
+      recommendPageNum: 1,
     };
   },
   methods: {
@@ -123,7 +125,7 @@ export default {
             name: this.searchTerm,
           },
         });
-
+        console.log(response.data);
         this.themeMaps = response.data.map((map) => ({
           ...map,
           isInFavorites: false,
@@ -214,6 +216,21 @@ export default {
       return this.themeMaps.some(
         (map) => map.id === themeMapId && map.isInFavorites
       );
+    },
+
+    recommend(pageNum) {
+      axios
+        .get(`${this.backURL}/recommend-thememap/` + pageNum)
+        .then((res) => {
+          console.log(res.data);
+          this.themeMaps = res.data.map((map) => ({
+            ...map,
+            isInFavorites: false,
+          }));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

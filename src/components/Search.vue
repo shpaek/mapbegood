@@ -63,12 +63,12 @@
     <div class="modal-container">
       <!-- 모달창 -->
       <AddBookmark
-    :isModalOpen="isModalOpen"
-    @close-modal="closeModal"
-    @add-myplace="addMyplace"
-    :groupId="groupId"
-    :place="selectedPlace"
-  />
+        :isModalOpen="isModalOpen"
+        @close-modal="closeModal"
+        @add-myplace="addMyplace"
+        :groupId="groupId"
+        :place="selectedPlace"
+      />
     </div>
   </div>
 </template>
