@@ -27,7 +27,7 @@
         <ul class="elevated-list mb-4">
           <li>
             <h3 @click="detailThememap(thememap.themeMapDto.id)">
-              리스트이름:{{ thememap.themeMapDto.name }}
+              {{ thememap.themeMapDto.name }}
             </h3>
             <h5>
               <!-- 공개 여부에 따라 다른 아이콘 표시 -->
