@@ -3,11 +3,7 @@
     <div class="g-part">
       <div class="icon-container">
         <span class="title">그룹 목록</span>
-        <span
-          class="check-waiting"
-          v-if="emptyMsg.length < 1"
-          @click="openModal"
-        >
+        <span class="check-waiting" @click="openModal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -24,11 +20,7 @@
       </div>
       <div class="group-container">
         <!-- 그룹 추가버튼 -->
-        <div
-          class="add-group"
-          @click="addgroupClickHandler"
-          v-if="emptyMsg.length < 1"
-        >
+        <div class="add-group" @click="addgroupClickHandler">
           <div
             class="new-group cursor-pointer btn btn-outline-dark"
             @click="addnewgroupclickHandler"
@@ -83,20 +75,14 @@
     </div>
   </div>
   <!-- 모달창 -->
-  <GroupInvite
-    :isModalOpen="isModalOpen"
-    @close-modal="closeModal"
-  />
-  <GroupCreate
-    :isCreateOpen="isCreateOpen"
-    @close-modal="closeCreate"
-  />
+  <GroupInvite :isModalOpen="isModalOpen" @close-modal="closeModal" />
+  <GroupCreate :isCreateOpen="isCreateOpen" @close-modal="closeCreate" />
 </template>
 <script>
 import axios from "axios";
-import Detailmap from './Detailmap.vue';
-import GroupInvite from './GroupInvite.vue';
-import GroupCreate from './GroupCreate.vue';
+import Detailmap from "./Detailmap.vue";
+import GroupInvite from "./GroupInvite.vue";
+import GroupCreate from "./GroupCreate.vue";
 export default {
   name: "GroupsView",
   components: {
