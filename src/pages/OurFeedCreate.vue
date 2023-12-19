@@ -24,13 +24,13 @@
             </div>
             <img v-else src="/images/photo.png" alt="photo" class="photo" />
             <input
-              type="file"
-              ref="fileInput"
-              @change="handleFileChange"
-              accept="image/*"
-              multiple
-              style="display: none"
-            />
+  type="file"
+  ref="fileInput"
+  @change="handleFileChange"
+  accept=".jpg, .jpeg, .png"
+  multiple
+  style="display: none"
+/>
           </div>
         </div>
         <div
@@ -93,8 +93,7 @@ export default {
   },
   methods: {
     submitForm() {
-      const ourplaceId = 109;
-      this.createFeed(ourplaceId);
+      this.createFeed(this.ourplaceId);
     },
     createFeed(ourplaceId) {
       const backURL = this.$root.backURL;
@@ -122,6 +121,7 @@ export default {
           if (this.feedImgs.length > 0) {
             this.uploadImages(this.ourplaceId);
           }
+          this.$router.push({ name: 'ourfeed', params: { ourplaceId: ourplaceId } });
         })
         .catch((error) => {
           console.error("Error creating feed:", error);

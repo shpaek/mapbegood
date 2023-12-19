@@ -80,32 +80,32 @@ const router = createRouter({
 
     { path: "/place", component: Place },
     {
-      path: "/myfeed/:myplaceId",
+      path: "/thememapdetail/:id/myfeed/:myplaceId",
       name: "myfeed",
       component: MyFeed,
     },
     {
-      path: "/myfeedcreate/:myplaceId",
+      path: "/thememapdetail/:id/myfeedcreate/:myplaceId",
       name: "myfeedcreate",
       component: MyFeedCreate,
     },
     {
-      path: "/myfeedupdate/:myplaceId",
+      path: "/thememapdetail/:id/myfeedupdate/:myplaceId",
       name: "myfeedupdate",
       component: MyFeedUpdate,
     },
     {
-      path: "/ourfeed/:groupId/:ourplaceId/:memberNickname",
+      path: "/detailgroupmap/:groupId/:groupThememapId/ourfeed/:ourplaceId",
       name: "ourfeed",
       component: OurFeed,
     },
     {
-      path: "/ourfeedcreate/:groupId/:ourplaceId",
+      path: "/detailgroupmap/:groupId/:groupThememapId/ourfeedcreate/:ourplaceId",
       name: "ourfeedcreate",
       component: OurFeedCreate,
     },
     {
-      path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
+      path: "/detailgroupmap/:groupId/:groupThememapId/ourfeedupdate/:ourplaceId",
       name: "ourfeedupdate",
       component: OurFeedUpdate,
     },

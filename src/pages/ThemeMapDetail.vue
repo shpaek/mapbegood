@@ -44,11 +44,12 @@
             <img src="/public/images/bookmark.png" class="bookmark-icon" />
             북마크취소
         </button>
-        <router-link v-if="myplace.feedExists"
+        <router-link v-if="myplace.feed"
         :to="{
           name: 'myfeed',
           params: {
-            myplaceId: myplace.id
+            myplaceId: myplace.id,
+            id: themeMapId
           },
         }"
       >
@@ -58,7 +59,8 @@
         :to="{
           name: 'myfeedcreate',
           params: {
-            myplaceId: myplace.id
+            myplaceId: myplace.id,
+            id: themeMapId
           },
         }"
       >
@@ -128,7 +130,7 @@ export default {
           },
         });
         this.mymapdetail.myplaces = response.data;
-        // Call the method in the child component
+
         this.$refs.detailMap.displayPlacesOnMap(response.data);
       } catch (error) {
         console.error(error);

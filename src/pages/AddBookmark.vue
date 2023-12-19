@@ -62,16 +62,12 @@
                             </div>
                             <div v-else>
                               <v-list-tile-sub-title
-                                v-for="groupItem in item.groupThememapList"
-                                :key="groupItem.id"
-                                @click="
-                                  addOurPlace(item.groupThememapList[0].id)
-                                "
-                              >
-                                <span style="display: block">
-                                  {{ groupItem.name }}
-                                </span>
-                              </v-list-tile-sub-title>
+    v-for="groupItem in item.groupThememapList"
+    :key="groupItem.id"
+    @click="addOurPlace(groupItem.id)"
+  >
+    <span style="display: block">{{ groupItem.name }}</span>
+  </v-list-tile-sub-title>
                             </div>
                           </v-list-tile-content>
                         </v-list-tile>
