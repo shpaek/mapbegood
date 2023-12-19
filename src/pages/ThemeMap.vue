@@ -2,84 +2,308 @@
   <div class="section-container">
     <div class="g-part">
       <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
+        <div class="header-container">
+          <h1 class="theme-list">나의 테마지도 리스트</h1>
+          <v-dialog v-model="themeMapAddDialog" persistent width="500">
+            <template v-slot:activator="{ props }">
+              <!-- "테마맵 추가" 버튼 -->
+              <!-- @click="addNewThememap" -->
 
-      <div class="header-container">
-      <h1 class="theme-list">나의 테마지도리스트</h1>
-           <!-- "테마맵 추가" 버튼 -->
-           <button
-          @click="addNewThememap"
-          class="sticker-btn btn btn-outline-secondary"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="23"
-            height="23"
-            fill="currentColor"
-            class="bi bi-file-earmark-plus-fill"
-            viewBox="0 0 16 16"
-          >
-        </svg>
-        </button>
-      </div>
+              <button
+                class="btn btn-outline-secondary"
+                v-bind="props"
+                style="display: block; margin-left: 80%"
+              >
+                추가
+              </button>
+              <v-divider color="warningss"></v-divider>
+            </template>
 
-      <!-- 각 테마맵에 대한 반복문 -->
-      <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
-        <ul class="elevated-list mb-4">
-          <li>
-            <h3 @click="detailThememap(thememap.themeMapDto.id)">
-              {{ thememap.themeMapDto.name }}
-            </h3>
-            <h5>
-              <!-- 공개 여부에 따라 다른 아이콘 표시 -->
-              <span v-if="thememap.themeMapDto.show">
-                <!-- ... -->
-              </span>
-              <span v-else>
-                <!-- ... -->
-              </span>
-            </h5>
-            <div class="text-right">
-              <!-- "상세보기" 버튼 -->
-              <button
-                @click="detailThememap(thememap.themeMapDto.id)"
-                class="btn btn-outline-secondary"
-              >
-                상세보기
-              </button>
-              <!-- 리스트 수정 버튼 -->
-              <button
-                @click="editThememap(thememap.themeMapDto.id)"
-                class="btn btn-outline-secondary"
-              >
-                수정
-              </button>
-              <!-- 리스트 삭제 버튼 -->
-              <button
-                @click="deleteThememap(thememap.themeMapDto.id)"
-                class="btn btn-outline-danger"
-              >
-                삭제
-              </button>
-              <!-- 리스트 복사 버튼 -->
-              <button
-                @click="copyThememap(thememap.themeMapDto.id)"
-                class="btn btn-outline-secondary"
-              >
-                복사
-              </button>
-            </div>
-          </li>
-        </ul>
+            <v-card>
+              <v-card-title>
+                <h1 class="text-primary mb-4">테마지도 생성</h1>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container>
+                  <!-- 테마 이름 입력 -->
+                  <div class="mb-3">
+                    <label for="themeName" class="form-label text-black"
+                      >테마 이름</label
+                    >
+                    <input
+                      v-model="themeName"
+                      id="themeName"
+                      name="themeName"
+                      type="text"
+                      class="form-control"
+                      ref="themeName"
+                    />
+                  </div>
+
+                  <!-- 색상 선택 드롭다운 -->
+                  <div class="mb-3">
+                    <label for="colorSelector" class="form-label text-black"
+                      >테마 색상 선택</label
+                    >
+                    <select
+                      v-model="selectedColor"
+                      id="colorSelector"
+                      name="colorSelector"
+                      class="form-select"
+                      ref="colorSelector"
+                    >
+                      <option
+                        v-for="color in colors"
+                        :key="color"
+                        :value="color"
+                      >
+                        {{ color }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- 테마 메모 입력 -->
+                  <div class="mb-3">
+                    <label for="themeMemo" class="form-label text-black"
+                      >테마 메모</label
+                    >
+                    <textarea
+                      v-model="themeMemo"
+                      id="themeMemo"
+                      name="themeMemo"
+                      rows="4"
+                      class="form-control"
+                    ></textarea>
+                  </div>
+
+                  <!-- 테마 공개 여부 체크박스 -->
+                  <div class="mb-3 form-check">
+                    <input
+                      v-model="isThemePublic"
+                      type="checkbox"
+                      class="form-check-input"
+                      id="showCheckbox"
+                    />
+                    <label
+                      class="form-check-label text-black"
+                      for="showCheckbox"
+                      >테마 공개 여부</label
+                    >
+                  </div>
+
+                  <!-- 메인맵 여부 체크박스 -->
+                  <div class="mb-3 form-check">
+                    <input
+                      v-model="isMainMap"
+                      type="checkbox"
+                      class="form-check-input"
+                      id="mainmapCheckbox"
+                    />
+                    <label
+                      class="form-check-label text-black"
+                      for="mainmapCheckbox"
+                      >메인맵으로 설정</label
+                    >
+                  </div>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <!-- 테마맵 생성 버튼 -->
+                <button @click="createThemeMap" class="btn btn-dark">
+                  생성
+                </button>
+                <button
+                  data-v-fce5df64=""
+                  class="btn btn-light"
+                  @click="cancleThemeMapAdd"
+                >
+                  취소
+                </button>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+              <br />
+            </v-card>
+          </v-dialog>
+        </div>
+
+        <!-- 각 테마맵에 대한 반복문 -->
+        <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
+          <ul class="elevated-list mb-4">
+            <li>
+              <h3 @click="detailThememap(thememap.themeMapDto.id)">
+                리스트이름:{{ thememap.themeMapDto.name }}</h3>
+              
+
+                <p>내용:{{thememap.themeMapDto.memo}}</p> 
+              <h5>
+                <!-- 공개 여부에 따라 다른 아이콘 표시 -->
+                <span v-if="thememap.themeMapDto.show">
+                  <!-- ... -->
+                </span>
+                <span v-else>
+                  <!-- ... -->
+                </span>
+              </h5>
+              <div class="text-right">
+                <!-- "상세보기" 버튼 -->
+                <button
+                  @click="detailThememap(thememap.themeMapDto.id)"
+                  class="btn btn-outline-secondary"
+                >
+                  상세보기
+                </button>
+
+                <!-- 리스트 수정 버튼 -->
+                <v-dialog v-model="themeMapEditDialog" persistent width="500">
+                  <template v-slot:activator="{ props }">
+                    <button
+                      class="btn btn-outline-secondary"
+                      v-bind="props"
+                      @click="loadThemeMapDetails(thememap.themeMapDto.id)"
+                    >
+                      수정
+                    </button>
+                  </template>
+
+                  <v-card>
+                    <v-card-title>
+                      <h1 class="text-primary mb-4">테마지도 수정</h1>
+                    </v-card-title>
+
+                    <v-card-text>
+                      <v-container>
+                        <!-- 테마 이름 입력 -->
+                        <div class="mb-3">
+                          <label for="themeName" class="form-label text-black"
+                            >테마 이름</label
+                          >
+                          <input
+                            v-model="themeMapDto.name"
+                            id="themeMapDto.name"
+                            name="themeMapDto.name"
+                            type="text"
+                            class="form-control"
+                            ref="themeMapDto.name"
+                          />
+                        </div>
+
+                        <!-- 색상 선택 드롭다운 -->
+                        <div class="mb-3">
+                          <label
+                            for="colorSelector"
+                            class="form-label text-black"
+                            >테마 색상 선택</label
+                          >
+                          <select
+                            v-model="themeMapDto.color"
+                            id="themeMapDto.color"
+                            name="themeMapDto.color"
+                            class="form-select"
+                            ref="themeMapDto.color"
+                          >
+                            <option
+                              v-for="color in colors"
+                              :key="color"
+                              :value="color"
+                            >
+                              {{ color }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <!-- 테마 메모 입력 -->
+                        <div class="mb-3">
+                          <label for="themeMemo" class="form-label text-black"
+                            >테마 메모</label
+                          >
+                          <textarea
+                            v-model="themeMapDto.memo"
+                            id="themeMapDto.memo"
+                            name="themeMapDto.memo"
+                            rows="4"
+                            class="form-control"
+                          ></textarea>
+                        </div>
+
+                        <!-- 테마 공개 여부 체크박스 -->
+                        <div class="mb-3 form-check">
+                          <input
+                            v-model="themeMapDto.show"
+                            type="checkbox"
+                            class="form-check-input"
+                            id="themeMapDto.show"
+                          />
+                          <label
+                            class="form-check-label text-black"
+                            for="themeMapDto.show"
+                            >테마 공개 여부</label
+                          >
+                        </div>
+
+                        <!-- 메인맵 여부 체크박스 -->
+                        <div class="mb-3 form-check">
+                          <input
+                            v-model="themeMapDto.mainmap"
+                            type="checkbox"
+                            class="form-check-input"
+                            id="themeMapDto.mainmap"
+                          />
+                          <label
+                            class="form-check-label text-black"
+                            for="themeMapDto.mainmap"
+                            >메인맵으로 설정</label
+                          >
+                        </div>
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <!-- 테마맵 생성 버튼 -->
+                      <button
+                        @click="updateThemeMap(themeMapDto.id)"
+                        class="btn btn-dark"
+                      >
+                        수정
+                      </button>
+                      <button
+                        data-v-fce5df64=""
+                        class="btn btn-light"
+                        @click="cancleThemeMapEdit"
+                      >
+                        취소
+                      </button>
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                    <br />
+                  </v-card>
+                </v-dialog>
+
+                <!-- 리스트 삭제 버튼 -->
+                <button
+                  @click="deleteThememap(thememap.themeMapDto.id)"
+                  class="btn btn-outline-danger"
+                >
+                  삭제
+                </button>
+                <!-- 리스트 복사 버튼 -->
+                <button
+                  @click="copyThememap(thememap.themeMapDto.id)"
+                  class="btn btn-outline-secondary"
+                >
+                  복사
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
     <div class="m-part">
-    <Detailmap />
+      <Detailmap />
+    </div>
   </div>
-
-   
-  </div>
- 
 </template>
 
 <script>
@@ -95,6 +319,36 @@ export default {
     return {
       favoriteList: [],
       themeMapId: null, // 초기값 추가
+
+      themeMapAddDialog: false,
+
+      colors: [
+        "red",
+        "yellow",
+        "green",
+        "blue",
+        "indigo",
+        "purple",
+        "pink",
+        "gray",
+        "black",
+      ],
+      themeName: "",
+      selectedColor: "",
+      themeMemo: "",
+      isThemePublic: false,
+      isMainMap: false,
+
+      themeMapEditDialog: false,
+
+      themeMapDto: {
+        id: null,
+        name: "",
+        color: "",
+        memo: "",
+        show: false,
+        mainmap: false,
+      },
     };
   },
 
@@ -124,10 +378,6 @@ export default {
           alert("로그인이 필요한 서비스입니다.");
           location.href = "/login";
         });
-    },
-
-    addNewThememap() {
-      this.$router.push({ name: "ThememapCreate" });
     },
 
     detailThememap(themeMapId) {
@@ -180,11 +430,121 @@ export default {
           alert("삭제 실패");
         });
     },
+
+    createThemeMap() {
+      if (this.themeName == "") {
+        alert("테마지도 이름을 입력해주세요.");
+        this.$refs.themeName.focus();
+        return;
+      }
+      if (this.selectedColor == "") {
+        alert("테마지도 색상을 선택해 주세요.");
+        this.$refs.colorSelector.focus();
+        return;
+      }
+
+      // 사용자 입력을 이용해 themeMapDto 객체 생성
+      const themeMapDto = {
+        name: this.themeName,
+        color: this.selectedColor,
+        memo: this.themeMemo,
+        show: this.isThemePublic,
+        mainmap: this.isMainMap,
+      };
+
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      const url = `${this.backURL}/mymap/create`;
+
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      axios
+        .post(url, themeMapDto)
+        .then((response) => {
+          console.log(response.data);
+          // 성공적으로 생성되었을 때의 로직 추가
+          alert(this.themeName + "이 성공적으로 생성되었습니다.");
+          // Thememap.vue로 자동으로 이동
+          this.themeMapAddDialog = false;
+          this.cancleThemeMapAdd();
+          this.loadMymapList();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    cancleThemeMapAdd() {
+      this.themeMapAddDialog = false;
+
+      this.themeName = "";
+      this.selectedColor = "";
+      this.themeMemo = "";
+      this.isThemePublic = false;
+      this.isMainMap = false;
+    },
+
+    loadThemeMapDetails(themeMapId) {
+      console.log(themeMapId);
+      if (!this.themeMapDto) {
+        console.error("ID가 정의되지 않았습니다.");
+        return;
+      }
+      const url = `${this.backURL}/mymap/` + themeMapId;
+
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      axios
+        .get(url, { withCredentials: true })
+        .then((response) => {
+          this.themeMapDto = response.data;
+          console.log(this.themeMapDto);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error.msg);
+        });
+    },
+
+    updateThemeMap(themeMapId) {
+      console.log(themeMapId);
+      const url = `${this.backURL}/mymap/update/` + themeMapId;
+      const updatedThemeMapDto = this.themeMapDto;
+
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      axios
+        .put(url, updatedThemeMapDto)
+        .then((response) => {
+          console.log(response.data);
+          alert("테마맵이 성공적으로 수정되었습니다.");
+          this.cancleThemeMapEdit();
+          this.loadMymapList();
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("테마맵 수정에 실패했습니다.");
+          this.cancleThemeMapEdit();
+        });
+    },
+
+    cancleThemeMapEdit() {
+      this.themeMapEditDialog = false;
+
+      this.themeMapDto = {
+        id: null,
+        name: "",
+        color: "",
+        memo: "",
+        show: false,
+        mainmap: false,
+      };
+    },
   },
 };
 </script>
 <style scoped>
-
 .search-wrapper {
   /* position: absolute; */
   /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */

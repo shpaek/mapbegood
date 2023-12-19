@@ -6,7 +6,8 @@
     <h1>favoriteList 목록</h1>
     <ul class="elevated-list">
       <li v-for="favorite in favoriteList" :key="favorite.themeMapDto.id">
-        <h2>{{ favorite.themeMapDto.name }}</h2>
+        <h2>제목:{{ favorite.themeMapDto.name }}</h2>
+        <p>내용:{{ favorite.themeMapDto.memo }}</p>
         <!-- <p>{{ favorite.themeMapDto.memo }}</p> -->
         <!-- <p>ID: {{ favorite.themeMapDto.id }}</p> -->
         <button

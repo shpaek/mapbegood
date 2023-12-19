@@ -40,8 +40,8 @@
         <!-- 각 테마맵에 대한 목록 -->
         <li class="list-group-item">
           <div>
-            <h5 class="mb-1">{{ themeMap.name }}</h5>
-            <p class="mb-1">{{ themeMap.memo }}</p>
+            <h5 class="mb-1">제목: {{ themeMap.name }}</h5>
+            <p class="mb-1">내용: {{ themeMap.memo }}</p>
             <!-- <small>{{ themeMap.id }}</small> -->
 
             <!-- 추가하기 버튼 -->
