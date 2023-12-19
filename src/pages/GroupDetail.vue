@@ -159,8 +159,6 @@
     },
   
     methods: {
-
-
       fetchGroupThememaps() {
         const url = `${this.backURL}/ourmap/getall/${this.groupId}`;
         axios.get(url)
@@ -175,26 +173,10 @@
         this.isDropdownOpen = !this.isDropdownOpen;
       },
       updateImageClickHandler() {
-        // this.$router.push({
-        //   name: '/groupimage',
-        //   params: {
-        //     groupId: this.groupId,
-        //     groupName: this.groupName,
-        //     leaderNickname: this.leaderNickname
-        //   }
-        // });
         this.isImageChangeOpen=true;
         console.log(this.isImageChangeOpen)
       },
       updateNameClickHandler() {
-        // this.$router.push({
-        //   name: '/groupname',
-        //   params: {
-        //     groupId: this.groupId,
-        //     groupName: this.groupName,
-        //     leaderNickname: this.leaderNickname
-        //   }
-        // }); openImageChange(){
         this.isNameChangeOpen = true;
         console.log(this.isNameChangeOpen)
       },
@@ -275,8 +257,6 @@
     },
   },
     };
-  
-  
   </script>
   <style scoped>
   *{
@@ -295,9 +275,14 @@
   li.img {
     position: relative;
     height: 150px;
+    width: 150px;
   }
   li.img>img{
     border-radius: 5px;
+    min-height: 150px;
+    max-height: 150px;
+    min-width: 150px;
+    max-width: 150px;
   }
   
   li.img svg.bi-gear {
@@ -400,9 +385,8 @@
   div.group-detail>div.group-info>ul>li.img>div.combobox>div.dropdown {
     position: absolute;
     font-size: 12px;
-    left: 94.7%;
-    transform: translateX(-94.7%);
-    top: 42px;
+    left: 268px;
+    top: 35px;
     width: 75px;
     height: 55px;
     text-align: center;
@@ -423,9 +407,8 @@
   
   div.group-detail>div.group-info>ul>li.img>div.combobox>div.triangle {
     position: absolute;
-    top: 32px;
-    left: 92%;
-    transform: translateX(-93%);
+    top: 26px;
+    left: 323px;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
     border-bottom: 12px solid rgb(240, 240, 240);
@@ -438,4 +421,4 @@
   transform: translate(-50%, -50%);
   z-index: 1000; /* Ensure it's above other elements */
 }
-  </style>
+</style>
