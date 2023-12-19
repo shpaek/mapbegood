@@ -83,7 +83,7 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import Detailmap from "./Detailmap.vue";
-
+import Swal from "sweetalert2";
 export default {
   computed: {
     ...mapState(["userInfo"]),
@@ -166,8 +166,8 @@ export default {
             console.log("Message:", data);
             console.log("데이터 타입", data.type, data.type !== "Created");
             //로그인 상태에서 구독했을때에도 알림창이 띄어지는데, 급한대로 이름으로 무시하기, 만들때는 data.type 꼭 주자.
-            alert("알림:" + data);
-
+            // alert("알림:" + data);
+            Swal.fire({ text: "알림:" + data, icon: "info" });
             //  // data.type이 정의되어 있을 때만 알림창 띄우기
             //  if (data.type !== undefined && data.type !== 'Created') {
             //     alert('알림:' + data);
@@ -196,7 +196,7 @@ export default {
         const response = await axios.post(url);
         console.log(response.data); // 성공하면 콘솔에 출력
         // 추가 성공 메시지
-        alert("추가되었습니다");
+        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" })
 
         // Update the isInFavorites property after successfully adding to favorites
         const updatedThemeMaps = this.themeMaps.map((map) => {

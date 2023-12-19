@@ -29,6 +29,7 @@
 </template>
 <script>
 import axios from 'axios';
+import Swal from "sweetalert2";
 export default {
     name: 'GroupNameChange',
     props:{
@@ -78,7 +79,7 @@ export default {
                 })
                 .catch(error => {
                     console.log(error)
-                    alert("그룹명 변경에 실패했습니다")
+                    Swal.fire({ text: "그룹명 변경에 실패했습니다", icon: "error" });
                 })
         },
         b1ClickHandler() { //중복확인 버튼 클릭 시
@@ -87,14 +88,14 @@ export default {
                 const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`
                 axios.get(url)
                     .then(response => {
-                        alert("사용가능한 그룹명입니다")
+                        Swal.fire({ text: "사용가능한 그룹명입니다", icon: "success" });
                         this.isDupchkOk = true
                     })
                     .catch(error => {
-                        alert("사용할 수 없는 그룹명입니다")
+                        Swal.fire({ text: "사용할 수 없는 그룹명입니다", icon: "error" });
                     })
             } else {
-                alert("그룹명을 반드시 입력해주세요")
+                Swal.fire({ text: "그룹명을 반드시 입력해주세요", icon: "warning" });
             }
         },
         b3ClickHandler() { //변경 취소 버튼 클릭 시

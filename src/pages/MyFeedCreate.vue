@@ -25,13 +25,13 @@
             </div>
             <img v-else src="/images/photo.png" alt="photo" class="photo" />
             <input
-  type="file"
-  ref="fileInput"
-  @change="handleFileChange"
-  accept=".jpg, .jpeg, .png"
-  multiple
-  style="display: none"
-/>
+              type="file"
+              ref="fileInput"
+              @change="handleFileChange"
+              accept=".jpg, .jpeg, .png"
+              multiple
+              style="display: none"
+            />
           </div>
         </div>
         <div
@@ -53,7 +53,6 @@
       </div>
       <button type="submit">Share</button>
     </form>
-    <!-- Add your feed display code here if needed -->
     <div class="feed">
       <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
         <img
@@ -68,13 +67,13 @@
 
 <script>
 import axios from "axios";
-
+import Swal from "sweetalert2";
 export default {
   name: "MyFeedCreate",
   data() {
     return {
       feedImgs: [],
-      currentIndex: 0, // Add currentIndex to data
+      currentIndex: 0,
       myplaceId: "",
       feedContent: "",
       posts: [],
@@ -96,11 +95,9 @@ export default {
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
-      // Create feed
       const createData = {
         myplaceId: myplaceId,
         content: this.feedContent,
-        // Add other properties as needed
       };
 
       axios
@@ -108,11 +105,21 @@ export default {
         .then((response) => {
           console.log("Feed created successfully:", response.data);
 
-          // Upload images if selected
           if (this.feedImgs.length > 0) {
             this.uploadImages(myplaceId);
           }
-          this.$router.push({ name: 'myfeed', params: { myplaceId: myplaceId } });
+          Swal.fire({
+            text: "피드 생성이 완료되었습니다",
+            icon: "success",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push({
+                name: "myfeed",
+                params: { myplaceId: myplaceId },
+              });
+            }
+          });
         })
         .catch((error) => {
           console.error("Error creating feed:", error);
@@ -122,12 +129,11 @@ export default {
     uploadImages(myplaceId) {
       const backURL = this.$root.backURL;
 
-      // Upload images
       const formData = new FormData();
       formData.append("id", myplaceId);
-      formData.append("opt", "myfeed"); // Add your image option here
+      formData.append("opt", "myfeed");
       this.feedImgs.forEach((file, index) => {
-        formData.append("files", file.file); // Use "file" instead of "files"
+        formData.append("files", file.file);
       });
 
       axios
@@ -161,16 +167,15 @@ export default {
       for (let i = 0; i < maxFiles; i++) {
         const file = files[i];
 
-        // Check file extension before processing
         if (!this.isValidFileExtension(file)) {
-          alert('Invalid file format. Please select only JPG or PNG files.');
+          alert("Invalid file format. Please select only JPG or PNG files.");
           return;
         }
 
         const base64Data = await this.readFileAsync(files[i]);
         this.feedImgs.push({ file: files[i], base64Data });
       }
-      this.currentIndex = 0; // Reset currentIndex when new images are added
+      this.currentIndex = 0;
     },
 
     readFileAsync(file) {
@@ -182,16 +187,15 @@ export default {
       });
     },
     isValidFileExtension(file) {
-      const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+      const allowedExtensions = [".jpg", ".jpeg", ".png"];
       const fileName = file.name.toLowerCase();
-      return allowedExtensions.some(ext => fileName.endsWith(ext));
+      return allowedExtensions.some((ext) => fileName.endsWith(ext));
     },
   },
 };
 </script>
 
 <style scoped>
-/* Add your custom Instagram-like styles here */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;

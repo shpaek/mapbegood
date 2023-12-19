@@ -16,7 +16,7 @@
   
   <script>
   import axios from 'axios';
-  
+  import Swal from "sweetalert2";
   export default {
     name: 'FavoriteList',
     data() {
@@ -47,6 +47,7 @@
         };
         });
         console.log(this.favoriteList);
+        
       })
       .catch(error => {
         console.error(error);

@@ -53,6 +53,7 @@ import axios from "axios";
 import Detailmap from "./Detailmap.vue";
 import GroupInvite from "./GroupInvite.vue";
 import GroupCreate from "./GroupCreate.vue";
+import Swal from "sweetalert2";
 export default {
   name: "GroupsView",
   components: {
@@ -88,8 +89,15 @@ export default {
       })
       .catch((error) => {
         console.log(error);
-        alert("로그인이 필요한 서비스 입니다.");
-        location.href = "/login";
+        Swal.fire({
+            text: "로그인이 필요한 서비스 입니다.",
+            icon: "warning",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.href = "/login";
+            }
+          });
       });
   },
   methods: {

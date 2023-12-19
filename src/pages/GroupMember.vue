@@ -112,7 +112,7 @@
 <script>
 import axios from "axios";
 import SearchMember from "../pages/SearchMember.vue";
-
+import Swal from "sweetalert2";
 export default {
   name: "GroupMember",
   components: {
@@ -202,12 +202,12 @@ export default {
       axios
         .delete(url, { data: requestBody, withCredentials: true })
         .then((response) => {
-          alert("멤버가 방출되었습니다");
+          Swal.fire({ text: "멤버가 방출되었습니다", icon: "success" });
           window.location.reload();
         })
         .catch((error) => {
           console.log(error);
-          alert("멤버가 방출되지 않았습니다");
+          Swal.fire({ text: "멤버가 방출되지 않았습니다", icon: "error" });
         });
     },
     waitinglistClickHandler() {

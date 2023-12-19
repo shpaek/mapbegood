@@ -39,7 +39,7 @@
 </template>
 <script>
 import axios from 'axios';
-
+import Swal from "sweetalert2";
 export default {
     name: 'GroupInvite',
     props: {
@@ -105,17 +105,17 @@ export default {
                 .then(response => {
                     axios.delete(url2, { data: Waiting, withCredentials: true } )
                          .then(response => {
-                             alert("그룹초대 요청을 수락했습니다")
+                            Swal.fire({ text: "그룹초대 요청을 수락했습니다", icon: "success" });
                              this.load()
                          })
                          .catch(error => {
                              console.log(error)
-                             alert("그룹초대 요청을 수락하지 못했습니다")
+                             Swal.fire({ text: "그룹초대 요청을 수락하지 못했습니다", icon: "error" });
                          })
                     })
                 .catch(error => {
                     console.log(error)
-                    alert("그룹초대 요청을 수락하지 못했습니다")
+                    Swal.fire({ text: "그룹초대 요청을 수락하지 못했습니다", icon: "error" });
                 })
         },
         inviteRejectClickHandler(group){
@@ -131,12 +131,12 @@ export default {
             console.log(group.id)
             axios.delete(url, { data: Waiting, withCredentials: true } )
                 .then(response => {
-                    alert("그룹초대 요청을 거절했습니다")
+                    Swal.fire({ text: "그룹초대 요청을 거절했습니다", icon: "success" });
                     this.load()
                 })
                 .catch(error => {
                     console.log(error)
-                    alert("그룹초대 요청을 거절하지 못했습니다")
+                    Swal.fire({ text: "그룹초대 요청을 거절하지 못했습니다", icon: "error" });
                 })
         }
     }

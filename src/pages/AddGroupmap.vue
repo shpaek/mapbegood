@@ -36,7 +36,7 @@
 
 <script>
 import axios from 'axios';
-
+import Swal from "sweetalert2";
 export default {
   name: "addgroupmap",
   data() {
@@ -68,18 +68,22 @@ export default {
 
         // 응답이 정상적으로 오면 성공 메시지 출력 또는 추가 작업 수행
         console.log("Group Theme Map created:", response.data);
-        alert("그룹테마맵이 생성되었습니다.");
-        
+        Swal.fire({
+            text: "그룹테마맵이 생성되었습니다.",
+            icon: "success",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
         //자동으로 GroupDetail.vue로 이동
         this.$router.push({name:"group"});
-
+            }
+          });
       } catch (error) {
         // 오류 처리
         console.error("생성실패:", error);
       }
     },
-    cancelCreateGroupMap() {
-       
+    cancelCreateGroupMap() { 
       this.$router.go(-1); // Go back one step in the history stack
     }
   }
