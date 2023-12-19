@@ -14,6 +14,7 @@
             name="themeName"
             type="text"
             class="form-control"
+            ref="themeName"
           />
         </div>
 
@@ -27,6 +28,7 @@
             id="colorSelector"
             name="colorSelector"
             class="form-select"
+            ref="colorSelector"
           >
             <option v-for="color in colors" :key="color" :value="color">
               {{ color }}
@@ -107,6 +109,17 @@ export default {
   },
   methods: {
     createThemeMap() {
+      if (this.themeName == "") {
+        alert("테마지도 이름을 입력해주세요.");
+        this.$refs.themeName.focus();
+        return;
+      }
+      if (this.selectedColor == "") {
+        alert("테마지도 색상을 선택해 주세요.");
+        this.$refs.colorSelector.focus();
+        return;
+      }
+
       // 사용자 입력을 이용해 themeMapDto 객체 생성
       const themeMapDto = {
         name: this.themeName,

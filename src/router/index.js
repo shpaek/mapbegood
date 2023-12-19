@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import Map from "../pages/Map.vue";
 import Login from "../pages/Login.vue";
 import Oauth from "../pages/Oauth.vue";
-import PasswordChange from "../pages/PasswordChange.vue";
-import NickChange from "../pages/NickChange.vue";
 import GroupsView from "../pages/GroupsView.vue";
 import GroupCreate from "../pages/GroupCreate.vue";
 import GroupDetail from "../pages/GroupDetail.vue";
@@ -21,7 +19,6 @@ import OurFeed from "../pages/OurFeed.vue";
 import OurFeedCreate from "../pages/OurFeedCreate.vue";
 import OurFeedUpdate from "../pages/OurFeedUpdate.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
-import MemberInfo from "../pages/MemberInfo.vue";
 import GroupMember from "../pages/GroupMember.vue";
 import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
@@ -45,8 +42,6 @@ const router = createRouter({
     { path: "/", component: OthersThemeMap }, // /일때 뭘 보여줄지 고민, 로그인 전-추천리스트 로그인 후-대표지도
     { name: "login", path: "/login", component: Login },
     { path: "/oauth", component: Oauth },
-    { path: "/pwdchange", component: PasswordChange },
-    { path: "/nickchange", component: NickChange },
     // { path: "/group", component: GroupView },
     { path: "/groups", component: GroupsView },
     { path: "/groupcreate", component: GroupCreate },
@@ -71,7 +66,7 @@ const router = createRouter({
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
-    { path: "/thememap", component: ThemeMap },
+    { name: "thememap", path: "/thememap", component: ThemeMap },
     {
       path: "/thememapcreate",
       name: "ThememapCreate",
@@ -79,39 +74,41 @@ const router = createRouter({
     },
     { path: "/favoritelist", component: FavoriteList },
     { path: "/favoriteadd", component: FavoriteAdd }, // 새로운 FavoriteAdd 컴포넌트 추가
-   
 
     { path: "/map", component: Map },
     { path: "/map", component: DetailMap }, //이거 임시
 
     { path: "/place", component: Place },
     {
-      path: '/myfeed/:myplaceId',
-      name: 'myfeed',
+      path: "/myfeed/:myplaceId",
+      name: "myfeed",
       component: MyFeed,
     },
     {
-      path: '/myfeedcreate/:myplaceId',
-      name: 'myfeedcreate',
+      path: "/myfeedcreate/:myplaceId",
+      name: "myfeedcreate",
       component: MyFeedCreate,
     },
     {
-      path: '/myfeedupdate/:myplaceId',
-      name: 'myfeedupdate',
+      path: "/myfeedupdate/:myplaceId",
+      name: "myfeedupdate",
       component: MyFeedUpdate,
     },
     {
-      path: '/ourfeed/:groupId/:ourplaceId/:memberNickname',
-      name: 'ourfeed',
+      path: "/ourfeed/:groupId/:ourplaceId/:memberNickname",
+      name: "ourfeed",
       component: OurFeed,
     },
-    { path: "/ourfeedcreate/:groupId/:ourplaceId",
-      name: 'ourfeedcreate',
-      component: OurFeedCreate },
-    { path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
-      name: 'ourfeedupdate',
-      component: OurFeedUpdate },
-    { path: "/members", component: MemberInfo },
+    {
+      path: "/ourfeedcreate/:groupId/:ourplaceId",
+      name: "ourfeedcreate",
+      component: OurFeedCreate,
+    },
+    {
+      path: "/ourfeedupdate/:groupId/:ourplaceId/:memberNickname",
+      name: "ourfeedupdate",
+      component: OurFeedUpdate,
+    },
 
     { path: "/groupmembers", component: GroupMember },
     {
