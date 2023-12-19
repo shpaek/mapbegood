@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.kosa.mapbegood.domain.member.dto.MemberDTO;
+import com.kosa.mapbegood.domain.member.dto.MemberSignUpDTO;
 import com.kosa.mapbegood.domain.member.entity.Member;
 import com.kosa.mapbegood.domain.member.repository.MemberRepository;
 import com.kosa.mapbegood.domain.ourmap.ourplace.entity.Ourplace;
@@ -55,9 +57,16 @@ public class OurplaceFeedService {
 	 */
 	public OurplaceFeedDTO findOurFeedById(OurplaceFeedEmbedded feedId) throws FindException {
 		Optional<OurplaceFeed> feed = ofr.findById(feedId);
-
+		OurplaceFeedDTO ourfeed = new OurplaceFeedDTO();
+		ourfeed = mapper.entityToDto(feed.get());
+		Member member = feed.get().getMember();
+		MemberDTO memberDto = new MemberDTO();
+		memberDto.setEmail(member.getEmail());
+		memberDto.setNickname(member.getNickname());
+		memberDto.setProfileImage(member.getProfileImage());
+		ourfeed.setMemberEmail(memberDto);
 		if (feed.isPresent()) {
-			return mapper.entityToDto(feed.get());
+			return ourfeed;
 		} else {
 			return null;
 		}
