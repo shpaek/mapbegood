@@ -126,6 +126,7 @@ export default {
   },
   mounted() {
     this.loadMymapList();
+    this.setTab('personal');
   },
   methods: {
     toggle(index) {
@@ -257,7 +258,7 @@ export default {
     addOurPlace(groupThememapId) {
     // Make sure you have access to the clickedThemeMapId and place information
     const clickedThemeMapId = this.clickedThemeMapId;
-    const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
+    const category = this.place.category_group_name ? this.place.category_group_name : "기타";
     // Assuming you have the necessary data to create the request payload
     const ourplaceWrapperDto = {
       ourplaceDto: {

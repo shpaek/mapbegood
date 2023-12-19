@@ -44,6 +44,26 @@
             <img src="/public/images/bookmark.png" class="bookmark-icon" />
             북마크취소
         </button>
+        <router-link v-if="myplace.feedExists"
+        :to="{
+          name: 'myfeed',
+          params: {
+            myplaceId: myplace.id
+          },
+        }"
+      >
+        <button>피드보기</button>
+      </router-link>
+      <router-link v-else
+        :to="{
+          name: 'myfeedcreate',
+          params: {
+            myplaceId: myplace.id
+          },
+        }"
+      >
+        <button>피드생성</button>
+      </router-link>
         </li>
       </ul>
     </div>
