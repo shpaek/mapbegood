@@ -35,6 +35,33 @@
                 <p>주소: {{ ourplace.placeId.address }}</p>
                 <!-- 추가적인 Myplace 정보 표시 -->
               </div>
+              <button
+              class="add-bookmark-btn"
+              @click="cancelBookmark(ourplace)"
+            >
+            <img src="/public/images/bookmark.png" class="bookmark-icon" />
+            북마크취소
+        </button>
+        <router-link :to="{
+    name: 'ourfeed',
+    params: {
+      groupId: groupId,
+      groupThememapId: ourplace.groupThememapId,
+      ourplaceId: ourplace.id,
+    },
+  }">
+        <button>피드보기</button>
+      </router-link>
+      <router-link :to="{
+    name: 'ourfeedcreate',
+    params: {
+      groupId: groupId,
+      groupThememapId: ourplace.groupThememapId, // Make sure you have the correct property
+      ourplaceId: ourplace.id,
+    },
+  }">
+        <button>피드생성</button>
+      </router-link>
             </li>
           </ul>
         </div>
@@ -58,12 +85,19 @@ export default {
   data() {
     return {
       thememap: {}, // 테마지도 정보 저장할 객체
+      groupThememapId: null,
     };
   },
-  created() {
-    const groupThememapId = this.$route.params.groupThememapId;
+  async created() {
+    const groupId = this.$route.params.groupId;
+    this.groupThememapId = this.$route.params.groupThememapId;
+    await this.findAllOurPlace(this.groupThememapId);
 
-    axios.get(`http://localhost:8080/ourmap/get/${groupThememapId}`)
+  },
+  methods:{
+
+    async findAllOurPlace(groupThememapId){
+      axios.get(`http://localhost:8080/ourmap/get/${groupThememapId}`)
       .then(response => {
         // API로부터 받은 데이터를 컴포넌트의 데이터에 저장
         this.thememap = response.data;
@@ -72,10 +106,143 @@ export default {
       .catch(error => {
         console.error('Error fetching theme map data:', error);
       });
-  },
+    },
+
+    async cancelBookmark(ourplace) {
+      const ourplaceId = ourplace.id;
+      const url = `${this.backURL}/ourplace/${ourplaceId}`;
+      try {
+        await axios.delete(url, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+          },
+        });
+        // After successful deletion, you might want to refresh the data
+        await this.findAllOurPlace(this.groupThememapId);
+      } catch (error) {
+        console.error(error);
+        alert(
+          error.response.data.message || "북마크를 취소하지 못했습니다."
+        );
+      }
+    },
+  }
 };
 </script>
 
 <style scoped>
-/* 추가적인 스타일링을 할 수 있습니다. */
+.full-screen {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* 스크롤 없애기 */
+}
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  position: relative;
+}
+
+.theme-map-details {
+  position: fixed;
+  top: 100px;
+  left: 90px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 330px;
+  width: 100%;
+  margin: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* 추가된 부분 */
+}
+
+.myplace-list {
+  list-style: none;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.myplace-item {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.myplace-info {
+  flex-grow: 1;
+}
+
+.myplace-list-container {
+  overflow: auto;
+  max-height: 650px; /* 스크롤이 나타날 최대 높이 */
+}
+
+.add-bookmark-btn {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-bookmark-btn:hover {
+  background-color: #45a049;
+}
+
+.bookmark-icon {
+  margin-right: 5px;
+  width: 30px;
+}
+
+.search {
+    position: relative;
+    width: calc(100% - 40px);
+    margin: 0 auto 10px;
+  }
+  
+  .search input {
+    width: 100%;
+    border: 2px solid #bbb;
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+  
+  .search img {
+    user-drag: none;
+    -webkit-user-drag: none;
+    position: absolute;
+    width: 17px;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    pointer-events: none;
+  }
+  
+  .search img.icon {
+    pointer-events: auto;
+  }
+  
+  .search img:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .search input:focus {
+    outline: none;
+    border-color: #555;
+  }
 </style>
