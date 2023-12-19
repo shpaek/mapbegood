@@ -42,13 +42,13 @@
 
 <script>
 import axios from "axios";
-
+import Swal from "sweetalert2";
 export default {
   name: "myfeed",
   data() {
     return {
-      feedImgs: [], // Initialize as an empty array
-      currentIndex: 0, // Index of the current image
+      feedImgs: [],
+      currentIndex: 0,
       post: {},
       memberEmail: "",
     };
@@ -61,9 +61,7 @@ export default {
   mounted() {
     const backURL = this.$root.backURL;
     this.$store.dispatch("getUserInfo").then(() => {
-      // Make sure to set this.myplaceId here
       this.myplaceId = this.$route.params.myplaceId;
-      // Rest of your code...
 
       axios
         .get(`${backURL}/feed/download?id=${this.myplaceId}&opt=myfeed`)
@@ -93,7 +91,7 @@ export default {
       axios
         .get(`${backURL}/myfeed/${this.myplaceId}`)
         .then((response) => {
-          this.post = response.data || {}; // Ensure post is an object
+          this.post = response.data || {};
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -115,22 +113,38 @@ export default {
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
       console.log("Delete feed with ID:", myplaceId);
-      // Confirm with the user before proceeding with the delete
-      if (window.confirm("Are you sure you want to delete this feed?")) {
-        const backURL = this.$root.backURL;
-        axios
-          .delete(`${backURL}/myfeed/${this.myplaceId}`)
-          .then((response) => {
-            console.log("Feed deleted successfully:", response.data);
-            this.$router.push({
-              name: "thememapdetail",
-              params: { id: response.data.thememapId }, // Replace with the correct property
+
+      Swal.fire({
+        title: "삭제",
+        text: "정말로 삭제하시겠습니까?",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        denyButtonText: "취소"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const backURL = this.$root.backURL;
+          axios
+            .delete(`${backURL}/myfeed/${this.myplaceId}`)
+            .then((response) => {
+              console.log("Feed deleted successfully:", response.data);
+              this.$router.push({
+                name: "thememapdetail",
+                params: { id: response.data.thememapId },
+              });
+            })
+            .catch((error) => {
+              console.error("Error deleting feed:", error);
             });
-          })
-          .catch((error) => {
-            console.error("Error deleting feed:", error);
+          Swal.fire({
+            title: "피드 삭제",
+            text: "피드가 삭제되었습니다",
+            icon: "success",
           });
-      }
+        }
+      });
     },
     prevImage() {
       if (this.currentIndex > 0) {
@@ -146,7 +160,6 @@ export default {
 };
 </script>
 <style scoped>
-/* Add your custom Instagram-like styles here */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;

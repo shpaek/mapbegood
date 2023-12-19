@@ -30,6 +30,7 @@
 </template>
 <script>
 import axios from 'axios';
+import Swal from "sweetalert2";
 export default {
   name: 'SearchMember',
   props: {
@@ -60,7 +61,7 @@ export default {
       // },
       searchUserClickHandler() {
           if (this.name.length < 1) {
-              alert("최소 한글자 이상 입력하세요")
+            Swal.fire({ text: "최소 한글자 이상 입력하세요", icon: "warning" });
           } else {
               const url = `${this.backURL}/user?nickName=${this.name}`
               const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken")
@@ -77,7 +78,7 @@ export default {
                   })
                   .catch(error => {
                       console.log(error)
-                      alert("사용자를 검색하지 못했습니다")
+                      Swal.fire({ text: "사용자를 검색하지 못했습니다", icon: "error" });
                   })
           }
       },
@@ -92,11 +93,11 @@ export default {
           };
           axios.post(url, requestBody, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
                .then(response => {
-                  alert("초대장을 보냈습니다")
+                    Swal.fire({ text: "초대장을 보냈습니다", icon: "success" });
                })
                .catch(error =>{
                   console.log(error)
-                  alert(error.response.data.message)
+                  Swal.fire({ text: error.response.data.message, icon: "error" });
                })
       }
   }

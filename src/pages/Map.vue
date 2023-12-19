@@ -12,7 +12,7 @@
 
 <script>
 import Search from "@/components/Search.vue";
-
+import Swal from "sweetalert2";
 export default {
   name: "Map",
   data() {
@@ -114,7 +114,7 @@ export default {
         this.map.setCenter(myLocation);
       } catch (error) {
         console.error("Error getting my location:", error);
-        alert("현재 위치를 가져올 수 없습니다.");
+        Swal.fire({ text: "현재 위치를 가져올 수 없습니다.", icon: "error" });
       }
     },
 

@@ -16,14 +16,24 @@
 
                 <template v-slot:extension>
                   <v-tabs
-    v-model="tabs"
-    centered
-    color="black"
-    slider-color="white"
-  >
-    <v-tab key="personal" @click="setTab('personal')" :class="{ 'active-tab': tabs === 'personal' }">개인</v-tab>
-    <v-tab key="group" @click="setTab('group')" :class="{ 'active-tab': tabs === 'group' }">그룹</v-tab>
-  </v-tabs>
+                    v-model="tabs"
+                    centered
+                    color="black"
+                    slider-color="white"
+                  >
+                    <v-tab
+                      key="personal"
+                      @click="setTab('personal')"
+                      :class="{ 'active-tab': tabs === 'personal' }"
+                      >개인</v-tab
+                    >
+                    <v-tab
+                      key="group"
+                      @click="setTab('group')"
+                      :class="{ 'active-tab': tabs === 'group' }"
+                      >그룹</v-tab
+                    >
+                  </v-tabs>
                 </template>
               </v-toolbar>
 
@@ -43,23 +53,26 @@
                           : groupList"
                         :key="index"
                       >
-                      <v-list-tile
-  avatar
-  ripple
-  @mouseenter="highlightListItem(index)"
-  @mouseleave="resetHighlight()"
-  @click="toggle(index)"
-  :class="{ 'selected-list-item': index === selectedListItemIndex, 'hovered-list-item': index === hoveredListItemIndex }"
->
+                        <v-list-tile
+                          avatar
+                          ripple
+                          @mouseenter="highlightListItem(index)"
+                          @mouseleave="resetHighlight()"
+                          @click="toggle(index)"
+                          :class="{
+                            'selected-list-item':
+                              index === selectedListItemIndex,
+                            'hovered-list-item': index === hoveredListItemIndex,
+                          }"
+                        >
                           <v-list-tile-content @click="handleItemClick(item)">
                             <div>
                               <v-list-tile-title v-if="tabs === 'personal'">{{
                                 item.themeMapDto.name
                               }}</v-list-tile-title>
-                              <v-list-tile-title
-                                v-else
-                                >{{ item.name  }}</v-list-tile-title
-                              >
+                              <v-list-tile-title v-else>{{
+                                item.name
+                              }}</v-list-tile-title>
                             </div>
                             <div v-if="tabs === 'personal'">
                               <v-list-tile-sub-title>{{
@@ -68,12 +81,14 @@
                             </div>
                             <div v-else>
                               <v-list-tile-sub-title
-    v-for="groupItem in item.groupThememapList"
-    :key="groupItem.id"
-    @click="addOurPlace(groupItem.id)"
-  >
-    <span style="display: block">{{ groupItem.name }}</span>
-  </v-list-tile-sub-title>
+                                v-for="groupItem in item.groupThememapList"
+                                :key="groupItem.id"
+                                @click="addOurPlace(groupItem.id)"
+                              >
+                                <span style="display: block">{{
+                                  groupItem.name
+                                }}</span>
+                              </v-list-tile-sub-title>
                             </div>
                           </v-list-tile-content>
                         </v-list-tile>
@@ -109,6 +124,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   name: "AddBookmark",
@@ -127,8 +143,7 @@ export default {
       tabs: "personal",
       selected: [],
       clickedThemeMapId: null,
-          selectedListItemIndex: null,
-
+      selectedListItemIndex: null,
     };
   },
 
@@ -141,31 +156,29 @@ export default {
     },
   },
 
-
   mounted() {
     this.loadMymapList();
   },
 
   methods: {
     toggle(index) {
-  const clickedItem =
-    this.tabs === "personal"
-      ? this.myThememapList[index]
-      : this.groupList[index];
-  this.clickedThemeMapId = 
-    this.tabs === "personal"
-      ? clickedItem.themeMapDto.id
-      : clickedItem.groupThememapList.id;
-  console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
-  const i = this.selected.indexOf(index);
-  if (i > -1) {
-    this.selected.splice(i, 1);
-  } else {
-    this.selected.push(index);
-  }
-  alert("클릭되었습니다!");
-  this.$emit("add-myplace");
-},
+      const clickedItem =
+        this.tabs === "personal"
+          ? this.myThememapList[index]
+          : this.groupList[index];
+      this.clickedThemeMapId =
+        this.tabs === "personal"
+          ? clickedItem.themeMapDto.id
+          : clickedItem.groupThememapList.id;
+      console.log("Clicked ThemeMapId:", this.clickedThemeMapId);
+      const i = this.selected.indexOf(index);
+      if (i > -1) {
+        this.selected.splice(i, 1);
+      } else {
+        this.selected.push(index);
+      }
+      this.$emit("add-myplace");
+    },
     backClickHandler() {
       this.$emit("close-modal");
     },
@@ -187,8 +200,15 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert("로그인이 필요한 서비스 입니다.");
-          location.href = "/login";
+          Swal.fire({
+            text: "로그인이 필요한 서비스 입니다.",
+            icon: "warning",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.href = "/login";
+            }
+          });
         });
     },
 
@@ -202,7 +222,7 @@ export default {
         .then((response) => {
           const list = response.data;
           this.groupList = list;
-          console.log(this.groupList)
+          console.log(this.groupList);
           if (this.groupList.length < 1) {
             this.emptyMsg = "소속된 그룹이 없습니다";
           }
@@ -226,15 +246,16 @@ export default {
         console.error("No place information provided.");
         return;
       }
-      const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
-      // Assuming you have the necessary data to create the request payload
+      const category = this.place.category_group_name
+        ? this.place.category_group_name
+        : "기타";
       const myplaceWrapperDto = {
         myplaceDto: {
           thememapId: {
             id: clickedThemeMapId,
           },
           placeId: {
-            id: this.place.id, // Use the place ID from the prop
+            id: this.place.id,
           },
         },
         placeDto: {
@@ -247,19 +268,34 @@ export default {
         },
       };
       console.log(myplaceWrapperDto);
-      
+
       const url = `${this.backURL}/myplace`;
 
-      // Making the POST request to create Myplace
       axios
         .post(url, myplaceWrapperDto)
         .then((response) => {
-          // Handle the success response
           console.log("Myplace created successfully:", response.data);
+          Swal.fire({
+            text: "장소가 추가되었습니다",
+            icon: "success",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$emit("close-modal");
+            }
+          });
         })
         .catch((error) => {
-          // Handle errors
           console.error("Error creating Myplace:", error);
+          Swal.fire({
+            text: "장소 추가에 실패했습니다",
+            icon: "error",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$emit("close-modal");
+            }
+          });
         });
     },
 
@@ -267,60 +303,68 @@ export default {
       if (this.tabs === "personal") {
         this.addMyplace(item.themeMapDto.id);
       } else if (this.tabs === "group") {
-        // Handle group tab click here
-        // For example, show a message or perform a different action
         console.log("Group tab item clicked:", item);
         this.clickedGroupItem = item;
       }
     },
     addOurPlace(groupThememapId) {
-    // Make sure you have access to the clickedThemeMapId and place information
-    const clickedThemeMapId = this.clickedThemeMapId;
-    const category = this.place.category_group_name ? this.place.category_group_name : "기타";
-    // Assuming you have the necessary data to create the request payload
-    const ourplaceWrapperDto = {
-      ourplaceDto: {
-        groupThememapId : groupThememapId,
-        placeId : {
-          id: this.place.id
-        }
-      },
-      placeDto: {
-        id: this.place.id,
+      const clickedThemeMapId = this.clickedThemeMapId;
+      const category = this.place.category_group_name
+        ? this.place.category_group_name
+        : "기타";
+      const ourplaceWrapperDto = {
+        ourplaceDto: {
+          groupThememapId: groupThememapId,
+          placeId: {
+            id: this.place.id,
+          },
+        },
+        placeDto: {
+          id: this.place.id,
           placeName: this.place.place_name,
           address: this.place.address_name,
           x: this.place.x,
           y: this.place.y,
           category: category, // Update with the actual category
-      },
-    };
+        },
+      };
 
-    // Make the API request to create Ourplace
-    const url = `${this.backURL}/ourplace`;
-    axios
-      .post(url, ourplaceWrapperDto)
-      .then((response) => {
-        // Handle the success response
-        console.log("Ourplace created successfully:", response.data);
+      const url = `${this.backURL}/ourplace`;
+      axios
+        .post(url, ourplaceWrapperDto)
+        .then((response) => {
+          console.log("Ourplace created successfully:", response.data);
+          Swal.fire({
+            text: "장소가 추가되었습니다",
+            icon: "success",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$emit("close-modal");
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error creating Ourplace:", error);
+          Swal.fire({
+            text: "장소 추가에 실패했습니다",
+            icon: "error",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$emit("close-modal");
+            }
+          });
+        });
+    },
+    highlightListItem(index) {
+      this.selectedListItemIndex = index;
+    },
 
-        // Now you can handle any additional logic if needed
-        // For example, you can close the modal or update the UI
-      })
-      .catch((error) => {
-        // Handle errors
-        console.error("Error creating Ourplace:", error);
-      });
+    resetHighlight() {
+      this.selectedListItemIndex = null;
+    },
   },
-  highlightListItem(index) {
-    this.selectedListItemIndex = index;
-  },
-
-  resetHighlight() {
-    this.selectedListItemIndex = null;
-  },
-  
-  },
-  
 };
 </script>
 
@@ -360,21 +404,18 @@ button.close {
 .selected-list-item {
   background-color: #3498db;
   color: #3e65e7;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .hovered-list-item {
   background-color: #ecf0f1;
   color: #333333;
-  font-weight: bold; 
- 
+  font-weight: bold;
 }
 
 .hovered-list-item:hover {
   background-color: #aed6f1;
   color: #2c3e50;
-  font-weight: bold; 
- 
+  font-weight: bold;
 }
-
 </style>

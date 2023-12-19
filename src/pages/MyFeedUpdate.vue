@@ -44,13 +44,13 @@
 
 <script>
 import axios from "axios";
-
+import Swal from "sweetalert2";
 export default {
   name: "myfeedupdate",
   data() {
     return {
       feedImgs: [],
-      currentIndex: 0, // Add currentIndex to data
+      currentIndex: 0,
       myplaceId: "",
       feedContent: "",
       posts: [],
@@ -66,55 +66,68 @@ export default {
   mounted() {
     const backURL = this.$root.backURL;
     this.$store.dispatch("getUserInfo").then(() => {
-    // Make sure to set this.myplaceId here
-    this.myplaceId = this.$route.params.myplaceId;
-    axios
-      .get(`${backURL}/feed/download?id=${this.myplaceId}&opt=myfeed`)
-      .then((response) => {
-        console.log("Response Data:", response.data);
-        if (response.status === 200) {
-          // 이미지 속성 변경
-          this.feedImgs = response.data.map((img) => ({
-            url: "data:" + img.mimeType + ";base64," + img.data,
-            mimeType: img.mimeType,
-          }));
-          console.log("Feed Images:", this.feedImgs);
-        } else {
-          console.error("Failed to fetch images. Status:", response.status);
-        }
-        this.fetchPosts();
-      })
-      .catch((error) => {
-        console.error("Error fetching images:", error);
-      });
+      this.myplaceId = this.$route.params.myplaceId;
+      axios
+        .get(`${backURL}/feed/download?id=${this.myplaceId}&opt=myfeed`)
+        .then((response) => {
+          console.log("Response Data:", response.data);
+          if (response.status === 200) {
+            this.feedImgs = response.data.map((img) => ({
+              url: "data:" + img.mimeType + ";base64," + img.data,
+              mimeType: img.mimeType,
+            }));
+            console.log("Feed Images:", this.feedImgs);
+          } else {
+            console.error("Failed to fetch images. Status:", response.status);
+          }
+          this.fetchPosts();
+        })
+        .catch((error) => {
+          console.error("Error fetching images:", error);
+        });
     });
   },
   methods: {
     submitForm() {
-        this.updateFeed(this.myplaceId);
+      this.updateFeed(this.myplaceId);
     },
     updateFeed(myplaceId) {
       const backURL = this.$root.backURL;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
-      // Update feed
       const updateData = {
         myplaceId: myplaceId,
         content: this.feedContent,
-        // Add other properties as needed
       };
 
-      axios
-        .put(`${backURL}/myfeed/${myplaceId}`, updateData)
-        .then((response) => {
-          console.log("Feed updated successfully:", response.data);
-          this.fetchPosts();
-          this.$router.push({ name: 'myfeed', params: { myplaceId: myplaceId } });
-        })
-        .catch((error) => {
-          console.error("Error updating feed:", error);
-        });
+      Swal.fire({
+        title: "수정",
+        text: "변경사항을 저장하시겠습니까?",
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "저장",
+        denyButtonText: `취소`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .put(`${backURL}/myfeed/${myplaceId}`, updateData)
+            .then((response) => {
+              console.log("Feed updated successfully:", response.data);
+              this.fetchPosts();
+              this.$router.push({
+                name: "myfeed",
+                params: { myplaceId: myplaceId },
+              });
+            })
+            .catch((error) => {
+              console.error("Error updating feed:", error);
+            });
+          Swal.fire({ text: "피드 수정이 완료되었습니다", icon: "success" });
+        } else if (result.isDenied) {
+          Swal.fire({ text: "취소되었습니다", icon: "warning" });
+        }
+      });
     },
 
     prevImage() {
@@ -133,11 +146,7 @@ export default {
         .get(`${backURL}/myfeed/${this.myplaceId}`)
         .then((response) => {
           const postData = response.data;
-
-          // Set the content to the textarea
           this.feedContent = postData.content;
-
-          // Update the posts array
           this.posts = [postData];
         })
         .catch((error) => {
@@ -149,7 +158,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom Instagram-like styles here */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
@@ -177,8 +185,8 @@ form {
   margin: 15px 0;
   position: relative;
   display: flex;
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
+  align-items: center; 
+  justify-content: center;
 }
 
 textarea {
@@ -188,7 +196,7 @@ textarea {
   border-radius: 3px;
   resize: vertical;
   min-height: 100px;
-  width: 558.4px; /* Adjust the width based on your padding */
+  width: 558.4px; 
 }
 
 label {
@@ -200,8 +208,8 @@ textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  resize: vertical; /* Allow vertical resizing */
-  min-height: 100px; /* Set the minimum height */
+  resize: vertical; 
+  min-height: 100px; 
 }
 
 input[type="file"] {

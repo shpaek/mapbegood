@@ -54,6 +54,7 @@
 </template>
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   name: "GroupCreate",
   props: {
@@ -78,17 +79,25 @@ export default {
       axios.defaults.headers.common["Authorization"] = accessToken;
 
       axios
-        .post(url, fd, {
-          contentType: false,
-          processData: false,
-          withCredentials: true,
-        })
+        .get(url)
         .then((response) => {
-          alert("그룹이 생성되었습니다");
-          location.href = "/groups";
+          Swal.fire({
+            text: "그룹이 생성되었습니다",
+            icon: "success",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.href = "/groups";
+            }
+          });
         })
         .catch((error) => {
-          alert("그룹이 생성되지 않았습니다");
+          Swal.fire({
+            text: "그룹 추가에 실패했습니다",
+            icon: "error",
+            confirmButtonText: "확인",
+          });
+          // alert(error.message);
         });
     },
     imageChangeHandler(e) {
@@ -129,14 +138,14 @@ export default {
         axios
           .get(url)
           .then((response) => {
-            alert("사용가능한 그룹명입니다");
+            Swal.fire({ text: "사용가능한 그룹명입니다", icon: "success" });
             this.isDupchkOk = true;
           })
           .catch((error) => {
-            alert("사용할 수 없는 그룹명입니다");
+            Swal.fire({ text: "사용할 수 없는 그룹명입니다", icon: "warning" });
           });
       } else {
-        alert("그룹명을 반드시 입력해주세요");
+        Swal.fire({ text: "그룹명을 반드시 입력해주세요", icon: "warning" });
       }
     },
   },

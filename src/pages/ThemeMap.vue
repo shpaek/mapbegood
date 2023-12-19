@@ -168,7 +168,7 @@
 
                 <div class="text-right">
                   <!-- "상세보기" 버튼 -->
-                  <!-- <button
+                  <!-- <button            
                   @click="detailThememap(thememap.themeMapDto.id)"
                   class="btn btn-outline-secondary"
                 >
@@ -313,12 +313,12 @@
                   </button>
 
                   <!-- 리스트 복사 버튼 -->
-                  <button
+                  <!-- <button
                     @click="copyThememap(thememap.themeMapDto.id)"
                     class="btn btn-outline-secondary"
                   >
                     복사
-                  </button>
+                  </button> -->
                 </div>
               </li>
             </ul>
@@ -335,7 +335,7 @@
 <script>
 import axios from "axios";
 import Detailmap from "./Detailmap.vue";
-
+import Swal from "sweetalert2";
 export default {
   name: "FavoriteList",
   components: {
@@ -403,8 +403,15 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert("로그인이 필요한 서비스입니다.");
-          location.href = "/login";
+          Swal.fire({
+            text: "로그인이 필요한 서비스 입니다.",
+            icon: "warning",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              location.href = "/login";
+            }
+          });
         });
     },
 
@@ -426,7 +433,6 @@ export default {
     copyThememap(themeMapId) {
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       const url = `${this.backURL}/mymap/copy/${themeMapId}`;
-
       axios.defaults.headers.common["Authorization"] = accessToken;
 
       axios
@@ -451,23 +457,48 @@ export default {
         .delete(url)
         .then((response) => {
           console.log(response.data);
-          alert("삭제 성공");
-          this.loadMymapList();
+
+          Swal.fire({
+            title: "삭제",
+            text: "정말로 삭제하시겠습니까?",
+            icon: "warning",
+            showDenyButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "삭제",
+            denyButtonText: "취소",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const backURL = this.$root.backURL;
+              axios
+                .delete(`${backURL}/myfeed/${this.myplaceId}`)
+                .then((response) => {
+                  this.loadMymapList();
+                })
+                .catch((error) => {
+                  console.error("Error deleting feed:", error);
+                });
+              Swal.fire({
+                text: "삭제되었습니다",
+                icon: "success",
+              });
+            }
+          });
         })
         .catch((error) => {
           console.error(error);
-          alert("삭제 실패");
+          Swal.fire({ text: "삭제하지 못했습니다", icon: "error" });
         });
     },
 
     createThemeMap() {
       if (this.themeName == "") {
-        alert("테마지도 이름을 입력해주세요.");
+        Swal.fire({ text: "테마지도 이름을 입력해주세요.", icon: "warning" });
         this.$refs.themeName.focus();
         return;
       }
       if (this.selectedColor == "") {
-        alert("테마지도 색상을 선택해 주세요.");
+        Swal.fire({ text: "테마지도 색상을 선택해 주세요.", icon: "warning" });
         this.$refs.colorSelector.focus();
         return;
       }
@@ -491,7 +522,10 @@ export default {
         .then((response) => {
           // console.log(response.data);
           // 성공적으로 생성되었을 때의 로직 추가
-          alert(this.themeName + "이 성공적으로 생성되었습니다.");
+          Swal.fire({
+            text: `${this.themeName}이 성공적으로 생성되었습니다.`,
+            icon: "success",
+          });
           // Thememap.vue로 자동으로 이동
           this.themeMapAddDialog = false;
           this.cancleThemeMapAdd();
@@ -531,7 +565,7 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          alert(error.msg);
+          Swal.fire({ text: error.msg, icon: "error" });
         });
     },
 
@@ -555,12 +589,15 @@ export default {
         .put(url, updatedThemeMapDto)
         .then((response) => {
           console.log(response.data);
-          alert("테마맵이 성공적으로 수정되었습니다.");
+          Swal.fire({
+            text: "테마맵이 성공적으로 수정되었습니다.",
+            icon: "success",
+          });
           this.cancleThemeMapEdit(themeMapDto);
         })
         .catch((error) => {
           console.error(error);
-          alert("테마맵 수정에 실패했습니다.");
+          Swal.fire({ text: "테마맵 수정에 실패했습니다.", icon: "error" });
           this.cancleThemeMapEdit();
         });
     },
