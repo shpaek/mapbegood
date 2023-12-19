@@ -2,17 +2,9 @@
   <div>
     <div id="searchContainer" class="bg_white">
       <div class="search">
-        <input
-          type="text"
-          v-model="keyword"
-          placeholder="장소 검색"
-          @keyup.enter="search"
-        />
-        <img
-          src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
-          class="icon"
-          @click="search"
-        />
+        <input type="text" v-model="keyword" placeholder="장소 검색" @keyup.enter="search"/>
+        <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png" 
+          class="icon" @click="search"/>
       </div>
 
       <!-- 장소 목록 -->
@@ -22,12 +14,8 @@
           <img class="markerbg" :src="getMarkerImageUrl(index)" />
           <div class="info">
             <h5>{{ place.place_name }}</h5>
-            <span v-if="place.road_address_name">{{
-              place.road_address_name
-            }}</span>
-            <span class="jibun gray" v-if="place.road_address_name">{{
-              place.address_name
-            }}</span>
+            <span v-if="place.road_address_name">{{place.road_address_name}}</span>
+            <span class="jibun gray" v-if="place.road_address_name">{{place.address_name}}</span>
             <span v-else>{{ place.address_name }}</span>
             <span class="tel" v-if="place.phone">{{ place.phone }}</span>
           </div>
@@ -96,7 +84,9 @@ export default {
       isModalOpen: false,
     };
   },
-
+  props: {
+    getMarkerImageUrl: Function, // Receive the method as a prop
+  },
   methods: {
     async loadAndInitializeMap() {
       // Kakao 지도 스크립트 로드
@@ -118,6 +108,13 @@ export default {
       });
     },
 
+    getMarkerImageUrl(index) {
+      // 마커 이미지 URL을 설정하는 부분을 수정
+      const markerColors = ["blue", "red", "yellow", "green", "purple", "gray", "orange", "pink", "cyan", "brown", "navy", "olive", "lime", "teal", "indigo"];
+      const placeIndex = index % markerColors.length;
+      return `https://example.com/markers/${markerColors[placeIndex]}.png`;
+    },
+    
     async initialize() {
       try {
         if (!window.kakao || !window.kakao.maps) {
@@ -311,6 +308,137 @@ export default {
 };
 </script>
 
+
+
+
+<style scoped>
+* {
+  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+}
+
+.markerbg {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-size: 36px 320px;
+  text-indent: -9999px;
+  margin-right: 5px;
+}
+
+#placesList {
+  list-style: none;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 10px;
+  overflow-y: auto;
+  max-height: 560px;
+}
+
+#placesList li {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0ppx;
+}
+
+#placesList li .info {
+  flex-grow: 1;
+}
+
+#placesList li h5,
+#placesList li .info {
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 1;
+}
+
+#placesList li .info h5 {
+  font-weight: bold;
+}
+
+#placesList li .info .gray {
+  color: #8a8a8a;
+}
+
+#placesList li .info .jibun {
+  padding-left: 26px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+  opacity: 0.7;
+}
+
+#placesList li .info .tel {
+  color: #009900;
+}
+
+#searchContainer {
+  position: fixed;
+  top: 0px;
+  left: 90px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 20px;
+  max-width: 330px;
+  width: 100%;
+  margin: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.search {
+  position: relative;
+  width: calc(100% - 40px);
+  margin: 0 auto 10px;
+}
+
+.search input {
+  width: 100%;
+  border: 2px solid #bbb;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.search img {
+  user-drag: none;
+  -webkit-user-drag: none;
+  position: absolute;
+  width: 17px;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.search img.icon {
+  pointer-events: auto;
+}
+
+.search img:hover {
+  background-color: #f2f2f2;
+}
+
+.search input:focus {
+  outline: none;
+  border-color: #555;
+}
+
+.bookmark {
+  width: 30px;
+}
+
+</style>
+
 <style scoped>
 * {
   font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
@@ -395,14 +523,14 @@ export default {
 #placesList li .info .tel {
   display: block;
 }
-.markerbg {
+/* .markerbg {
   display: inline-block;
   width: 20px;
   height: 20px;
   background-size: 36px 320px;
   text-indent: -9999px;
   margin-right: 5px;
-}
+} */
 
 #placesList li .marker_1 {
   background-position: 0 -10px;
@@ -507,12 +635,8 @@ export default {
   top: 0px;
   left: 90px;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 20px;
   max-width: 330px;
   width: 100%;
-  margin: 20px;
   box-sizing: border-box;
   overflow-y: auto;
 }
