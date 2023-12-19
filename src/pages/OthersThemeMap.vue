@@ -70,7 +70,7 @@
           <button
             @click="addToFavorites(themeMap.id)"
             class="btn btn-dark"
-            style="position: absolute"
+            style="position: absolute; margin-top: 8px"
           >
             추가하기
           </button>
