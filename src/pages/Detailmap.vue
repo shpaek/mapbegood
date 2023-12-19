@@ -47,10 +47,12 @@ export default {
 
         const userLocation = await this.getCurrentLocation();
         this.setInitialMap(userLocation.latitude, userLocation.longitude);
-        // this.getMyLocation();
 
-        // Display markers on the map
-        this.displayPlacesOnMap();
+        // Check if mymapdetail is defined before calling displayPlacesOnMap
+        if (this.mymapdetail) {
+          // Display markers on the map
+          this.displayPlacesOnMap();
+        }
       } catch (error) {
         console.error("지도 초기화 오류:", error);
       }
@@ -92,6 +94,8 @@ export default {
       const zoomControl = new window.kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
     },
+
+    
 
     // getMyLocation() {
     //   this.getCurrentLocation()
