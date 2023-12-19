@@ -65,7 +65,6 @@ public class MyplaceController {
 		}
 		
 	}
-	
 	@PostMapping("")
 	ResponseEntity<?> createMyplace(@RequestBody MyplaceWrapperDTO myplaceWrapperDto){
 		try {

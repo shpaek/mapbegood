@@ -57,7 +57,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
             throw new SignatureException("");
         }
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
-        log.error("jws: " + jws);
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         return jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getPayload();
     }
