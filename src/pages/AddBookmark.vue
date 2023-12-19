@@ -203,8 +203,11 @@ export default {
       }
     },
     addMyplace(clickedThemeMapId) {
+      console.log(clickedThemeMapId);
+      console.log(this.place);
       if (!this.place) {
         console.error("No place information provided.");
+
         return;
       }
       const category = this.place.category_group_name ? this.place.category_group_name : "음식점";
