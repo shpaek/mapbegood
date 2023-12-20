@@ -336,6 +336,7 @@
 import axios from "axios";
 import Detailmap from "./Detailmap.vue";
 import Swal from "sweetalert2";
+
 export default {
   name: "FavoriteList",
   components: {
@@ -482,7 +483,6 @@ export default {
                 text: "삭제되었습니다",
                 icon: "success",
               });
-              this.loadMymapList();
             }
           });
         })

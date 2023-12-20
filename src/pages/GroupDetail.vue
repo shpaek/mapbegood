@@ -79,11 +79,7 @@
         </div>
       </div>
       <hr />
-      <!-- <AddGroupmap
-      v-show="isAddGroupmapOpen"
-      :groupId="groupId"
-      @close-modal="closeAddGroupmap"
-    /> -->
+
       <div class="group-thememap-list">
         <v-dialog v-model="groupThemeMapAddDialog" persistent width="500">
           <template v-slot:activator="{ props }">
@@ -188,12 +184,15 @@
         <ul class="list-group">
           <li
             v-for="thememap in groupThememaps"
-            :key="thememap.id"
+            :key="thememap.themeMapDto.id"
             class="thememap"
           >
-            <div class="info" @click="goToDetailGroupMap(thememap.id)">
-              <div class="name">{{ thememap.name }}</div>
-              <div class="memo">{{ thememap.memo }}</div>
+            <div
+              class="info"
+              @click="goToDetailGroupMap(thememap.themeMapDto.id)"
+            >
+              <div class="name">{{ thememap.themeMapDto.name }}</div>
+              <div class="memo">{{ thememap.themeMapDto.memo }}</div>
             </div>
             <!-- 더보기 버튼 -->
             <div class="btn-group" role="group">
@@ -217,8 +216,102 @@
                 </svg>
               </button>
               <ul class="dropdown-menu">
-                <li @click="editGroupmap(thememap.id)">수정</li>
-                <li @click="deleteGroupmap(thememap.id)">삭제</li>
+                <v-dialog
+                  v-model="thememap.themeMapDto.themeMapEditDialog"
+                  persistent
+                  width="500"
+                >
+                  <template v-slot:activator="{ props }">
+                    <li v-bind="props">
+                      <!-- @click="editGroupmap(thememap.themeMapDto.id)" -->
+                      수정
+                    </li>
+                  </template>
+
+                  <v-card>
+                    <v-card-title>
+                      <h1 class="text-primary mb-4">그룹 테마지도 수정</h1>
+                    </v-card-title>
+
+                    <v-card-text>
+                      <v-container>
+                        <!-- 테마 이름 입력 -->
+                        <div class="mb-3">
+                          <label for="themeName" class="form-label text-black"
+                            >테마 이름</label
+                          >
+                          <input
+                            v-model="thememap.themeMapDto.name"
+                            id="themeMapDto.name"
+                            name="themeMapDto.name"
+                            type="text"
+                            class="form-control"
+                            ref="themeMapDto.name"
+                          />
+                        </div>
+
+                        <!-- 색상 선택 드롭다운 -->
+                        <div class="mb-3">
+                          <label
+                            for="colorSelector"
+                            class="form-label text-black"
+                            >테마 색상 선택</label
+                          >
+                          <select
+                            v-model="thememap.themeMapDto.color"
+                            id="themeMapDto.color"
+                            name="themeMapDto.color"
+                            class="form-select"
+                            ref="themeMapDto.color"
+                          >
+                            <option
+                              v-for="color in colors"
+                              :key="color"
+                              :value="color"
+                            >
+                              {{ color }}
+                            </option>
+                          </select>
+                        </div>
+
+                        <!-- 테마 메모 입력 -->
+                        <div class="mb-3">
+                          <label for="themeMemo" class="form-label text-black"
+                            >테마 메모</label
+                          >
+                          <textarea
+                            v-model="thememap.themeMapDto.memo"
+                            id="themeMapDto.memo"
+                            name="themeMapDto.memo"
+                            rows="4"
+                            class="form-control"
+                          ></textarea>
+                        </div>
+                      </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <!-- 테마맵 생성 버튼 -->
+                      <button
+                        @click="updateGroupMap(thememap.themeMapDto)"
+                        class="btn btn-dark"
+                      >
+                        수정</button
+                      >&nbsp;&nbsp;
+                      <button
+                        data-v-fce5df64=""
+                        class="btn btn-light"
+                        @click="cancleThemeMapEdit(thememap.themeMapDto)"
+                      >
+                        취소
+                      </button>
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                    <br />
+                  </v-card>
+                </v-dialog>
+
+                <li @click="deleteGroupmap(thememap.themeMapDto.id)">삭제</li>
               </ul>
             </div>
           </li>
@@ -251,7 +344,6 @@
 </template>
 <script>
 import axios from "axios";
-import AddGroupmap from "./AddGroupmap.vue"; // AddGroupmap.vue를 import
 import Detailmap from "./Detailmap.vue";
 import GroupImageChange from "./GroupImageChange.vue";
 import GroupNameChange from "./GroupNameChange.vue";
@@ -260,7 +352,6 @@ import Swal from "sweetalert2";
 export default {
   name: "GroupDetail",
   components: {
-    AddGroupmap, // AddGroupmap 컴포넌트 등록
     Detailmap,
     GroupImageChange,
     GroupNameChange,
@@ -300,23 +391,28 @@ export default {
         "gray",
         "black",
       ],
+
+      themeMapDto: {
+        themeMapEditDialog: false,
+        id: null,
+        name: "",
+        color: "",
+        memo: "",
+      },
     };
   },
   async created() {
-    const groupId = this.$route.params.groupId;
-    const groupName = this.$route.params.groupName;
-    const leaderNickname = this.$route.params.leaderNickname;
-    const groupMemo = this.$route.params.groupMemo;
-    this.groupId = groupId;
-    this.groupName = groupName;
-    this.leaderNickname = leaderNickname;
-    this.groupMemo = groupMemo;
+    this.groupId = this.$route.params.groupId;
+    this.groupName = this.$route.params.groupName;
+    this.leaderNickname = this.$route.params.leaderNickname;
+    this.groupMemo = this.$route.params.groupMemo;
     this.fetchGroupThememaps();
 
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
     if (this.$store.state.userInfo.nickName == this.leaderNickname) {
       this.isleader = true;
     }
+
     console.log(this.userInfo.nickName);
     console.log(this.leaderNickname);
     console.log(this.isleader);
@@ -328,7 +424,11 @@ export default {
       axios
         .get(url)
         .then((response) => {
-          this.groupThememaps = response.data;
+          this.groupThememaps = response.data.map((themeMap) => {
+            return {
+              themeMapDto: themeMap,
+            };
+          });
         })
         .catch((error) => {
           console.error("Error fetching group theme maps:", error);
@@ -385,12 +485,6 @@ export default {
         params: { groupThememapId: groupThememapId },
       });
     },
-    editGroupmap(thememapId) {
-      this.$router.push({
-        name: "updategroupmap",
-        params: { groupId: this.groupId, groupThememapId: thememapId },
-      });
-    },
     deleteGroupmap(groupThememapId) {
       const url = `${this.backURL}/ourmap/delete/${this.groupId}/${groupThememapId}`;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -419,15 +513,6 @@ export default {
     closeNameChange() {
       this.isImageChangeOpen = false;
     },
-    // 그룹 테마지도 추가 모달 열기
-    // openAddGroupmapModal() {
-    //   this.isAddGroupmapOpen = true;
-    // },
-
-    // 그룹 테마지도 추가 모달 닫기
-    // closeAddGroupmap() {
-    //   this.isAddGroupmapOpen = false;
-    // },
 
     async CreateGroupThemeMap() {
       try {
@@ -476,6 +561,39 @@ export default {
       this.groupThemeMapName = "";
       this.themeMapColor = "";
       this.groupThemeMapMemo = "";
+    },
+
+    updateGroupMap(themeMapDto) {
+      const url =
+        `http://localhost:8080/ourmap/update/${this.groupId}/` + themeMapDto.id;
+      const updatedGroupThememap = {
+        name: themeMapDto.name,
+        color: themeMapDto.color,
+        memo: themeMapDto.memo,
+      };
+
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
+
+      axios
+        .put(url, updatedGroupThememap)
+        .then((response) => {
+          // console.log(response.data);
+          Swal.fire({
+            text: "그룹테마맵이 성공적으로 수정되었습니다.",
+            icon: "success",
+          }).then((result) => {
+            this.cancleThemeMapEdit(themeMapDto);
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          Swal.fire({ text: "그룹테마맵 수정에 실패했습니다.", icon: "error" });
+        });
+    },
+
+    cancleThemeMapEdit(themeMapDto) {
+      themeMapDto.themeMapEditDialog = false;
     },
   },
 };
