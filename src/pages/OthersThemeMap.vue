@@ -33,19 +33,23 @@
     <div v-if="themeMaps.length > 0">
       <!-- 검색 결과가 있는 경우 -->
       <ul
-        class="elevated-list search-results-list mb-4"
-        v-for="themeMap in themeMaps"
-        :key="themeMap.id"
-      >
+      class="elevated-list search-results-list mb-4"
+      v-for="themeMap in themeMaps"
+      :key="themeMap.id"
+    >
         <!-- 각 테마맵에 대한 목록 -->
-        <li class="list-group-item">
-          <div>
-            <h5 class="mb-1">제목: {{ themeMap.name }}</h5>
-            <p class="mb-1">내용: {{ themeMap.memo }}</p>
+        <li class="list-group-item" @click="showDetails(themeMap.id)">
+        <div>
+          <h5 class="mb-1">제목: {{ themeMap.name }}</h5>
+          <p class="mb-1">내용: {{ themeMap.memo }}</p>
             <!-- <small>{{ themeMap.id }}</small> -->
 
             <!-- 추가하기 버튼 -->
-            <button @click="addToFavorites(themeMap.id)" class="btn btn-dark">
+            <button
+              @click="addToFavorites(themeMap.id)"
+              class="btn btn-dark"
+              :disabled="isInFavorites(themeMap.id)"
+            >
               추가하기
             </button>
 
@@ -53,6 +57,7 @@
             <span v-if="isInFavorites(themeMap.id)" class="text-danger ml-2">
               이미 추가된 list입니다.
             </span>
+         
           </div>
         </li>
       </ul>
@@ -75,7 +80,7 @@
     </div>
   </div>
   <div class="m-part">
-    <Detailmap />
+    <Detailmap :mymapdetail="themeMapDetail" />
   </div>
 </template>
 
@@ -115,6 +120,8 @@ export default {
   methods: {
     // 테마맵 검색 메서드
     async searchThemeMap() {
+
+      
       try {
         const url = `${this.backURL}/maplist/search`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -142,6 +149,32 @@ export default {
       this.checkNotifications();
     },
 
+    async showDetails(themeMapId) {
+      try {
+        // 클릭한 테마맵ID와 연결된 내 장소 목록 가져오기
+        const url = `${this.backURL}/myplace/${themeMapId}`;
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        const response = await axios.get(url);
+        const myPlaces = response.data;
+
+        // 여기에서 myPlaces 데이터를 활용하여 내 장소 목록을 표시하도록 구현할 수 있습니다.
+        console.log('내 장소 목록:', myPlaces);
+
+        this.themeMapDetail = {
+          themeMap,
+          myPlaces,
+        };
+
+        // 예시: 특정 동작 수행을 위해 가져온 내 장소 목록 활용
+        // this.performSomeActionWithMyPlaces(myPlaces);
+      } catch (error) {
+        console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
+      }
+    },
+
+    
     // sub 호출 메서드
     async checkNotifications() {
       try {
@@ -185,6 +218,25 @@ export default {
       }
     },
 
+    async detailThememap(themeMapId) {
+      try {
+        // 클릭한 테마맵ID와 연결된 장소에 대한 자세한 정보를 가져오기
+        const url = `${this.backURL}/maplist/details/${themeMapId}`;
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        const response = await axios.get(url);
+        const detailedPlaces = response.data; // API가 자세한 장소 정보를 반환한다고 가정합니다
+
+        // 자세한 장소 정보를 콘솔에 기록하기
+        console.log('자세한 장소 정보:', detailedPlaces);
+
+        // 여기에서 detailedPlaces 데이터를 활용하여 상세 정보를 표시하도록 구현할 수 있습니다.
+        // 예를 들어, 모달 창이나 다른 컴포넌트를 사용하여 상세 정보를 표시할 수 있습니다.
+      } catch (error) {
+        console.error("자세한 정보를 가져오는 중 오류 발생:", error);
+      }
+    },
     // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
       try {
@@ -266,13 +318,21 @@ ul.elevated-list {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 기존의 elevated-list 스타일에 추가: 리스트 아이템에 선을 추가 */
 ul.elevated-list li {
   border-bottom: 1px solid #4e4e52;
   padding: 10px;
 }
 
-/* 마지막 리스트 아이템에는 선을 표시하지 않음 */
+ul.elevated-list li:hover {
+  background-color: #e9ecef7a; 
+  cursor: pointer; 
+}
+
+ul.search-results-list li:hover {
+  background-color: #e9ecef; 
+  cursor: pointer; 
+} 
+
 ul.elevated-list li:last-child {
   border-bottom: none;
 }
