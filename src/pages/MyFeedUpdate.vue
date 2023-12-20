@@ -39,6 +39,9 @@
       </div>
       <button type="submit">Update</button>
     </form>
+    <span class="placeName">{{ placeName }}</span>
+    <span class="address">{{ address }}</span>
+    <span class="address">{{ visitedAt }}</span>
   </div>
 </template>
 
@@ -56,6 +59,9 @@ export default {
       posts: [],
       image: null,
       imageList: [],
+      placeName: "",
+      address: "",
+      visitedAt: "",
     };
   },
   computed: {
@@ -64,6 +70,9 @@ export default {
     },
   },
   mounted() {
+    const placeName = this.$route.query.placeName;
+    const address = this.$route.query.address;
+    const visitedAt = this.$route.query.visitedAt;
     const backURL = this.$root.backURL;
     this.$store.dispatch("getUserInfo").then(() => {
       this.myplaceId = this.$route.params.myplaceId;
@@ -85,6 +94,9 @@ export default {
         .catch((error) => {
           console.error("Error fetching images:", error);
         });
+      this.placeName = placeName;
+      this.address = address;
+      this.visitedAt = visitedAt;
     });
   },
   methods: {
@@ -102,7 +114,6 @@ export default {
       };
 
       Swal.fire({
-        title: "수정",
         text: "변경사항을 저장하시겠습니까?",
         icon: "question",
         showDenyButton: true,
@@ -118,14 +129,19 @@ export default {
               this.$router.push({
                 name: "myfeed",
                 params: { myplaceId: myplaceId },
+                query: {
+                  placeName: this.placeName,
+                  address: this.address,
+                  visitedAt: this.visitedAt,
+                },
               });
             })
             .catch((error) => {
               console.error("Error updating feed:", error);
             });
-          Swal.fire({ text: "피드 수정이 완료되었습니다", icon: "success" });
+          Swal.fire({ text: "피드가 수정되었습니다.", icon: "success" });
         } else if (result.isDenied) {
-          Swal.fire({ text: "취소되었습니다", icon: "warning" });
+          Swal.fire({ text: "취소되었습니다.", icon: "warning" });
         }
       });
     },
@@ -185,7 +201,7 @@ form {
   margin: 15px 0;
   position: relative;
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
 }
 
@@ -196,7 +212,7 @@ textarea {
   border-radius: 3px;
   resize: vertical;
   min-height: 100px;
-  width: 558.4px; 
+  width: 558.4px;
 }
 
 label {
@@ -208,8 +224,8 @@ textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  resize: vertical; 
-  min-height: 100px; 
+  resize: vertical;
+  min-height: 100px;
 }
 
 input[type="file"] {

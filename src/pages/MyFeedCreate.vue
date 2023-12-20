@@ -53,15 +53,9 @@
       </div>
       <button type="submit">Share</button>
     </form>
-    <div class="feed">
-      <div v-for="post in posts" :key="post.myplaceId" class="feed-item">
-        <img
-          class="avatar"
-          :src="post.memberEmail?.profileImage"
-          alt="Avatar"
-        />
-      </div>
-    </div>
+    <span class="placeName">{{ placeName }}</span>
+    <span class="address">{{ address }}</span>
+    <span class="address">{{ visitedAt }}</span>
   </div>
 </template>
 
@@ -79,7 +73,15 @@ export default {
       posts: [],
       image: null,
       imageList: [],
+      placeName: "",
+      address: "",
+      visitedAt: "",
     };
+  },
+  mounted() {
+    this.placeName = this.$route.query.placeName;
+    this.address = this.$route.query.address;
+    this.visitedAt = this.$route.query.visitedAt;
   },
   created() {
     this.$store.dispatch("getUserInfo").then(() => {
@@ -109,7 +111,7 @@ export default {
             this.uploadImages(myplaceId);
           }
           Swal.fire({
-            text: "피드 생성이 완료되었습니다",
+            text: "피드가 생성되었습니다.",
             icon: "success",
             confirmButtonText: "확인",
           }).then((result) => {
@@ -117,6 +119,11 @@ export default {
               this.$router.push({
                 name: "myfeed",
                 params: { myplaceId: myplaceId },
+                query: {
+                  placeName: this.placeName,
+                  address: this.address,
+                  visitedAt: this.visitedAt,
+                },
               });
             }
           });
@@ -168,7 +175,11 @@ export default {
         const file = files[i];
 
         if (!this.isValidFileExtension(file)) {
-          alert("Invalid file format. Please select only JPG or PNG files.");
+          Swal.fire({
+            title: "잘못된 파일형식",
+            text: "JPG, PNG 파일 형식만 선택 가능합니다.",
+            icon: "error",
+          });
           return;
         }
 

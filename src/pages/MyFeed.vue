@@ -1,42 +1,60 @@
 <template>
   <div id="app">
-    <span class="image-label">{{ feedImgs.length }}/10</span>
-    <div v-if="feedImgs.length > 0" class="image-container">
-      <div
-        class="arrow-icon-container prev"
-        @click="prevImage"
-        v-show="currentIndex > 0"
-      >
-        <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
-      </div>
+    <div class="placeContainer">
+      <span class="placeName">{{ placeName }}</span>
+      <span class="address">{{ address }}</span>
+      <span class="address">{{ visitedAt }}</span>
+    </div>
+    <div class="feedContainer">
+      <div v-if="feedImgs.length > 0" class="image-container">
+        <div
+          class="arrow-icon-container prev"
+          @click="prevImage"
+          v-show="currentIndex > 0"
+        >
+          <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
+        </div>
 
-      <div class="centered-image">
-        <img
-          :src="currentImage.url"
-          class="feedImg"
-          :alt="'Image ' + (currentIndex + 1)"
-        />
-      </div>
+        <div class="centered-image">
+          <img
+            :src="currentImage.url"
+            class="feedImg"
+            :alt="'Image ' + (currentIndex + 1)"
+          />
+        </div>
 
-      <div
-        class="arrow-icon-container next"
-        @click="nextImage"
-        v-show="currentIndex < feedImgs.length - 1"
-      >
-        <img src="/images/next.png" alt="Next" class="arrow-icon" />
+        <div
+          class="arrow-icon-container next"
+          @click="nextImage"
+          v-show="currentIndex < feedImgs.length - 1"
+        >
+          <img src="/images/next.png" alt="Next" class="arrow-icon" />
+        </div>
+      </div>
+      <div class="contentSection">
+        <div class="caption">{{ post.content }}</div>
+        <div class="meta">
+          <span class="nickname">{{ post.memberEmail?.nickname }}</span>
+          <span class="createdAt">{{ post.createdAt }}</span>
+        </div>
+      </div>
+      <div class="buttons">
+        <router-link
+          :to="{
+            name: 'myfeedupdate',
+            params: { myplaceId: post.myplaceId },
+            query: {
+              placeName: this.placeName,
+              address: this.address,
+              visitedAt: this.visitedAt,
+            },
+          }"
+        >
+          <button class="update-btn">수정하기</button>
+        </router-link>
+        <button @click="deleteFeed(post.myplaceId)" class="delete-btn">삭제하기</button>
       </div>
     </div>
-    <div class="contentSection">
-      <div class="caption">{{ post.content }}</div>
-      <span class="nickname">{{ post.memberEmail?.nickname }}</span>
-      <span class="createdAt">{{ post.createdAt }}</span>
-    </div>
-    <router-link
-      :to="{ name: 'myfeedupdate', params: { myplaceId: post.myplaceId } }"
-    >
-      <button>Update</button>
-    </router-link>
-    <button @click="deleteFeed(post.myplaceId)">Delete</button>
   </div>
 </template>
 
@@ -51,6 +69,9 @@ export default {
       currentIndex: 0,
       post: {},
       memberEmail: "",
+      placeName: "",
+      address: "",
+      visitedAt: "",
     };
   },
   computed: {
@@ -59,6 +80,9 @@ export default {
     },
   },
   mounted() {
+    const placeName = this.$route.query.placeName;
+    const address = this.$route.query.address;
+    const visitedAt = this.$route.query.visitedAt;
     const backURL = this.$root.backURL;
     this.$store.dispatch("getUserInfo").then(() => {
       this.myplaceId = this.$route.params.myplaceId;
@@ -82,6 +106,9 @@ export default {
         .catch((error) => {
           console.error("Error fetching images:", error);
         });
+      this.placeName = placeName;
+      this.address = address;
+      this.visitedAt = visitedAt;
     });
   },
   methods: {
@@ -115,14 +142,13 @@ export default {
       console.log("Delete feed with ID:", myplaceId);
 
       Swal.fire({
-        title: "삭제",
         text: "정말로 삭제하시겠습니까?",
         icon: "warning",
         showDenyButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "삭제",
-        denyButtonText: "취소"
+        denyButtonText: "취소",
       }).then((result) => {
         if (result.isConfirmed) {
           const backURL = this.$root.backURL;
@@ -130,6 +156,7 @@ export default {
             .delete(`${backURL}/myfeed/${this.myplaceId}`)
             .then((response) => {
               console.log("Feed deleted successfully:", response.data);
+              this.deleteFeedImg(myplaceId);
               this.$router.push({
                 name: "thememapdetail",
                 params: { id: response.data.thememapId },
@@ -139,13 +166,25 @@ export default {
               console.error("Error deleting feed:", error);
             });
           Swal.fire({
-            title: "피드 삭제",
-            text: "피드가 삭제되었습니다",
+            text: "피드가 삭제되었습니다.",
             icon: "success",
           });
         }
       });
     },
+
+    deleteFeedImg(myplaceId) {
+      const backURL = this.$root.backURL;
+
+      axios
+        .delete(`${backURL}/feed/delete`, {
+          params: { id: myplaceId, opt: "myfeed" },
+        })
+        .catch((error) => {
+          console.error("Failed to delete images:", error);
+        });
+    },
+
     prevImage() {
       if (this.currentIndex > 0) {
         this.currentIndex--;
@@ -175,36 +214,90 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 20px;
+  text-align: center;
 }
 
 label {
   margin-bottom: 5px;
 }
 
-button {
-  background-color: #87ceeb; /* Sky-blue color */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.update-btn,
+.delete-btn {
+  background-color: #4c91af; /* Green color for Update button */
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  width: 279.2px;
+  transition: background-color 0.3s;
 }
 
-button:hover {
-  background-color: #5f9ea0; /* Darker shade on hover */
+.delete-btn {
+  background-color: #f44336; /* Red color for Delete button */
 }
 
-.feed {
+.update-btn:hover,
+.delete-btn:hover {
+  background-color: #86d2d0; /* Darker shade on hover */
+}
+
+.placeContainer {
+  text-align: left; /* Left-align the text */
+  margin-bottom: 20px;
+}
+
+.placeContainer span {
+  display: block; /* Display each span on a new line */
+  margin-bottom: 5px; /* Add spacing between spans */
+}
+
+.placeName{
+  font-size: larger;
+  font-weight: bold;
+}
+
+.feedContainer {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  max-width: 600px;
+  margin: 20px auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Align children in a column */
+  align-items: center; /* Center children horizontally */
 }
 
-.feed-item {
-  border-bottom: 1px solid #e0e0e0;
-  padding: 15px;
+.image-container {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
+  max-height: 400px; /* Adjusted maximum height */
+  overflow: hidden; /* Hide any content that overflows */
+}
+
+.contentSection {
+  width: 400px;
+  margin-top: 20px; /* Add margin for spacing */
+  display: flex;
+  flex-direction: column; /* Align children in a column */
+  align-items: center; /* Center children horizontally */
+}
+
+.centered-image {
+  max-width: 100%;
+  max-height: 100%; /* Adjusted to ensure it doesn't exceed the height of its container */
+  width: auto;
+  margin: 0 auto;
 }
 .feedImg {
   width: 400px; /* Fixed width */
