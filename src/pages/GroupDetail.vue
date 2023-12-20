@@ -85,27 +85,106 @@
       @close-modal="closeAddGroupmap"
     /> -->
       <div class="group-thememap-list">
-        <div
-          class="new-thememap cursor-pointer btn btn-outline-dark"
-          @click="openAddGroupmapModal"
-        >
-          <!-- 그룹 테마지도 추가버튼 -->
-          <span class="new">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="19"
-              height="19"
-              fill="currentColor"
-              class="bi bi-plus-circle-fill"
-              viewBox="0 0 16 16"
+        <v-dialog v-model="groupThemeMapAddDialog" persistent width="500">
+          <template v-slot:activator="{ props }">
+            <!-- "테마맵 추가" 버튼 -->
+            <div
+              class="new-thememap cursor-pointer btn btn-outline-dark"
+              v-bind="props"
             >
-              <path
-                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
-              />
-            </svg> </span
-          >&nbsp;&nbsp;
-          <span class="text">테마지도 추가</span>
-        </div>
+              <!-- 그룹 테마지도 추가버튼 -->
+              <span class="new">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="19"
+                  height="19"
+                  fill="currentColor"
+                  class="bi bi-plus-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
+                  />
+                </svg> </span
+              >&nbsp;&nbsp;
+              <span class="text">테마지도 추가</span>
+            </div>
+          </template>
+
+          <v-card>
+            <v-card-title>
+              <h1 class="text-primary mb-4">그룹 테마지도 생성</h1>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <!-- 테마 이름 입력 -->
+                <div class="mb-3">
+                  <label for="themeName" class="form-label text-black"
+                    >테마 이름</label
+                  >
+                  <input
+                    v-model="groupThemeMapName"
+                    id="groupThemeMapName"
+                    name="groupThemeMapName"
+                    type="text"
+                    class="form-control"
+                    ref="groupThemeMapName"
+                  />
+                </div>
+
+                <!-- 색상 선택 드롭다운 -->
+                <div class="mb-3">
+                  <label for="colorSelector" class="form-label text-black"
+                    >테마 색상 선택</label
+                  >
+                  <select
+                    v-model="themeMapColor"
+                    id="themeMapColor"
+                    name="themeMapColor"
+                    class="form-select"
+                    ref="themeMapColor"
+                  >
+                    <option v-for="color in colors" :key="color" :value="color">
+                      {{ color }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- 테마 메모 입력 -->
+                <div class="mb-3">
+                  <label for="themeMemo" class="form-label text-black"
+                    >테마 메모</label
+                  >
+                  <textarea
+                    v-model="groupThemeMapMemo"
+                    id="groupThemeMapMemo"
+                    name="groupThemeMapMemo"
+                    rows="4"
+                    class="form-control"
+                  ></textarea>
+                </div>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <!-- 테마맵 생성 버튼 -->
+              <button @click="CreateGroupThemeMap" class="btn btn-dark">
+                생성</button
+              >&nbsp;&nbsp;&nbsp;
+              <button
+                data-v-fce5df64=""
+                class="btn btn-light"
+                @click="cancelCreateGroupMap"
+              >
+                취소
+              </button>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+            <br />
+          </v-card>
+        </v-dialog>
+
         <ul class="list-group">
           <li
             v-for="thememap in groupThememaps"
@@ -161,10 +240,11 @@
         :groupId="groupId"
         @close-modal="closeNameChange"
       />
+
       <AddGroupmap
         v-show="isAddGroupmapOpen"
         :groupId="groupId"
-        @close-modal="closeAddGroupmap"
+        @close-modal="cancelCreateGroupMap"
       />
     </div>
   </div>
@@ -175,6 +255,8 @@ import AddGroupmap from "./AddGroupmap.vue"; // AddGroupmap.vue를 import
 import Detailmap from "./Detailmap.vue";
 import GroupImageChange from "./GroupImageChange.vue";
 import GroupNameChange from "./GroupNameChange.vue";
+import Swal from "sweetalert2";
+
 export default {
   name: "GroupDetail",
   components: {
@@ -200,6 +282,24 @@ export default {
       isNameChangeOpen: false,
       isGroupMemberOpen: false,
       isAddGroupmapOpen: false, // 모달의 열림/닫힘 상태를 저장하는 변수 추가
+
+      groupThemeMapAddDialog: false,
+
+      groupThemeMapName: "",
+      themeMapColor: "",
+      groupThemeMapMemo: "",
+
+      colors: [
+        "red",
+        "yellow",
+        "green",
+        "blue",
+        "indigo",
+        "purple",
+        "pink",
+        "gray",
+        "black",
+      ],
     };
   },
   async created() {
@@ -320,13 +420,62 @@ export default {
       this.isImageChangeOpen = false;
     },
     // 그룹 테마지도 추가 모달 열기
-    openAddGroupmapModal() {
-      this.isAddGroupmapOpen = true;
-    },
+    // openAddGroupmapModal() {
+    //   this.isAddGroupmapOpen = true;
+    // },
 
     // 그룹 테마지도 추가 모달 닫기
-    closeAddGroupmap() {
-      this.isAddGroupmapOpen = false;
+    // closeAddGroupmap() {
+    //   this.isAddGroupmapOpen = false;
+    // },
+
+    async CreateGroupThemeMap() {
+      try {
+        // 현재 라우트에서 추출한 groupId 사용
+        const groupId = this.$route.params.groupId;
+        // 사용자 입력을 이용해 groupthememapDto 생성
+        const groupthemeMapDto = {
+          name: this.groupThemeMapName,
+          color: this.themeMapColor,
+          memo: this.groupThemeMapMemo,
+        };
+
+        // 백엔드로 그룹 테마지도 생성 요청 보내기
+        const response = await axios.post(
+          `http://localhost:8080/ourmap/create/${groupId}`,
+          groupthemeMapDto,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("mapbegoodToken"),
+            },
+          }
+        );
+
+        // 응답이 정상적으로 오면 성공 메시지 출력 또는 추가 작업 수행
+        console.log("Group Theme Map created:", response.data);
+        Swal.fire({
+          text: "그룹테마맵이 생성되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.cancelCreateGroupMap();
+          }
+        });
+        this.fetchGroupThememaps();
+      } catch (error) {
+        // 오류 처리
+        console.error("생성실패:", error);
+      }
+    },
+
+    cancelCreateGroupMap() {
+      // this.$router.go(-1); // Go back one step in the history stack
+      this.groupThemeMapAddDialog = false;
+
+      this.groupThemeMapName = "";
+      this.themeMapColor = "";
+      this.groupThemeMapMemo = "";
     },
   },
 };
