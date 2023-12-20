@@ -3,12 +3,7 @@
     <div class="g-part">
       <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
         <div class="header-container">
-          <a href="/thememap" style="color: #000; text-decoration: none">
-            <h2 class="theme-list" style="margin-left: 10px">
-              나의 테마지도
-            </h2></a
-          >
-
+          <h2 class="theme-list">나의 테마지도 리스트</h2>
           <v-dialog v-model="themeMapAddDialog" persistent width="500">
             <template v-slot:activator="{ props }">
               <!-- "테마맵 추가" 버튼 -->
@@ -156,15 +151,42 @@
                   <p>{{ thememap.themeMapDto.memo }}</p>
                   <p v-show="thememap.themeMapDto.memo == null">&nbsp;</p>
                 </div>
-                <h5>
-                  <!-- 공개 여부에 따라 다른 아이콘 표시 -->
-                  <span v-if="thememap.themeMapDto.show">
-                    <!-- ... -->
-                  </span>
-                  <span v-else>
-                    <!-- ... -->
-                  </span>
-                </h5>
+                
+              
+                
+                <span class="show-info"  v-if="thememap.themeMapDto.show">
+                  <!-- <p>공개여부: {{ thememap.themeMapDto.show }}</p> -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-unlock-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"
+                    ></path>
+                  </svg>
+                </span>
+                <span class="show-info" v-else>
+                  <!-- <p>공개여부: {{ thememap.themeMapDto.show }}</p> -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-lock-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"
+                    ></path>
+                  </svg>
+                </span>
+                
+
+
 
                 <div class="text-right">
                   <!-- "상세보기" 버튼 -->
@@ -336,7 +358,6 @@
 import axios from "axios";
 import Detailmap from "./Detailmap.vue";
 import Swal from "sweetalert2";
-
 export default {
   name: "FavoriteList",
   components: {
@@ -587,13 +608,13 @@ export default {
             text: "테마맵이 성공적으로 수정되었습니다.",
             icon: "success",
           });
-          this.cancleThemeMapEdit(themeMapDto);
+          this.cancleThemeMapEdit();
           this.loadMymapList();
         })
         .catch((error) => {
           console.error(error);
           Swal.fire({ text: "테마맵 수정에 실패했습니다.", icon: "error" });
-          this.cancleThemeMapEdit(themeMapDto);
+          this.cancleThemeMapEdit();
         });
     },
 
@@ -616,7 +637,12 @@ export default {
   /* overflow-x: hidden;
   overflow-y: auto; */
 }
-
+.show-info {
+  position:relative;
+  left: 70px;
+  bottom: 30px;
+   /* 다른 스타일 조정이 필요한 경우 여기에 추가하세요 */
+}
 .m-part {
   position: absolute;
   left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
