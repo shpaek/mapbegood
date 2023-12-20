@@ -116,6 +116,14 @@ export default {
   computed: {
     ...mapState(["userInfo"]),
   },
+  state: {
+  themeMapDetail: null,
+},
+mutations: {
+  setThemeMapDetail(state, payload) {
+    state.themeMapDetail = payload;
+  },
+},
   components: {
     Detailmap,
   },
@@ -169,31 +177,31 @@ export default {
       //구독 메서드 호출
       this.checkNotifications();
     },
-
     async showDetails(themeMapId) {
-      try {
-        // 클릭한 테마맵ID와 연결된 내 장소 목록 가져오기
-        const url = `${this.backURL}/myplace/${themeMapId}`;
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-        axios.defaults.headers.common["Authorization"] = accessToken;
+  try {
+    const url = `${this.backURL}/myplace/${themeMapId}`;
+    const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+    axios.defaults.headers.common["Authorization"] = accessToken;
 
-        const response = await axios.get(url);
-        const myPlaces = response.data;
+    const response = await axios.get(url);
+    const myPlaces = response.data;
 
-        // 여기에서 myPlaces 데이터를 활용하여 내 장소 목록을 표시하도록 구현할 수 있습니다.
-        console.log("내 장소 목록:", myPlaces);
+    // 스토어에 themeMapDetail 데이터 설정
+    this.$store.commit("setThemeMapDetail", {
+      themeMap: response.data,
+      myPlaces,
+    });
 
-        this.themeMapDetail = {
-          themeMapId,
-          myPlaces,
-        };
+    // themeMapId를 매개변수로하여 상세 보기로 리디렉션
+    this.$router.push({
+      name: "otherthememapdetail",
+      params: { id: themeMapId },
+    });
 
-        // 예시: 특정 동작 수행을 위해 가져온 내 장소 목록 활용
-        // this.performSomeActionWithMyPlaces(myPlaces);
-      } catch (error) {
-        console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
-      }
-    },
+  } catch (error) {
+    console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
+  }
+},
 
     // sub 호출 메서드
     async checkNotifications() {
@@ -309,6 +317,7 @@ export default {
           console.log(err);
         });
     },
+    
 
     reCommendDeatail() {
       console.log("테마지도 상세 페이지");
