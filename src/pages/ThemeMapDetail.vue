@@ -62,8 +62,7 @@
             <!-- 추가적인 Myplace 정보 표시 -->
           </div>
           <button class="add-bookmark-btn" @click="cancelBookmark(myplace.id)">
-            <img src="/public/images/bookmark.png" class="bookmark-icon" />
-            북마크취소
+            <img src="/public/images/bookmark.png" class="bookmark-icon" />          
           </button>
           <router-link
             v-if="myplace.feed"
@@ -80,7 +79,10 @@
               },
             }"
           >
-            <button>피드보기</button>
+            <button class = "feed=btn">
+              <img src ="/public/images/feed.png" class = "feed-icon"/>
+
+            </button>
           </router-link>
           <router-link
             v-else
@@ -206,8 +208,8 @@ export default {
 
 .theme-map-details {
   position: fixed;
-  top: 100px;
-  left: 90px;
+  top: 00px;
+  left: 80px;
   z-index: 2;
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
@@ -234,7 +236,7 @@ export default {
   min-height: 65px;
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: 10px;
 }
 
 .myplace-info {
@@ -247,21 +249,30 @@ export default {
 }
 
 .add-bookmark-btn {
-  background-color: #4caf50;
+  
   color: #fff;
   border: none;
   padding: 8px 16px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-.add-bookmark-btn:hover {
-  background-color: #45a049;
+/* .add-bookmark-btn:hover {
+  background-color: #0077ff;
+} */
+.bookmark-icon,
+.feed-icon {
+  width: 20px; /* Adjust the width as needed */
+  height: 20px; /* Adjust the height as needed */
+  /* Add any other styling properties you want */
 }
 
-.bookmark-icon {
-  margin-right: 5px;
-  width: 30px;
+.add-bookmark-btn,
+.feed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px; /* Adjust the margin as needed */
 }
 
 .search {
@@ -305,4 +316,6 @@ export default {
   outline: none;
   border-color: #555;
 }
+
+  
 </style>

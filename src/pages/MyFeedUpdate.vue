@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <div class="placeContainer">
+    <span class="placeName">{{ placeName }}</span>
+    <span class="address">{{ address }}</span>
+    <span class="address">{{ visitedAt }}</span>
+    </div>
     <span class="image-label">{{ feedImgs.length }}/10</span>
     <div v-if="feedImgs.length > 0" class="image-container">
       <div
@@ -34,14 +39,12 @@
           v-model="feedContent"
           id="content"
           required
-          placeholder="내용을 작성하세요"
+          placeholder="내용을 작성하세요."
         ></textarea>
       </div>
-      <button type="submit">Update</button>
+      <button type="submit">수정하기</button>
     </form>
-    <span class="placeName">{{ placeName }}</span>
-    <span class="address">{{ address }}</span>
-    <span class="address">{{ visitedAt }}</span>
+
   </div>
 </template>
 
@@ -354,5 +357,20 @@ button:hover {
   margin: 0;
   display: block;
   text-align: center;
+}
+
+.placeContainer {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.placeContainer span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.placeName {
+  font-size: larger;
+  font-weight: bold;
 }
 </style>
