@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <div class="placeContainer">
+      <span class="placeName">{{ placeName }}</span>
+      <span class="address">{{ address }}</span>
+      <span class="visitedAt">{{ visitedAt }}</span>
+    </div>
     <span class="image-label">{{ feedImgs.length }}/10</span>
 
     <form @submit.prevent="submitForm">
@@ -18,7 +23,7 @@
                 <img
                   :src="feedImgs[currentIndex].base64Data"
                   alt="Preview"
-                  style="max-width: 300px; max-height: 300px"
+                  class="feedImg"
                 />
               </div>
             </div>
@@ -50,7 +55,7 @@
           placeholder="내용을 작성하세요"
         ></textarea>
       </div>
-      <button type="submit">Share</button>
+      <button type="submit" class="button">작성하기</button>
     </form>
     <div class="feed">
       <div v-for="post in posts" :key="post.ourplaceId" class="feed-item">
@@ -61,9 +66,6 @@
         />
       </div>
     </div>
-    <span class="placeName">{{ placeName }}</span>
-    <span class="address">{{ address }}</span>
-    <span class="address">{{ visitedAt }}</span>
   </div>
 </template>
 
@@ -222,8 +224,9 @@ export default {
 </script>
 
 <style scoped>
+/* Add your Instagram-like styles here */
 body {
-  font-family: "Arial", sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
   background-color: #fafafa;
@@ -260,31 +263,16 @@ textarea {
   border-radius: 3px;
   resize: vertical;
   min-height: 100px;
-  width: 558.4px;
+  width: 100%;
 }
 
-label {
+.caption {
   margin-bottom: 5px;
+  font-weight: bold;
 }
 
-textarea {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  resize: vertical;
-  min-height: 100px;
-}
-
-input[type="file"] {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-button {
-  background-color: #87ceeb;
+.share-btn {
+  background-color: #009688;
   color: white;
   padding: 10px;
   border: none;
@@ -292,8 +280,8 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #5f9ea0;
+.share-btn:hover {
+  background-color: #00796b;
 }
 
 .feed {
@@ -307,33 +295,34 @@ button:hover {
   display: flex;
   align-items: center;
 }
-.feedImg {
-  max-width: 100%; /* 이미지가 부모 너비를 초과하지 않도록 조정 */
-  max-height: 400px;
-  object-fit: contain; /* 원본 비율을 유지한 채로 조절 */
-  margin: 0 auto;
-}
+
 .avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: 15px;
+}
+
+.post-content {
+  width: 100%;
 }
 
 .post-image {
   width: 100%;
   max-height: 400px;
   object-fit: cover;
-}
-
-.caption {
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .meta {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
+}
+
+.caption {
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .image-container {
@@ -366,13 +355,13 @@ button:hover {
 .photo {
   width: 40px;
   height: 40px;
-  margin: 0 auto; /* Add some space between the image and the input */
+  margin: 0 auto;
 }
 
 .image-label {
   margin: 0;
   display: block;
-  text-align: center; /* 가운데 정렬을 위해 추가 */
+  text-align: center;
 }
 
 .imageUpload {
@@ -386,20 +375,30 @@ button:hover {
 .image-preview-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px; /* 이미지 사이의 간격을 조절하세요. */
+  gap: 5px;
 }
 
-.image-preview {
-  width: 40px; /* 이미지의 크기를 조절하세요. */
-  height: 40px;
+.feedImg {
+  width: 400px;
+  height: 400px;
   object-fit: cover;
+  margin: 0 auto;
+}
+
+
+
+button {
+  background-color: #4c91af;
+  color: white;
+  padding: 10px 20px;
+  border: none;
   border-radius: 3px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.image-count {
-  margin: 0;
-  display: block;
-  text-align: center;
+
+button:hover {
+  background-color: #86d2d0;
 }
 </style>
