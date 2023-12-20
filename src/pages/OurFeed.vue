@@ -1,54 +1,46 @@
 <template>
   <div id="app">
-    <span class="placeName">{{ placeName }}</span>
-    <span class="address">{{ address }}</span>
-    <span class="visitedAt">{{ visitedAt }}</span>
-    <div v-for="(post, index) in feedList" :key="index">
+    <div class="placeContainer">
+      <span class="placeName">{{ placeName }}</span>
+      <span class="address">{{ address }}</span>
+      <span class="visitedAt">{{ visitedAt }}</span>
+    </div>
+
+    <div v-for="(post, index) in feedList" :key="index" class="feedContainer">
       <span class="image-label">{{ post.feedImgs.length }}/10</span>
-      <div
-        v-if="post.feedImgs && post.feedImgs.length > 0"
-        class="image-container"
-      >
-        <div v-if="post.feedImgs.length > 1">
-          <div
-            class="arrow-icon-container prev"
-            @click="prevImage"
-            v-show="currentIndex > 0"
-          >
-            <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
-          </div>
-          <div class="centered-image">
-            <img
-              v-for="(image, imgIndex) in post.feedImgs"
-              :key="imgIndex"
-              :src="image.url"
-              class="feedImg"
-              :alt="'Image ' + (imgIndex + 1)"
-              v-show="imgIndex === currentIndex"
-            />
-          </div>
-          <div
-            class="arrow-icon-container next"
-            @click="nextImage"
-            v-show="currentIndex < post.feedImgs.length - 1"
-          >
-            <img src="/images/next.png" alt="Next" class="arrow-icon" />
-          </div>
+
+      <div v-if="post.feedImgs && post.feedImgs.length > 0" class="image-container">
+        <div v-if="post.feedImgs.length > 1" class="arrow-icon-container prev" @click="prevImage" v-show="currentIndex > 0">
+          <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
         </div>
-        <div v-else>
+
+        <div class="centered-image">
           <img
-            :src="post.feedImgs[0].url"
+            v-for="(image, imgIndex) in post.feedImgs"
+            :key="imgIndex"
+            :src="image.url"
             class="feedImg"
-            :alt="'Image ' + (currentIndex + 1)"
+            :alt="'Image ' + (imgIndex + 1)"
+            v-show="imgIndex === currentIndex"
           />
         </div>
+
+        <div class="arrow-icon-container next" @click="nextImage" v-show="currentIndex < post.feedImgs.length - 1">
+          <img src="/images/next.png" alt="Next" class="arrow-icon" />
+        </div>
       </div>
+
+      <div v-else>
+        <img :src="post.feedImgs[0].url" class="feedImg" :alt="'Image ' + (currentIndex + 1)" />
+      </div>
+
       <div class="contentSection">
         <div class="caption">{{ post.content }}</div>
         <span class="nickname">{{ post.memberEmail.nickname }}</span>
         <span class="createdAt">{{ post.createdAt }}</span>
       </div>
-      <div v-if="emailMatchesCurrentUser(post.memberEmail.email)">
+
+      <div v-if="emailMatchesCurrentUser(post.memberEmail.email)" class="button-container">
         <router-link
           :to="{
             name: 'ourfeedupdate',
@@ -59,17 +51,19 @@
             },
           }"
         >
-          <button>Update</button>
+          <button class="update-btn">수정하기</button>
         </router-link>
-        <button @click="deleteFeed(post.ourplaceId)">Delete</button>
+
+        <button @click="deleteFeed(post.ourplaceId)" class="delete-btn">삭제하기</button>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
 import Swal from "sweetalert2";
+
 export default {
   name: "ourfeed",
   data() {
@@ -86,18 +80,12 @@ export default {
       visitedAt: null,
     };
   },
-  mounted() {
-    this.placeName = this.$route.query.placeName;
-    this.address = this.$route.query.address;
-    this.visitedAt = this.$route.query.visitedAt;
-  },
   computed: {
     currentImage() {
       const currentFeedImages =
         this.feedList[this.currentIndex]?.feedImgs || [];
       return currentFeedImages[this.currentIndex] || {};
     },
-    ...mapState(["userInfo"]),
   },
   created() {
     this.$store.dispatch("getUserInfo").then(() => {
@@ -105,69 +93,16 @@ export default {
       this.groupId = this.$route.params.groupId;
       this.ourplaceId = this.$route.params.ourplaceId;
       this.groupThememapId = this.$route.params.groupThememapId;
+      this.placeName = this.$route.query.placeName;
+      this.address = this.$route.query.address;
+      this.visitedAt = this.$route.query.visitedAt;
       this.fetchFeedsByEmail(this.email);
     });
   },
   methods: {
-    async fetchMemberEmails() {
-      const backURL = this.$root.backURL;
-      const url = `${this.backURL}/groupmember/${this.groupId}`;
-      const accessToken = `Bearer ${localStorage.getItem("mapbegoodToken")}`;
-      axios.defaults.headers.common["Authorization"] = accessToken;
-
-      try {
-        const response = await axios.get(url, {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        });
-
-        this.memberList = response.data;
-
-        await this.fetchFeedsForMemberEmails();
-      } catch (error) {
-        console.error("Error fetching member emails:", error);
-      }
-    },
-
-    async fetchFeedsForMemberEmails() {
-      for (const member of this.memberList) {
-        await this.fetchFeedsByEmail(member.member.email);
-      }
-    },
-
-    async fetchFeedImages(ourplaceId, memberEmail) {
-      const id = `${ourplaceId}${memberEmail}`;
-      console.log("Fetching feed images for:", id);
-      const backURL = this.$root.backURL;
-      try {
-        const response = await axios.get(`${this.backURL}/feed/download`, {
-          params: { id: id, opt: "ourfeed" },
-          responseType: "json",
-        });
-
-        console.log("Image response:", response);
-
-        const imageData = response.data;
-
-        if (imageData && imageData.length > 0) {
-          const images = imageData.map((image) => ({
-            url: `data:${image.mimeType};base64,${image.data}`,
-            mimeType: image.mimeType,
-          }));
-
-          return images;
-        } else {
-          return null;
-        }
-      } catch (error) {
-        console.error("Failed to fetch images:", error);
-        return null;
-      }
-    },
-
     async fetchFeedsByEmail(email) {
       const backURL = this.$root.backURL;
-      const url = `${this.backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${email}`;
+      const url = `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${email}`;
       const accessToken = `Bearer ${localStorage.getItem("mapbegoodToken")}`;
       axios.defaults.headers.common["Authorization"] = accessToken;
 
@@ -191,8 +126,34 @@ export default {
       }
     },
 
-    updateFeed(ourplaceId) {
-      console.log("Update feed with ID:", ourplaceId);
+    async fetchFeedImages(ourplaceId, memberEmail) {
+      const id = `${ourplaceId}${memberEmail}`;
+      console.log("Fetching feed images for:", id);
+      const backURL = this.$root.backURL;
+      try {
+        const response = await axios.get(`${backURL}/feed/download`, {
+          params: { id: id, opt: "ourfeed" },
+          responseType: "json",
+        });
+
+        console.log("Image response:", response);
+
+        const imageData = response.data;
+
+        if (imageData && imageData.length > 0) {
+          const images = imageData.map((image) => ({
+            url: `data:${image.mimeType};base64,${image.data}`,
+            mimeType: image.mimeType,
+          }));
+
+          return images;
+        } else {
+          return null;
+        }
+      } catch (error) {
+        console.error("Failed to fetch images:", error);
+        return null;
+      }
     },
 
     deleteFeed(ourplaceId) {
@@ -242,11 +203,13 @@ export default {
     },
     deleteFeedImg(ourplaceId, email) {
       const id = `${ourplaceId}${this.email}`;
-        axios.delete(`${this.backURL}/feed/delete`, {
-          params: { id: id, opt: "ourfeed" }
-      }).catch((error) => {
-      console.error("Failed to delete images:", error);
-    });
+      axios
+        .delete(`${this.$root.backURL}/feed/delete`, {
+          params: { id: id, opt: "ourfeed" },
+        })
+        .catch((error) => {
+          console.error("Failed to delete images:", error);
+        });
     },
 
     prevImage() {
@@ -263,9 +226,6 @@ export default {
       }
     },
 
-    getProfileImage(feed) {
-      return feed.memberEmail ? feed.memberEmail.profileImage : "";
-    },
     emailMatchesCurrentUser(feedEmail) {
       return feedEmail === this.email;
     },
@@ -289,59 +249,66 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 20px;
+  text-align: center;
 }
 
-label {
+.label {
   margin-bottom: 5px;
 }
 
-button {
-  background-color: #87ceeb; /* Sky-blue color */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.update-btn,
+.delete-btn {
+  background-color: #4c91af;
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  width: 279.2px;
+  transition: background-color 0.3s;
 }
 
-button:hover {
-  background-color: #5f9ea0; /* Darker shade on hover */
+.delete-btn {
+  background-color: #f44336;
 }
 
-.feed {
+.update-btn:hover,
+.delete-btn:hover {
+  background-color: #86d2d0;
+}
+
+.placeContainer {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.placeContainer span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.placeName {
+  font-size: larger;
+  font-weight: bold;
+}
+
+.feedContainer {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  max-width: 600px;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
-}
-
-.feed-item {
-  border-bottom: 1px solid #e0e0e0;
-  padding: 15px;
-  display: flex;
   align-items: center;
-}
-.feedImg {
-  width: 400px; /* Fixed width */
-  height: 400px; /* Fixed height */
-  object-fit: cover; /* Maintain aspect ratio and cover container */
-  object-position: center; /* Center the image within the container */
-  margin: 0 auto;
-}
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-.caption {
-  margin-top: 10px;
-}
-
-.meta {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
 }
 
 .image-container {
@@ -349,65 +316,47 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  max-height: 400px; /* Adjusted maximum height */
-  overflow: hidden; /* Hide any content that overflows */
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.contentSection {
+  width: 400px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .centered-image {
   max-width: 100%;
-  max-height: 100%; /* Adjusted to ensure it doesn't exceed the height of its container */
+  max-height: 100%;
   width: auto;
   margin: 0 auto;
 }
 
-.arrow-icon-container {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.prev {
-  left: 10px;
-}
-
-.next {
-  right: 10px;
-}
-
-.arrow-icon {
-  width: 30px;
-  height: 30px;
-}
-
-.photo {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto; /* Add some space between the image and the input */
+.feedImg {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+  margin: 0 auto;
 }
 
 .image-label {
   margin: 0;
   display: block;
-  text-align: center; /* 가운데 정렬을 위해 추가 */
-}
-
-.imageUpload {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: 400px;
+  text-align: center;
 }
 
 .image-preview-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px; /* 이미지 사이의 간격을 조절하세요. */
+  gap: 5px;
 }
 
 .image-preview {
-  width: 40px; /* 이미지의 크기를 조절하세요. */
+  width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 3px;
