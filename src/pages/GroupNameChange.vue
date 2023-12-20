@@ -68,14 +68,7 @@ export default {
             axios.put(url, requestBody, { withCredentials: true, headers: { 'Content-Type': 'application/json' } })
                 .then(response => {
                     this.$emit('close-Name');
-                    this.$router.push({
-                        name: "/group", 
-                        params: {
-                        groupId: this.groupId,
-                        groupName: this.name,
-                        leaderNickname: this.leaderNickname,
-                        },
-                    });
+                    location.href=`/group/${groupId}/${this.name}/${this.leaderNickname}`
                 })
                 .catch(error => {
                     console.log(error)

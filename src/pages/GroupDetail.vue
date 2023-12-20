@@ -304,18 +304,17 @@
 
     <div class="modal-container">
       <!-- 모달창 -->
-      <GroupImageChange
-        :isImageChangeOpen="isImageChangeOpen"
-        :groupId="groupId"
-        @close-Image="closeImageChange"
-      />
-      <GroupNameChange
-        :isNameChangeOpen="isNameChangeOpen"
-        :groupId="groupId"
-        @close-Name="closeNameChange"
-      />
-      />
     </div>
+    <GroupImageChange
+      :isImageChangeOpen="isImageChangeOpen"
+      :groupId="groupId"
+      @close-Image="closeImageChange"
+    />
+    <GroupNameChange
+      :isNameChangeOpen="isNameChangeOpen"
+      :groupId="groupId"
+      @close-Name="closeNameChange"
+    />
   </div>
 </template>
 <script>
