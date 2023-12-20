@@ -4,6 +4,7 @@
     ref="detailMap"
     :mymapdetail="mymapdetail"
     :places="mymapdetail.myplaces"
+    :color="mymapdetail.themeMapDto.color"
   />
   <!-- <Map /> -->
   <div class="theme-map-details">
@@ -121,6 +122,7 @@ export default {
           name: "",
           memo: "",
           id: "",
+          color: "",
         },
         myplaces: [],
       },
