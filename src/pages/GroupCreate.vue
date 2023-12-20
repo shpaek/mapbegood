@@ -7,13 +7,8 @@
           <div class="img">
             <img class="img" :src="image" alt="그룹이미지" />
             <br />
-            <input
-              type="file"
-              name="image"
-              id="i"
-              required
-              @change="imageChangeHandler"
-            />
+            <input type="file" name="image" id="i" required
+              @change="imageChangeHandler"/>
             <div class="errorMsg" v-show="fileErrorMsg.length > 1">
               <span>{{ fileErrorMsg }}</span>
             </div>
@@ -21,23 +16,10 @@
           <br />
           <div class="groupName" v-show="fileErrorMsg.length < 1">
             <label for="n">그룹명</label>&nbsp;
-            <input
-              type="text"
-              name="name"
-              id="n"
-              v-model="name"
-              maxlength="20"
-              placeholder="20자 이내로 입력하세요"
-              required
-            />
-            <button
-              type="button"
-              class="btn btn-outline-dark"
-              id="b3"
-              @click="b3ClickHandler"
-            >
-              중복확인
-            </button>
+            <input type="text" name="name" id="n" v-model="name" maxlength="20"
+             placeholder="20자 이내로 입력하세요" required/>
+            <button type="button" class="btn btn-outline-dark" id="b3"
+              @click="b3ClickHandler">중복확인</button>
           </div>
         </div>
         <div class="button-container">
@@ -79,7 +61,7 @@ export default {
       axios.defaults.headers.common["Authorization"] = accessToken;
 
       axios
-        .get(url)
+        .post(url, fd, { contentType: false, processData: false, withCredentials: true })
         .then((response) => {
           Swal.fire({
             text: "그룹이 생성되었습니다",
@@ -116,9 +98,9 @@ export default {
       }
 
       // 파일 크기 제한 (2MB)
-      const maxSize = 2 * 1024 * 1024; // 2MB
+      const maxSize = 5 * 1024 * 1024; // 5MB
       if (file.size > maxSize) {
-        this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
+        this.fileError = "파일 크기는 5MB를 초과할 수 없습니다.";
         fileInput.value = ""; // 파일 선택 초기화
         return;
       }
