@@ -3,9 +3,7 @@
     <div class="g-part">
       <div class="icon-container">
         <span class="title">그룹 목록</span>
-        <span
-          class="check-waiting"
-          @click="openModal">
+        <span class="check-waiting" @click="openModal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -23,10 +21,7 @@
       <div class="group-container">
         <!-- 그룹 추가버튼 -->
         <div class="add-group" @click="addgroupClickHandler">
-          <div
-            class="new-group cursor-pointer btn btn-outline-dark"
-            @click="addnewgroupclickHandler"
-          >
+          <div class="new-group cursor-pointer btn btn-outline-dark">
             <span class="new">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -62,9 +57,13 @@
           />
           <ul>
             <li>
-              <div class="group-info">{{group.name}}</div>
+              <div class="group-info">{{ group.name }}</div>
               <div class="group-mem-info">
-                {{group.memberGroupList&&group.memberGroupList.length>0?group.memberGroupList[0].member.nickname:''}}
+                {{
+                  group.memberGroupList && group.memberGroupList.length > 0
+                    ? group.memberGroupList[0].member.nickname
+                    : ""
+                }}
               </div>
             </li>
           </ul>
