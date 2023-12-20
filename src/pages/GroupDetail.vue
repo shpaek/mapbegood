@@ -38,7 +38,7 @@
             </li>
             <li class="group-member">
               <span class="group-member" @click="groupmemberClickHandler">
-                {{ leaderNickname }}({{ memCnt }})
+                {{ leaderNickname }}
               </span>
               <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
               <svg
