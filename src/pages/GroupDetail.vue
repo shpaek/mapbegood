@@ -302,9 +302,6 @@
       <Detailmap />
     </div>
 
-    <div class="modal-container">
-      <!-- 모달창 -->
-    </div>
     <GroupImageChange
       :isImageChangeOpen="isImageChangeOpen"
       :groupId="groupId"

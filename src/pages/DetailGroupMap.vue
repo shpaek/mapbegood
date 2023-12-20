@@ -62,7 +62,6 @@
                     src="/public/images/bookmark.png"
                     class="bookmark-icon"
                   />
-                  북마크취소
                 </button>
                 <router-link
                   :to="{
@@ -78,7 +77,9 @@
                     },
                   }"
                 >
-                  <button>피드보기</button>
+                  <button class = "feed-make">
+                    <img src ="/public/images/feedmake.png" class = "feed-make">
+                    </button>
                 </router-link>
                 <router-link
                   :to="{
@@ -90,7 +91,9 @@
                     },
                   }"
                 >
-                  <button>피드생성</button>
+                <button class = "feed-btn">
+              <img src ="/public/images/feed.png" class = "feed-icon"/>
+            </button>
                 </router-link>
               </li>
             </ul>
@@ -206,24 +209,29 @@ export default {
   overflow: auto;
   max-height: 650px; /* 스크롤이 나타날 최대 높이 */
 }
-
-.add-bookmark-btn {
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+ 
 
 .add-bookmark-btn:hover {
   background-color: #45a049;
 }
 
-.bookmark-icon {
-  margin-right: 5px;
-  width: 30px;
+.bookmark-icon,
+.feed-make,
+.feed-icon {
+  width: 20px; /* Adjust the width as needed */
+  height: 20px; /* Adjust the height as needed */
+  /* Add any other styling properties you want */
 }
+
+.feed-make,
+.add-bookmark-btn,
+.feed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px; /* Adjust the margin as needed */
+}
+
 
 .search {
   position: relative;
