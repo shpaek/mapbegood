@@ -1,33 +1,37 @@
 <template lang="">
-    <h2>그룹초대 수락대기 명단</h2>
-    <div class="waiting-list-container"> <!--group-member-container-->
-        <div class="icons">
-            <!-- 아이콘들 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16"
-                @click="groupmemberlistClickHandler">
-                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-            </svg>
-        </div>
-        <div class="waiting-list"> <!--member-list-->
-            <hr>
-            <div class="member" v-for="waiting in waitingList">
-                <!-- <div class="guide">
-                    <span>닉네임</span>
-                    <span>삭제</span>
-                </div> -->
-                <div class="info">
-                    <span class="member" @click="memberdetailClickHandler(waiting.nickname)">
-                        <img :src="waiting.profileImage" alt="프로필이미지" class="profileImage">
-                        {{waiting.nickname}}
-                    </span>
+    <div class="section-container">
+        <div class="g-part">
+            <div class="space"><span>그룹초대 수락대기 명단</span></div>
+            <div class="waiting-list-container"> <!--group-member-container-->
+                <div class="icons">
+                    <!-- 아이콘들 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16"
+                        @click="groupmemberlistClickHandler">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                    </svg>
                 </div>
+                <div class="waiting-list"> <!--member-list-->
+                    <hr>
+                    <div class="member" v-for="waiting in waitingList">
+                        <div class="info">
+                            <span class="member" @click="memberdetailClickHandler(waiting.nickname)">
+                                <img :src="waiting.profileImage" alt="프로필이미지" class="profileImage">
+                                {{waiting.nickname}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <span class="emty-msg">{{emptyMsg}}</span>
             </div>
         </div>
-        <span class="emty-msg">{{emptyMsg}}</span>
-    </div>    
+        <div class="m-part">
+            <Detailmap />
+        </div>
+    </div>  
 </template>
 <script>
 import axios from 'axios';
+import Detailmap from './Detailmap.vue';
 export default {
     name: "GroupWaiting",
     data(){
@@ -39,6 +43,9 @@ export default {
             emptyMsg:'',
             selectedNickname: '',
         }
+    },
+    components:{
+        Detailmap
     },
     created(){
         //$router.parmas를 통해 전달된 파라미터 확인
@@ -91,8 +98,21 @@ export default {
 }
 </script>
 <style scoped>
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+div.space {
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 18px;
+}
+.emty-msg{
+    padding-left:75px;
+}
 div.icons{
-    width: 500px;
+    width: 300px;
     margin-top: 50px;
     margin-left:auto;
     margin-right:auto;
@@ -101,14 +121,10 @@ div.icons{
 }
 
 div.waiting-list{
-    width: 500px;
+    width: 300px;
     margin-left:auto;
     margin-right:auto;
 }
-/* div.guide{
-    display: flex;
-    justify-content: space-between;
-} */
 div.info{
     display: flex;
     justify-content: space-between;
@@ -119,5 +135,24 @@ img.profileImage{
     max-width: 42px;
     max-height: 40px;
     border-radius: 50%;
+}
+
+.section-container {
+  display: flex;
+  height: 100vh;
+}
+
+div.g-part {
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+div.m-part {
+  position: absolute;
+  left: 454px;
+  right: 0;
+  height: 100%;
 }
 </style>

@@ -5,9 +5,7 @@
         <span class="title">그룹 목록</span>
         <span
           class="check-waiting"
-          v-show="emptyMsg.length < 1"
-          @click="openModal"
-        >
+          @click="openModal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -64,9 +62,9 @@
           />
           <ul>
             <li>
-              <div class="group-info">{{ group.name }}</div>
+              <div class="group-info">{{group.name}}</div>
               <div class="group-mem-info">
-                {{ group.memberGroupList[0].member.nickname }}
+                {{group.memberGroupList&&group.memberGroupList.length>0?group.memberGroupList[0].member.nickname:''}}
               </div>
             </li>
           </ul>
@@ -114,10 +112,10 @@ export default {
     axios
       .get(url, { withCredentials: true })
       .then((response) => {
-        console.log("GroupView /group 요청 성공: ");
+        // console.log("GroupView /group 요청 성공: ");
         //사용자의 그룹 목록 받기
         const list = response.data;
-        console.log(list);
+        // console.log(list);
         this.groupList = list;
         if (this.groupList.length < 1) {
           this.emptyMsg = "소속된 그룹이 없습니다";
@@ -126,20 +124,20 @@ export default {
       .catch((error) => {
         console.log(error);
         Swal.fire({
-            text: "로그인이 필요한 서비스 입니다.",
-            icon: "warning",
-            confirmButtonText: "확인",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              location.href = "/login";
-            }
-          });
+          text: "로그인이 필요한 서비스 입니다.",
+          icon: "warning",
+          confirmButtonText: "확인",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.href = "/login";
+          }
+        });
       });
   },
   methods: {
     addgroupClickHandler() {
       this.isCreateOpen = true;
-      console.log(this.isCreateOpen);
+      // console.log(this.isCreateOpen);
     },
     groupClickHandler(group) {
       //그룹의 테마그룹 List보여주는 탭으로 주소이동시키기

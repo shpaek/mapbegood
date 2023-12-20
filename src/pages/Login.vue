@@ -1,4 +1,4 @@
-<template>r
+<template>
   <div class="login-container">
     <div class="login-logo">
       <a href="/">
@@ -503,9 +503,9 @@ export default {
       if (this.email == "") {
         Swal.fire({
           text: "이메일을 입력하세요.",
-        icon: "warning",
-        customClass: {container: 'swal-container'},
-      });
+          icon: "warning",
+          customClass: { container: "swal-container" },
+        });
         this.$refs.email.focus();
         return;
       } else if (this.rules.email(this.email) != true) {
@@ -568,7 +568,10 @@ export default {
         return;
       } else if (this.signupProfileImage != "") {
         if (this.signupProfileImage.type.indexOf("image") < 0) {
-          Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
+          Swal.fire({
+            text: "이미지 파일만 업로드 가능합니다.",
+            icon: "warning",
+          });
           return;
         }
       }
@@ -636,7 +639,7 @@ export default {
           this.nickduplication = true;
         })
         .catch((err) => {
-          Swal.fire({ text: err.response.data.message, icon: "error" });;
+          Swal.fire({ text: err.response.data.message, icon: "error" });
           this.$refs.signupNickName.focus();
         });
     },
@@ -647,7 +650,10 @@ export default {
 
     uploadProfileImageHandler(e) {
       if (e != null && e.target.files[0].type.indexOf("image") < 0) {
-        Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
+        Swal.fire({
+          text: "이미지 파일만 업로드 가능합니다.",
+          icon: "warning",
+        });
         return;
       }
       this.signupProfileImage = e.target.files[0];
@@ -663,8 +669,7 @@ export default {
         this.$refs.signupEmail.focus();
         return;
       } else if (!pattern.test(this.signupEmail)) {
-        Swal.fire({ text: "이메일을 확인해 주세요.", icon: "warning",
-  });
+        Swal.fire({ text: "이메일을 확인해 주세요.", icon: "warning" });
         this.$refs.signupEmail.focus();
         return;
       }
@@ -807,7 +812,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          Swal.fire({ text: err.response.data.message, icon: "error" });;
+          Swal.fire({ text: err.response.data.message, icon: "error" });
         });
     },
 
