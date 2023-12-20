@@ -119,9 +119,14 @@ export default {
     },
 
     centerMap(placePosition) {
-      console.log("Centering map at:", placePosition);
-      this.map.setCenter(placePosition);
-    },
+  console.log("Centering map at:", placePosition);
+
+  // You can adjust the zoom level based on your requirement
+  const zoomLevel = 7;
+
+  this.map.setLevel(zoomLevel, { anchor: placePosition });
+  this.map.setCenter(placePosition);
+},
 
     setZoomLevel(level) {
       if (this.map) {
