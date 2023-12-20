@@ -24,9 +24,7 @@ import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
 import ThememapDetail from "../pages/ThemeMapDetail.vue"; //테마맵 Id로 조회
 import GroupWaiting from "../pages/GroupWaiting.vue";
-import AddGroupmap from "../pages/AddGroupmap.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가
-import UpdateGroupMapComponent from "../pages/UpdateGroupMap.vue";
 import test from "../pages/test.vue";
 import DetailMap from "../pages/Detailmap.vue";
 import chat from "../pages/chat_tmp.vue";
@@ -110,21 +108,10 @@ const router = createRouter({
       component: GroupWaiting,
     },
     {
-      path: "/addgroupmap/:groupId",
-      name: "addgroupmap",
-      component: AddGroupmap,
-    },
-    {
       path: "/detailgroupmap/:groupId/:groupThememapId",
       name: "detailgroupmap",
       component: DetailGroupMap,
     },
-    {
-      path: "/updategroupmap/:groupId/:groupThememapId",
-      name: "updategroupmap",
-      component: UpdateGroupMapComponent,
-    },
-
     {
       name: "/groupmember",
       path: "/groupmember/:groupId/:groupName/:leaderNickname",

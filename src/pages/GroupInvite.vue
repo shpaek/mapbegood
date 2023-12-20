@@ -22,7 +22,9 @@
             </li>
             <li>
               <span class="nickname">{{
-                group.memberGroupList[0].member.nickname
+                group.memberGroupList && group.memberGroupList.length > 0
+                  ? group.memberGroupList[0].member.nickname
+                  : ""
               }}</span>
             </li>
           </ul>
@@ -102,9 +104,9 @@ export default {
           headers: { "Content-Type": "application/json" },
         })
         .then((response) => {
-          (this.emptyMsg = ""), console.log(response.data);
-          const list = response.data;
-          this.groupList = list;
+          // console.log(response.data);
+          this.emptyMsg = "";
+          this.groupList = response.data;
           if (this.groupList.length < 1) {
             this.emptyMsg = "새로운 초대 요청이 없습니다";
           }
@@ -172,31 +174,31 @@ export default {
           });
         });
     },
-  },
-  inviteRejectClickHandler(group) {
-    // 그룹초대 거절 시 수락대기 목록에서 제거
-    const url = `${this.backURL}/waiting`;
+    inviteRejectClickHandler(group) {
+      // 그룹초대 거절 시 수락대기 목록에서 제거
+      const url = `${this.backURL}/waiting`;
 
-    const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-    axios.defaults.headers.common["Authorization"] = accessToken;
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
 
-    const Waiting = {
-      groupId: group.id,
-    };
-    console.log(group.id);
-    axios
-      .delete(url, { data: Waiting, withCredentials: true })
-      .then((response) => {
-        Swal.fire({ text: "그룹초대 요청을 거절했습니다", icon: "success" });
-        this.load();
-      })
-      .catch((error) => {
-        console.log(error);
-        Swal.fire({
-          text: "그룹초대 요청을 거절하지 못했습니다",
-          icon: "error",
+      const Waiting = {
+        groupId: group.id,
+      };
+      console.log(group.id);
+      axios
+        .delete(url, { data: Waiting, withCredentials: true })
+        .then((response) => {
+          Swal.fire({ text: "그룹초대 요청을 거절했습니다", icon: "success" });
+          this.load();
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            text: "그룹초대 요청을 거절하지 못했습니다",
+            icon: "error",
+          });
         });
-      });
+    },
   },
 };
 </script>
