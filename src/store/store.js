@@ -108,6 +108,8 @@ export default createStore({
               };
 
               this.commit("loginSuccess", userInfo);
+              console.log("getUserInfo: 성공")
+              console.log(this.state.userInfo)
             });
         } catch (error) {
           console.log(error);

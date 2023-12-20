@@ -49,17 +49,6 @@ const router = createRouter({
       path: "/group/:groupId/:groupName/:leaderNickname",
       component: GroupDetail,
     },
-
-    {
-      name: "/groupname",
-      path: "/groupn/:groupId/:groupName/:leaderNickname",
-      component: GroupNameChange,
-    },
-    {
-      name: "/groupimage",
-      path: "/groupi/:groupId/:groupName/:leaderNickname",
-      component: GroupImageChange,
-    },
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
     { path: "/thememaplist", component: ThemeMapList },
@@ -140,11 +129,6 @@ const router = createRouter({
       name: "/groupmember",
       path: "/groupmember/:groupId/:groupName/:leaderNickname",
       component: GroupMember,
-    },
-    {
-      name: "/waiting",
-      path: "/waiting/:groupId/:groupName/:leaderNickname",
-      component: GroupWaiting,
     },
     { path: "/test", component: test },
 

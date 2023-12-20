@@ -6,25 +6,10 @@
         <div class="group-info">
           <ul>
             <li class="img">
-              <img
-                :src="
-                  'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
-                  this.groupId +
-                  '_groupImage.jpg?' +
-                  new Date().getTime()
-                "
-                alt="그룹이미지"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                class="bi bi-gear"
-                viewBox="0 0 16 16"
-                @click="gearClickHandler"
-              >
-                <!-- v-show="isleader"> -->
+              <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +this.groupId +'_groupImage.jpg?' + new Date().getTime()" alt="그룹이미지"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"
+                @click="gearClickHandler">
+                <!-- v-show="isleader" -->
                 <path
                   d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
                 />
@@ -150,23 +135,23 @@
       <Detailmap />
     </div>
   </div>
-<div class="modal-container">
-    <!-- 모달창 -->
-    <GroupImageChange
-      :isImageChangeOpen="isImageChangeOpen"
-      :groupId="groupId"
-      @close-Image="closeImageChange"
-    />
-    <GroupNameChange
-      :isNameChangeOpen="isNameChangeOpen"
-      :groupId="groupId"
-      @close-Name="closeNameChange"/>
-      <AddGroupmap
+  <!-- 모달창 -->
+  <GroupImageChange
+  :isImageChangeOpen="isImageChangeOpen"
+  :groupId="groupId"
+  @close-Image="closeImageChange"
+  />
+  <GroupNameChange
+  :isNameChangeOpen="isNameChangeOpen"
+  :groupId="groupId"
+  @close-Name="closeNameChange"/>
+  <div class="modal-container">
+    <AddGroupmap
       v-show="isAddGroupmapOpen"
       :groupId="groupId"
       @close-modal="closeAddGroupmap"
     />
-</div>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -210,13 +195,13 @@ export default {
     this.groupName = groupName;
     this.leaderNickname = leaderNickname;
     this.groupMemo = groupMemo;
-    this.fetchGroupThememaps();
+    this.fetchGroupThememaps(); 
 
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
     if (this.$store.state.userInfo.nickName == this.leaderNickname) {
       this.isleader = true;
     }
-    console.log(this.userInfo.nickName);
+    console.log(this.$store.state.userInfo);
     console.log(this.leaderNickname);
     console.log(this.isleader);
   },
@@ -237,10 +222,12 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     updateImageClickHandler() {
+      console.log(this.isImageChangeOpen);
       this.isImageChangeOpen = true;
       console.log(this.isImageChangeOpen);
     },
     updateNameClickHandler() {
+      console.log(this.isNameChangeOpen);
       this.isNameChangeOpen = true;
       console.log(this.isNameChangeOpen);
     },
@@ -313,10 +300,10 @@ export default {
         });
     },
     closeImageChange() {
-      this.iscloseChangeOpen = false;
+      this.isImageChangeOpen = false;
     },
     closeNameChange() {
-      this.isImageChangeOpen = false;
+      this.isNameChangeOpen = false;
     },
     // 그룹 테마지도 추가 모달 열기
     openAddGroupmapModal() {
@@ -509,12 +496,13 @@ div.group-detail > div.group-info > ul > li.img > div.combobox > div.triangle {
   border-right: 7px solid transparent;
   border-bottom: 12px solid rgb(240, 240, 240);
 }
-/* Add the following styles for the modal */
+
 div.modal-container {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1000; /* Ensure it's above other elements */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
 </style>
