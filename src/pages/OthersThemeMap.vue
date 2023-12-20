@@ -224,11 +224,11 @@ export default {
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
 
-        console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
+        // console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
         const response = await axios.post(url);
-        console.log(response.data); // 성공하면 콘솔에 출력
+        // console.log(response.data); // 성공하면 콘솔에 출력
         // 추가 성공 메시지
-        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" })
+        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" });
 
         // Update the isInFavorites property after successfully adding to favorites
         const updatedThemeMaps = this.themeMaps.map((map) => {
@@ -254,7 +254,7 @@ export default {
       axios
         .get(`${this.backURL}/recommend-thememap/` + pageNum)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.themeMaps = res.data.map((map) => ({
             ...map,
             isInFavorites: false,
