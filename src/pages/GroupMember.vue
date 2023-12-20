@@ -5,9 +5,7 @@
       <div class="group-member-container">
         <div class="icons">
           <!-- 아이콘들 -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
+          <svg xmlns="http://www.w3.org/2000/svg" width="30"
             height="30"
             fill="currentColor"
             class="bi bi-list"
@@ -251,8 +249,15 @@ export default {
 * {
   font-family: "Noto Sans KR", sans-serif;
 }
+div.space {
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: 18px;
+}
 div.icons {
-  width: 500px;
+  width: 300px;
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
@@ -261,7 +266,7 @@ div.icons {
 }
 
 div.member-list {
-  width: 500px;
+  width: 300px;
   margin-left: auto;
   margin-right: auto;
 }

@@ -5,9 +5,7 @@
         <span class="title">그룹 목록</span>
         <span
           class="check-waiting"
-          v-show="emptyMsg.length < 1"
-          @click="openModal"
-        >
+          @click="openModal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -64,9 +62,9 @@
           />
           <ul>
             <li>
-              <div class="group-info">{{ group.name }}</div>
+              <div class="group-info">{{group.name}}</div>
               <div class="group-mem-info">
-                {{ group.memberGroupList[0].member.nickname }}
+                {{group.memberGroupList&&group.memberGroupList.length>0?group.memberGroupList[0].member.nickname:''}}
               </div>
             </li>
           </ul>
