@@ -92,11 +92,15 @@ import axios from "axios";
 import SearchMember from "../pages/SearchMember.vue";
 import Swal from "sweetalert2";
 import Detailmap from './Detailmap.vue';
+import { mapState, mapActions } from "vuex";
 export default {
   name: "GroupMember",
   components: {
     SearchMember,
     Detailmap
+  },
+  computed: {
+    ...mapState(["userInfo"]),
   },
   data() {
     return {
@@ -113,6 +117,7 @@ export default {
     };
   },
   async created() {
+    await this.$store.dispatch("getUserInfo");
     //$router.parmas를 통해 전달된 파라미터 확인
     const groupId = this.$route.params.groupId;
     const groupName = this.$route.params.groupName;
@@ -125,7 +130,7 @@ export default {
     console.log(groupId, groupName, leaderNickname);
 
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
-    if (this.$store.state.userInfo.nickName == this.leaderNickname) {
+    if (this.userInfo.nickName  == this.leaderNickname) {
       this.isleader = true;
     }
     // axios로 back에 그룹 멤버 명단 요청
