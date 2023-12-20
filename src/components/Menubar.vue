@@ -65,109 +65,109 @@
         </a>
 
         <router-link
-  to="/map"
-  class="menu-item"
-  :class="{ active: isMenuActive('/map') }"
-  title="Map"
-  data-bs-toggle="tooltip"
-  data-bs-placement="right"
->
-  <svg
-    class="bi pe-none"
-    width="24"
-    height="24"
-    style="margin: 5"
-    role="img"
-    aria-label="Map"
-  >
-    <use xlink:href="#Map" />
-  </svg>
-  <span class="menu-text">지도</span>
-</router-link>
+          to="/map"
+          class="menu-item"
+          :class="{ active: isMenuActive('/map') }"
+          title="Map"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+        >
+          <svg
+            class="bi pe-none"
+            width="24"
+            height="24"
+            style="margin: 5"
+            role="img"
+            aria-label="Map"
+          >
+            <use xlink:href="#Map" />
+          </svg>
+          <span class="menu-text">지도</span>
+        </router-link>
 
-<router-link
-  to="/othersthememap"
-  class="menu-item"
-  :class="{ active: isMenuActive('/othersthememap') }"
-  title="othersthememap"
-  data-bs-toggle="tooltip"
-  data-bs-placement="right"
->
-  <svg
-    class="bi pe-none"
-    width="24"
-    height="24"
-    style="margin: 5"
-    role="img"
-    aria-label="othersthememap"
-  >
-    <use xlink:href="#othersthememap" />
-  </svg>
-  <span class="menu-text">추천</span>
-</router-link>
+        <router-link
+          to="/othersthememap"
+          class="menu-item"
+          :class="{ active: isMenuActive('/othersthememap') }"
+          title="othersthememap"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+        >
+          <svg
+            class="bi pe-none"
+            width="24"
+            height="24"
+            style="margin: 5"
+            role="img"
+            aria-label="othersthememap"
+          >
+            <use xlink:href="#othersthememap" />
+          </svg>
+          <span class="menu-text">추천</span>
+        </router-link>
 
-<router-link
-  to="/thememap"
-  class="menu-item"
-  :class="{ active: isMenuActive('/thememap') }"
-  title="thememap"
-  data-bs-toggle="tooltip"
-  data-bs-placement="right"
->
-  <svg
-    class="bi pe-none"
-    width="24"
-    height="24"
-    style="margin: 5"
-    role="img"
-    aria-label="thememap"
-  >
-    <use xlink:href="#thememap" />
-  </svg>
-  <span class="menu-text">테마지도</span>
-</router-link>
+        <router-link
+          to="/thememap"
+          class="menu-item"
+          :class="{ active: isMenuActive('/thememap') }"
+          title="thememap"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+        >
+          <svg
+            class="bi pe-none"
+            width="24"
+            height="24"
+            style="margin: 5"
+            role="img"
+            aria-label="thememap"
+          >
+            <use xlink:href="#thememap" />
+          </svg>
+          <span class="menu-text">테마지도</span>
+        </router-link>
 
-<router-link
-  to="/FavoriteList"
-  class="menu-item"
-  :class="{ active: isMenuActive('/FavoriteList') }"
-  title="FavoriteList"
-  data-bs-toggle="tooltip"
-  data-bs-placement="right"
->
-  <svg
-    class="bi pe-none"
-    width="24"
-    height="24"
-    style="margin: 5"
-    role="img"
-    aria-label="FavoriteList"
-  >
-    <use xlink:href="#FavoriteList" />
-  </svg>
-  <span class="menu-text">즐겨찾기</span>
-</router-link>
+        <router-link
+          to="/FavoriteList"
+          class="menu-item"
+          :class="{ active: isMenuActive('/FavoriteList') }"
+          title="FavoriteList"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+        >
+          <svg
+            class="bi pe-none"
+            width="24"
+            height="24"
+            style="margin: 5"
+            role="img"
+            aria-label="FavoriteList"
+          >
+            <use xlink:href="#FavoriteList" />
+          </svg>
+          <span class="menu-text">즐겨찾기</span>
+        </router-link>
 
-<router-link
-  to="/groups"
-  class="menu-item"
-  :class="{ active: isMenuActive('/groups') }"
-  title="group"
-  data-bs-toggle="tooltip"
-  data-bs-placement="right"
->
-  <svg
-    class="bi pe-none"
-    width="24"
-    height="24"
-    style="margin: 5"
-    role="img"
-    aria-label="group"
-  >
-    <use xlink:href="#group" />
-  </svg>
-  <span class="menu-text">그룹</span>
-</router-link>
+        <router-link
+          to="/groups"
+          class="menu-item"
+          :class="{ active: isMenuActive('/groups') }"
+          title="group"
+          data-bs-toggle="tooltip"
+          data-bs-placement="right"
+        >
+          <svg
+            class="bi pe-none"
+            width="24"
+            height="24"
+            style="margin: 5"
+            role="img"
+            aria-label="group"
+          >
+            <use xlink:href="#group" />
+          </svg>
+          <span class="menu-text">그룹</span>
+        </router-link>
         <!-- 드롭다운 메뉴 -->
         <div class="mt-auto">
           <div class="dropdown border-end" ref="profileDropdown">
@@ -379,7 +379,7 @@ export default {
     ...mapState(["userInfo"]),
   },
   async beforeCreate() {
-    console.log("menu bar 에서 호출");
+    // console.log("menu bar 에서 호출");
     await this.$store.dispatch("getUserInfo");
     this.profileImage = this.userInfo.profileImage;
     this.displayImage = this.userInfo.profileImage;
@@ -406,8 +406,8 @@ export default {
     },
 
     isMenuActive(menuPath) {
-    return this.$route.path === menuPath;
-  },
+      return this.$route.path === menuPath;
+    },
 
     toggleDropdown() {
       const dropdown = this.$refs.profileDropdown;
@@ -443,7 +443,10 @@ export default {
 
     uploadProfileImageHandler(e) {
       if (e != null && e.target.files[0].type.indexOf("image") < 0) {
-        Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
+        Swal.fire({
+          text: "이미지 파일만 업로드 가능합니다.",
+          icon: "warning",
+        });
         return;
       }
       this.modifyProfileImage = e.target.files[0];
@@ -480,7 +483,10 @@ export default {
     updateMyInfoHandler() {
       if (this.modifyPassword != null || this.modifyPassword1 != null) {
         if (this.rules.password(this.modifyPassword) != true) {
-          Swal.fire({ text: "비밀번호 규칙에 맞지 않습니다.", icon: "warning" });
+          Swal.fire({
+            text: "비밀번호 규칙에 맞지 않습니다.",
+            icon: "warning",
+          });
           this.$refs.modifyPassword.select();
           return;
         } else if (this.modifyPassword != this.modifyPassword1) {
@@ -495,7 +501,10 @@ export default {
         return;
       } else if (this.modifyProfileImage != null) {
         if (this.modifyProfileImage.type.indexOf("image") < 0) {
-          Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
+          Swal.fire({
+            text: "이미지 파일만 업로드 가능합니다.",
+            icon: "warning",
+          });
           return;
         }
       }
@@ -609,7 +618,7 @@ main {
 
 .menu-item.active {
   background-color: #56cee33f; /* 배경색을 진하게 설정하세요 */
-  color: #333; 
+  color: #333;
 }
 
 body,
