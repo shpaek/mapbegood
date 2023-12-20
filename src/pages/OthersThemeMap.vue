@@ -73,7 +73,7 @@
             @click="addToFavorites(themeMap.id)"
             class="btn btn-dark"
             style="position: absolute; margin-top: 8px"
-            :disabled="isInFavorites(themeMap.id)"
+            v-show="!isInFavorites(themeMap.id)"
           >
             추가
           </button>
@@ -184,7 +184,7 @@ export default {
         console.log("내 장소 목록:", myPlaces);
 
         this.themeMapDetail = {
-          themeMap,
+          themeMapId,
           myPlaces,
         };
 

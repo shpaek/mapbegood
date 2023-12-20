@@ -482,6 +482,7 @@ export default {
                 text: "삭제되었습니다",
                 icon: "success",
               });
+              this.loadMymapList();
             }
           });
         })
