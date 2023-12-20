@@ -115,7 +115,7 @@ public class ThemeMapService {
         Optional<Member> optMember = memberRepository.findById(email);
         if (optMember.isPresent()) {
             Member member = optMember.get();
-            List<ThemeMap> themeMaps = themeMapRepository.findByMemberEmail(member);
+            List<ThemeMap> themeMaps = themeMapRepository.findByMemberEmailOrderById(member);
 
             // ThemeMap을 ThemeMapDto로 변환
             List<ThemeMapDto> themeMapDtos = themeMaps.stream()

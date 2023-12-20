@@ -53,6 +53,7 @@ public class GroupsController {
 			log.error("email={}", email);
 			return gs.findAllGroupsByMemberEmail(email);
 		} catch (Exception e) {
+			log.error("/group 조회 Err: " + e.getMessage());
 			return new ArrayList<>();
 		}
 	}
