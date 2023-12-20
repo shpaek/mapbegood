@@ -59,7 +59,7 @@
         style="margin-left: 10px; margin-right: 10px"
       >
         <!-- 각 테마맵에 대한 목록 -->
-        <li class="list-group-item">
+        <li class="list-group-item" @click="showDetails(themeMap.id)">
           <div style="display: inline-block; width: 265px">
             <h5 class="mb-1">
               <b>{{ themeMap.name }}</b>
@@ -73,6 +73,7 @@
             @click="addToFavorites(themeMap.id)"
             class="btn btn-dark"
             style="position: absolute; margin-top: 8px"
+            :disabled="isInFavorites(themeMap.id)"
           >
             추가
           </button>
@@ -102,7 +103,7 @@
     </div>
   </div>
   <div class="m-part">
-    <Detailmap />
+    <Detailmap :mymapdetail="themeMapDetail" />
   </div>
 </template>
 
@@ -169,6 +170,31 @@ export default {
       this.checkNotifications();
     },
 
+    async showDetails(themeMapId) {
+      try {
+        // 클릭한 테마맵ID와 연결된 내 장소 목록 가져오기
+        const url = `${this.backURL}/myplace/${themeMapId}`;
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        const response = await axios.get(url);
+        const myPlaces = response.data;
+
+        // 여기에서 myPlaces 데이터를 활용하여 내 장소 목록을 표시하도록 구현할 수 있습니다.
+        console.log("내 장소 목록:", myPlaces);
+
+        this.themeMapDetail = {
+          themeMap,
+          myPlaces,
+        };
+
+        // 예시: 특정 동작 수행을 위해 가져온 내 장소 목록 활용
+        // this.performSomeActionWithMyPlaces(myPlaces);
+      } catch (error) {
+        console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
+      }
+    },
+
     // sub 호출 메서드
     async checkNotifications() {
       try {
@@ -212,6 +238,25 @@ export default {
       }
     },
 
+    async detailThememap(themeMapId) {
+      try {
+        // 클릭한 테마맵ID와 연결된 장소에 대한 자세한 정보를 가져오기
+        const url = `${this.backURL}/maplist/details/${themeMapId}`;
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        const response = await axios.get(url);
+        const detailedPlaces = response.data; // API가 자세한 장소 정보를 반환한다고 가정합니다
+
+        // 자세한 장소 정보를 콘솔에 기록하기
+        console.log("자세한 장소 정보:", detailedPlaces);
+
+        // 여기에서 detailedPlaces 데이터를 활용하여 상세 정보를 표시하도록 구현할 수 있습니다.
+        // 예를 들어, 모달 창이나 다른 컴포넌트를 사용하여 상세 정보를 표시할 수 있습니다.
+      } catch (error) {
+        console.error("자세한 정보를 가져오는 중 오류 발생:", error);
+      }
+    },
     // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
       if (this.isInFavorites(themeMapId)) {
@@ -302,13 +347,21 @@ ul.elevated-list {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 기존의 elevated-list 스타일에 추가: 리스트 아이템에 선을 추가 */
 ul.elevated-list li {
   border-bottom: 1px solid #4e4e52;
   padding: 10px;
 }
 
-/* 마지막 리스트 아이템에는 선을 표시하지 않음 */
+ul.elevated-list li:hover {
+  background-color: #e9ecef7a;
+  cursor: pointer;
+}
+
+ul.search-results-list li:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
 ul.elevated-list li:last-child {
   border-bottom: none;
 }

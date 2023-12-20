@@ -29,7 +29,6 @@ import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap ì»´í
 import UpdateGroupMapComponent from "../pages/UpdateGroupMap.vue";
 import test from "../pages/test.vue";
 import DetailMap from "../pages/Detailmap.vue";
-
 import chat from "../pages/chat_tmp.vue";
 
 const router = createRouter({
