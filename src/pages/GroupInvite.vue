@@ -102,9 +102,9 @@ export default {
           headers: { "Content-Type": "application/json" },
         })
         .then((response) => {
-          (this.emptyMsg = ""), console.log(response.data);
-          const list = response.data;
-          this.groupList = list;
+          // console.log(response.data);
+          this.emptyMsg = "";
+          this.groupList = response.data;
           if (this.groupList.length < 1) {
             this.emptyMsg = "새로운 초대 요청이 없습니다";
           }

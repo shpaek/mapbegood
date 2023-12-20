@@ -128,7 +128,7 @@ export default {
     },
     b2ClickHandler() {
       //생성 취소 버튼 클릭 시
-      console.log("b2ClickHandler");
+      // console.log("b2ClickHandler");
       this.$emit("close-create");
     },
     b3ClickHandler() {

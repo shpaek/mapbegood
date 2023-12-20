@@ -424,6 +424,7 @@ export default {
       axios
         .get(url)
         .then((response) => {
+          this.listCnt = response.data.length;
           this.groupThememaps = response.data.map((themeMap) => {
             return {
               themeMapDto: themeMap,
@@ -515,6 +516,17 @@ export default {
     },
 
     async CreateGroupThemeMap() {
+      if (this.groupThemeMapName == "") {
+        Swal.fire({ text: "테마지도 이름을 입력해주세요.", icon: "warning" });
+        this.$refs.groupThemeMapName.focus();
+        return;
+      }
+      if (this.themeMapColor == "") {
+        Swal.fire({ text: "테마지도 색상을 선택해 주세요.", icon: "warning" });
+        this.$refs.themeMapColor.focus();
+        return;
+      }
+
       try {
         // 현재 라우트에서 추출한 groupId 사용
         const groupId = this.$route.params.groupId;
