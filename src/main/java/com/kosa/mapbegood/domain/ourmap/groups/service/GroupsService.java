@@ -90,8 +90,8 @@ public class GroupsService {
 			List<GroupsDTO> resultGroupDTO = new ArrayList<>();//이메일 사용자가 속한 그룹들
 			for(int i=0; i<memberGroups.size(); i++) {
 				//그룹정보 셋팅
-				MemberGroup membergroup = memberGroups.get(i); //이메일 사용자가 속해있는 그룹1개
-				Groups group = membergroup.getGroupId();
+				MemberGroup membergroup = memberGroups.get(i); 
+				Groups group = membergroup.getGroupId(); //이메일 사용자가 속해있는 그룹1개
 				GroupsDTO groupDTO = new GroupsDTO();
 				groupDTO.setId(group.getId());
 				groupDTO.setName(group.getName());
@@ -103,13 +103,14 @@ public class GroupsService {
 					groupThememapListDto.add(groupThememapDto);
 				}
 				groupDTO.setGroupThememapList(groupThememapListDto);
-				List<MemberGroup>members = group.getMemberGroupList(); //각 그룹의 멤버들
-				for(MemberGroup mg: members) {
-					if(mg.getLeader() == 1) { //리더인 경우
-						//String leaderNickName = members.get(0).getMemberEmail().getNickname();
+				List<MemberGroup> members = group.getMemberGroupList(); //각 그룹의 멤버들
+				for(int j=0; j<members.size();j++) {
+					MemberGroup mg = new MemberGroup();
+					mg = members.get(j);
+					if(mg.getLeader()==1) { //리더인 경우
 						MemberDTO leaderMemberDTO = new MemberDTO();
-						leaderMemberDTO.setNickname(members.get(0).getMemberEmail().getNickname());
-		
+						leaderMemberDTO.setNickname(members.get(j).getMemberEmail().getNickname());
+						
 						MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
 						memberGroupDTO.setMember(leaderMemberDTO);
 						memberGroupDTO.setLeader(mg.getLeader());
@@ -117,9 +118,24 @@ public class GroupsService {
 						List<MemberGroupDTO> listGroupMemberDTO = new ArrayList<>();
 						listGroupMemberDTO.add(memberGroupDTO);
 						groupDTO.setMemberGroupList(listGroupMemberDTO);
-					}			
+					}
 				}
 				
+//				for(MemberGroup mg: members) {
+//					if(mg.getLeader() == 1) { //리더인 경우
+//						//String leaderNickName = members.get(0).getMemberEmail().getNickname();
+//						MemberDTO leaderMemberDTO = new MemberDTO();
+//						leaderMemberDTO.setNickname(members.get(0).getMemberEmail().getNickname());
+//		
+//						MemberGroupDTO memberGroupDTO = new MemberGroupDTO();
+//						memberGroupDTO.setMember(leaderMemberDTO);
+//						memberGroupDTO.setLeader(mg.getLeader());
+//						
+//						List<MemberGroupDTO> listGroupMemberDTO = new ArrayList<>();
+//						listGroupMemberDTO.add(memberGroupDTO);
+//						groupDTO.setMemberGroupList(listGroupMemberDTO);
+//					}			
+//				}
 				log.error("groupDTO.getId={}, groupDTO.getName={},leaderNickname={} ", groupDTO.getId(), groupDTO.getName(), groupDTO.getMemberGroupList().get(0).getMember().getNickname());
 				resultGroupDTO.add(groupDTO);
 			}
