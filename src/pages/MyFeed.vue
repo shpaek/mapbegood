@@ -6,6 +6,7 @@
       <span class="address">{{ visitedAt }}</span>
     </div>
     <div class="feedContainer">
+      <span class="image-label">{{ feedImgs.length }}/10</span>
       <div v-if="feedImgs.length > 0" class="image-container">
         <div
           class="arrow-icon-container prev"
@@ -37,22 +38,23 @@
           <span class="nickname">{{ post.memberEmail?.nickname }}</span>
           <span class="createdAt">{{ post.createdAt }}</span>
         </div>
-      </div>
-      <div class="buttons">
-        <router-link
-          :to="{
-            name: 'myfeedupdate',
-            params: { myplaceId: post.myplaceId },
-            query: {
-              placeName: this.placeName,
-              address: this.address,
-              visitedAt: this.visitedAt,
-            },
-          }"
-        >
-          <button class="update-btn">수정하기</button>
-        </router-link>
-        <button @click="deleteFeed(post.myplaceId)" class="delete-btn">삭제하기</button>
+
+        <div class="button-container">
+          <router-link
+            :to="{
+              name: 'myfeedupdate',
+              params: { myplaceId: post.myplaceId },
+              query: {
+                placeName: this.placeName,
+                address: this.address,
+                visitedAt: this.visitedAt,
+              },
+            }"
+          >
+            <button class="update-btn">수정하기</button>
+          </router-link>
+          <button @click="deleteFeed(post.myplaceId)" class="delete-btn">삭제하기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -69,7 +71,7 @@ export default {
       currentIndex: 0,
       post: {},
       memberEmail: "",
-      placeName: "",
+      placeName: "", 
       address: "",
       visitedAt: "",
     };
@@ -148,7 +150,7 @@ export default {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "삭제",
-        denyButtonText: "취소",
+        denyButtonText: "취소"
       }).then((result) => {
         if (result.isConfirmed) {
           const backURL = this.$root.backURL;
@@ -156,7 +158,7 @@ export default {
             .delete(`${backURL}/myfeed/${this.myplaceId}`)
             .then((response) => {
               console.log("Feed deleted successfully:", response.data);
-              this.deleteFeedImg(myplaceId);
+              this.deleteFeedImg(myplaceId)
               this.$router.push({
                 name: "thememapdetail",
                 params: { id: response.data.thememapId },
@@ -176,13 +178,11 @@ export default {
     deleteFeedImg(myplaceId) {
       const backURL = this.$root.backURL;
 
-      axios
-        .delete(`${backURL}/feed/delete`, {
-          params: { id: myplaceId, opt: "myfeed" },
-        })
-        .catch((error) => {
-          console.error("Failed to delete images:", error);
-        });
+      axios.delete(`${backURL}/feed/delete`, {
+        params: { id: myplaceId, opt: "myfeed" }
+      }).catch((error) => {
+        console.error("Failed to delete images:", error);
+      });
     },
 
     prevImage() {
@@ -198,6 +198,8 @@ export default {
   },
 };
 </script>
+
+
 <style scoped>
 body {
   font-family: "Arial", sans-serif;
@@ -214,10 +216,9 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 20px;
-  text-align: center;
 }
 
-label {
+.label {
   margin-bottom: 5px;
 }
 
@@ -229,7 +230,7 @@ label {
 
 .update-btn,
 .delete-btn {
-  background-color: #4c91af; /* Green color for Update button */
+  background-color: #4c91af;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -239,25 +240,25 @@ label {
 }
 
 .delete-btn {
-  background-color: #f44336; /* Red color for Delete button */
+  background-color: #f44336;
 }
 
 .update-btn:hover,
 .delete-btn:hover {
-  background-color: #86d2d0; /* Darker shade on hover */
+  background-color: #86d2d0;
 }
 
 .placeContainer {
-  text-align: left; /* Left-align the text */
+  text-align: left;
   margin-bottom: 20px;
 }
 
 .placeContainer span {
-  display: block; /* Display each span on a new line */
-  margin-bottom: 5px; /* Add spacing between spans */
+  display: block;
+  margin-bottom: 5px;
 }
 
-.placeName{
+.placeName {
   font-size: larger;
   font-weight: bold;
 }
@@ -272,8 +273,8 @@ label {
   max-width: 600px;
   margin: 20px auto;
   display: flex;
-  flex-direction: column; /* Align children in a column */
-  align-items: center; /* Center children horizontally */
+  flex-direction: column;
+  align-items: center;
 }
 
 .image-container {
@@ -281,62 +282,57 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  max-height: 400px; /* Adjusted maximum height */
-  overflow: hidden; /* Hide any content that overflows */
+  max-height: 400px;
+  overflow: hidden;
 }
 
 .contentSection {
   width: 400px;
-  margin-top: 20px; /* Add margin for spacing */
+  margin-top: 20px;
   display: flex;
-  flex-direction: column; /* Align children in a column */
-  align-items: center; /* Center children horizontally */
-}
-
-.centered-image {
-  max-width: 100%;
-  max-height: 100%; /* Adjusted to ensure it doesn't exceed the height of its container */
-  width: auto;
-  margin: 0 auto;
-}
-.feedImg {
-  width: 400px; /* Fixed width */
-  height: 400px; /* Fixed height */
-  object-fit: cover; /* Maintain aspect ratio and cover container */
-  object-position: center; /* Center the image within the container */
-  margin: 0 auto;
-}
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-.caption {
-  margin-top: 10px;
-}
-
-.meta {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.image-container {
-  position: relative;
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  max-height: 400px; /* Adjusted maximum height */
-  overflow: hidden; /* Hide any content that overflows */
 }
 
 .centered-image {
   max-width: 100%;
-  max-height: 100%; /* Adjusted to ensure it doesn't exceed the height of its container */
+  max-height: 100%;
   width: auto;
   margin: 0 auto;
+}
+
+.feedImg {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+  margin: 0 auto;
+}
+
+.image-label {
+  margin: 0;
+  display: block;
+  text-align: center;
+}
+
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.image-preview {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.image-count {
+  margin: 0;
+  display: block;
+  text-align: center;
 }
 
 .arrow-icon-container {
@@ -359,43 +355,4 @@ label {
   height: 30px;
 }
 
-.photo {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto; /* Add some space between the image and the input */
-}
-
-.image-label {
-  margin: 0;
-  display: block;
-  text-align: center; /* 가운데 정렬을 위해 추가 */
-}
-
-.imageUpload {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  height: 400px;
-}
-
-.image-preview-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px; /* 이미지 사이의 간격을 조절하세요. */
-}
-
-.image-preview {
-  width: 40px; /* 이미지의 크기를 조절하세요. */
-  height: 40px;
-  object-fit: cover;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.image-count {
-  margin: 0;
-  display: block;
-  text-align: center;
-}
 </style>
