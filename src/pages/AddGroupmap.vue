@@ -84,7 +84,7 @@ export default {
       }
     },
     cancelCreateGroupMap() { 
-      this.$router.go(-1); // Go back one step in the history stack
+      this.$emit('close-modal'); 
     }
   }
 };
@@ -94,8 +94,7 @@ export default {
 
 </script>
 <style scoped>
-  /* ... existing styles ... */
-  .modal {
+  /* .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -105,15 +104,17 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 999; 
 }
   .modal-container {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999; /* Adjust the z-index value as needed */
-  }
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; 
+  } */
 
-  /* ... existing styles ... */
 </style>
