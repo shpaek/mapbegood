@@ -60,7 +60,7 @@
 <script>
 import axios from "axios";
 import AddBookmark from "../pages/AddBookmark.vue";
-
+import Swal from "sweetalert2";
 export default {
   name: "Search",
 
@@ -150,7 +150,7 @@ export default {
     async search() {
       const keyword = this.keyword.trim();
       if (!keyword) {
-        alert("검색어를 입력해주세요.");
+        Swal.fire({ text: "검색어를 입력해주세요.", icon: "warning" });
         return;
       }
 
@@ -161,7 +161,7 @@ export default {
       if (this.ps) {
         this.ps.keywordSearch(keyword, this.placesSearchCB);
       } else {
-        alert("Places 서비스가 초기화되지 않았습니다.");
+        Swal.fire({ text: "Places 서비스가 초기화되지 않았습니다.", icon: "warning" });
       }
     },
 
@@ -197,9 +197,9 @@ export default {
 
         this.displayPagination(pagination);
       } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-        alert("검색 결과가 존재하지 않습니다.");
+        Swal.fire({ text: "검색 결과가 존재하지 않습니다.", icon: "warning" });
       } else if (status === window.kakao.maps.services.Status.ERROR) {
-        alert("검색 결과 중 오류가 발생했습니다.");
+        Swal.fire({ text: "검색 중 오류가 발생했습니다.", icon: "error" });
       }
     },
 

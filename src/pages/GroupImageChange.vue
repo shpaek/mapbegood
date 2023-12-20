@@ -19,6 +19,7 @@
 </template>
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   name: "GroupImageChange",
   props:{
@@ -96,7 +97,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          alert("그룹 이미지를 변경하지 못했습니다");
+          Swal.fire({ text: "그룹 이미지를 변경하지 못했습니다", icon: "warning" });
         });
     },
   },

@@ -46,27 +46,27 @@
         <span class="createdAt">{{ post.createdAt }}</span>
       </div>
       <div v-if="emailMatchesCurrentUser(post.memberEmail.email)">
-      <router-link
-        :to="{
-          name: 'ourfeedupdate',
-          params: {
-            groupId: post.groupId,
-            ourplaceId: post.ourplaceId,
-            memberNickname: post.memberNickname,
-          },
-        }"
-      >
-        <button>Update</button>
-      </router-link>
-      <button @click="deleteFeed(post.ourplaceId)">Delete</button>
-    </div>
+        <router-link
+          :to="{
+            name: 'ourfeedupdate',
+            params: {
+              groupId: post.groupId,
+              ourplaceId: post.ourplaceId,
+              memberNickname: post.memberNickname,
+            },
+          }"
+        >
+          <button>Update</button>
+        </router-link>
+        <button @click="deleteFeed(post.ourplaceId)">Delete</button>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-
+import Swal from "sweetalert2";
 export default {
   name: "ourfeed",
   data() {
@@ -74,10 +74,10 @@ export default {
       groupId: null,
       email: null,
       ourplaceId: null,
-      feedList: [], // List to store fetched feeds
+      feedList: [],
       currentIndex: 0,
-      memberList: [], // List to store member emails
-      groupThememapId: null
+      memberList: [],
+      groupThememapId: null,
     };
   },
   computed: {
@@ -94,7 +94,6 @@ export default {
       this.groupId = this.$route.params.groupId;
       this.ourplaceId = this.$route.params.ourplaceId;
       this.groupThememapId = this.$route.params.groupThememapId;
-      // Fetch feeds for the current user
       this.fetchFeedsByEmail(this.email);
     });
   },
@@ -124,7 +123,7 @@ export default {
         await this.fetchFeedsByEmail(member.member.email);
       }
     },
-    // Modify fetchFeedImages to resolve the promise with the images
+
     async fetchFeedImages(ourplaceId, memberEmail) {
       const id = `${ourplaceId}${memberEmail}`;
       console.log("Fetching feed images for:", id);
@@ -145,7 +144,7 @@ export default {
             mimeType: image.mimeType,
           }));
 
-          return images; // Resolve the promise with the images
+          return images;
         } else {
           return null;
         }
@@ -155,7 +154,6 @@ export default {
       }
     },
 
-    // Modify fetchFeedsByEmail to correctly wait for image fetching
     async fetchFeedsByEmail(email) {
       const backURL = this.$root.backURL;
       const url = `${this.backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${email}`;
@@ -184,7 +182,6 @@ export default {
 
     updateFeed(ourplaceId) {
       console.log("Update feed with ID:", ourplaceId);
-      // Implement your update logic
     },
 
     deleteFeed(ourplaceId) {
@@ -192,28 +189,46 @@ export default {
       axios.defaults.headers.common["Authorization"] = accessToken;
       console.log("Delete feed with ID:", ourplaceId);
 
-      if (window.confirm("Are you sure you want to delete this feed?")) {
-        const backURL = this.$root.backURL;
-        axios
-          .delete(
-            `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.email}`
-          )
-          .then((response) => {
-            console.log("Feed deleted successfully:", response.data);
-            // Remove the deleted feed from the feedList
-            this.feedList = this.feedList.filter(
-              (feed) => feed.ourplaceId !== ourplaceId
-            );
+      Swal.fire({
+        title: "삭제",
+        text: "정말로 삭제하시겠습니까?",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        denyButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const backURL = this.$root.backURL;
+          axios
+            .delete(
+              `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.email}`
+            )
+            .then((response) => {
+              console.log("Feed deleted successfully:", response.data);
+              this.feedList = this.feedList.filter(
+                (feed) => feed.ourplaceId !== ourplaceId
+              );
 
-            this.$router.push({
-              name: "detailgroupmap",
-              params: {groupId: this.groupId, groupThememapId: this.groupThememapId }, // Replace with the correct property
+              this.$router.push({
+                name: "detailgroupmap",
+                params: {
+                  groupId: this.groupId,
+                  groupThememapId: this.groupThememapId,
+                },
+              });
+            })
+            .catch((error) => {
+              console.error("Error deleting feed:", error);
             });
-          })
-          .catch((error) => {
-            console.error("Error deleting feed:", error);
+          Swal.fire({
+            title: "피드 삭제",
+            text: "피드가 삭제되었습니다",
+            icon: "success",
           });
-      }
+        }
+      });
     },
 
     async fetchData() {
@@ -247,7 +262,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom Instagram-like styles here */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;

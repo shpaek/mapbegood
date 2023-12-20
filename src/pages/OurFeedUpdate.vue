@@ -45,7 +45,7 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-
+import Swal from "sweetalert2";
 export default {
   name: "OurFeed",
   data() {
@@ -63,13 +63,13 @@ export default {
     currentImage() {
       return this.feedImgs[this.currentIndex] || {};
     },
-    ...mapState(['userInfo'])
+    ...mapState(["userInfo"]),
   },
   mounted() {
     console.log("OurPlaceId:", this.$route.params.ourplaceId);
     this.$store.dispatch("getUserInfo").then(() => {
       console.log("UserInfo:", this.userInfo);
-      this.memberEmail = this.userInfo.email; // Set memberEmail here
+      this.memberEmail = this.userInfo.email;
       this.groupId = this.$route.params.groupId;
       this.ourplaceId = this.$route.params.ourplaceId;
 
@@ -80,7 +80,6 @@ export default {
         .then((response) => {
           console.log("Response Data:", response.data);
           if (response.status === 200) {
-            // 이미지 속성 변경
             this.feedImgs = response.data.map((img) => ({
               url: "data:" + img.mimeType + ";base64," + img.data,
               mimeType: img.mimeType,
@@ -98,21 +97,20 @@ export default {
   },
   methods: {
     submitForm() {
-      this.updateFeed(this.ourplaceId)
-          const { groupId, ourplaceId, memberNickname } = this.$route.params;
-          this.$router.push({
-            name: "ourfeed",
-            params: {
-              ourplaceId
-            },
-          });
+      this.updateFeed(this.ourplaceId);
+      const { groupId, ourplaceId, memberNickname } = this.$route.params;
+      this.$router.push({
+        name: "ourfeed",
+        params: {
+          ourplaceId,
+        },
+      });
     },
     updateFeed(ourplaceId) {
       const backURL = this.$root.backURL;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
-      // Update feed
       const updateData = {
         ourplaceId: {
           id: this.ourplaceId,
@@ -121,15 +119,32 @@ export default {
         content: this.feedContent,
       };
 
-      axios
-        .put(`${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.memberEmail}`, updateData)
-        .then((response) => {
-          console.log("Feed updated successfully:", response.data);
-          this.fetchPosts();
-        })
-        .catch((error) => {
-          console.error("Error updating feed:", error);
-        });
+      Swal.fire({
+        title: "수정",
+        text: "변경사항을 저장하시겠습니까?",
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "저장",
+        denyButtonText: `취소`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .put(
+              `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.memberEmail}`,
+              updateData
+            )
+            .then((response) => {
+              console.log("Feed updated successfully:", response.data);
+              this.fetchPosts();
+            })
+            .catch((error) => {
+              console.error("Error updating feed:", error);
+            });
+          Swal.fire({ text: "피드 수정이 완료되었습니다", icon: "success" });
+        } else if (result.isDenied) {
+          Swal.fire({ text: "취소되었습니다", icon: "warning" });
+        }
+      });
     },
 
     prevImage() {
@@ -147,14 +162,12 @@ export default {
       const accessToken = `Bearer ${localStorage.getItem("mapbegoodToken")}`;
       axios.defaults.headers.common["Authorization"] = accessToken;
       axios
-        .get(`${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.memberEmail}`)
+        .get(
+          `${backURL}/ourfeed/${this.groupId}/${this.ourplaceId}/${this.memberEmail}`
+        )
         .then((response) => {
           const postData = response.data;
-
-          // Set the content to the textarea
           this.feedContent = postData.content;
-
-          // Update the posts array
           this.posts = [postData];
         })
         .catch((error) => {
@@ -166,7 +179,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom Instagram-like styles here */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
@@ -194,8 +206,8 @@ form {
   margin-bottom: 15px;
   position: relative;
   display: flex;
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
+  align-items: center;
+  justify-content: center;
 }
 
 textarea {
@@ -205,7 +217,7 @@ textarea {
   border-radius: 3px;
   resize: vertical;
   min-height: 100px;
-  width: 558.4px; /* Adjust the width based on your padding */
+  width: 558.4px; 
 }
 
 label {
@@ -217,8 +229,8 @@ textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  resize: vertical; /* Allow vertical resizing */
-  min-height: 100px; /* Set the minimum height */
+  resize: vertical;
+  min-height: 100px;
 }
 
 input[type="file"] {

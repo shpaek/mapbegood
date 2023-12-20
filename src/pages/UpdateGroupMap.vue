@@ -84,11 +84,11 @@ export default {
       axios.put(url, updatedGroupThememap)
         .then(response => {
           console.log(response.data);
-          alert("그룹테마맵이 성공적으로 수정되었습니다.");
+          Swal.fire({ text: "그룹테마맵이 성공적으로 수정되었습니다.", icon: "success" });
         })
         .catch(error => {
           console.error(error);
-          alert("그룹테마맵 수정에 실패했습니다.");
+          Swal.fire({ text: "그룹테마맵 수정에 실패했습니다.", icon: "error" });
         });
     },
   },

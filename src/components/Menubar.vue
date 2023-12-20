@@ -339,7 +339,7 @@
 <script>
 import axios from "axios";
 import { mapState, mapActions } from "vuex";
-
+import Swal from "sweetalert2";
 export default {
   name: "Menubar",
   data() {
@@ -387,10 +387,22 @@ export default {
   },
   methods: {
     logoutClickHandler() {
-      if (confirm("로그아웃 하겠습니까?") == true) {
-        this.logOut;
-        location.href = "/";
-      }
+      Swal.fire({
+        title: "로그아웃",
+        text: "로그아웃 하겠습니까?",
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "확인",
+        denyButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.logOut;
+          location.href = "/";
+          Swal.fire({ text: "로그아웃 되었습니다.", icon: "success" });
+        } else if (result.isDenied) {
+          Swal.fire({ text: "취소 되었습니다.", icon: "warning" });
+        }
+      });
     },
 
     isMenuActive(menuPath) {
@@ -431,7 +443,7 @@ export default {
 
     uploadProfileImageHandler(e) {
       if (e != null && e.target.files[0].type.indexOf("image") < 0) {
-        alert("이미지 파일만 업로드 가능합니다.");
+        Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
         return;
       }
       this.modifyProfileImage = e.target.files[0];
@@ -444,7 +456,7 @@ export default {
 
     nickNameDuplicationHandler() {
       if (this.modifyNickName == "") {
-        alert("닉네임을 입력하세요.");
+        Swal.fire({ text: "닉네임을 입력하세요.", icon: "warning" });
         this.$refs.modifyNickName.focus();
         return;
       }
@@ -456,11 +468,11 @@ export default {
       axios
         .get(`${this.backURL}/name`, { params })
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.nickduplication = true;
         })
         .catch((err) => {
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
           this.$refs.modifyNickName.focus();
         });
     },
@@ -468,22 +480,22 @@ export default {
     updateMyInfoHandler() {
       if (this.modifyPassword != null || this.modifyPassword1 != null) {
         if (this.rules.password(this.modifyPassword) != true) {
-          alert("비밀번호 규칙에 맞지 않습니다.");
+          Swal.fire({ text: "비밀번호 규칙에 맞지 않습니다.", icon: "warning" });
           this.$refs.modifyPassword.select();
           return;
         } else if (this.modifyPassword != this.modifyPassword1) {
-          alert("비밀번호가 다릅니다.");
+          Swal.fire({ text: "비밀번호가 다릅니다.", icon: "warning" });
           this.$refs.modifyPassword.select();
           return;
         }
       }
       if (this.modifyNickName != null && this.nickduplication != true) {
-        alert("닉네임 중복확인이 필요합니다.");
+        Swal.fire({ text: "닉네임 중복확인이 필요합니다.", icon: "warning" });
         this.$refs.modifyNickName.focus();
         return;
       } else if (this.modifyProfileImage != null) {
         if (this.modifyProfileImage.type.indexOf("image") < 0) {
-          alert("이미지 파일만 업로드 가능합니다.");
+          Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
           return;
         }
       }
@@ -513,13 +525,13 @@ export default {
       axios
         .put(`${this.backURL}/update-myinfo`, formData, config)
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.closeModifyMyInfoHandler();
           location.reload();
         })
         .catch((err) => {
           console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
           this.closeModifyMyInfoHandler();
         });
     },

@@ -24,13 +24,13 @@
             </div>
             <img v-else src="/images/photo.png" alt="photo" class="photo" />
             <input
-  type="file"
-  ref="fileInput"
-  @change="handleFileChange"
-  accept=".jpg, .jpeg, .png"
-  multiple
-  style="display: none"
-/>
+              type="file"
+              ref="fileInput"
+              @change="handleFileChange"
+              accept=".jpg, .jpeg, .png"
+              multiple
+              style="display: none"
+            />
           </div>
         </div>
         <div
@@ -67,6 +67,7 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
 export default {
   name: "ourfeedCreate",
   computed: {
@@ -117,11 +118,21 @@ export default {
         .then((response) => {
           console.log("Feed created successfully:", response.data);
 
-          // Upload images if selected
           if (this.feedImgs.length > 0) {
             this.uploadImages(this.ourplaceId);
           }
-          this.$router.push({ name: 'ourfeed', params: { ourplaceId: ourplaceId } });
+          Swal.fire({
+            text: "피드 생성이 완료되었습니다",
+            icon: "success",
+            confirmButtonText: "확인",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$router.push({
+                name: "ourfeed",
+                params: { ourplaceId: ourplaceId },
+              });
+            }
+          });
         })
         .catch((error) => {
           console.error("Error creating feed:", error);
@@ -131,12 +142,11 @@ export default {
     uploadImages(ourplaceId) {
       const backURL = this.$root.backURL;
       const memberEmail = this.userInfo.email;
-      // Upload images
       const formData = new FormData();
       formData.append("id", this.ourplaceId + memberEmail);
-      formData.append("opt", "ourfeed"); // Add your image option here
+      formData.append("opt", "ourfeed");
       this.feedImgs.forEach((file, index) => {
-        formData.append("files", file.file); // Use "file" instead of "files"
+        formData.append("files", file.file);
       });
 
       axios
@@ -171,7 +181,7 @@ export default {
         const base64Data = await this.readFileAsync(files[i]);
         this.feedImgs.push({ file: files[i], base64Data });
       }
-      this.currentIndex = 0; // Reset currentIndex when new images are added
+      this.currentIndex = 0;
     },
 
     readFileAsync(file) {
@@ -187,7 +197,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add your custom Instagram-like styles here */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
@@ -215,8 +224,8 @@ form {
   margin-bottom: 15px;
   position: relative;
   display: flex;
-  align-items: center; /* Center items vertically */
-  justify-content: center; /* Center items horizontally */
+  align-items: center;
+  justify-content: center;
 }
 
 textarea {
@@ -226,7 +235,7 @@ textarea {
   border-radius: 3px;
   resize: vertical;
   min-height: 100px;
-  width: 558.4px; /* Adjust the width based on your padding */
+  width: 558.4px;
 }
 
 label {
@@ -238,8 +247,8 @@ textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  resize: vertical; /* Allow vertical resizing */
-  min-height: 100px; /* Set the minimum height */
+  resize: vertical;
+  min-height: 100px;
 }
 
 input[type="file"] {
@@ -250,7 +259,7 @@ input[type="file"] {
 }
 
 button {
-  background-color: #87ceeb; /* Sky-blue color */
+  background-color: #87ceeb;
   color: white;
   padding: 10px;
   border: none;
@@ -259,7 +268,7 @@ button {
 }
 
 button:hover {
-  background-color: #5f9ea0; /* Darker shade on hover */
+  background-color: #5f9ea0;
 }
 
 .feed {

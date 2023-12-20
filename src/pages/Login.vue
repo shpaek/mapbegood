@@ -1,4 +1,4 @@
-<template>
+<template>r
   <div class="login-container">
     <div class="login-logo">
       <a href="/">
@@ -375,7 +375,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import axios from "axios";
-
+import Swal from "sweetalert2";
 export default {
   name: "login",
   data() {
@@ -501,15 +501,19 @@ export default {
 
     loginFormSubmitHandler() {
       if (this.email == "") {
-        alert("이메일을 입력하세요.");
+        Swal.fire({
+          text: "이메일을 입력하세요.",
+        icon: "warning",
+        customClass: {container: 'swal-container'},
+      });
         this.$refs.email.focus();
         return;
       } else if (this.rules.email(this.email) != true) {
-        alert("올바른 이메일 형식이 아닙니다.");
+        Swal.fire({ text: "올바른 이메일 형식이 아닙니다.", icon: "warning" });
         this.$refs.email.focus();
         return;
       } else if (this.password == "") {
-        alert("비밀번호를 입력하세요.");
+        Swal.fire({ text: "비밀번호를 입력하세요.", icon: "warning" });
         this.$refs.password.focus();
         return;
       }
@@ -531,40 +535,40 @@ export default {
 
     signupFormSubmitHandler() {
       if (this.signupEmail == "") {
-        alert("이메일을 입력하세요.");
+        Swal.fire({ text: "이메일을 입력하세요.", icon: "warning" });
         this.$refs.signupEmail.focus();
         return;
       } else if (this.rules.email(this.signupEmail) != true) {
-        alert("올바른 이메일 형식이 아닙니다.");
+        Swal.fire({ text: "올바른 이메일 형식이 아닙니다.", icon: "warning" });
         this.$refs.signupEmail.focus();
         return;
       } else if (this.signupAuthEmail != true) {
-        alert("이메일 인증이 필요합니다.");
+        Swal.fire({ text: "이메일 인증이 필요합니다.", icon: "warning" });
         this.$refs.signupEmail.focus();
         return;
       } else if (this.signupPassword == "") {
-        alert("비밀번호를 입력하세요.");
+        Swal.fire({ text: "비밀번호를 입력하세요.", icon: "warning" });
         this.$refs.signupPassword.focus();
         return;
       } else if (this.rules.password(this.signupPassword) != true) {
-        alert("비밀번호 규칙에 맞지 않습니다.");
+        Swal.fire({ text: "비밀번호 규칙에 맞지 않습니다.", icon: "warning" });
         this.$refs.signupPassword.select();
         return;
       } else if (this.signupPassword != this.signupPassword1) {
-        alert("비밀번호가 다릅니다.");
+        Swal.fire({ text: "비밀번호가 다릅니다.", icon: "warning" });
         this.$refs.signupPassword.select();
         return;
       } else if (this.signupNickName == "") {
-        alert("닉네임을 입력하세요.");
+        Swal.fire({ text: "닉네임을 입력하세요.", icon: "warning" });
         this.$refs.signupNickName.focus();
         return;
       } else if (this.nickduplication != true) {
-        alert("닉네임 중복확인이 필요합니다.");
+        Swal.fire({ text: "닉네임 중복확인이 필요합니다.", icon: "warning" });
         this.$refs.signupNickName.focus();
         return;
       } else if (this.signupProfileImage != "") {
         if (this.signupProfileImage.type.indexOf("image") < 0) {
-          alert("이미지 파일만 업로드 가능합니다.");
+          Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
           return;
         }
       }
@@ -593,14 +597,14 @@ export default {
         .post(`${this.backURL}/signup`, formData, config)
         .then((res) => {
           // console.log(res);
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.email = this.signupEmail;
           this.initSignUpHandler();
           this.$refs.password.focus();
         })
         .catch((err) => {
           // console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
           this.$refs.signupEmail.focus();
         });
     },
@@ -616,7 +620,7 @@ export default {
 
     nickNameDuplicationHandler() {
       if (this.signupNickName == "") {
-        alert("닉네임을 입력하세요.");
+        Swal.fire({ text: "닉네임을 입력하세요.", icon: "warning" });
         this.$refs.signupNickName.focus();
         return;
       }
@@ -628,11 +632,11 @@ export default {
       axios
         .get(`${this.backURL}/name`, { params })
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.nickduplication = true;
         })
         .catch((err) => {
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });;
           this.$refs.signupNickName.focus();
         });
     },
@@ -643,7 +647,7 @@ export default {
 
     uploadProfileImageHandler(e) {
       if (e != null && e.target.files[0].type.indexOf("image") < 0) {
-        alert("이미지 파일만 업로드 가능합니다.");
+        Swal.fire({ text: "이미지 파일만 업로드 가능합니다.", icon: "warning" });
         return;
       }
       this.signupProfileImage = e.target.files[0];
@@ -655,11 +659,12 @@ export default {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
       if (this.signupEmail == "") {
-        alert("이메일을 입력해주세요.");
+        Swal.fire({ text: "이메일을 입력해주세요.", icon: "warning" });
         this.$refs.signupEmail.focus();
         return;
       } else if (!pattern.test(this.signupEmail)) {
-        alert("이메일을 확인해 주세요.");
+        Swal.fire({ text: "이메일을 확인해 주세요.", icon: "warning",
+  });
         this.$refs.signupEmail.focus();
         return;
       }
@@ -672,7 +677,7 @@ export default {
       axios
         .post(`${this.backURL}/auth-email`, sendEmail)
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.showSignUpAuthCode = true;
           this.showSignUpAuthCodeBt = true;
           this.showSignUpAuthEmailBtDisable = false;
@@ -681,13 +686,13 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
         });
     },
 
     sendSignUpAuthCodeHandle() {
       if (this.signupAuthCode == "") {
-        alert("인증번호를 입력해 주세요.");
+        Swal.fire({ text: "인증번호를 입력해 주세요.", icon: "warning" });
         this.$refs.signupAuthCode.focus();
         return;
       }
@@ -700,7 +705,7 @@ export default {
       axios
         .post(`${this.backURL}/signup-auth-code`, sendCode)
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.signupAuthEmail = true;
           this.showSignUpAuthEmailBt = false;
           this.showSignUpAuthCode = false;
@@ -709,7 +714,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
         });
     },
 
@@ -744,11 +749,11 @@ export default {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
       if (this.authEmail == "") {
-        alert("가입한 이메일을 입력해주세요.");
+        Swal.fire({ text: "가입한 이메일을 입력해주세요.", icon: "warning" });
         this.$refs.authEmail.focus();
         return;
       } else if (!pattern.test(this.authEmail)) {
-        alert("이메일을 확인해 주세요.");
+        Swal.fire({ text: "이메일을 확인해 주세요.", icon: "warning" });
         this.$refs.authEmail.focus();
         return;
       }
@@ -761,7 +766,7 @@ export default {
       axios
         .post(`${this.backURL}/auth-email`, sendEmail)
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.showAuthCode = true;
           this.showAuthCodeBt = true;
           this.showAuthEmailBtDisable = false;
@@ -770,13 +775,13 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
         });
     },
 
     sendAuthCodeHandle() {
       if (this.authCode == "") {
-        alert("인증번호를 입력해 주세요.");
+        Swal.fire({ text: "인증번호를 입력해 주세요.", icon: "warning" });
         this.$refs.authCode.focus();
         return;
       }
@@ -789,7 +794,7 @@ export default {
       axios
         .post(`${this.backURL}/auth-code`, sendCode)
         .then((res) => {
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.tmpAccessToken = res.headers.authorization;
 
           this.showAuthEmail = false;
@@ -802,21 +807,21 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });;
         });
     },
 
     sendChangePassword() {
       if (this.changePassword == "") {
-        alert("변경할 비밀번호를 입력하세요.");
+        Swal.fire({ text: "변경할 비밀번호를 입력하세요.", icon: "warning" });
         this.$refs.changePassword.focus();
         return;
       } else if (this.rules.password(this.changePassword) != true) {
-        alert("비밀번호 규칙에 맞지 않습니다.");
+        Swal.fire({ text: "비밀번호 규칙에 맞지 않습니다.", icon: "warning" });
         this.$refs.changePassword.select();
         return;
       } else if (this.changePassword != this.changePassword1) {
-        alert("비밀번호가 다릅니다.");
+        Swal.fire({ text: "비밀번호가 다릅니다.", icon: "warning" });
         this.$refs.changePassword.select();
         return;
       }
@@ -835,12 +840,12 @@ export default {
         .put(`${this.backURL}/pwd`, data, config)
         .then((res) => {
           console.log(res);
-          alert(res.data.message);
+          Swal.fire({ text: res.data.message, icon: "success" });
           this.email = this.authEmail;
         })
         .catch((err) => {
           console.log(err);
-          alert(err.response.data.message);
+          Swal.fire({ text: err.response.data.message, icon: "error" });
         });
       this.initFindPwdHandler();
     },
