@@ -453,42 +453,35 @@ export default {
       axios.defaults.headers.common["Authorization"] = accessToken;
 
       const url = `${this.backURL}/mymap/delete/${themeMapId}`;
-      axios
-        .delete(url)
-        .then((response) => {
-          console.log(response.data);
 
+      Swal.fire({
+        title: "삭제",
+        text: "정말로 삭제하시겠습니까?",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        denyButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const backURL = this.$root.backURL;
+          axios
+            .delete(url)
+            .then((response) => {
+              console.log(response.data);
+              this.loadMymapList();
+            })
+            .catch((error) => {
+              console.error(error);
+              Swal.fire({ text: "삭제하지 못했습니다", icon: "error" });
+            });
           Swal.fire({
-            title: "삭제",
-            text: "정말로 삭제하시겠습니까?",
-            icon: "warning",
-            showDenyButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "삭제",
-            denyButtonText: "취소",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              const backURL = this.$root.backURL;
-              axios
-                .delete(`${backURL}/myfeed/${this.myplaceId}`)
-                .then((response) => {
-                  this.loadMymapList();
-                })
-                .catch((error) => {
-                  console.error("Error deleting feed:", error);
-                });
-              Swal.fire({
-                text: "삭제되었습니다",
-                icon: "success",
-              });
-            }
+            text: "삭제되었습니다",
+            icon: "success",
           });
-        })
-        .catch((error) => {
-          console.error(error);
-          Swal.fire({ text: "삭제하지 못했습니다", icon: "error" });
-        });
+        }
+      });
     },
 
     createThemeMap() {
@@ -593,7 +586,8 @@ export default {
             text: "테마맵이 성공적으로 수정되었습니다.",
             icon: "success",
           });
-          this.cancleThemeMapEdit(themeMapDto);
+          this.cancleThemeMapEdit();
+          this.loadMymapList();
         })
         .catch((error) => {
           console.error(error);

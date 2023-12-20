@@ -61,6 +61,9 @@
         />
       </div>
     </div>
+    <span class="placeName">{{ placeName }}</span>
+    <span class="address">{{ address }}</span>
+    <span class="address">{{ visitedAt }}</span>
   </div>
 </template>
 
@@ -86,7 +89,15 @@ export default {
       posts: [],
       image: null,
       imageList: [],
+      placeName: null,
+      address: null,
+      visitedAt: null,
     };
+  },
+  mounted() {
+    this.placeName = this.$route.query.placeName;
+    this.address = this.$route.query.address;
+    this.visitedAt = this.$route.query.visitedAt;
   },
   created() {
     this.ourplaceId = this.$route.params.ourplaceId;
@@ -122,7 +133,7 @@ export default {
             this.uploadImages(this.ourplaceId);
           }
           Swal.fire({
-            text: "피드 생성이 완료되었습니다",
+            text: "피드가 생성되었습니다.",
             icon: "success",
             confirmButtonText: "확인",
           }).then((result) => {
@@ -178,6 +189,15 @@ export default {
       this.feedImgs = [];
       console.log("Selected Files:", files);
       for (let i = 0; i < maxFiles; i++) {
+        const file = files[i];
+        if (!this.isValidFileExtension(file)) {
+          Swal.fire({
+            title: "잘못된 파일형식",
+            text: "JPG, PNG 파일 형식만 선택 가능합니다.",
+            icon: "error",
+          });
+          return;
+        }
         const base64Data = await this.readFileAsync(files[i]);
         this.feedImgs.push({ file: files[i], base64Data });
       }
@@ -191,6 +211,11 @@ export default {
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    },
+    isValidFileExtension(file) {
+      const allowedExtensions = [".jpg", ".jpeg", ".png"];
+      const fileName = file.name.toLowerCase();
+      return allowedExtensions.some((ext) => fileName.endsWith(ext));
     },
   },
 };

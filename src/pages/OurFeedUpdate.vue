@@ -57,6 +57,12 @@ export default {
       feedContent: "",
       posts: [],
       memberEmail: "",
+      placeName: null,
+      address: null,
+      visitedAt: null,
+      placeName: "",
+      address: "",
+      visitedAt: "",
     };
   },
   computed: {
@@ -66,6 +72,9 @@ export default {
     ...mapState(["userInfo"]),
   },
   mounted() {
+    const placeName = this.$route.query.placeName;
+    const address = this.$route.query.address;
+    const visitedAt = this.$route.query.visitedAt;
     console.log("OurPlaceId:", this.$route.params.ourplaceId);
     this.$store.dispatch("getUserInfo").then(() => {
       console.log("UserInfo:", this.userInfo);
@@ -93,6 +102,9 @@ export default {
         .catch((error) => {
           console.error("Error fetching images:", error);
         });
+        this.placeName = placeName;
+      this.address = address;
+      this.visitedAt = visitedAt;
     });
   },
   methods: {
@@ -120,7 +132,6 @@ export default {
       };
 
       Swal.fire({
-        title: "수정",
         text: "변경사항을 저장하시겠습니까?",
         icon: "question",
         showDenyButton: true,
@@ -140,9 +151,9 @@ export default {
             .catch((error) => {
               console.error("Error updating feed:", error);
             });
-          Swal.fire({ text: "피드 수정이 완료되었습니다", icon: "success" });
+          Swal.fire({ text: "피드가 수정되었습니다.", icon: "success" });
         } else if (result.isDenied) {
-          Swal.fire({ text: "취소되었습니다", icon: "warning" });
+          Swal.fire({ text: "취소되었습니다.", icon: "warning" });
         }
       });
     },
