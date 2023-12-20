@@ -125,6 +125,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
+
 export default {
   name: "AddBookmark",
   props: {
@@ -208,7 +209,6 @@ export default {
               location.href = "/login";
             }
           });
-          
         });
     },
 

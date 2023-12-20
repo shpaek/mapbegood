@@ -68,24 +68,20 @@ export default {
       isDupchkOk: false,
     };
   },
-    methods: {
-      groupcreateFormSubmitHandler(e) {
-        //그룹 생성 버튼 클릭 시
-        //axios로 백 url요청
-        const url = `${this.backURL}/group`; //`${this.backURL}/group`
-        const fd = new FormData(e.target);
+  methods: {
+    groupcreateFormSubmitHandler(e) {
+      //그룹 생성 버튼 클릭 시
+      //axios로 백 url요청
+      const url = `${this.backURL}/group`; //`${this.backURL}/group`
+      const fd = new FormData(e.target);
 
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-        axios.defaults.headers.common["Authorization"] = accessToken;
+      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+      axios.defaults.headers.common["Authorization"] = accessToken;
 
-        axios
-          .post(url, fd, {
-            contentType: false,
-            processData: false,
-            withCredentials: true,
-          })
-          .then((response) => {
-            Swal.fire({
+      axios
+        .get(url)
+        .then((response) => {
+          Swal.fire({
             text: "그룹이 생성되었습니다",
             icon: "success",
             confirmButtonText: "확인",
@@ -93,66 +89,66 @@ export default {
             if (result.isConfirmed) {
               location.href = "/groups";
             }
-          });          
+          });
         })
         .catch((error) => {
           Swal.fire({
             text: "그룹 추가에 실패했습니다",
             icon: "error",
             confirmButtonText: "확인",
-          })
+          });
           // alert(error.message);
         });
-      },
-      imageChangeHandler(e) {
-        const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
-        this.image = url; //$('form.signup img.profile').attr('src', url)
-
-        const fileInput = e.target;
-        const file = fileInput.files[0];
-
-        // 이미지 파일만 허용
-        const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-        if (!allowedTypes.includes(file.type)) {
-          this.fileErrorMsg = "이미지 파일만 허용됩니다.";
-          fileInput.value = ""; // 파일 선택 초기화
-          return;
-        }
-
-        // 파일 크기 제한 (2MB)
-        const maxSize = 2 * 1024 * 1024; // 2MB
-        if (file.size > maxSize) {
-          this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
-          fileInput.value = ""; // 파일 선택 초기화
-          return;
-        }
-
-        // 유효성 검사를 통과한 경우
-        this.fileErrorMsg = "";
-      },
-      b2ClickHandler() {
-        //생성 취소 버튼 클릭 시
-        console.log("b2ClickHandler");
-        this.$emit("close-create");
-      },
-      b3ClickHandler() {
-        //중복확인 버튼 클릭 시
-        if (this.name.trim().length > 0) {
-          const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`;
-          axios
-            .get(url)
-            .then((response) => {
-              Swal.fire({ text: "사용가능한 그룹명입니다", icon: "success" });
-              this.isDupchkOk = true;
-            })
-            .catch((error) => {
-              Swal.fire({ text: "사용할 수 없는 그룹명입니다", icon: "warning" });
-            });
-        } else {
-          Swal.fire({ text: "그룹명을 반드시 입력해주세요", icon: "warning" });
-        }
-      },
     },
+    imageChangeHandler(e) {
+      const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
+      this.image = url; //$('form.signup img.profile').attr('src', url)
+
+      const fileInput = e.target;
+      const file = fileInput.files[0];
+
+      // 이미지 파일만 허용
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+      if (!allowedTypes.includes(file.type)) {
+        this.fileErrorMsg = "이미지 파일만 허용됩니다.";
+        fileInput.value = ""; // 파일 선택 초기화
+        return;
+      }
+
+      // 파일 크기 제한 (2MB)
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        this.fileError = "파일 크기는 2MB를 초과할 수 없습니다.";
+        fileInput.value = ""; // 파일 선택 초기화
+        return;
+      }
+
+      // 유효성 검사를 통과한 경우
+      this.fileErrorMsg = "";
+    },
+    b2ClickHandler() {
+      //생성 취소 버튼 클릭 시
+      console.log("b2ClickHandler");
+      this.$emit("close-create");
+    },
+    b3ClickHandler() {
+      //중복확인 버튼 클릭 시
+      if (this.name.trim().length > 0) {
+        const url = `${this.backURL}/group/${this.groupId}?name=${this.name}`;
+        axios
+          .get(url)
+          .then((response) => {
+            Swal.fire({ text: "사용가능한 그룹명입니다", icon: "success" });
+            this.isDupchkOk = true;
+          })
+          .catch((error) => {
+            Swal.fire({ text: "사용할 수 없는 그룹명입니다", icon: "warning" });
+          });
+      } else {
+        Swal.fire({ text: "그룹명을 반드시 입력해주세요", icon: "warning" });
+      }
+    },
+  },
 };
 </script>
 <style scoped>

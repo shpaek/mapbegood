@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default createStore({
   state: {
@@ -17,7 +18,7 @@ export default createStore({
     loginSuccess({ state }, payload) {
       this.state.userInfo = payload;
       this.state.isLogin = true;
-      console.log("#getLoginInfo Success");
+      // console.log("#getLoginInfo Success");
     },
     logOut({ state }) {
       this.state.userInfo = "";
@@ -40,21 +41,26 @@ export default createStore({
 
           this.dispatch("getUserInfo");
           this.state.loading = false;
-          alert("로그인 성공");
+          Swal.fire({
+            text: "로그인 성공",
+            icon: "success",
+          });
           location.href = "/";
         })
         .catch(() => {
           this.state.loading = false;
-          alert("이메일과 비밀번호를 확인해 주세요.");
+          Swal.fire({
+            text: "이메일과 비밀번호를 확인해 주세요.",
+            icon: "error",
+          });
         });
     },
     logOut({ commit }) {
       this.commit("logOut");
-      alert("로그아웃 되었습니다.");
     },
     async getUserInfo({ commit, dispatch }) {
       let isToken = localStorage.getItem("mapbegoodToken");
-      console.log("getUserInfo 호출");
+      // console.log("getUserInfo 호출");
       if (isToken != null) {
         let config = {
           headers: {
