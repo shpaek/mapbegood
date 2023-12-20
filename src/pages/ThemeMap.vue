@@ -174,7 +174,7 @@
                 <button
                   data-v-fce5df64=""
                   class="btn btn-light"
-                  @click="cancleThemeMapAdd"
+                  @click="cancelThemeMapAdd"
                 >
                   취소
                 </button>
@@ -393,13 +393,13 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <!-- 테마맵 수정 버튼 -->
-                        <button @click="createThemeMap" class="btn btn-dark">
+                        <button @click="updateThemeMap(thememap.themeMapDto)" class="btn btn-dark">
                           수정
                         </button>
                         <button
                           data-v-fce5df64=""
                           class="btn btn-light"
-                          @click="cancleThemeMapEdit(thememap.themeMapDto)"
+                          @click="cancelThemeMapEdit(thememap.themeMapDto)"
                         >
                           취소
                         </button>
@@ -453,7 +453,7 @@ export default {
       themeMapId: null,
       themeMapAddDialog: true,
       themeName: "",
-      selectedColor: "",
+      // selectedColor: "",
       themeMemo: "",
       isThemePublic: false,
       selectedColor: "",
@@ -580,7 +580,9 @@ export default {
     createThemeMap() {
       if (this.themeName == "") {
         Swal.fire({ text: "테마지도 이름을 입력해주세요.", icon: "warning" });
-        this.$refs.themeName.focus();
+        this.$nextTick(() => {
+      this.$refs.themeName.focus();
+    });
         return;
       }
       if (this.selectedColor == "") {
@@ -614,7 +616,7 @@ export default {
           });
           // Thememap.vue로 자동으로 이동
           this.themeMapAddDialog = false;
-          this.cancleThemeMapAdd();
+          // this.cancelThemeMapAdd();
           this.loadMymapList();
         })
         .catch((error) => {
@@ -622,8 +624,9 @@ export default {
         });
     },
 
-    cancleThemeMapAdd() {
+    cancelThemeMapAdd() {
       this.themeMapAddDialog = false;
+      this.cancelCreateThemeMap();
     },
 
     loadThemeMapDetails(themeMapId) {
@@ -656,7 +659,7 @@ export default {
       const updatedThemeMapDto = {
         id: themeMapDto.id,
         name: themeMapDto.name,
-        color: themeMapDto.color,
+        color: this.selectedColor,
         memo: themeMapDto.memo,
         show: themeMapDto.show,
         mainmap: themeMapDto.mainmap,
@@ -664,7 +667,7 @@ export default {
 
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
-
+      console.log(updatedThemeMapDto);
       axios
         .put(url, updatedThemeMapDto)
         .then((response) => {
@@ -673,17 +676,17 @@ export default {
             text: "테마맵이 성공적으로 수정되었습니다.",
             icon: "success",
           });
-          this.cancleThemeMapEdit(themeMapDto);
+          this.cancelThemeMapEdit(themeMapDto);
           this.loadMymapList();
         })
         .catch((error) => {
           console.error(error);
           Swal.fire({ text: "테마맵 수정에 실패했습니다.", icon: "error" });
-          this.cancleThemeMapEdit(themeMapDto);
+          this.cancelThemeMapEdit(themeMapDto);
         });
     },
 
-    cancleThemeMapEdit(themeMapDto) {
+    cancelThemeMapEdit(themeMapDto) {
       themeMapDto.themeMapEditDialog = false;
     },
 
@@ -729,15 +732,17 @@ export default {
 
     cancelCreateThemeMap() {
       this.themeMapAddDialog = false;
-      this.themeName = "";
-      this.selectedColor = "";
-      // ... 다른 폼 입력 초기화 ...
+  this.themeName = "";
+  this.selectedColor = "";
+  this.themeMemo = "";
+  this.isThemePublic = false;
+  this.isMainMap = false;
     },
 
-    cancelThemeMapEdit() {
-      // 취소 버튼 클릭 시 다이얼로그를 닫습니다.
-      this.themeMapEditDialog = false;
-    },
+    // cancelThemeMapEdit() {
+    //   // 취소 버튼 클릭 시 다이얼로그를 닫습니다.
+    //   this.themeMapEditDialog = false;
+    // },
   },
 };
 </script>
