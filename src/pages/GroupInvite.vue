@@ -11,7 +11,7 @@
                             <span class="name">{{group.name}}</span>
                         </li>
                         <li>
-                            <span class="nickname">{{group.memberGroupList[0].member.nickname}}</span>
+                            <span class="nickname">{{ group.memberGroupList && group.memberGroupList.length > 0 ? group.memberGroupList[0].member.nickname : '' }}</span>
                         </li>
                     </ul>
                     <div class="btn-container">

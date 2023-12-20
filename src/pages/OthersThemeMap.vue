@@ -115,6 +115,8 @@ export default {
       searchTerm: "",
       themeMaps: [],
       recommendPageNum: 1,
+            themeMapDetail: null, // 세부 테마 맵 정보를 저장할 새로운 속성
+
     };
   },
   methods: {
@@ -163,7 +165,7 @@ export default {
         console.log('내 장소 목록:', myPlaces);
 
         this.themeMapDetail = {
-          themeMap,
+          themeMap: response.data,
           myPlaces,
         };
 
@@ -218,25 +220,26 @@ export default {
       }
     },
 
-    async detailThememap(themeMapId) {
-      try {
-        // 클릭한 테마맵ID와 연결된 장소에 대한 자세한 정보를 가져오기
-        const url = `${this.backURL}/maplist/details/${themeMapId}`;
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-        axios.defaults.headers.common["Authorization"] = accessToken;
+    // async detailThememap(themeMapId) {
+    //   try {
+    //     // 클릭한 테마맵ID와 연결된 장소에 대한 자세한 정보를 가져오기
+    //     const url = `${this.backURL}/maplist/details/${themeMapId}`;
+    //     const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+    //     axios.defaults.headers.common["Authorization"] = accessToken;
 
-        const response = await axios.get(url);
-        const detailedPlaces = response.data; // API가 자세한 장소 정보를 반환한다고 가정합니다
+    //     const response = await axios.get(url);
+    //     const detailedPlaces = response.data; // API가 자세한 장소 정보를 반환한다고 가정합니다
 
-        // 자세한 장소 정보를 콘솔에 기록하기
-        console.log('자세한 장소 정보:', detailedPlaces);
+    //     // 자세한 장소 정보를 콘솔에 기록하기
+    //     console.log('자세한 장소 정보:', detailedPlaces);
 
-        // 여기에서 detailedPlaces 데이터를 활용하여 상세 정보를 표시하도록 구현할 수 있습니다.
-        // 예를 들어, 모달 창이나 다른 컴포넌트를 사용하여 상세 정보를 표시할 수 있습니다.
-      } catch (error) {
-        console.error("자세한 정보를 가져오는 중 오류 발생:", error);
-      }
-    },
+    //     // 여기에서 detailedPlaces 데이터를 활용하여 상세 정보를 표시하도록 구현할 수 있습니다.
+    //     // 예를 들어, 모달 창이나 다른 컴포넌트를 사용하여 상세 정보를 표시할 수 있습니다.
+    //   } catch (error) {
+    //     console.error("자세한 정보를 가져오는 중 오류 발생:", error);
+    //   }
+    // },
+
     // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
       try {
@@ -299,6 +302,7 @@ export default {
   height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
+ 
 }
 
 .m-part {

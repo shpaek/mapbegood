@@ -175,8 +175,8 @@ export default {
 
 .theme-map-details {
   position: fixed;
-  top: 100px;
-  left: 90px;
+  top: 00px;
+  left: 80px;
   z-index: 2;
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
@@ -203,7 +203,7 @@ export default {
   min-height: 65px;
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: 10px;
 }
 
 .myplace-info {
@@ -220,7 +220,7 @@ export default {
   color: #fff;
   border: none;
   padding: 8px 16px;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -230,7 +230,7 @@ export default {
 
 .bookmark-icon {
   margin-right: 5px;
-  width: 30px;
+  width: 20px;
 }
 
 .search {
