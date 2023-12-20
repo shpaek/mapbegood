@@ -5,10 +5,23 @@
         <div class="space"><span>새 그룹 생성</span></div>
         <div class="fill">
           <div class="img">
-            <img class="img" :src="image" alt="그룹이미지" />
+            <a href="#">
+              <img
+                class="img"
+                :src="image"
+                alt="그룹이미지"
+                @click="groupImage"
+              />
+            </a>
             <br />
-            <input type="file" name="image" id="i" required
-              @change="imageChangeHandler"/>
+            <input
+              type="file"
+              name="image"
+              id="i"
+              ref="file"
+              @change="imageChangeHandler"
+              v-show="false"
+            />
             <div class="errorMsg" v-show="fileErrorMsg.length > 1">
               <span>{{ fileErrorMsg }}</span>
             </div>
@@ -16,18 +29,31 @@
           <br />
           <div class="groupName" v-show="fileErrorMsg.length < 1">
             <label for="n">그룹명</label>&nbsp;
-            <input type="text" name="name" id="n" v-model="name" maxlength="20"
-             placeholder="20자 이내로 입력하세요" required/>
-            <button type="button" class="btn btn-outline-dark" id="b3"
-              @click="b3ClickHandler">중복확인</button>
+            <input
+              type="text"
+              name="name"
+              id="n"
+              v-model="name"
+              maxlength="20"
+              placeholder="20자 이내로 입력하세요"
+              required
+            />
+            <button
+              type="button"
+              class="btn btn-outline-dark"
+              id="b3"
+              @click="b3ClickHandler"
+            >
+              중복확인
+            </button>
           </div>
         </div>
         <div class="button-container">
-          <button type="button" class="cancel" id="b2" @click="b2ClickHandler">
-            생성 취소
-          </button>
           <button type="submit" class="create" id="b1" v-show="isDupchkOk">
-            그룹 생성
+            생성
+          </button>
+          <button type="button" class="cancel" id="b2" @click="b2ClickHandler">
+            취소
           </button>
         </div>
       </form>
@@ -37,6 +63,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
+
 export default {
   name: "GroupCreate",
   props: {
@@ -44,7 +71,7 @@ export default {
   },
   data() {
     return {
-      image: "../../../public/images/defaultGroupProfile.jpg",
+      image: "../../public/images/defaultGroupProfile.png",
       name: "",
       fileErrorMsg: "",
       isDupchkOk: false,
@@ -52,35 +79,48 @@ export default {
   },
   methods: {
     groupcreateFormSubmitHandler(e) {
-      //그룹 생성 버튼 클릭 시
-      //axios로 백 url요청
-      const url = `${this.backURL}/group`; //`${this.backURL}/group`
-      const fd = new FormData(e.target);
-
-      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-      axios.defaults.headers.common["Authorization"] = accessToken;
-
-      axios
-        .post(url, fd, { contentType: false, processData: false, withCredentials: true })
-        .then((response) => {
-          Swal.fire({
-            text: "그룹이 생성되었습니다",
-            icon: "success",
-            confirmButtonText: "확인",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              location.href = "/groups";
-            }
-          });
-        })
-        .catch((error) => {
-          Swal.fire({
-            text: "그룹 추가에 실패했습니다",
-            icon: "error",
-            confirmButtonText: "확인",
-          });
-          // alert(error.message);
+      console.log(e.target[0].files[0] == undefined);
+      if (e.target[0].files[0] == undefined) {
+        Swal.fire({
+          text: "그룹 이미지를 첨부하세요.",
+          icon: "error",
+          confirmButtonText: "확인",
         });
+      } else {
+        //그룹 생성 버튼 클릭 시
+        //axios로 백 url요청
+        const url = `${this.backURL}/group`; //`${this.backURL}/group`
+        const fd = new FormData(e.target);
+
+        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+        axios.defaults.headers.common["Authorization"] = accessToken;
+
+        axios
+          .post(url, fd, {
+            contentType: false,
+            processData: false,
+            withCredentials: true,
+          })
+          .then((response) => {
+            Swal.fire({
+              text: "그룹이 생성되었습니다",
+              icon: "success",
+              confirmButtonText: "확인",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                location.href = "/groups";
+              }
+            });
+          })
+          .catch((error) => {
+            Swal.fire({
+              text: "그룹 추가에 실패했습니다",
+              icon: "error",
+              confirmButtonText: "확인",
+            });
+            // alert(error.message);
+          });
+      }
     },
     imageChangeHandler(e) {
       const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
@@ -108,9 +148,10 @@ export default {
       // 유효성 검사를 통과한 경우
       this.fileErrorMsg = "";
     },
-    b2ClickHandler() {
+    b2ClickHandler(e) {
       //생성 취소 버튼 클릭 시
       // console.log("b2ClickHandler");
+      this.name = "";
       this.$emit("close-create");
     },
     b3ClickHandler() {
@@ -129,6 +170,10 @@ export default {
       } else {
         Swal.fire({ text: "그룹명을 반드시 입력해주세요", icon: "warning" });
       }
+    },
+
+    groupImage() {
+      this.$refs.file.click();
     },
   },
 };
@@ -172,7 +217,7 @@ div.space > span {
 div.fill {
   height: 310px;
 }
-div.fill > div.img > img.img {
+div.fill > div.img > a > img.img {
   display: flex;
   margin-left: auto;
   margin-right: auto;
@@ -181,7 +226,7 @@ div.fill > div.img > img.img {
   min-height: 200px;
   min-width: 200px;
 }
-div.fill > div.img > input {
+div.fill > a > div.img > input {
   margin-left: 25px;
 }
 div.fill > div.groupName > label {
@@ -195,6 +240,8 @@ div.fill > div.groupName > button {
 div.button-container {
   display: flex;
   margin-top: 50px;
+  margin-left: 120px;
+  margin-right: 120px;
 }
 div.button-container > button {
   margin-left: auto;
