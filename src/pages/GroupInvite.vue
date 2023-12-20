@@ -1,69 +1,68 @@
 <template lang="">
-    <div v-show="isModalOpen" class="modal" @click="backClickHandler">
-      <v-sheet :elevation="18" :height="500" :width="400" rounded @click.stop>
-        <div class="space">
-          {{ this.$store.state.userInfo.nickName }}님을 초대한 그룹
-        </div>
-        <div class="result">
-          <div class="group" v-for="group in groupList">
-            <img
-              :src="
-                'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
-                group.id +
-                '_groupImage.jpg?' +
-                new Date().getTime()
-              "
-              alt="그룹이미지"
-              class="groupImage"
-            />
-            <ul>
-              <li>
-                <span class="nickname">{{ group.memberGroupList && group.memberGroupList.length > 0 ? group.memberGroupList[0].member.nickname : '' }}</span>              </li>
-              <li>
-                <span class="nickname">{{
-                  group.memberGroupList[0].member.nickname
-                }}</span>
-              </li>
-            </ul>
-            <div class="btn-container">
-              <span class="accept" @click="inviteAcceptClickHandler(group)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  class="bi bi-check-circle"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-                  />
-                  <path
-                    d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"
-                  />
-                </svg>
-              </span>
-              <span class="reject" @click="inviteRejectClickHandler(group)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  class="bi bi-x-circle"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-                  />
-                  <path
-                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-          <div class="empty-msg">
-            <span>{{ emptyMsg }}</span>
+  <div v-show="isModalOpen" class="modal" @click="backClickHandler">
+    <v-sheet :elevation="18" :height="500" :width="400" rounded @click.stop>
+      <div class="space">
+        {{ this.$store.state.userInfo.nickName }}님을 초대한 그룹
+      </div>
+      <div class="result">
+        <div class="group" v-for="group in groupList">
+          <img
+            :src="
+              'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
+              group.id +
+              '_groupImage.jpg?' +
+              new Date().getTime()
+            "
+            alt="그룹이미지"
+            class="groupImage"
+          />
+          <ul>
+            <li>
+              <span class="name">{{ group.name }}</span>
+            </li>
+            <li>
+              <span class="nickname">{{
+                group.memberGroupList && group.memberGroupList.length > 0
+                  ? group.memberGroupList[0].member.nickname
+                  : ""
+              }}</span>
+            </li>
+          </ul>
+          <div class="btn-container">
+            <span class="accept" @click="inviteAcceptClickHandler(group)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                class="bi bi-check-circle"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                />
+                <path
+                  d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"
+                />
+              </svg>
+            </span>
+            <span class="reject" @click="inviteRejectClickHandler(group)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                class="bi bi-x-circle"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                />
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+                />
+              </svg>
+            </span>
           </div>
         </div>
         <div class="empty-msg">
@@ -119,11 +118,13 @@ export default {
     backClickHandler(e) {
       // 모달 영역 외의 영역을 클릭할 때만 모달을 닫기
       if (e.target.classList.contains("modal")) {
-        this.$emit("close-modal"); // 모달 닫기 이벤트를 부모 컴포넌트로 전달
+        // this.$emit("close-modal"); // 모달 닫기 이벤트를 부모 컴포넌트로 전달
+        location.href='/groups';
       }
     },
     b1ClickHandler() {
-      this.$emit("close-modal");
+      // this.$emit("close-modal");
+      location.href='/groups';
     },
     inviteAcceptClickHandler(group) {
       // 그룹초대 수락 시 그룹 추가 후 수락대기 목록에서 제거
