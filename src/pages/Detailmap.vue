@@ -1,11 +1,18 @@
 <template>
   <div>
-    <div id="map"></div>
+    <!-- <div id="map"> -->
+    <!-- <div class="chat-container"> -->
+    <chat />
+    <!-- </div> -->
+    <!-- v-if="$route.name == '/groups'" -->
+    <a href="#"><img src="../../public/images/chat.png" alt="chat" /></a>
   </div>
+  <!-- </div> -->
 </template>
 
 <script>
 import axios from "axios";
+import chat from "../components/Chat.vue";
 
 export default {
   name: "DetailMap",
@@ -18,6 +25,9 @@ export default {
       type: String,
       required: true,
     },
+  },
+  components: {
+    chat,
   },
   data() {
     return {
@@ -115,62 +125,62 @@ export default {
     // },
 
     displayPlacesOnMap() {
-  const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-  // Remove existing markers
-  this.removeMarkers();
+      // Remove existing markers
+      this.removeMarkers();
 
-  // Check if myplaces is an array and not empty
-  if (
-    Array.isArray(this.mymapdetail.myplaces) &&
-    this.mymapdetail.myplaces.length > 0
-  ) {
-    // Display markers on the map
-    const markerPromises = this.mymapdetail.myplaces.map((place) => {
-      return new Promise(async (resolve) => {
-        if (place.placeId && place.placeId.x && place.placeId.y) {
-          const placePosition = new window.kakao.maps.LatLng(
-            place.placeId.y,
-            place.placeId.x
-          );
-          const markerColor = await this.getMarkerColor(place.category);
-          const imageSrc = `/images/location-${markerColor}.svg`
-          const imageSize = new kakao.maps.Size(64, 69);
-          const imageOption = { offset: new kakao.maps.Point(27, 69) };
-          const markerImage = new kakao.maps.MarkerImage(
-            imageSrc,
-            imageSize,
-            imageOption
-          );
+      // Check if myplaces is an array and not empty
+      if (
+        Array.isArray(this.mymapdetail.myplaces) &&
+        this.mymapdetail.myplaces.length > 0
+      ) {
+        // Display markers on the map
+        const markerPromises = this.mymapdetail.myplaces.map((place) => {
+          return new Promise(async (resolve) => {
+            if (place.placeId && place.placeId.x && place.placeId.y) {
+              const placePosition = new window.kakao.maps.LatLng(
+                place.placeId.y,
+                place.placeId.x
+              );
+              const markerColor = await this.getMarkerColor(place.category);
+              const imageSrc = `/images/location-${markerColor}.svg`;
+              const imageSize = new kakao.maps.Size(64, 69);
+              const imageOption = { offset: new kakao.maps.Point(27, 69) };
+              const markerImage = new kakao.maps.MarkerImage(
+                imageSrc,
+                imageSize,
+                imageOption
+              );
 
-          // Creating the marker
-          const marker = new kakao.maps.Marker({
-            position: placePosition,
-            image: markerImage,
+              // Creating the marker
+              const marker = new kakao.maps.Marker({
+                position: placePosition,
+                image: markerImage,
+              });
+
+              marker.setMap(this.map);
+
+              window.kakao.maps.event.addListener(marker, "click", () => {
+                this.centerMap(placePosition);
+              });
+
+              bounds.extend(placePosition);
+              this.markers.push(marker);
+              resolve();
+            }
           });
+        });
 
-          marker.setMap(this.map);
-
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            this.centerMap(placePosition);
-          });
-
-          bounds.extend(placePosition);
-          this.markers.push(marker);
-          resolve();
-        }
-      });
-    });
-
-    // Wait for all markers to be created before setting the map bounds
-    Promise.all(markerPromises).then(() => {
-      // Set the map bounds even if there are no markers
-      this.map.setBounds(bounds);
-    });
-  } else {
-    console.warn("No places to display on the map.");
-  }
-},
+        // Wait for all markers to be created before setting the map bounds
+        Promise.all(markerPromises).then(() => {
+          // Set the map bounds even if there are no markers
+          this.map.setBounds(bounds);
+        });
+      } else {
+        console.warn("No places to display on the map.");
+      }
+    },
 
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
@@ -183,7 +193,7 @@ export default {
 
     getMarkerColor(category) {
       return this.color || "default";
-    }
+    },
   },
 };
 </script>
@@ -195,5 +205,21 @@ export default {
   position: relative;
   overflow: hidden;
   z-index: 1;
+}
+.chat-container {
+  /* position: fixed;
+  z-index: 2; */
+  /* margin-top: 10vh; */
+  /* margin-left: 115vh; */
+  /* margin-left: 50vh; */
+}
+
+img {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  z-index: 2;
+  margin-top: 88vh;
+  margin-left: 140vh;
 }
 </style>
