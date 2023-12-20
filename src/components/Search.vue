@@ -19,7 +19,8 @@
       <ul id="placesList">
         <!-- @click="selectPlace(place, index)" -->
         <li v-for="(place, index) in places" :key="index" @click="centerMap(place)">
-          <img class="markerbg" :src="getMarkerImageUrl(index)" />
+          <!-- <img class="markerbg" :src="getMarkerImageUrl(index)" /> -->
+          <span class="indexNum">{{index+1}}</span>
           <div class="info">
             <h5>{{ place.place_name }}</h5>
             <span v-if="place.road_address_name">{{
@@ -173,22 +174,20 @@ export default {
       this.$emit("center-map", placePosition);
 
       // Emit a custom event with the selected place, index, and marker image URL
-      const markerImageUrl = this.getMarkerImageUrl(index);
+      // const markerImageUrl = this.getMarkerImageUrl(index);
       this.$emit("place-selected", { place, index, markerImageUrl });
     },
 
-    getMarkerImageUrl(markerIndex) {
-      const placeIndex = (markerIndex % 15) + 1;
-      return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
-    },
+    // getMarkerImageUrl(markerIndex) {
+    //   const placeIndex = (markerIndex % 15) + 1;
+    //   return `https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png#${placeIndex}`;
+    // },
 
     placesSearchCB(data, status, pagination) {
-      if (status === window.kakao.maps.services.Status.OK) {
-        this.places = data.map((place, index) => {
-          // console.log(data);
-          const markerImage = this.getMarkerImageUrl(index); // 수정된 부분
-          return { ...place, markerImage };
-        });
+  if (status === window.kakao.maps.services.Status.OK) {
+    this.places = data.map((place, index) => {
+      return { ...place, markerImage: index }; // Set markerImage with index
+    });
 
         // 검색 결과를 Map.vue로 전송
         this.$emit("search-results", this.places);
@@ -730,5 +729,23 @@ export default {
 
 #pagination a:hover {
   background-color: #f2f2f2;
+}
+
+#placesList li .indexNum {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-color: #3498db; /* Choose your preferred color */
+  color: #fff;
+  text-align: center;
+  line-height: 25px;
+  border-radius: 50%;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+/* Add this style to make the number bold */
+#placesList li .indexNum {
+  font-weight: bold;
 }
 </style>

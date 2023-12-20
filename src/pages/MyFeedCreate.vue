@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <div class="placeContainer">
+    <span class="placeName">{{ placeName }}</span>
+    <span class="address">{{ address }}</span>
+    <span class="address">{{ visitedAt }}</span>
+  </div>
     <span class="image-label">{{ feedImgs.length }}/10</span>
 
     <form @submit.prevent="submitForm">
@@ -53,9 +58,6 @@
       </div>
       <button type="submit">Share</button>
     </form>
-    <span class="placeName">{{ placeName }}</span>
-    <span class="address">{{ address }}</span>
-    <span class="address">{{ visitedAt }}</span>
   </div>
 </template>
 
@@ -387,5 +389,20 @@ button:hover {
   margin: 0;
   display: block;
   text-align: center;
+}
+
+.placeContainer {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.placeContainer span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.placeName {
+  font-size: larger;
+  font-weight: bold;
 }
 </style>

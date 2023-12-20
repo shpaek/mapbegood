@@ -8,47 +8,66 @@
 
     <div v-for="(post, index) in feedList" :key="index" class="feedContainer">
       <span class="image-label">{{ post.feedImgs.length }}/10</span>
-
-      <div v-if="post.feedImgs && post.feedImgs.length > 0" class="image-container">
-        <div v-if="post.feedImgs.length > 1" class="arrow-icon-container prev" @click="prevImage" v-show="currentIndex > 0">
-          <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
+      <div
+        v-if="post.feedImgs && post.feedImgs.length > 0"
+        class="image-container"
+      >
+        <div v-if="post.feedImgs.length > 1">
+          <div
+            class="arrow-icon-container prev"
+            @click="prevImage"
+            v-show="currentIndex > 0"
+          >
+            <img src="/images/previous.png" alt="Previous" class="arrow-icon" />
+          </div>
+          <div class="centered-image">
+            <div class="centered-image">
+  <img
+    v-for="(image, imgIndex) in post.feedImgs"
+    :key="imgIndex"
+    :src="image.url"
+    class="feedImg"
+    :alt="'Image ' + (imgIndex + 1)"
+    :style="{ display: imgIndex === currentIndex ? 'block' : 'none' }"
+  />
+</div>
+          </div>
+          <div
+            class="arrow-icon-container next"
+            @click="nextImage"
+            v-show="currentIndex < post.feedImgs.length - 1"
+          >
+            <img src="/images/next.png" alt="Next" class="arrow-icon" />
+          </div>
         </div>
-
-        <div class="centered-image">
+        <div v-else>
           <img
-            v-for="(image, imgIndex) in post.feedImgs"
-            :key="imgIndex"
-            :src="image.url"
+            :src="post.feedImgs[0].url"
             class="feedImg"
-            :alt="'Image ' + (imgIndex + 1)"
-            v-show="imgIndex === currentIndex"
+            :alt="'Image ' + (currentIndex + 1)"
           />
         </div>
-
-        <div class="arrow-icon-container next" @click="nextImage" v-show="currentIndex < post.feedImgs.length - 1">
-          <img src="/images/next.png" alt="Next" class="arrow-icon" />
-        </div>
       </div>
-
-      <div v-else>
-        <img :src="post.feedImgs[0].url" class="feedImg" :alt="'Image ' + (currentIndex + 1)" />
-      </div>
-
       <div class="contentSection">
         <div class="caption">{{ post.content }}</div>
         <span class="nickname">{{ post.memberEmail.nickname }}</span>
         <span class="createdAt">{{ post.createdAt }}</span>
       </div>
-
-      <div v-if="emailMatchesCurrentUser(post.memberEmail.email)" class="button-container">
+      <div v-if="emailMatchesCurrentUser(post.memberEmail.email)">
         <router-link
           :to="{
             name: 'ourfeedupdate',
             params: {
+              
               groupId: post.groupId,
               ourplaceId: post.ourplaceId,
               memberNickname: post.memberNickname,
             },
+            query: {
+                placeName: this.placeName,
+                address: this.address,
+                visitedAt: this.visitedAt,
+              },
           }"
         >
           <button class="update-btn">수정하기</button>
@@ -63,7 +82,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import { mapState } from "vuex";
 export default {
   name: "ourfeed",
   data() {
@@ -86,6 +105,7 @@ export default {
         this.feedList[this.currentIndex]?.feedImgs || [];
       return currentFeedImages[this.currentIndex] || {};
     },
+    ...mapState(["userInfo"]),
   },
   created() {
     this.$store.dispatch("getUserInfo").then(() => {
@@ -249,7 +269,6 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   padding: 20px;
-  text-align: center;
 }
 
 .label {
@@ -368,4 +387,25 @@ body {
   display: block;
   text-align: center;
 }
+
+.arrow-icon-container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.arrow-icon {
+  width: 30px;
+  height: 30px;
+}
+
 </style>
