@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <span class="placeName">{{ placeName }}</span>
+    <span class="address">{{ address }}</span>
+    <span class="visitedAt">{{ visitedAt }}</span>
     <div v-for="(post, index) in feedList" :key="index">
       <span class="image-label">{{ post.feedImgs.length }}/10</span>
       <div
@@ -78,7 +81,15 @@ export default {
       currentIndex: 0,
       memberList: [],
       groupThememapId: null,
+      placeName: null,
+      address: null,
+      visitedAt: null,
     };
+  },
+  mounted() {
+    this.placeName = this.$route.query.placeName;
+    this.address = this.$route.query.address;
+    this.visitedAt = this.$route.query.visitedAt;
   },
   computed: {
     currentImage() {
@@ -130,7 +141,7 @@ export default {
       const backURL = this.$root.backURL;
       try {
         const response = await axios.get(`${this.backURL}/feed/download`, {
-          params: { id, opt: "ourfeed" },
+          params: { id: id, opt: "ourfeed" },
           responseType: "json",
         });
 
@@ -190,7 +201,6 @@ export default {
       console.log("Delete feed with ID:", ourplaceId);
 
       Swal.fire({
-        title: "삭제",
         text: "정말로 삭제하시겠습니까?",
         icon: "warning",
         showDenyButton: true,
@@ -210,7 +220,8 @@ export default {
               this.feedList = this.feedList.filter(
                 (feed) => feed.ourplaceId !== ourplaceId
               );
-
+              // 이미지 삭제 메소드 호출
+              this.deleteFeedImg(ourplaceId, this.email);
               this.$router.push({
                 name: "detailgroupmap",
                 params: {
@@ -223,18 +234,19 @@ export default {
               console.error("Error deleting feed:", error);
             });
           Swal.fire({
-            title: "피드 삭제",
-            text: "피드가 삭제되었습니다",
+            text: "피드가 삭제되었습니다.",
             icon: "success",
           });
         }
       });
     },
-
-    async fetchData() {
-      for (const member of this.memberList) {
-        await this.fetchFeedsByEmail(member.member.email);
-      }
+    deleteFeedImg(ourplaceId, email) {
+      const id = `${ourplaceId}${this.email}`;
+        axios.delete(`${this.backURL}/feed/delete`, {
+          params: { id: id, opt: "ourfeed" }
+      }).catch((error) => {
+      console.error("Failed to delete images:", error);
+    });
     },
 
     prevImage() {
