@@ -85,23 +85,23 @@
     <div class="m-part">
           <Detailmap />
     </div>
-    <div class="modal-container">
-      <!-- 모달창 -->
-      <GroupImageChange
-        :isImageChangeOpen="isImageChangeOpen"
-        :groupId="groupId"
-        @close-modal="closeImageChange"
-      />
-      <GroupNameChange
-        :isNameChangeOpen="isNameChangeOpen"
-        :groupId="groupId"
-        @close-modal="closeNameChange"/>
-        <AddGroupmap
-        v-show="isAddGroupmapOpen"
-        :groupId="groupId"
-        @close-modal="closeAddGroupmap"
-      />
-    </div>
+  </div>
+  <div class="modal-container">
+    <!-- 모달창 -->
+    <GroupImageChange
+      :isImageChangeOpen="isImageChangeOpen"
+      :groupId="groupId"
+      @close-Image="closeImageChange"
+    />
+    <GroupNameChange
+      :isNameChangeOpen="isNameChangeOpen"
+      :groupId="groupId"
+      @close-Name="closeNameChange"/>
+      <AddGroupmap
+      v-show="isAddGroupmapOpen"
+      :groupId="groupId"
+      @close-modal="closeAddGroupmap"
+    />
   </div>
   </template>
   <script>
@@ -250,7 +250,6 @@
     openAddGroupmapModal() {
       this.isAddGroupmapOpen = true;
     },
-
     // 그룹 테마지도 추가 모달 닫기
     closeAddGroupmap() {
       this.isAddGroupmapOpen = false;
