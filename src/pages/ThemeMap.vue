@@ -587,13 +587,13 @@ export default {
             text: "테마맵이 성공적으로 수정되었습니다.",
             icon: "success",
           });
-          this.cancleThemeMapEdit();
+          this.cancleThemeMapEdit(themeMapDto);
           this.loadMymapList();
         })
         .catch((error) => {
           console.error(error);
           Swal.fire({ text: "테마맵 수정에 실패했습니다.", icon: "error" });
-          this.cancleThemeMapEdit();
+          this.cancleThemeMapEdit(themeMapDto);
         });
     },
 
