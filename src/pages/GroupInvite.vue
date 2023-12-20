@@ -118,11 +118,13 @@ export default {
     backClickHandler(e) {
       // 모달 영역 외의 영역을 클릭할 때만 모달을 닫기
       if (e.target.classList.contains("modal")) {
-        this.$emit("close-modal"); // 모달 닫기 이벤트를 부모 컴포넌트로 전달
+        // this.$emit("close-modal"); // 모달 닫기 이벤트를 부모 컴포넌트로 전달
+        location.href='/groups';
       }
     },
     b1ClickHandler() {
-      this.$emit("close-modal");
+      // this.$emit("close-modal");
+      location.href='/groups';
     },
     inviteAcceptClickHandler(group) {
       // 그룹초대 수락 시 그룹 추가 후 수락대기 목록에서 제거
