@@ -18,8 +18,7 @@
             />
             <ul>
               <li>
-                <span class="name">{{ group.name }}</span>
-              </li>
+                <span class="nickname">{{ group.memberGroupList && group.memberGroupList.length > 0 ? group.memberGroupList[0].member.nickname : '' }}</span>              </li>
               <li>
                 <span class="nickname">{{
                   group.memberGroupList[0].member.nickname
