@@ -135,7 +135,7 @@ export default {
           );
           const markerColor = await this.getMarkerColor(place.category);
           const imageSrc = `/images/location-${markerColor}.svg`
-          const imageSize = new kakao.maps.Size(64, 69);
+          const imageSize = new kakao.maps.Size(34, 39);
           const imageOption = { offset: new kakao.maps.Point(27, 69) };
           const markerImage = new kakao.maps.MarkerImage(
             imageSrc,
