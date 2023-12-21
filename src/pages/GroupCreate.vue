@@ -90,7 +90,8 @@ export default {
       } else {
         //그룹 생성 버튼 클릭 시
         //axios로 백 url요청
-        const url = `${this.backURL}/group`; //`${this.backURL}/group`
+        // const url = `${this.backURL}/group`; //`${this.backURL}/group`
+        const url = "http://localhost:8080/group";
         const fd = new FormData(e.target);
 
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
