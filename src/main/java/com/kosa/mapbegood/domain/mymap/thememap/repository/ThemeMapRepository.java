@@ -10,7 +10,7 @@ import com.kosa.mapbegood.domain.mymap.thememap.entity.ThemeMap;
 
 public interface ThemeMapRepository extends JpaRepository<ThemeMap, Long>, ThemeMapCustomRepository {
 
-   public List<ThemeMap> findByMemberEmail(Member m);
+   public List<ThemeMap> findByMemberEmailOrderById(Member m);
 
    //이름 설정과 show가 true라고 설정될때 
    List<ThemeMap>findByNameContainingAndShowTrue(String name); 
