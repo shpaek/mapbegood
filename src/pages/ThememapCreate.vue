@@ -30,7 +30,7 @@
               >
               <select
                 v-model="selectedColor"
-                id="colorSelector"location.href='/groups'";
+                id="colorSelector"location.href='/groups'"
                 name="colorSelector"
                 class="form-select"
                 ref="colorSelector"
@@ -165,8 +165,8 @@ export default {
           });
         })
         .catch((error) => {
-          // console.error(error);
-          // alert(error);
+          console.error(error);
+          alert(error);
           Swal.fire({
             text: "테마지도 생성에 실패했습니다",
             icon: "error",
