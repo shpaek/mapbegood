@@ -22,7 +22,6 @@ app.use(vuetify);
 // using defaults
 app.use(VueSSE);
 // app.config.globalProperties.backURL = "http://localhost:8080";
-app.config.globalProperties.backURL =
-  "http://ec2-15-164-213-115.ap-northeast-2.compute.amazonaws.com:8080";
+app.config.globalProperties.backURL = "https://api.mapbegood.site";
 
 app.mount("#app");
