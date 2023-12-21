@@ -470,7 +470,10 @@ export default {
       axios.defaults.headers.common["Authorization"] = accessToken;
 
       axios
-        .get("https://api.mapbegood.site/mymap/list", { withCredentials: true })
+        .get(
+          "http://ec2-15-164-213-115.ap-northeast-2.compute.amazonaws.com:8080/mymap/list",
+          { withCredentials: true }
+        )
         .then((response) => {
           console.log(response.data);
           const themeMapList = response.data;
