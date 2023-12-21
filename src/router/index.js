@@ -18,6 +18,7 @@ import OurFeed from "../pages/OurFeed.vue";
 import OurFeedCreate from "../pages/OurFeedCreate.vue";
 import OurFeedUpdate from "../pages/OurFeedUpdate.vue";
 import OthersThemeMap from "../pages/OthersThemeMap.vue";
+import OthersThemeMapDetail from "../pages/OthersThemeMapDetail.vue";
 import GroupMember from "../pages/GroupMember.vue";
 import GroupNameChange from "../pages/GroupNameChange.vue";
 import GroupImageChange from "../pages/GroupImageChange.vue";
@@ -44,6 +45,11 @@ const router = createRouter({
       component: GroupDetail,
     },
     { path: "/othersthememap", component: OthersThemeMap },
+    {
+      path: "/othersthememapdetail/:id",
+      name: "othersthememapdetail",
+      component: OthersThemeMapDetail,
+    },
     { path: "/groupthememap", component: GroupThemeMap },
     { name: "thememap", path: "/thememap", component: ThemeMap },
 

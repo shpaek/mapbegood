@@ -231,6 +231,9 @@ div.group-container > div.group > ul {
   margin-bottom: auto;
   margin-left: 10px;
 }
+div.group-container > div.group:hover {
+  background-color: rgba(0,112,192,0.329);
+}
 div.group-container > div.group > ul > li > div.group-info {
   font-size: 18px;
   font-weight: bold;

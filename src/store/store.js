@@ -93,7 +93,8 @@ export default createStore({
 
         try {
           await axios
-            .get("http://localhost:8080/login-info", config, {
+            // .get("http://localhost:8080/login-info", config, {
+            .get("https://api.mapbegood.site/login-info", config, {
               withCredentials: true,
             })
             .then((res) => {
@@ -124,7 +125,8 @@ export default createStore({
         "Bearer " + localStorage.getItem("refresh");
 
       axios
-        .post("http://localhost:8080/refresh", {
+        // .post("http://localhost:8080/refresh", {
+        .post("https://api.mapbegood.site/refresh", {
           withCredentials: true,
         })
         .then((res) => {

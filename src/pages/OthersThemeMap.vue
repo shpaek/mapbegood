@@ -1,103 +1,57 @@
 <template>
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <div>
-      <a href="/othersthememap" style="color: #000; text-decoration: none">
-        <h2 class="mt-3" style="margin-left: 10px">추천 테마지도</h2>
+    <div style="display:flex;">
+      <a href="/othersthememap" style="color:#000;text-decoration:none;margin-top:25px;margin-bottom:30px;">
+        <span class="theme-list" style="font-weight:bold;font-size:25px;margin-left:30px;padding-top:15px;">추천 테마지도</span>
       </a>
-      <div class="input-group mb-3">
-        <input
-          v-model="searchTerm"
-          placeholder="테마지도 검색하기"
-          class="form-control"
-          @keyup.enter="executeSearch"
-          style="margin-left: 5px"
-        />
-
-        <div class="input-group-append">
+    </div>
+    <div>
+      <div class="input-group mb-3" style="width:370px;padding-left:20px;">
+        <input v-model="searchTerm" placeholder="테마지도 검색하기" class="form-control"
+          @keyup.enter="executeSearch" style="margin-left: 5px"/>
+        <div class="input-group-append" style="display: flex;">
           <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
-          <button
-            @click="executeSearch"
-            class="btn btn-dark"
-            style="margin-right: 5px"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              fill="currentColor"
-              class="bi bi-search-heart"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"
-              />
-              <path
-                d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
-              />
+          <span @click="executeSearch" class="btn btn-dark" style="margin-right: 5px;padding:2px 7px 0 7px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
-          </button>
+          </span>
         </div>
       </div>
-      <v-divider color="warningss"></v-divider>
     </div>
 
-    <div
-      v-if="themeMaps.length > 0"
-      style="
-        position: absolute;
-        width: 390px;
-        height: 85vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-      "
-    >
+    <div v-if="themeMaps.length > 0" style=" position: absolute; width: 390px; height: 85vh; overflow-y: auto; overflow-x: hidden;">
       <!-- 검색 결과가 있는 경우 -->
-      <ul
-        class="elevated-list search-results-list mb-4"
-        v-for="themeMap in themeMaps"
-        :key="themeMap.id"
-        style="margin-left: 10px; margin-right: 10px"
-      >
+      <ul class="list-group">
         <!-- 각 테마맵에 대한 목록 -->
-        <li class="list-group-item" @click="showDetails(themeMap.id)">
-          <div style="display: inline-block; width: 265px">
-            <h5 class="mb-1">
-              <b>{{ themeMap.name }}</b>
-            </h5>
-            <p class="mb-1">{{ themeMap.memo }}</p>
+        <li v-for="themeMap in themeMaps" :key="themeMap.id" @click="showDetails(themeMap)"
+            class="thememap">
+          <div class="info">
+            <div class="name">{{ themeMap.name }}</div>
+            <div class="memo">{{ themeMap.memo }}</div>
             <p v-show="themeMap.memo == null" class="mb-1">&nbsp;</p>
             <!-- <small>{{ themeMap.id }}</small> -->
           </div>
           <!-- 추가하기 버튼 -->
-          <button
-            @click="addToFavorites(themeMap.id)"
-            class="btn btn-dark"
-            style="position: absolute; margin-top: 8px"
-            v-show="!isInFavorites(themeMap.id)"
-          >
-            추가
-          </button>
+          <span @click="addToFavorites(themeMap.id)" class="star" v-show="!isInFavorites(themeMap.id)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16"
+                  style="cursor: pointer;">
+              <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+            </svg>
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"
+            style="cursor: pointer;">
+              <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg> -->
+          </span>
         </li>
       </ul>
     </div>
 
-    <div
-      v-else
-      class="alert alert-warning mt-3 text-center"
-      role="alert"
-      style="width: 370px; margin: auto"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="30"
-        height="30"
-        fill="currentColor"
-        class="bi bi-exclamation-circle-fill text-warning mb-2"
-        viewBox="0 0 16 16"
-      >
-        <path
-          d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0V4zm.5 6a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1h1z"
-        />
+    <div v-else class="alert alert-warning mt-3 text-center" role="alert"
+      style="width: 370px; margin: auto">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+        class="bi bi-exclamation-circle-fill text-warning mb-2" viewBox="0 0 16 16">
+        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0V4zm.5 6a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1h1z"/>
       </svg>
       <p class="mb-0">검색 결과가 없습니다.</p>
     </div>
@@ -117,13 +71,13 @@ export default {
     ...mapState(["userInfo"]),
   },
   state: {
-  themeMapDetail: null,
-},
-mutations: {
-  setThemeMapDetail(state, payload) {
-    state.themeMapDetail = payload;
+    themeMapDetail: null,
   },
-},
+  mutations: {
+    setThemeMapDetail(state, payload) {
+      state.themeMapDetail = payload;
+    },
+  },
   components: {
     Detailmap,
   },
@@ -146,6 +100,7 @@ mutations: {
       searchTerm: "",
       themeMaps: [],
       recommendPageNum: 1,
+      themeMapDetail: null,
     };
   },
   methods: {
@@ -177,31 +132,20 @@ mutations: {
       //구독 메서드 호출
       this.checkNotifications();
     },
-    async showDetails(themeMapId) {
-  try {
-    const url = `${this.backURL}/myplace/${themeMapId}`;
-    const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-    axios.defaults.headers.common["Authorization"] = accessToken;
 
-    const response = await axios.get(url);
-    const myPlaces = response.data;
-
-    // 스토어에 themeMapDetail 데이터 설정
-    this.$store.commit("setThemeMapDetail", {
-      themeMap: response.data,
-      myPlaces,
-    });
-
-    // themeMapId를 매개변수로하여 상세 보기로 리디렉션
-    this.$router.push({
-      name: "otherthememapdetail",
-      params: { id: themeMapId },
-    });
-
-  } catch (error) {
-    console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
-  }
-},
+    showDetails(themeMap) {
+      this.$store.commit("setThemeMapDetail", themeMap);
+  this.$router.push({
+    name: 'othersthememapdetail',
+    params: {
+      id: themeMap.id
+    },
+    query: {
+      name: themeMap.name,
+      memo: themeMap.memo,
+    }
+  });
+  },
 
     // sub 호출 메서드
     async checkNotifications() {
@@ -271,7 +215,6 @@ mutations: {
         alert("이미 추가된 테마지도 입니다.");
         return;
       }
-
       try {
         const url = `${this.backURL}/favorite/create/${themeMapId}`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -295,14 +238,12 @@ mutations: {
         console.error("즐겨찾기 추가 중 오류 발생:", error);
       }
     },
-
     // themeMapId가 현재 사용자의 즐겨찾기 목록에 있는지 확인
     isInFavorites(themeMapId) {
       return this.themeMaps.some(
         (map) => map.id === themeMapId && map.isInFavorites
       );
     },
-
     recommend(pageNum) {
       axios
         .get(`${this.backURL}/recommend-thememap/` + pageNum)
@@ -317,8 +258,6 @@ mutations: {
           console.log(err);
         });
     },
-    
-
     reCommendDeatail() {
       console.log("테마지도 상세 페이지");
     },
@@ -326,25 +265,66 @@ mutations: {
 };
 </script>
 <style>
-.search-wrapper {
-  /* position: absolute; */
-  /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
-  /* right: 0; 오른쪽에 닿도록 */
-  /* height: 100%; */
 
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top:30px;
+}
+li.thememap {
+  display:flex;
+  margin-left:auto;
+  margin-right:auto;
+  border: 1px solid grey;
+  border-radius: 5px;
+  height: 60px;
+  width: 330px;
+  vertical-align: baseline;
+}
+li.thememap > div.info {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 13px;
+  width: 260px;
+}
+li.thememap > div.info > div.name {
+  font-size: 18px;
+  font-weight: bold;
+}
+li.thememap > div.info > div.memo {
+  font-size: 13px;
+  color: grey;
+  overflow-x: hidden;
+  white-space: nowrap;
+  max-width: 230px;
+}
+
+ul.list-group > li {
+  margin-top: 15px;
+}
+ul.list-group > li:hover {
+  background-color: rgba(0,112,192,0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
+}
+span.star{
+  margin-left:20px;
+  margin-top: 15px;
+}
+span.star>svg:hover{
+  fill:rgba(250, 206, 60, 0.767);
+}
+.m-part {
+  position: absolute;
+  left: 454px; 
+  right: 0; 
+  height: 100%;
+}
+
+.search-wrapper {
   position: absolute;
   width: 390px;
   height: 100vh;
-  /* overflow-x: hidden;
-  overflow-y: auto; */
 }
-
-.m-part {
-  position: absolute;
-  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
-  right: 0; /* 오른쪽에 닿도록 */
-  height: 100%;
-}
+/* 
 
 ul.elevated-list {
   list-style-type: none;
@@ -375,19 +355,17 @@ ul.elevated-list li:last-child {
   border-bottom: none;
 }
 
-/* 새로운 스타일 추가: 검색 결과 목록에 선을 추가 */
 ul.search-results-list li {
   border-bottom: 1px solid #4e4e52;
   padding: 10px;
 }
 
-/* 마지막 검색 결과 목록 아이템에는 선을 표시하지 않음 */
 ul.search-results-list li:last-child {
   border-bottom: none;
 }
-/* 새로운 스타일 추가: 검색 결과 목록의 각 리스트 아이템을 독립적으로 표시 */
 ul.search-results-list li {
   padding: 10px;
   border-bottom: none;
 }
+*/
 </style>

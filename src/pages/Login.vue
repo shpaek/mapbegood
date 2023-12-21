@@ -361,7 +361,8 @@
       <v-divider color="warningss"></v-divider>
 
       <v-card-text class="text-center">
-        <a href="http://localhost:8080/oauth2/authorization/kakao">
+        <!-- <a href="http://localhost:8080/oauth2/authorization/kakao"> -->
+        <a href="https://api.mapbegood.site/oauth2/authorization/kakao">
           <img
             src="../../public/images/kakao_login_medium_narrow.png"
             alt="kakao_signup_img1"

@@ -1,6 +1,6 @@
 <template>
-      <!-- 전체화면에 맵 표시 -->
-      <DetailMap
+  <!-- 전체화면에 맵 표시 -->
+  <DetailMap
     ref="detailMap"
     :mymapdetail="thememap"
     :places="thememap.ourplaceList"
@@ -84,9 +84,9 @@
                     },
                   }"
                 >
-                  <button class = "feed-make">
-                    <img src ="/public/images/feedmake.png" class = "feed-make">
-                    </button>
+                  <button class="feed-make">
+                    <img src="/public/images/feedmake.png" class="feed-make" />
+                  </button>
                 </router-link>
                 <router-link
                   :to="{
@@ -98,9 +98,9 @@
                     },
                   }"
                 >
-                <button class = "feed-btn">
-              <img src ="/public/images/feed.png" class = "feed-icon"/>
-            </button>
+                  <button class="feed-btn">
+                    <img src="/public/images/feed.png" class="feed-icon" />
+                  </button>
                 </router-link>
               </li>
             </ul>
@@ -133,11 +133,13 @@ export default {
   methods: {
     async findAllOurPlace(groupThememapId) {
       axios
-        .get(`http://localhost:8080/ourmap/get/${groupThememapId}`)
+        // .get(`http://localhost:8080/ourmap/get/${groupThememapId}`)
+        .get(`${this.backURL}/ourmap/get/${groupThememapId}`)
         .then((response) => {
           // API로부터 받은 데이터를 컴포넌트의 데이터에 저장
           this.thememap = response.data;
           console.log(response.data);
+          this.$refs.detailMap.displayPlacesOnMap(response.data);
         })
         .catch((error) => {
           console.error("Error fetching theme map data:", error);
@@ -219,7 +221,6 @@ export default {
   overflow: auto;
   max-height: 650px; /* 스크롤이 나타날 최대 높이 */
 }
- 
 
 .add-bookmark-btn:hover {
   background-color: #45a049;
@@ -241,7 +242,6 @@ export default {
   justify-content: center;
   margin-right: 10px; /* Adjust the margin as needed */
 }
-
 
 .search {
   position: relative;
