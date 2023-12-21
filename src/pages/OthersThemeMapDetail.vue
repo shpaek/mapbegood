@@ -4,12 +4,11 @@
     ref="detailMap"
     :mymapdetail="mymapdetail"
     :places="mymapdetail.myplaces"
-    :color="mymapdetail.themeMapDto.color"
-    @updateColor="updateColor"
+    :color="firstPlace.thememapId.color"
   />
   <!-- <Map /> -->
   <div class="theme-map-details">
-    <h2 class="display-4" style="font-size: 2rem; fonr-weight: bold">
+    <h2 class="display-4" style="font-size: 2rem; font-weight: bold">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -22,7 +21,7 @@
           d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
         />
       </svg>
-      {{ mymapdetail.themeMapDto.name }}
+      {{ name }}
     </h2>
 
     <div class="card">
@@ -45,7 +44,7 @@
           </svg>
           내용:
         </h5>
-        <p class="card-text">{{ mymapdetail.themeMapDto.memo }}</p>
+        <p class="card-text">{{ memo }}</p>
       </div>
     </div>
     <!--<p>아이디(가릴예정): {{ mymapdetail.themeMapDto.id }}</p>-->
@@ -63,46 +62,6 @@
             <p>주소: {{ myplace.placeId.address }}</p>
             <!-- 추가적인 Myplace 정보 표시 -->
           </div>
-          <button class="add-bookmark-btn" @click="cancelBookmark(myplace.id)">
-            <img src="/public/images/bookmark.png" class="bookmark-icon" />          
-          </button>
-          <router-link
-            v-if="myplace.feed"
-            :to="{
-              name: 'myfeed',
-              params: {
-                myplaceId: myplace.id,
-                id: themeMapId,
-              },
-              query: {
-                placeName: myplace.placeId.placeName,
-                address: myplace.placeId.address,
-                visitedAt: myplace.visitedAt
-              },
-            }"
-          >
-            <button class = "feed=btn">
-              <img src ="/public/images/feed.png" class = "feed-icon"/>
-
-            </button>
-          </router-link>
-          <router-link
-            v-else
-            :to="{
-              name: 'myfeedcreate',
-              params: {
-                myplaceId: myplace.id,
-                id: themeMapId,
-              },
-              query: {
-                placeName: myplace.placeId.placeName,
-                address: myplace.placeId.address,
-                visitedAt: myplace.visitedAt
-              },
-            }"
-          >
-            <button>피드생성</button>
-          </router-link>
         </li>
       </ul>
     </div>
@@ -112,11 +71,14 @@
 <script>
 import axios from "axios";
 import DetailMap from "./Detailmap.vue";
-// import Map from "./Map.vue";
 export default {
   components: {
     DetailMap,
-    // Map
+  },
+  props: {
+    mymapdetail: Object,
+    places: Array,
+    color: String,
   },
   data() {
     return {
@@ -129,72 +91,54 @@ export default {
         },
         myplaces: [],
       },
+      firstPlace: {
+        id: "",
+        placeId: {},
+        thememapId: {
+          color: "",
+          id: "",
+          mainmap: "",
+          memo: "",
+          name: "",
+          show: ""
+        },
+        visitedAt: ""
+      }
     };
   },
-  mounted() {
-    // 라우터에서 테마맵 ID를 받아와서 상세 정보를 불러옵니다.
-    const themeMapId = this.$route.params.id;
-    this.loadThemeMapDetail(themeMapId);
-  },
-  methods: {
-    async loadThemeMapDetail(themeMapId) {
-      const url = `${this.backURL}/mymap/${themeMapId}`;
-      try {
-        const response = await axios.get(url, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
-          },
-        });
-        this.mymapdetail = {
-          themeMapDto: response.data,
-        };
-        this.findAllMyPlace(themeMapId);
-      } catch (error) {
-        console.error(error);
-        alert(
-          error.response.data.message ||
-            "테마 맵 세부 정보를 불러오지 못했습니다."
-        );
-      }
+  watch: {
+    color(newColor) {
+      this.$refs.detailMap.updateColor(newColor);
     },
+  },
+  mounted() {
+  // Access parameters from the URL
+  const themeMapId = this.$route.params.id;
+  const name = this.$route.query.name;
+  const memo = this.$route.query.memo;
+
+  this.themeMapId = themeMapId;
+  this.name = name;
+  this.memo = memo;
+  // Alternatively, you can call a method to load data based on these parameters
+  this.findAllMyPlace(themeMapId);
+},
+    methods: {
     async findAllMyPlace(themeMapId) {
       const myPlacesUrl = `${this.backURL}/myplace/${themeMapId}`;
       try {
-        const response = await axios.get(myPlacesUrl, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
-          },
-        });
+        const response = await axios.get(myPlacesUrl);
         this.mymapdetail.myplaces = response.data;
-
+        this.$nextTick(() => {
+        this.firstPlace = response.data[0]
         this.$refs.detailMap.displayPlacesOnMap(response.data);
+        });
+        console.log(response.data)
+        console.log(this.firstPlace)
       } catch (error) {
         console.error(error);
         alert(error.response.data.message || "Myplaces를 불러오지 못했습니다.");
       }
-    },
-
-    async cancelBookmark(myplaceId) {
-      const url = `${this.backURL}/myplace/${myplaceId}`;
-      try {
-        await axios.delete(url, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
-          },
-        });
-        // After successful deletion, you might want to refresh the data
-        this.findAllMyPlace(this.mymapdetail.themeMapDto.id);
-      } catch (error) {
-        console.error(error);
-        alert(error.response.data.message || "북마크를 취소하지 못했습니다.");
-      }
-    },
-    updateColor(newColor) {
-      // This method will be called when the color changes in the child component
-      this.firstPlace.thememapId.color = newColor;
     },
   },
 };

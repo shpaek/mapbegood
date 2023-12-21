@@ -28,6 +28,11 @@ export default {
   mounted() {
     this.loadScript();
   },
+  watch: {
+    color(newColor) {
+      this.updateColor(newColor);
+    },
+  },
 
   methods: {
     loadScript() {
@@ -134,7 +139,11 @@ export default {
             place.placeId.x
           );
           const markerColor = await this.getMarkerColor(place.category);
-          const imageSrc = `/images/location-${markerColor}.svg`
+          const imageSrc = `/images/location-${markerColor}.svg`;
+
+          // Make sure the image source is correctly constructed
+          console.log("Image Source:", imageSrc);
+
           const imageSize = new kakao.maps.Size(64, 69);
           const imageOption = { offset: new kakao.maps.Point(27, 69) };
           const markerImage = new kakao.maps.MarkerImage(
@@ -172,6 +181,7 @@ export default {
   }
 },
 
+
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
         this.markers.forEach((marker) => {
@@ -182,8 +192,13 @@ export default {
     },
 
     getMarkerColor(category) {
-      return this.color || "default";
-    }
+      return this.color || "blue";
+    },
+    updateColor(newColor) {
+      // Update markers with the new color
+      this.displayPlacesOnMap();
+    },
+
   },
 };
 </script>

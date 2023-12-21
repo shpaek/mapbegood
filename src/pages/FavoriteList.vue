@@ -25,7 +25,7 @@
         style="margin-left: 10px; margin-right: 10px"
       >
         <li>
-          <div style="display: inline-block; width: 265px">
+          <div style="display: inline-block; width: 265px" @click="showDetails(favorite)">
             <h5>
               <b>{{ favorite.themeMapDto.name }}</b>
             </h5>
@@ -76,6 +76,12 @@ export default {
   data() {
     return {
       favoriteList: [],
+      themeMapDto: {
+        id: "",
+        name: "",
+        color: "",
+        memo: "",
+      },
     };
   },
 
@@ -146,6 +152,20 @@ export default {
         }
       });
     },
+    showDetails(favorite) {
+  this.$store.commit("setThemeMapDetail", favorite);
+  this.$router.push({
+    name: 'othersthememapdetail',
+    params: {
+      id: favorite.themeMapDto.id
+    },
+    query: {
+      name: favorite.themeMapDto.name,
+      memo: favorite.themeMapDto.memo,
+    }
+  });
+},
+    
   },
 };
 </script>
