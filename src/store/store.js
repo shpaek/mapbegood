@@ -94,13 +94,9 @@ export default createStore({
         try {
           await axios
             // .get("http://localhost:8080/login-info", config, {
-            .get(
-              "http://ec2-15-164-213-115.ap-northeast-2.compute.amazonaws.com:8080/login-info",
-              config,
-              {
-                withCredentials: true,
-              }
-            )
+            .get("https://api.mapbegood.site/login-info", config, {
+              withCredentials: true,
+            })
             .then((res) => {
               if (res.data.message == "The token has expired.") {
                 this.dispatch("getTokenRefresh");
@@ -130,12 +126,9 @@ export default createStore({
 
       axios
         // .post("http://localhost:8080/refresh", {
-        .post(
-          "http://ec2-15-164-213-115.ap-northeast-2.compute.amazonaws.com:8080/refresh",
-          {
-            withCredentials: true,
-          }
-        )
+        .post("https://api.mapbegood.site/refresh", {
+          withCredentials: true,
+        })
         .then((res) => {
           localStorage.setItem("mapbegoodToken", res.headers.authorization);
           location.reload();

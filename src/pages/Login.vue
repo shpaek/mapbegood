@@ -362,9 +362,7 @@
 
       <v-card-text class="text-center">
         <!-- <a href="http://localhost:8080/oauth2/authorization/kakao"> -->
-        <a
-          href="http://ec2-15-164-213-115.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/kakao"
-        >
+        <a href="https://api.mapbegood.site/oauth2/authorization/kakao">
           <img
             src="../../public/images/kakao_login_medium_narrow.png"
             alt="kakao_signup_img1"
