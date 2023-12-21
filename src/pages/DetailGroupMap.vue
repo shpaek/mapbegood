@@ -54,7 +54,7 @@ ref="detailMap"
             v-for="ourplace in ourmapdetail.myplaces"
             :key="ourplace.id"
             class="myplace-item"
-            @click="centerMap(place)"
+            @click="centerMap(ourplace.placeId.x, ourplace.placeId.y)"
           >
             <div class="myplace-info">
               <h5>{{ ourplace.placeId.placeName }}</h5>
@@ -115,6 +115,7 @@ ref="detailMap"
 import axios from "axios";
 import DetailMap from "./Detailmap.vue";
 export default {
+  emits: ['center-map', 'set-zoom-level'],
   components: {
     DetailMap,
   },
@@ -192,12 +193,12 @@ export default {
       this.firstPlace.thememapId.color = newColor;
     },
 
-    centerMap(place) {
-      const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-      this.$emit("center-map", placePosition);
-      const level = 3; // 원하는 줌 레벨로 설정
-      this.$emit("set-zoom-level", level);
-    },
+    centerMap(x, y) {
+  const placePosition = new window.kakao.maps.LatLng(y, x);
+  this.$emit('center-map', placePosition);
+  const level = 3; // 원하는 줌 레벨로 설정
+  this.$emit('set-zoom-level', level);
+},
 
   },
 };
