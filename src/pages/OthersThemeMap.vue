@@ -1,92 +1,69 @@
 <template>
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <div>
-      <a href="/othersthememap" style="color: #000; text-decoration: none">
-        <h2 class="mt-3" style="margin-left: 10px">추천 테마지도</h2>
-      </a>
-      <div class="input-group mb-3">
-        <input
-          v-model="searchTerm"
-          placeholder="테마지도 검색하기"
-          class="form-control"
-          @keyup.enter="executeSearch"
-          style="margin-left: 5px"
-        />
-
-        <div class="input-group-append">
-          <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
-          <button
-            @click="executeSearch"
-            class="btn btn-dark"
-            style="margin-right: 5px"
+    <h2 class="mt-3">추천 테마지도</h2>
+    <div class="input-group mb-3">
+      <input
+        v-model="searchTerm"
+        placeholder="테마지도 검색하기"
+        class="form-control"
+        @keyup.enter="executeSearch"
+      />
+      <div class="input-group-append">
+        <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
+        <button @click="executeSearch" class="btn btn-dark">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-search-heart"
+            viewBox="0 0 16 16"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              fill="currentColor"
-              class="bi bi-search-heart"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"
-              />
-              <path
-                d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
-              />
-            </svg>
-          </button>
-        </div>
+            <path
+              d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"
+            />
+            <path
+              d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
+            />
+          </svg>
+        </button>
       </div>
-      <v-divider color="warningss"></v-divider>
     </div>
 
-    <div
-      v-if="themeMaps.length > 0"
-      style="
-        position: absolute;
-        width: 390px;
-        height: 85vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-      "
-    >
+    <div v-if="themeMaps.length > 0">
       <!-- 검색 결과가 있는 경우 -->
       <ul
-        class="elevated-list search-results-list mb-4"
-        v-for="themeMap in themeMaps"
-        :key="themeMap.id"
-        style="margin-left: 10px; margin-right: 10px"
-      >
+      class="elevated-list search-results-list mb-4"
+      v-for="themeMap in themeMaps"
+      :key="themeMap.id"
+    >
         <!-- 각 테마맵에 대한 목록 -->
         <li class="list-group-item" @click="showDetails(themeMap.id)">
-          <div style="display: inline-block; width: 265px">
-            <h5 class="mb-1">
-              <b>{{ themeMap.name }}</b>
-            </h5>
-            <p class="mb-1">{{ themeMap.memo }}</p>
-            <p v-show="themeMap.memo == null" class="mb-1">&nbsp;</p>
+        <div>
+          <h5 class="mb-1" style="font-weight: bold;">제목: {{ themeMap.name }}</h5>
+          <p class="mb-1">내용: {{ themeMap.memo }}</p>
             <!-- <small>{{ themeMap.id }}</small> -->
+
+            <!-- 추가하기 버튼 -->
+            <button
+              @click="addToFavorites(themeMap.id)"
+              class="btn btn-dark"
+              :disabled="isInFavorites(themeMap.id)"
+            >
+              추가하기
+            </button>
+
+            <!-- 중복 여부 확인 메시지 -->
+            <span v-if="isInFavorites(themeMap.id)" class="text-danger ml-2">
+              이미 추가된 list입니다.
+            </span>
+         
           </div>
-          <!-- 추가하기 버튼 -->
-          <button
-            @click="addToFavorites(themeMap.id)"
-            class="btn btn-dark"
-            style="position: absolute; margin-top: 8px"
-            v-show="!isInFavorites(themeMap.id)"
-          >
-            추가
-          </button>
         </li>
       </ul>
     </div>
 
-    <div
-      v-else
-      class="alert alert-warning mt-3 text-center"
-      role="alert"
-      style="width: 370px; margin: auto"
-    >
+    <div v-else class="alert alert-warning mt-3 text-center" role="alert">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="30"
@@ -143,6 +120,8 @@ export default {
   methods: {
     // 테마맵 검색 메서드
     async searchThemeMap() {
+
+      
       try {
         const url = `${this.backURL}/maplist/search`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -181,10 +160,10 @@ export default {
         const myPlaces = response.data;
 
         // 여기에서 myPlaces 데이터를 활용하여 내 장소 목록을 표시하도록 구현할 수 있습니다.
-        console.log("내 장소 목록:", myPlaces);
+        console.log('내 장소 목록:', myPlaces);
 
         this.themeMapDetail = {
-          themeMapId,
+          themeMap: response.data,
           myPlaces,
         };
 
@@ -195,6 +174,7 @@ export default {
       }
     },
 
+    
     // sub 호출 메서드
     async checkNotifications() {
       try {
@@ -249,7 +229,7 @@ export default {
         const detailedPlaces = response.data; // API가 자세한 장소 정보를 반환한다고 가정합니다
 
         // 자세한 장소 정보를 콘솔에 기록하기
-        console.log("자세한 장소 정보:", detailedPlaces);
+        console.log('자세한 장소 정보:', detailedPlaces);
 
         // 여기에서 detailedPlaces 데이터를 활용하여 상세 정보를 표시하도록 구현할 수 있습니다.
         // 예를 들어, 모달 창이나 다른 컴포넌트를 사용하여 상세 정보를 표시할 수 있습니다.
@@ -259,21 +239,16 @@ export default {
     },
     // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
-      if (this.isInFavorites(themeMapId)) {
-        alert("이미 추가된 테마지도 입니다.");
-        return;
-      }
-
       try {
         const url = `${this.backURL}/favorite/create/${themeMapId}`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
 
-        // console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
+        console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
         const response = await axios.post(url);
-        // console.log(response.data); // 성공하면 콘솔에 출력
+        console.log(response.data); // 성공하면 콘솔에 출력
         // 추가 성공 메시지
-        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" });
+        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" })
 
         // Update the isInFavorites property after successfully adding to favorites
         const updatedThemeMaps = this.themeMaps.map((map) => {
@@ -299,7 +274,7 @@ export default {
       axios
         .get(`${this.backURL}/recommend-thememap/` + pageNum)
         .then((res) => {
-          // console.log(res.data);
+          console.log(res.data);
           this.themeMaps = res.data.map((map) => ({
             ...map,
             isInFavorites: false,
@@ -309,14 +284,13 @@ export default {
           console.log(err);
         });
     },
-
-    reCommendDeatail() {
-      console.log("테마지도 상세 페이지");
-    },
   },
 };
 </script>
 <style>
+.mb-1{
+
+}
 .search-wrapper {
   /* position: absolute; */
   /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
@@ -326,8 +300,8 @@ export default {
   position: absolute;
   width: 390px;
   height: 100vh;
-  /* overflow-x: hidden;
-  overflow-y: auto; */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .m-part {
@@ -353,14 +327,14 @@ ul.elevated-list li {
 }
 
 ul.elevated-list li:hover {
-  background-color: #e9ecef7a;
-  cursor: pointer;
+  background-color: #e9ecef7a; 
+  cursor: pointer; 
 }
 
 ul.search-results-list li:hover {
-  background-color: #e9ecef;
-  cursor: pointer;
-}
+  background-color: #e9ecef; 
+  cursor: pointer; 
+} 
 
 ul.elevated-list li:last-child {
   border-bottom: none;

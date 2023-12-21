@@ -14,6 +14,10 @@ export default {
       type: Object,
       required: true,
     },
+    color: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -95,8 +99,6 @@ export default {
       this.map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
     },
 
-    
-
     // getMyLocation() {
     //   this.getCurrentLocation()
     //     .then((position) => {
@@ -113,45 +115,62 @@ export default {
     // },
 
     displayPlacesOnMap() {
-      const bounds = new window.kakao.maps.LatLngBounds();
+  const bounds = new window.kakao.maps.LatLngBounds();
 
-      // Remove existing markers
-      this.removeMarkers();
+  // Remove existing markers
+  this.removeMarkers();
 
-      // Check if myplaces is an array and not empty
-      if (
-        Array.isArray(this.mymapdetail.myplaces) &&
-        this.mymapdetail.myplaces.length > 0
-      ) {
-        // Display markers on the map
-        this.mymapdetail.myplaces.forEach((place) => {
-          if (place.placeId && place.placeId.x && place.placeId.y) {
-            const placePosition = new window.kakao.maps.LatLng(
-              place.placeId.y,
-              place.placeId.x
-            );
+  // Check if myplaces is an array and not empty
+  if (
+    Array.isArray(this.mymapdetail.myplaces) &&
+    this.mymapdetail.myplaces.length > 0
+  ) {
+    // Display markers on the map
+    const markerPromises = this.mymapdetail.myplaces.map((place) => {
+      return new Promise(async (resolve) => {
+        if (place.placeId && place.placeId.x && place.placeId.y) {
+          const placePosition = new window.kakao.maps.LatLng(
+            place.placeId.y,
+            place.placeId.x
+          );
+          const markerColor = await this.getMarkerColor(place.category);
+          const imageSrc = `/images/location-${markerColor}.svg`
+          const imageSize = new kakao.maps.Size(64, 69);
+          const imageOption = { offset: new kakao.maps.Point(27, 69) };
+          const markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          );
 
-            const marker = new window.kakao.maps.Marker({
-              position: placePosition,
-            });
+          // Creating the marker
+          const marker = new kakao.maps.Marker({
+            position: placePosition,
+            image: markerImage,
+          });
 
-            marker.setMap(this.map);
+          marker.setMap(this.map);
 
-            window.kakao.maps.event.addListener(marker, "click", () => {
-              this.centerMap(placePosition);
-            });
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            this.centerMap(placePosition);
+          });
 
-            bounds.extend(placePosition);
-            this.markers.push(marker);
-          }
-        });
-      } else {
-        console.warn("No places to display on the map.");
-      }
+          bounds.extend(placePosition);
+          this.markers.push(marker);
+          resolve();
+        }
+      });
+    });
 
+    // Wait for all markers to be created before setting the map bounds
+    Promise.all(markerPromises).then(() => {
       // Set the map bounds even if there are no markers
       this.map.setBounds(bounds);
-    },
+    });
+  } else {
+    console.warn("No places to display on the map.");
+  }
+},
 
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
@@ -161,6 +180,10 @@ export default {
         this.markers = [];
       }
     },
+
+    getMarkerColor(category) {
+      return this.color || "default";
+    }
   },
 };
 </script>
