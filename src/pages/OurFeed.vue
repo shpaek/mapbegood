@@ -51,7 +51,7 @@
       <div class="contentSection">
         <div class="caption">{{ post.content }}</div>
         <span class="nickname">{{ post.memberEmail.nickname }}</span>
-        <span class="createdAt">{{ post.createdAt }}</span>
+        <!-- <span class="createdAt">{{ post.createdAt }}</span> -->
       </div>
       <div v-if="emailMatchesCurrentUser(post.memberEmail.email)">
         <router-link
