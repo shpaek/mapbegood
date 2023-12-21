@@ -7,7 +7,6 @@ import GroupCreate from "../pages/GroupCreate.vue";
 import GroupDetail from "../pages/GroupDetail.vue";
 // import GroupThemeMapList from "../pages/GroupThemeMapList.vue";
 import GroupThemeMap from "../pages/GroupThemeMap.vue";
-import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
 import FavoriteList from "../pages/FavoriteList.vue";
 import FavoriteAdd from "../pages/FavoriteAdd.vue";
@@ -46,7 +45,6 @@ const router = createRouter({
     },
     { path: "/othersthememap", component: OthersThemeMap },
     { path: "/groupthememap", component: GroupThemeMap },
-    { path: "/thememaplist", component: ThemeMapList },
     { name: "thememap", path: "/thememap", component: ThemeMap },
 
     { path: "/favoritelist", component: FavoriteList },

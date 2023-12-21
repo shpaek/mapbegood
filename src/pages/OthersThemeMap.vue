@@ -1,69 +1,92 @@
 <template>
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <h2 class="mt-3">추천 테마지도</h2>
-    <div class="input-group mb-3">
-      <input
-        v-model="searchTerm"
-        placeholder="테마지도 검색하기"
-        class="form-control"
-        @keyup.enter="executeSearch"
-      />
-      <div class="input-group-append">
-        <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
-        <button @click="executeSearch" class="btn btn-dark">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            fill="currentColor"
-            class="bi bi-search-heart"
-            viewBox="0 0 16 16"
+    <div>
+      <a href="/othersthememap" style="color: #000; text-decoration: none">
+        <h2 class="mt-3" style="margin-left: 10px">추천 테마지도</h2>
+      </a>
+      <div class="input-group mb-3">
+        <input
+          v-model="searchTerm"
+          placeholder="테마지도 검색하기"
+          class="form-control"
+          @keyup.enter="executeSearch"
+          style="margin-left: 5px"
+        />
+
+        <div class="input-group-append">
+          <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
+          <button
+            @click="executeSearch"
+            class="btn btn-dark"
+            style="margin-right: 5px"
           >
-            <path
-              d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"
-            />
-            <path
-              d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              fill="currentColor"
+              class="bi bi-search-heart"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.69 0-5.018Z"
+              />
+              <path
+                d="M13 6.5a6.471 6.471 0 0 1-1.258 3.844c.04.03.078.062.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1.007 1.007 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5ZM6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
+      <v-divider color="warningss"></v-divider>
     </div>
 
-    <div v-if="themeMaps.length > 0">
+    <div
+      v-if="themeMaps.length > 0"
+      style="
+        position: absolute;
+        width: 390px;
+        height: 85vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      "
+    >
       <!-- 검색 결과가 있는 경우 -->
       <ul
-      class="elevated-list search-results-list mb-4"
-      v-for="themeMap in themeMaps"
-      :key="themeMap.id"
-    >
+        class="elevated-list search-results-list mb-4"
+        v-for="themeMap in themeMaps"
+        :key="themeMap.id"
+        style="margin-left: 10px; margin-right: 10px"
+      >
         <!-- 각 테마맵에 대한 목록 -->
         <li class="list-group-item" @click="showDetails(themeMap.id)">
-        <div>
-          <h5 class="mb-1">제목: {{ themeMap.name }}</h5>
-          <p class="mb-1">내용: {{ themeMap.memo }}</p>
+          <div style="display: inline-block; width: 265px">
+            <h5 class="mb-1">
+              <b>{{ themeMap.name }}</b>
+            </h5>
+            <p class="mb-1">{{ themeMap.memo }}</p>
+            <p v-show="themeMap.memo == null" class="mb-1">&nbsp;</p>
             <!-- <small>{{ themeMap.id }}</small> -->
-
-            <!-- 추가하기 버튼 -->
-            <button
-              @click="addToFavorites(themeMap.id)"
-              class="btn btn-dark"
-              :disabled="isInFavorites(themeMap.id)"
-            >
-              추가하기
-            </button>
-
-            <!-- 중복 여부 확인 메시지 -->
-            <span v-if="isInFavorites(themeMap.id)" class="text-danger ml-2">
-              이미 추가된 list입니다.
-            </span>
-         
           </div>
+          <!-- 추가하기 버튼 -->
+          <button
+            @click="addToFavorites(themeMap.id)"
+            class="btn btn-dark"
+            style="position: absolute; margin-top: 8px"
+            v-show="!isInFavorites(themeMap.id)"
+          >
+            추가
+          </button>
         </li>
       </ul>
     </div>
 
-    <div v-else class="alert alert-warning mt-3 text-center" role="alert">
+    <div
+      v-else
+      class="alert alert-warning mt-3 text-center"
+      role="alert"
+      style="width: 370px; margin: auto"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="30"
@@ -93,6 +116,14 @@ export default {
   computed: {
     ...mapState(["userInfo"]),
   },
+  state: {
+  themeMapDetail: null,
+},
+mutations: {
+  setThemeMapDetail(state, payload) {
+    state.themeMapDetail = payload;
+  },
+},
   components: {
     Detailmap,
   },
@@ -120,8 +151,6 @@ export default {
   methods: {
     // 테마맵 검색 메서드
     async searchThemeMap() {
-
-      
       try {
         const url = `${this.backURL}/maplist/search`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
@@ -148,33 +177,32 @@ export default {
       //구독 메서드 호출
       this.checkNotifications();
     },
-
     async showDetails(themeMapId) {
-      try {
-        // 클릭한 테마맵ID와 연결된 내 장소 목록 가져오기
-        const url = `${this.backURL}/myplace/${themeMapId}`;
-        const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-        axios.defaults.headers.common["Authorization"] = accessToken;
+  try {
+    const url = `${this.backURL}/myplace/${themeMapId}`;
+    const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
+    axios.defaults.headers.common["Authorization"] = accessToken;
 
-        const response = await axios.get(url);
-        const myPlaces = response.data;
+    const response = await axios.get(url);
+    const myPlaces = response.data;
 
-        // 여기에서 myPlaces 데이터를 활용하여 내 장소 목록을 표시하도록 구현할 수 있습니다.
-        console.log('내 장소 목록:', myPlaces);
+    // 스토어에 themeMapDetail 데이터 설정
+    this.$store.commit("setThemeMapDetail", {
+      themeMap: response.data,
+      myPlaces,
+    });
 
-        this.themeMapDetail = {
-          themeMap: response.data,
-          myPlaces,
-        };
+    // themeMapId를 매개변수로하여 상세 보기로 리디렉션
+    this.$router.push({
+      name: "otherthememapdetail",
+      params: { id: themeMapId },
+    });
 
-        // 예시: 특정 동작 수행을 위해 가져온 내 장소 목록 활용
-        // this.performSomeActionWithMyPlaces(myPlaces);
-      } catch (error) {
-        console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
-      }
-    },
+  } catch (error) {
+    console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
+  }
+},
 
-    
     // sub 호출 메서드
     async checkNotifications() {
       try {
@@ -229,7 +257,7 @@ export default {
         const detailedPlaces = response.data; // API가 자세한 장소 정보를 반환한다고 가정합니다
 
         // 자세한 장소 정보를 콘솔에 기록하기
-        console.log('자세한 장소 정보:', detailedPlaces);
+        console.log("자세한 장소 정보:", detailedPlaces);
 
         // 여기에서 detailedPlaces 데이터를 활용하여 상세 정보를 표시하도록 구현할 수 있습니다.
         // 예를 들어, 모달 창이나 다른 컴포넌트를 사용하여 상세 정보를 표시할 수 있습니다.
@@ -239,16 +267,21 @@ export default {
     },
     // 즐겨찾기에 추가 메서드
     async addToFavorites(themeMapId) {
+      if (this.isInFavorites(themeMapId)) {
+        alert("이미 추가된 테마지도 입니다.");
+        return;
+      }
+
       try {
         const url = `${this.backURL}/favorite/create/${themeMapId}`;
         const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
         axios.defaults.headers.common["Authorization"] = accessToken;
 
-        console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
+        // console.log("검색어:", this.searchTerm); // 디버깅을 위한 로그
         const response = await axios.post(url);
-        console.log(response.data); // 성공하면 콘솔에 출력
+        // console.log(response.data); // 성공하면 콘솔에 출력
         // 추가 성공 메시지
-        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" })
+        Swal.fire({ text: "즐겨찾기에 추가되었습니다", icon: "success" });
 
         // Update the isInFavorites property after successfully adding to favorites
         const updatedThemeMaps = this.themeMaps.map((map) => {
@@ -274,7 +307,7 @@ export default {
       axios
         .get(`${this.backURL}/recommend-thememap/` + pageNum)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.themeMaps = res.data.map((map) => ({
             ...map,
             isInFavorites: false,
@@ -283,6 +316,11 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    
+
+    reCommendDeatail() {
+      console.log("테마지도 상세 페이지");
     },
   },
 };
@@ -297,8 +335,8 @@ export default {
   position: absolute;
   width: 390px;
   height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* overflow-x: hidden;
+  overflow-y: auto; */
 }
 
 .m-part {
@@ -324,14 +362,14 @@ ul.elevated-list li {
 }
 
 ul.elevated-list li:hover {
-  background-color: #e9ecef7a; 
-  cursor: pointer; 
+  background-color: #e9ecef7a;
+  cursor: pointer;
 }
 
 ul.search-results-list li:hover {
-  background-color: #e9ecef; 
-  cursor: pointer; 
-} 
+  background-color: #e9ecef;
+  cursor: pointer;
+}
 
 ul.elevated-list li:last-child {
   border-bottom: none;

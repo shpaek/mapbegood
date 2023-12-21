@@ -6,31 +6,11 @@
         <div class="group-info">
           <ul>
             <li class="img">
-              <img
-                :src="
-                  'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +
-                  this.groupId +
-                  '_groupImage.jpg?' +
-                  new Date().getTime()
-                "
-                alt="그룹이미지"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                class="bi bi-gear"
-                viewBox="0 0 16 16"
-                @click="gearClickHandler"
-              >
-                <!-- v-show="isleader" -->
-                <path
-                  d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"
-                />
-                <path
-                  d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"
-                />
+              <img :src="'https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/group-image/' +this.groupId +'_groupImage.jpg?' + new Date().getTime()" alt="그룹이미지"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"
+                @click="gearClickHandler" v-show="isleader">
+                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
               </svg>
               <div class="combobox">
                 <!-- 콤보상자를 나타내는 요소 -->
@@ -58,7 +38,7 @@
             </li>
             <li class="group-member">
               <span class="group-member" @click="groupmemberClickHandler">
-                {{ leaderNickname }}({{ memCnt }})
+                {{ leaderNickname }}
               </span>
               <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
               <svg
@@ -108,8 +88,8 @@
           </template>
 
           <v-card>
-            <v-card-title>
-              <h1 class="text-primary mb-4">그룹 테마지도 생성</h1>
+            <v-card-title style="display:flex;">
+              <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">그룹 테마지도 생성</span>
             </v-card-title>
 
             <v-card-text>
@@ -162,65 +142,33 @@
                 </div>
               </v-container>
             </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
+            <div class="btn-create-thememap">
               <!-- 테마맵 생성 버튼 -->
-              <button @click="CreateGroupThemeMap" class="btn btn-dark">
-                생성</button
-              >&nbsp;&nbsp;&nbsp;
-              <button
-                data-v-fce5df64=""
-                class="btn btn-light"
-                @click="cancelCreateGroupMap"
-              >
-                취소
-              </button>
-              <v-spacer></v-spacer>
-            </v-card-actions>
+              <span @click="CreateGroupThemeMap" class="create-thememap">생성</span>
+              <span @click="cancelCreateGroupMap" class="cancel-thememap">취소</span>
+            </div>
             <br />
           </v-card>
         </v-dialog>
 
         <ul class="list-group">
-          <li
-            v-for="thememap in groupThememaps"
-            :key="thememap.themeMapDto.id"
-            class="thememap"
-          >
-            <div
-              class="info"
-              @click="goToDetailGroupMap(thememap.themeMapDto.id)"
-            >
+          <li v-for="thememap in groupThememaps" :key="thememap.themeMapDto.id"
+            class="thememap">
+            <div class="info"
+              @click="goToDetailGroupMap(thememap.themeMapDto.id)">
               <div class="name">{{ thememap.themeMapDto.name }}</div>
               <div class="memo">{{ thememap.themeMapDto.memo }}</div>
             </div>
             <!-- 더보기 버튼 -->
             <div class="btn-group" role="group">
-              <button
-                type="button"
-                class="more"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  fill="currentColor"
-                  class="bi bi-three-dots"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"
-                  />
+              <button type="button" class="more" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                  <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
                 </svg>
               </button>
               <ul class="dropdown-menu">
-                <v-dialog
-                  v-model="thememap.themeMapDto.themeMapEditDialog"
-                  persistent
-                  width="500"
-                >
+                <v-dialog v-model="thememap.themeMapDto.themeMapEditDialog" persistent width="500">
                   <template v-slot:activator="{ props }">
                     <li v-bind="props">
                       <!-- @click="editGroupmap(thememap.themeMapDto.id)" -->
@@ -229,8 +177,8 @@
                   </template>
 
                   <v-card>
-                    <v-card-title>
-                      <h1 class="text-primary mb-4">그룹 테마지도 수정</h1>
+                    <v-card-title style="display:flex;">
+                      <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">그룹 테마지도 수정</span>
                     </v-card-title>
 
                     <v-card-text>
@@ -289,24 +237,14 @@
                         </div>
                       </v-container>
                     </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
+                    <div class="btn-update-thememap">
                       <!-- 테마맵 생성 버튼 -->
-                      <button
-                        @click="updateGroupMap(thememap.themeMapDto)"
-                        class="btn btn-dark"
-                      >
-                        수정</button
-                      >&nbsp;&nbsp;
-                      <button
-                        data-v-fce5df64=""
-                        class="btn btn-light"
-                        @click="cancleThemeMapEdit(thememap.themeMapDto)"
-                      >
+                      <span @click="updateGroupMap(thememap.themeMapDto)" class="update-thememap">
+                        수정</span>&nbsp;&nbsp;
+                      <span class="cancel-thememap" @click="cancleThemeMapEdit(thememap.themeMapDto)">
                         취소
-                      </button>
-                      <v-spacer></v-spacer>
-                    </v-card-actions>
+                      </span>
+                    </div>
                     <br />
                   </v-card>
                 </v-dialog>
@@ -322,7 +260,6 @@
       <Detailmap />
     </div>
 
-    <!-- 모달창 -->
     <GroupImageChange
       :isImageChangeOpen="isImageChangeOpen"
       :groupId="groupId"
@@ -340,6 +277,7 @@ import axios from "axios";
 import Detailmap from "./Detailmap.vue";
 import GroupImageChange from "./GroupImageChange.vue";
 import GroupNameChange from "./GroupNameChange.vue";
+import { mapState, mapActions } from "vuex";
 import Swal from "sweetalert2";
 
 export default {
@@ -348,6 +286,9 @@ export default {
     Detailmap,
     GroupImageChange,
     GroupNameChange,
+  },
+  computed: {
+    ...mapState(["userInfo"]),
   },
   data() {
     return {
@@ -395,14 +336,16 @@ export default {
     };
   },
   async created() {
+    await this.$store.dispatch("getUserInfo");
     this.groupId = this.$route.params.groupId;
     this.groupName = this.$route.params.groupName;
     this.leaderNickname = this.$route.params.leaderNickname;
     this.groupMemo = this.$route.params.groupMemo;
     this.fetchGroupThememaps();
 
+
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
-    if (this.$store.state.userInfo.nickName == this.leaderNickname) {
+    if (this.userInfo.nickName  == this.leaderNickname) {
       this.isleader = true;
     }
 
@@ -693,12 +636,7 @@ div.group-thememap-list > ul.list-group > li {
   margin-top: 15px;
 }
 div.group-thememap-list > ul.list-group > li:hover {
-  background-color: rgba(
-    0,
-    112,
-    192,
-    0.329
-  ); /* 좋을지도 로고 파란색, 투명도 적용 */
+  background-color: rgba(0,112,192,0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
 }
 li.thememap {
   display: flex;
@@ -794,4 +732,23 @@ div.modal-container {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
+div.btn-create-thememap>span.create-thememap{
+  margin-left:200px;
+}
+div.btn-create-thememap>span.cancel-thememap{
+  margin-left:50px;
+}
+div.btn-create-thememap>span:hover{
+  font-weight: bold;
+}
+div.btn-update-thememap>span.update-thememap{
+  margin-left:200px;
+}
+div.btn-update-thememap>span.cancel-thememap{
+  margin-left:50px;
+}
+div.btn-update-thememap>span:hover{
+  font-weight: bold;
+}
+
 </style>
