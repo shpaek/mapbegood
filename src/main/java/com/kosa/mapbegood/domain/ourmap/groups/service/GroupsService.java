@@ -246,7 +246,8 @@ public class GroupsService {
 			int height=150;
 			String thumbFileName = groupId+"_groupImage.jpg"; //+  groupImage.getOriginalFilename() + extName; //그룹이미지 파일명
 //			png파일을 업로드 해도 jpg로 저장이 됨!
-			File thumbFile = new File("C:\\Users\\Public", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
+//			File thumbFile = new File("C:\\Users\\Public", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
+			File thumbFile = new File("/home/ubuntu/mapbegood-image/group", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
 			FileOutputStream thumbnailOS = new FileOutputStream(thumbFile);//출력스트림
 			URL url = new URL(imageUrl);
 			InputStream thumbnailIS =  url.openStream();//imageUrl);
