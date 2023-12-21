@@ -2,9 +2,10 @@
       <!-- 전체화면에 맵 표시 -->
       <DetailMap
     ref="detailMap"
-    :mymapdetail="thememap"
-    :places="thememap.ourplaceList"
-    :color="thememap.color"
+    :mymapdetail="ourmapdetail"
+    :places="ourmapdetail.myplaces"
+    :color="ourmapdetail.themeMapDto.color"
+    @updateColor="updateColor"
   />
   <div class="container mt-5">
     <h5 class="display-4" style="font-size: 2rem; font-weight: bold">
@@ -20,7 +21,7 @@
           d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"
         />
       </svg>
-      {{ thememap.name }}
+      {{ ourmapdetail.themeMapDto.name }}
     </h5>
 
     <div class="col-md-3">
@@ -44,14 +45,14 @@
             </svg>
             내용:
           </h5>
-          <p class="card-text">{{ thememap.memo }}</p>
+          <p class="card-text">{{ ourmapdetail.themeMapDto.memo }}</p>
         </div>
 
         <div class="theme-map-details">
           <div class="myplace-list-container">
             <ul class="myplace-list">
               <li
-                v-for="ourplace in thememap.ourplaceList"
+                v-for="ourplace in ourmapdetail.myplaces"
                 :key="ourplace.id"
                 class="myplace-item"
               >
@@ -121,7 +122,15 @@ export default {
   name: "DetailGroupMap",
   data() {
     return {
-      thememap: {}, // 테마지도 정보 저장할 객체
+      ourmapdetail: {
+        themeMapDto: {
+          name: "",
+          memo: "",
+          id: "",
+          color: "",
+        },
+        myplaces: [],
+      },
       groupThememapId: null,
     };
   },
@@ -131,12 +140,32 @@ export default {
     await this.findAllOurPlace(this.groupThememapId);
   },
   methods: {
+    async loadThemeMapDetail(groupThememapId) {
+      this.groupThememapId=groupThememapId;
+      const url = `${this.backURL}/ourmap/get/${groupThememapId}`;
+      try {
+        const response = await axios.get(url);
+        this.ourmapdetail = {
+          themeMapDto: response.data,
+        };
+        console.log(themeMapDto)
+        this.findAllMyPlace(groupThememapId);
+      } catch (error) {
+        console.error(error);
+        alert(
+          error.response.data.message ||
+            "테마 맵 세부 정보를 불러오지 못했습니다."
+        );
+      }
+    },
+
     async findAllOurPlace(groupThememapId) {
       axios
-        .get(`http://localhost:8080/ourmap/get/${groupThememapId}`)
+        .get(`http://localhost:8080/ourplace/${groupThememapId}`)
         .then((response) => {
           // API로부터 받은 데이터를 컴포넌트의 데이터에 저장
-          this.thememap = response.data;
+          this.ourmapdetail.myplaces = response.data;
+          // this.firstPlace = response.data[0];
           console.log(response.data);
           this.$refs.detailMap.displayPlacesOnMap(response.data);
         })
@@ -161,6 +190,10 @@ export default {
         console.error(error);
         alert(error.response.data.message || "북마크를 취소하지 못했습니다.");
       }
+    },
+    updateColor(newColor) {
+      // This method will be called when the color changes in the child component
+      this.firstPlace.thememapId.color = newColor;
     },
   },
 };

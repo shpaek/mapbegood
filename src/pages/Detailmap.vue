@@ -144,10 +144,10 @@ export default {
 
     displayPlacesOnMap() {
       const bounds = new window.kakao.maps.LatLngBounds();
-
       // Remove existing markers
       this.removeMarkers();
-
+      console.log("myplaces:", this.mymapdetail.myplaces);
+  console.log("myplaces type:", typeof this.mymapdetail.myplaces);
   // Check if myplaces is an array and not empty
   if (
     Array.isArray(this.mymapdetail.myplaces) &&
