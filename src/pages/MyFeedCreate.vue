@@ -56,7 +56,7 @@
           placeholder="내용을 작성하세요"
         ></textarea>
       </div>
-      <button type="submit">Share</button>
+      <button type="submit">작성하기</button>
     </form>
   </div>
 </template>

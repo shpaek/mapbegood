@@ -5,6 +5,7 @@
     :mymapdetail="mymapdetail"
     :places="mymapdetail.myplaces"
     :color="mymapdetail.themeMapDto.color"
+    @updateColor="updateColor"
   />
   <!-- <Map /> -->
   <div class="theme-map-details">
@@ -199,6 +200,10 @@ export default {
         console.error(error);
         alert(error.response.data.message || "북마크를 취소하지 못했습니다.");
       }
+    },
+    updateColor(newColor) {
+      // This method will be called when the color changes in the child component
+      this.firstPlace.thememapId.color = newColor;
     },
 
    

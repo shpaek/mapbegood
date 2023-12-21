@@ -24,7 +24,7 @@
       <!-- 검색 결과가 있는 경우 -->
       <ul class="list-group">
         <!-- 각 테마맵에 대한 목록 -->
-        <li v-for="themeMap in themeMaps" :key="themeMap.id" @click="showDetails(themeMap.id)"
+        <li v-for="themeMap in themeMaps" :key="themeMap.id" @click="showDetails(themeMap)"
             class="thememap">
           <div class="info">
             <div class="name">{{ themeMap.name }}</div>
@@ -71,13 +71,13 @@ export default {
     ...mapState(["userInfo"]),
   },
   state: {
-  themeMapDetail: null,
-},
-mutations: {
-  setThemeMapDetail(state, payload) {
-    state.themeMapDetail = payload;
+    themeMapDetail: null,
   },
-},
+  mutations: {
+    setThemeMapDetail(state, payload) {
+      state.themeMapDetail = payload;
+    },
+  },
   components: {
     Detailmap,
   },
@@ -100,6 +100,7 @@ mutations: {
       searchTerm: "",
       themeMaps: [],
       recommendPageNum: 1,
+      themeMapDetail: null,
     };
   },
   methods: {
@@ -131,31 +132,20 @@ mutations: {
       //구독 메서드 호출
       this.checkNotifications();
     },
-    async showDetails(themeMapId) {
-  try {
-    const url = `${this.backURL}/myplace/${themeMapId}`;
-    const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-    axios.defaults.headers.common["Authorization"] = accessToken;
 
-    const response = await axios.get(url);
-    const myPlaces = response.data;
-
-    // 스토어에 themeMapDetail 데이터 설정
-    this.$store.commit("setThemeMapDetail", {
-      themeMap: response.data,
-      myPlaces,
-    });
-
-    // themeMapId를 매개변수로하여 상세 보기로 리디렉션
-    this.$router.push({
-      name: "otherthememapdetail",
-      params: { id: themeMapId },
-    });
-
-  } catch (error) {
-    console.error("내 장소 목록을 가져오는 중 오류 발생:", error);
-  }
-},
+    showDetails(themeMap) {
+      this.$store.commit("setThemeMapDetail", themeMap);
+  this.$router.push({
+    name: 'othersthememapdetail',
+    params: {
+      id: themeMap.id
+    },
+    query: {
+      name: themeMap.name,
+      memo: themeMap.memo,
+    }
+  });
+  },
 
     // sub 호출 메서드
     async checkNotifications() {

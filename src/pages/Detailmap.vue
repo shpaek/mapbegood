@@ -51,6 +51,11 @@ export default {
   mounted() {
     this.loadScript();
   },
+  watch: {
+    color(newColor) {
+      this.updateColor(newColor);
+    },
+  },
 
   methods: {
     loadScript() {
@@ -143,28 +148,32 @@ export default {
       // Remove existing markers
       this.removeMarkers();
 
-      // Check if myplaces is an array and not empty
-      if (
-        Array.isArray(this.mymapdetail.myplaces) &&
-        this.mymapdetail.myplaces.length > 0
-      ) {
-        // Display markers on the map
-        const markerPromises = this.mymapdetail.myplaces.map((place) => {
-          return new Promise(async (resolve) => {
-            if (place.placeId && place.placeId.x && place.placeId.y) {
-              const placePosition = new window.kakao.maps.LatLng(
-                place.placeId.y,
-                place.placeId.x
-              );
-              const markerColor = await this.getMarkerColor(place.category);
-              const imageSrc = `/images/location-${markerColor}.svg`;
-              const imageSize = new kakao.maps.Size(64, 69);
-              const imageOption = { offset: new kakao.maps.Point(27, 69) };
-              const markerImage = new kakao.maps.MarkerImage(
-                imageSrc,
-                imageSize,
-                imageOption
-              );
+  // Check if myplaces is an array and not empty
+  if (
+    Array.isArray(this.mymapdetail.myplaces) &&
+    this.mymapdetail.myplaces.length > 0
+  ) {
+    // Display markers on the map
+    const markerPromises = this.mymapdetail.myplaces.map((place) => {
+      return new Promise(async (resolve) => {
+        if (place.placeId && place.placeId.x && place.placeId.y) {
+          const placePosition = new window.kakao.maps.LatLng(
+            place.placeId.y,
+            place.placeId.x
+          );
+          const markerColor = await this.getMarkerColor(place.category);
+          const imageSrc = `/images/location-${markerColor}.svg`;
+
+          // Make sure the image source is correctly constructed
+          console.log("Image Source:", imageSrc);
+
+          const imageSize = new kakao.maps.Size(34, 39);
+          const imageOption = { offset: new kakao.maps.Point(27, 69) };
+          const markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          );
 
               // Creating the marker
               const marker = new kakao.maps.Marker({
@@ -195,6 +204,7 @@ export default {
       }
     },
 
+
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
         this.markers.forEach((marker) => {
@@ -205,9 +215,12 @@ export default {
     },
 
     getMarkerColor(category) {
-      return this.color || "default";
+      return this.color || "blue";
     },
-
+    updateColor(newColor) {
+      // Update markers with the new color
+      this.displayPlacesOnMap();
+    },
     switchChat() {
       this.chatOnOff = !this.chatOnOff;
     },
