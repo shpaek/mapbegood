@@ -1,6 +1,8 @@
 <!--GroupDetail.vue-->
 <template lang="">
-  <div class="section-container">
+ 
+   <div class="section-container">
+     
     <div class="g-part">
       <div class="group-detail">
         <div class="group-info">
@@ -60,6 +62,8 @@
       </div>
       <hr />
 
+    
+    <h1 class="group-theme-map-heading">그룹테마지도</h1>
       <div class="group-thememap-list">
         <v-dialog v-model="groupThemeMapAddDialog" persistent width="500">
           <template v-slot:activator="{ props }">
@@ -259,17 +263,17 @@
     <div class="m-part">
       <Detailmap />
     </div>
-
-    <GroupImageChange
-      :isImageChangeOpen="isImageChangeOpen"
-      :groupId="groupId"
-      @close-Image="closeImageChange"
-    />
-    <GroupNameChange
-      :isNameChangeOpen="isNameChangeOpen"
-      :groupId="groupId"
-      @close-Name="closeNameChange"
-    />
+      <!-- 모달창 -->
+      <GroupImageChange
+        :isImageChangeOpen="isImageChangeOpen"
+        :groupId="groupId"
+        @close-Image="closeImageChange"
+      />
+      <GroupNameChange
+        :isNameChangeOpen="isNameChangeOpen"
+        :groupId="groupId"
+        @close-Name="closeNameChange"
+      />
   </div>
 </template>
 <script>
@@ -723,7 +727,11 @@ div.group-detail > div.group-info > ul > li.img > div.combobox > div.triangle {
   border-right: 7px solid transparent;
   border-bottom: 12px solid rgb(240, 240, 240);
 }
-
+h1.group-theme-map-heading {
+  text-align: center; /* Center the heading */
+  font-size: 24px; /* Adjust the font size as needed */
+  margin-top: 10px; /* Adjust the top margin as needed */
+}
 div.modal-container {
   position: fixed;
   top: 50%;

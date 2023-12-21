@@ -52,85 +52,62 @@
 
     <div class="myplace-list-container">
       <ul class="myplace-list">
-        <li v-for="myplace in mymapdetail.myplaces" :key="myplace.id">
-          <div class="myplace-item">
-            <div class="myplace-info">
-              <h5>{{ myplace.placeId.placeName }}</h5>
-              <p>방문 일자: {{ myplace.visitedAt }}</p>
-              <p>주소: {{ myplace.placeId.address }}</p>
-              <!-- 추가적인 Myplace 정보 표시 -->
-            </div>
-            <button
-              class="add-bookmark-btn"
-              @click="cancelBookmark(myplace.id)"
-            >
-              <img src="/public/images/bookmark.png" class="bookmark-icon" />
-            </button>
-
-            <button
-              type="button"
-              class="more"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="15"
-                height="15"
-                fill="currentColor"
-                class="bi bi-three-dots"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"
-                />
-              </svg>
-            </button>
-
-            <ul class="dropdown-menu">
-              <li>
-                <router-link
-                  :to="{
-                    name: 'myfeed',
-                    params: {
-                      myplaceId: myplace.id,
-                      id: mymapdetail.themeMapDto.id,
-                    },
-                    query: {
-                      placeName: myplace.placeId.placeName,
-                      address: myplace.placeId.address,
-                      visitedAt: myplace.visitedAt,
-                    },
-                  }"
-                >
-                  <button
-                    class="feed-button"
-                    @click="checkAndDisplayFeed(myplace.id)"
-                  >
-                    피드 보기
-                  </button>
-                </router-link>
-              </li>
-              <li>
-                <router-link
-                  :to="{
-                    name: 'myfeedcreate',
-                    params: {
-                      myplaceId: myplace.id,
-                      id: mymapdetail.themeMapDto.id,
-                    },
-                    query: {
-                      placeName: myplace.placeId.placeName,
-                      address: myplace.placeId.address,
-                      visitedAt: myplace.visitedAt,
-                    },
-                  }"
-                >
-                  <button>피드 생성</button>
-                </router-link>
-              </li>
-            </ul>
+        <li
+          v-for="myplace in mymapdetail.myplaces"
+          :key="myplace.id"
+          class="myplace-item"
+        >
+          <div class="myplace-info">
+            <h5>{{ myplace.placeId.placeName }}</h5>
+            <!-- 방문일자가 null이 아닌 경우에만 표시 -->
+            <p v-if="myplace.visitedAt">방문 일자: {{ myplace.visitedAt }}</p>
+            <p>주소: {{ myplace.placeId.address }}</p>
+                    
+            <!-- 추가적인 Myplace 정보 표시 -->
           </div>
+          <button class="add-bookmark-btn" @click="cancelBookmark(myplace.id)">
+            <img src="/public/images/bookmark.png" class="bookmark-icon" />          
+          </button>
+          <router-link
+            v-if="myplace.feed"
+            :to="{
+              name: 'myfeed',
+              params: {
+                myplaceId: myplace.id,
+                id: themeMapId,
+              },
+              query: {
+                placeName: myplace.placeId.placeName,
+                address: myplace.placeId.address,
+                visitedAt: myplace.visitedAt
+              },
+            }"
+          >
+            <button class = "feed=btn">
+              <img src ="/public/images/feed.png" class = "feed-icon"/>
+
+            </button>
+          </router-link>
+          <router-link
+            v-else
+            :to="{
+              name: 'myfeedcreate',
+              params: {
+                myplaceId: myplace.id,
+                id: themeMapId,
+              },
+              query: {
+                placeName: myplace.placeId.placeName,
+                address: myplace.placeId.address,
+                visitedAt: myplace.visitedAt
+              },
+            }"
+          >
+          <button>피드생성</button>
+        </router-link>
+
+        <span>방문일자</span>
+        <input type="date" @input="updateVisitedAt(myplace.id)" v-model="selectedVisitedDate">
         </li>
       </ul>
     </div>
@@ -157,6 +134,8 @@ export default {
         },
         myplaces: [],
       },
+      selectedVisitedDate: null, // 이 부분을 추가
+      themeMapId:null,
     };
   },
   mounted() {
@@ -166,6 +145,7 @@ export default {
   },
   methods: {
     async loadThemeMapDetail(themeMapId) {
+      this.themeMapId=themeMapId;
       const url = `${this.backURL}/mymap/${themeMapId}`;
       try {
         const response = await axios.get(url, {
@@ -220,6 +200,46 @@ export default {
         alert(error.response.data.message || "북마크를 취소하지 못했습니다.");
       }
     },
+
+   
+    // 방문일자를 선택한 경우, selectedVisitedDate에 값이 들어감
+    // 이 값을 서버로 전송하거나 다른 처리를 수행할 수 있음
+    updateVisitedAt(myplaceId) {
+      this.myplaceId=myplaceId;
+  if (  myplaceId && this.selectedVisitedDate) {
+    // 서버로 전송하기 전에 형식을 변경
+    // const formattedDate = new Date(this.selectedVisitedDate)
+    // console.log("Updating visited date:", this.selectedVisitedDate);
+    this.addVisitedAt(myplaceId,  this.selectedVisitedDate); // 수정된 부분
+  }
+},
+
+async addVisitedAt(myplaceId, visitedAt) {
+  const url = `${this.backURL}/myplace/${myplaceId}`;
+  try {
+    await axios.put(
+      url,
+      {
+        // thememapId: this.themeMapId , // 숫자를 문자열로 변환
+        // placeId: myplaceId,
+        id :  myplaceId,
+        visitedAt: visitedAt, // 수정된 부분
+      },
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    // 성공적으로 업데이트한 후에 Myplaces를 다시 불러올 수 있도록 처리
+    this.findAllMyPlace(this.mymapdetail.themeMapDto.id);
+  } catch (error) {
+    console.log(error.response.data);
+    alert(error.response.data.message || "생성일자 추가하지 못했습니다.");
+  }
+},
   },
   async checkAndDisplayFeed(myplaceId) {
     const url = `${this.backURL}/myfeed/${myplaceId}`;
@@ -279,7 +299,7 @@ export default {
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
   border-radius: 20px;
-  max-width: 330px;
+  max-width: 540px;
   width: 100%;
   margin: 20px;
   box-sizing: border-box;

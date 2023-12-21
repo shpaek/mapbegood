@@ -326,6 +326,9 @@ mutations: {
 };
 </script>
 <style>
+.mb-1{
+
+}
 .search-wrapper {
   /* position: absolute; */
   /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
