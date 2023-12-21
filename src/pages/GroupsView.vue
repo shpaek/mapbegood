@@ -34,8 +34,8 @@
                 <path
                   d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
                 />
-              </svg>
-            </span>&nbsp;&nbsp;
+              </svg> </span
+            >&nbsp;&nbsp;
             <span class="text">그룹 추가</span>
           </div>
         </div>
@@ -105,7 +105,7 @@ export default {
     console.log("GroupView Created: ");
     //axios요청
     const url = `${this.backURL}/group`;
-
+    console.log("url: " + url);
     const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
     axios.defaults.headers.common["Authorization"] = accessToken;
 
@@ -122,7 +122,7 @@ export default {
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.log("err: " + error);
         Swal.fire({
           text: "로그인이 필요한 서비스 입니다.",
           icon: "warning",
@@ -232,7 +232,7 @@ div.group-container > div.group > ul {
   margin-left: 10px;
 }
 div.group-container > div.group:hover {
-  background-color: rgba(0,112,192,0.329);
+  background-color: rgba(0, 112, 192, 0.329);
 }
 div.group-container > div.group > ul > li > div.group-info {
   font-size: 18px;

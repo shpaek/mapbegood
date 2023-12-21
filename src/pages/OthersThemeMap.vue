@@ -1,42 +1,95 @@
 <template>
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <div style="display:flex;">
-      <a href="/othersthememap" style="color:#000;text-decoration:none;margin-top:25px;margin-bottom:30px;">
-        <span class="theme-list" style="font-weight:bold;font-size:25px;margin-left:30px;padding-top:15px;">추천 테마지도</span>
+    <div style="display: flex">
+      <a
+        href="/othersthememap"
+        style="
+          color: #000;
+          text-decoration: none;
+          margin-top: 25px;
+          margin-bottom: 30px;
+        "
+      >
+        <span
+          class="theme-list"
+          style="
+            font-weight: bold;
+            font-size: 25px;
+            margin-left: 30px;
+            padding-top: 15px;
+          "
+          >추천 테마지도</span
+        >
       </a>
     </div>
     <div>
-      <div class="input-group mb-3" style="width:370px;padding-left:20px;">
-        <input v-model="searchTerm" placeholder="테마지도 검색하기" class="form-control"
-          @keyup.enter="executeSearch" style="margin-left: 5px"/>
-        <div class="input-group-append" style="display: flex;">
+      <div class="input-group mb-3" style="width: 370px; padding-left: 20px">
+        <input
+          v-model="searchTerm"
+          placeholder="테마지도 검색하기"
+          class="form-control"
+          @keyup.enter="executeSearch"
+          style="margin-left: 5px"
+        />
+        <div class="input-group-append" style="display: flex">
           <!-- <button @click="executeSearch" class="btn btn-dark">검색하기</button> -->
-          <span @click="executeSearch" class="btn btn-dark" style="margin-right: 5px;padding:2px 7px 0 7px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          <span
+            @click="executeSearch"
+            class="btn btn-dark"
+            style="margin-right: 5px; padding: 2px 7px 0 7px"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              class="bi bi-search"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+              />
             </svg>
           </span>
         </div>
       </div>
     </div>
 
-    <div v-if="themeMaps.length > 0" style=" position: absolute; width: 390px; height: 85vh; overflow-y: auto; overflow-x: hidden;">
+    <div
+      v-if="themeMaps.length > 0"
+      style="
+        position: absolute;
+        width: 390px;
+        height: 85vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+      "
+    >
       <!-- 검색 결과가 있는 경우 -->
       <ul class="list-group">
         <!-- 각 테마맵에 대한 목록 -->
-        <li v-for="themeMap in themeMaps" :key="themeMap.id" @click="showDetails(themeMap)"
-            class="thememap">
-          <div class="info">
+        <li v-for="themeMap in themeMaps" :key="themeMap.id" class="thememap">
+          <div class="info" @click="showDetails(themeMap)">
             <div class="name">{{ themeMap.name }}</div>
             <div class="memo">{{ themeMap.memo }}</div>
             <p v-show="themeMap.memo == null" class="mb-1">&nbsp;</p>
             <!-- <small>{{ themeMap.id }}</small> -->
           </div>
           <!-- 추가하기 버튼 -->
-          <span @click="addToFavorites(themeMap.id)" class="star" v-show="!isInFavorites(themeMap.id)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16"
-                  style="cursor: pointer;">
-              <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+          <span class="star" v-show="!isInFavorites(themeMap.id)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              class="bi bi-star"
+              viewBox="0 0 16 16"
+              style="cursor: pointer"
+              @click="addToFavorites(themeMap.id)"
+            >
+              <path
+                d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"
+              />
             </svg>
             <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"
             style="cursor: pointer;">
@@ -47,11 +100,23 @@
       </ul>
     </div>
 
-    <div v-else class="alert alert-warning mt-3 text-center" role="alert"
-      style="width: 370px; margin: auto">
-      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
-        class="bi bi-exclamation-circle-fill text-warning mb-2" viewBox="0 0 16 16">
-        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0V4zm.5 6a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1h1z"/>
+    <div
+      v-else
+      class="alert alert-warning mt-3 text-center"
+      role="alert"
+      style="width: 370px; margin: auto"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="30"
+        height="30"
+        fill="currentColor"
+        class="bi bi-exclamation-circle-fill text-warning mb-2"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0V4zm.5 6a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1h1z"
+        />
       </svg>
       <p class="mb-0">검색 결과가 없습니다.</p>
     </div>
@@ -135,17 +200,17 @@ export default {
 
     showDetails(themeMap) {
       this.$store.commit("setThemeMapDetail", themeMap);
-  this.$router.push({
-    name: 'othersthememapdetail',
-    params: {
-      id: themeMap.id
+      this.$router.push({
+        name: "othersthememapdetail",
+        params: {
+          id: themeMap.id,
+        },
+        query: {
+          name: themeMap.name,
+          memo: themeMap.memo,
+        },
+      });
     },
-    query: {
-      name: themeMap.name,
-      memo: themeMap.memo,
-    }
-  });
-  },
 
     // sub 호출 메서드
     async checkNotifications() {
@@ -265,16 +330,15 @@ export default {
 };
 </script>
 <style>
-
 ul {
   list-style-type: none;
   padding: 0;
-  margin-top:30px;
+  margin-top: 30px;
 }
 li.thememap {
-  display:flex;
-  margin-left:auto;
-  margin-right:auto;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
   border: 1px solid grey;
   border-radius: 5px;
   height: 60px;
@@ -303,19 +367,24 @@ ul.list-group > li {
   margin-top: 15px;
 }
 ul.list-group > li:hover {
-  background-color: rgba(0,112,192,0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
+  background-color: rgba(
+    0,
+    112,
+    192,
+    0.329
+  ); /* 좋을지도 로고 파란색, 투명도 적용 */
 }
-span.star{
-  margin-left:20px;
+span.star {
+  margin-left: 20px;
   margin-top: 15px;
 }
-span.star>svg:hover{
-  fill:rgba(250, 206, 60, 0.767);
+span.star > svg:hover {
+  fill: rgba(250, 206, 60, 0.767);
 }
 .m-part {
   position: absolute;
-  left: 454px; 
-  right: 0; 
+  left: 454px;
+  right: 0;
   height: 100%;
 }
 
