@@ -1,6 +1,9 @@
 <template>
-  <v-container fluid mt-5>
-    <div class="text-sm-h2 text-h4 font-weight-bold ml-3">그룹명</div>
+  <!-- <v-container fluid mt-5> -->
+  <div>
+    <div class="chat__header">
+      <span class="chat__header__greetings">{{ this.groupName }}</span>
+    </div>
 
     <v-list id="chats">
       <template v-for="(item, idx) in chats" :key="idx">
@@ -31,23 +34,45 @@
       </template>
     </v-list>
 
-    <v-form class="input mt-5 d-flex">
-      <v-textarea
-        v-model="chat"
-        autofocus
-        label="채팅을 남겨주세요."
-        color="green darken-1"
-        auto-grow
-        outlined
-        rows="1"
-        row-height="15"
+    <div class="form">
+      <input
+        class="form__input"
+        type="text"
+        placeholder="메세지를 입력하세요."
+        v-model.trim="chat"
         @keyup.enter="sendChat"
-      ></v-textarea>
-      <div>
-        <v-btn @click="sendChat" text class="mt-3 font-weight-bold">전송</v-btn>
+      />
+      <div @click="sendChat" class="form__submit">
+        <svg
+          width="30"
+          height="30"
+          viewBox="0 0 68 68"
+          fill="#CCCCCC"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_26_10)">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M48.0833 19.799C48.619 20.3347 48.806 21.127 48.5665 21.8457L35.8385 60.0294C35.5946 60.7614 34.9513 61.2877 34.1855 61.382C33.4198 61.4763 32.6681 61.1217 32.2539 60.4707L22.593 45.2893L7.41158 35.6285C6.76065 35.2142 6.40604 34.4625 6.50031 33.6968C6.59458 32.931 7.12092 32.2878 7.85287 32.0438L46.0366 19.3159C46.7553 19.0763 47.5476 19.2633 48.0833 19.799ZM26.5903 44.1204L33.3726 54.7782L42.0926 28.6181L26.5903 44.1204ZM39.2642 25.7897L23.7619 41.292L13.1041 34.5097L39.2642 25.7897Z"
+              fill=""
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_26_10">
+              <rect
+                width="48"
+                height="48"
+                fill="white"
+                transform="translate(33.9412) rotate(45)"
+              />
+            </clipPath>
+          </defs>
+        </svg>
       </div>
-    </v-form>
-  </v-container>
+    </div>
+  </div>
+  <!-- </v-container> -->
 </template>
 
 <script>
@@ -61,6 +86,7 @@ export default {
   },
   data() {
     return {
+      groupName: null,
       groupId: null,
       profileImage: null,
       nickName: null,
@@ -111,13 +137,20 @@ export default {
     },
   },
   async created() {
+    const groupInfo = location.pathname.split("/");
+    if (groupInfo[1] == "group") {
+      this.groupId = groupInfo[2];
+      this.groupName = decodeURI(groupInfo[3]);
+    }
+
     await this.$store.dispatch("getUserInfo");
-    this.groupId = 1;
+    console.log("open");
     this.profileImage = this.userInfo.profileImage;
     this.nickName = this.userInfo.nickName;
     this.connect();
   },
   updated() {
+    console.log(this.chats);
     const chatbox = document.querySelector("#chats");
     chatbox.scrollTop = chatbox.scrollHeight;
   },
@@ -126,11 +159,27 @@ export default {
 
 <style scoped>
 #chats {
-  position: absolute;
+  /* position: absolute; */
   overflow-y: scroll;
-  height: 500px;
-  width: 100%;
-  top: 100px;
+  /* height: 500px; */
+  /* width: 100%; */
+  height: 400px;
+  width: 380px;
+  /* top: 100px; */
+  border-radius: 10px 10px 12px 12px;
+}
+
+.chat__header {
+  background: #d6dbf8;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 24px 24px 0px 0px;
+  padding: 0.8rem;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.chat__header__greetings {
+  color: #292929;
 }
 
 .chat__mymessage {
@@ -138,12 +187,13 @@ export default {
   justify-content: right;
   align-items: flex-end;
   margin: 0;
+  margin-right: 10px;
   min-height: 40px;
   line-break: anywhere;
 }
 
 .chat__mymessage__paragraph {
-  margin: 0.4rem 0 0 1rem;
+  margin: 0.3rem 0 0 1rem;
   border-radius: 20px 20px 0px 20px;
   max-width: 180px;
   background-color: #bbc4ef;
@@ -158,7 +208,7 @@ export default {
 
 .chat__yourmessage__avartar {
   width: 40px;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .chat__yourmessage__img {
@@ -193,7 +243,7 @@ export default {
 }
 
 .chat__body {
-  padding: 2rem;
+  padding: 0.1rem;
   overflow: scroll;
   scroll-behavior: smooth;
 }
@@ -205,5 +255,41 @@ export default {
 .input {
   position: absolute;
   bottom: 0;
+}
+
+.form {
+  border: #bbc4ef 1px solid;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: #ffffff;
+  border-radius: 10px 10px 12px 12px;
+  box-shadow: 0px -5px 30px rgba(0, 0, 0, 0.05);
+  width: 365px;
+}
+
+.form__input {
+  border: none;
+  padding: 0.5rem;
+  font-size: 16px;
+  width: calc(100% - 60px);
+}
+
+.form__input:focus {
+  outline: none;
+}
+
+.form__submit {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+svg {
+  transition: 0.3s;
+}
+
+svg:hover {
+  fill: #999999;
 }
 </style>

@@ -1,13 +1,21 @@
 <template>
   <div>
-    <!-- <div id="map"> -->
-    <!-- <div class="chat-container"> -->
-    <chat />
-    <!-- </div> -->
-    <!-- v-if="$route.name == '/groups'" -->
-    <a href="#"><img src="../../public/images/chat.png" alt="chat" /></a>
+    <div id="map">
+      <!-- <div class="chat-container"> -->
+      <div :class="chatOnOff ? chatStyle2 : hidden">
+        <chat />
+      </div>
+
+      <a href="#"
+        ><img
+          src="../../public/images/chat1.png"
+          alt="chat"
+          v-if="$route.name == '/group'"
+          @click="switchChat"
+          style="border-radius: 20px 20px 20px 20px"
+      /></a>
+    </div>
   </div>
-  <!-- </div> -->
 </template>
 
 <script>
@@ -33,6 +41,10 @@ export default {
     return {
       map: null,
       markers: [],
+
+      chatOnOff: false,
+      hidden: "chat-container1",
+      chatStyle2: "chat-container2",
     };
   },
   mounted() {
@@ -194,6 +206,11 @@ export default {
     getMarkerColor(category) {
       return this.color || "default";
     },
+
+    switchChat() {
+      console.log(this.chatOnOff);
+      this.chatOnOff = !this.chatOnOff;
+    },
   },
 };
 </script>
@@ -206,20 +223,28 @@ export default {
   overflow: hidden;
   z-index: 1;
 }
-.chat-container {
-  /* position: fixed;
-  z-index: 2; */
-  /* margin-top: 10vh; */
+.chat-container1 {
+  display: none;
+}
+
+.chat-container2 {
+  position: fixed;
+  z-index: 2;
+  /* margin-top: 15vh; */
   /* margin-left: 115vh; */
-  /* margin-left: 50vh; */
+  /* margin-left: 111vh; */
+  margin-top: 360px;
+  margin-left: 1066px;
 }
 
 img {
   width: 50px;
   height: 50px;
   position: fixed;
-  z-index: 2;
-  margin-top: 88vh;
-  margin-left: 140vh;
+  z-index: 20;
+  /* margin-top: 88vh;
+  margin-left: 140vh; */
+  margin-top: 870px;
+  margin-left: 1360px;
 }
 </style>
