@@ -556,12 +556,19 @@ export default {
           headers: { "Content-Type": "application/json" },
         })
         .then((response) => {
-          alert("그룹이 삭제되었습니다");
+          Swal.fire({
+            text: "그룹이 삭제되었습니다",
+            icon: "success",
+          });
+
           location.href = "/groups";
         })
         .catch((error) => {
           console.log(error);
-          alert("그룹이 삭제되지 않았습니다 ");
+          Swal.fire({
+            text: "그룹 삭제를 실패했습니다.",
+            icon: "error",
+          });
         });
     },
     personClickHandler() {
@@ -597,13 +604,19 @@ export default {
         })
         .then((response) => {
           // Assuming your backend returns a success status
-          alert("그룹 테마지도가 삭제되었습니다.");
+          Swal.fire({
+            text: "그룹 테마지도가 삭제되었습니다.",
+            icon: "success",
+          });
           // Refresh the theme maps after deletion
           this.fetchGroupThememaps();
         })
         .catch((error) => {
           console.error("Error deleting group theme map:", error);
-          alert("그룹 테마지도를 삭제하지 못했습니다.");
+          Swal.fire({
+            text: "그룹 테마지도를 삭제하지 못했습니다.",
+            icon: "error",
+          });
         });
     },
     closeImageChange() {
@@ -862,12 +875,12 @@ li.thememap > div.info > div.memo {
   max-width: 250px;
   overflow-x: hidden;
 }
-.dropdown-menu {
+.dropdown {
   min-width: 45px;
   min-height: 50px;
 }
 
-.dropdown-menu li {
+.dropdown li {
   font-size: 12px;
   text-align: center;
 }

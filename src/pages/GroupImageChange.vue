@@ -29,6 +29,7 @@
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
+
 export default {
   name: "GroupImageChange",
   props: {
@@ -102,6 +103,10 @@ export default {
         .then((response) => {
           location.reload();
           this.$emit("close-Image");
+          Swal.fire({
+            text: "그룹 이미지를 변경하였습니다.",
+            icon: "success",
+          });
         })
         .catch((error) => {
           console.log(error);
