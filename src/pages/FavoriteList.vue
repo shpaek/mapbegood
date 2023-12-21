@@ -4,7 +4,12 @@
   <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
     <a href="/favoriteList" style="color: #000; text-decoration: none">
-      <h2 class="theme-list" style="margin-left: 10px; font-size: 24px; font-weight: bold;">즐겨찾기 목록</h2></a
+      <h2
+        class="theme-list"
+        style="margin-left: 10px; font-size: 24px; font-weight: bold"
+      >
+        즐겨찾기 목록
+      </h2></a
     >
 
     <v-divider color="warningss"></v-divider>
@@ -25,7 +30,10 @@
         style="margin-left: 10px; margin-right: 10px"
       >
         <li>
-          <div style="display: inline-block; width: 265px" @click="showDetails(favorite)">
+          <div
+            style="display: inline-block; width: 265px"
+            @click="showDetails(favorite)"
+          >
             <h5>
               <b>{{ favorite.themeMapDto.name }}</b>
             </h5>
@@ -155,19 +163,18 @@ export default {
       });
     },
     showDetails(favorite) {
-  this.$store.commit("setThemeMapDetail", favorite);
-  this.$router.push({
-    name: 'othersthememapdetail',
-    params: {
-      id: favorite.themeMapDto.id
+      this.$store.commit("setThemeMapDetail", favorite);
+      this.$router.push({
+        name: "othersthememapdetail",
+        params: {
+          id: favorite.themeMapDto.id,
+        },
+        query: {
+          name: favorite.themeMapDto.name,
+          memo: favorite.themeMapDto.memo,
+        },
+      });
     },
-    query: {
-      name: favorite.themeMapDto.name,
-      memo: favorite.themeMapDto.memo,
-    }
-  });
-},
-    
   },
 };
 </script>

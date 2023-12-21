@@ -1,8 +1,6 @@
 <!--GroupDetail.vue-->
 <template lang="">
- 
-   <div class="section-container">
-     
+  <div class="section-container">
     <div class="g-part">
       <div class="group-detail">
         <div class="group-info">
@@ -54,12 +52,20 @@
               </div>
             </li>
             <li>
-              <span class="group-name" @click="groupnameClickHandler" style="font-weight:bold;font-size:18px;">
+              <span
+                class="group-name"
+                @click="groupnameClickHandler"
+                style="font-weight: bold; font-size: 18px"
+              >
                 {{ groupName }}
               </span>
             </li>
             <li class="group-member">
-              <span class="group-member" @click="groupmemberClickHandler" style="font-size:15px;">
+              <span
+                class="group-member"
+                @click="groupmemberClickHandler"
+                style="font-size: 15px"
+              >
                 {{ leaderNickname }}
               </span>
               <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
@@ -82,8 +88,17 @@
       </div>
       <hr />
 
-    
-      <div class="group-theme-map-heading" style="font-size:18px;padding-left:130px;font-weight:bold;padding-bottom:20px;">그룹테마지도({{ listCnt }})</div>
+      <div
+        class="group-theme-map-heading"
+        style="
+          font-size: 18px;
+          padding-left: 130px;
+          font-weight: bold;
+          padding-bottom: 20px;
+        "
+      >
+        그룹테마지도({{ listCnt }})
+      </div>
       <div class="group-thememap-list">
         <v-dialog v-model="groupThemeMapAddDialog" persistent width="500">
           <template v-slot:activator="{ props }">
@@ -154,13 +169,91 @@
                     </option>
                   </select>
                 </div>
+                <div class="mb-4">
+                  <label class="form-label text-black">테마 색상</label>
+                  <div class="flex space-x-2">
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'red',
+                      }"
+                      @click="selectColor('red')"
+                      style="background-color: #eb3232"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'yellow',
+                      }"
+                      @click="selectColor('yellow')"
+                      style="background-color: #f3f335"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'green',
+                      }"
+                      @click="selectColor('green')"
+                      style="background-color: #34f834"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'blue',
+                      }"
+                      @click="selectColor('blue')"
+                      style="background-color: #4141e6"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'indigo',
+                      }"
+                      @click="selectColor('indigo')"
+                      style="background-color: #4b0082"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'purple',
+                      }"
+                      @click="selectColor('purple')"
+                      style="background-color: #800080"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'pink',
+                      }"
+                      @click="selectColor('pink')"
+                      style="background-color: #ff69b4"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'gray',
+                      }"
+                      @click="selectColor('gray')"
+                      style="background-color: #808080"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'black',
+                      }"
+                      @click="selectColor('black')"
+                      style="background-color: #000000"
+                    ></button>
+                  </div>
+                </div>
 
                 <!-- 테마 메모 입력 -->
                 <div class="mb-3">
                   <label for="themeMemo" class="form-label text-black"
                     >테마 메모</label
                   >
-                  <textarea v-model="groupThemeMapMemo"
+                  <textarea
+                    v-model="groupThemeMapMemo"
                     id="groupThemeMapMemo"
                     name="groupThemeMapMemo"
                     rows="4"
@@ -327,17 +420,17 @@
     <div class="m-part">
       <Detailmap />
     </div>
-      <!-- 모달창 -->
-      <GroupImageChange
-        :isImageChangeOpen="isImageChangeOpen"
-        :groupId="groupId"
-        @close-Image="closeImageChange"
-      />
-      <GroupNameChange
-        :isNameChangeOpen="isNameChangeOpen"
-        :groupId="groupId"
-        @close-Name="closeNameChange"
-      />
+    <!-- 모달창 -->
+    <GroupImageChange
+      :isImageChangeOpen="isImageChangeOpen"
+      :groupId="groupId"
+      @close-Image="closeImageChange"
+    />
+    <GroupNameChange
+      :isNameChangeOpen="isNameChangeOpen"
+      :groupId="groupId"
+      @close-Name="closeNameChange"
+    />
   </div>
 </template>
 <script>
@@ -518,6 +611,42 @@ export default {
     },
     closeNameChange() {
       this.isNameChangeOpen = false;
+    },
+
+    selectColor(color) {
+      this.themeMapColor = color;
+      switch (color) {
+        case "red":
+          // this.markerImage = "/public/images/";
+          this.themeMapDto.color = "red";
+          break;
+        case "yellow":
+          this.themeMapDto.color = "yellow";
+          break;
+        case "green":
+          this.themeMapDto.color = "green";
+          break;
+        case "blue":
+          this.themeMapDto.color = "blue";
+          break;
+        case "indigo":
+          this.themeMapDto.color = "indigo";
+          break;
+        case "purple":
+          this.themeMapDto.color = "purple";
+          break;
+        case "pink":
+          this.themeMapDto.color = "pink";
+          break;
+        case "gray":
+          this.themeMapDto.color = "gray";
+          break;
+        case "black":
+          this.themeMapDto.color = "black";
+          break;
+        default:
+          this.themeMapDto.color = "default"; // 기본값 설정
+      }
     },
 
     async CreateGroupThemeMap() {
@@ -763,11 +892,25 @@ div.group-detail > div.group-info > ul > li.img > div.combobox > div.dropdown {
   white-space: nowrap;
 }
 
-div.group-detail> div.group-info> ul> li.img> div.combobox> div.dropdown> ul> li {
+div.group-detail
+  > div.group-info
+  > ul
+  > li.img
+  > div.combobox
+  > div.dropdown
+  > ul
+  > li {
   color: rgb(80, 80, 80);
 }
 
-div.group-detail> div.group-info> ul> li.img> div.combobox> div.dropdown> ul> li:hover {
+div.group-detail
+  > div.group-info
+  > ul
+  > li.img
+  > div.combobox
+  > div.dropdown
+  > ul
+  > li:hover {
   cursor: pointer;
   background-color: rgb(211, 211, 211);
 }

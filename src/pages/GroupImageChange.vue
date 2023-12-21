@@ -5,13 +5,22 @@
         <div class="space"><span>그룹이미지 변경</span></div>
         <div class="fill">
           <img class="img" :src="image" alt="변경할이미지" />
-          <input type="file" name="image" id="i"
-            required @change="imageChangeHandler" />
-          <div class="errorMsg" v-show="fileErrorMsg"><span>{{ fileErrorMsg }}</span></div>
+          <input
+            type="file"
+            name="image"
+            id="i"
+            required
+            @change="imageChangeHandler"
+          />
+          <div class="errorMsg" v-show="fileErrorMsg">
+            <span>{{ fileErrorMsg }}</span>
+          </div>
         </div>
         <div class="button-container">
-          <button type="button" id="b1" @click="b1ClickHandler">돌아가기</button>
           <button type="submit" id="b2">변경하기</button>
+          <button type="button" id="b1" @click="b1ClickHandler">
+            돌아가기
+          </button>
         </div>
       </form>
     </v-sheet>
@@ -22,7 +31,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 export default {
   name: "GroupImageChange",
-  props:{
+  props: {
     isImageChangeOpen: Boolean,
   },
   data() {
@@ -32,7 +41,7 @@ export default {
       leaderNickname: "",
       image: "../../../public/images/defaultGroupProfile.jpg",
       groupImage: "",
-      fileErrorMsg: '',
+      fileErrorMsg: "",
     };
   },
   created() {
@@ -43,11 +52,10 @@ export default {
     this.groupId = groupId;
     this.groupName = groupName;
     this.leaderNickname = leaderNickname;
-
   },
   methods: {
     b1ClickHandler() {
-      this.$emit('close-Image');
+      this.$emit("close-Image");
     },
     imageChangeHandler(e) {
       const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
@@ -93,11 +101,14 @@ export default {
         })
         .then((response) => {
           location.reload();
-          this.$emit('close-Image');
+          this.$emit("close-Image");
         })
         .catch((error) => {
           console.log(error);
-          Swal.fire({ text: "그룹 이미지를 변경하지 못했습니다", icon: "warning" });
+          Swal.fire({
+            text: "그룹 이미지를 변경하지 못했습니다",
+            icon: "warning",
+          });
         });
     },
   },
@@ -105,62 +116,62 @@ export default {
 </script>
 <style scoped>
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
-div.space{
-    display: flex;
+div.space {
+  display: flex;
 }
-div.errorMsg{
-    display: flex;
+div.errorMsg {
+  display: flex;
 }
-div.errorMsg>span{
-    margin-left: auto;
-    margin-right: auto;
-    margin-top:18px;
-    color:red;
+div.errorMsg > span {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 18px;
+  color: red;
 }
-div.space>span{
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 15px;
-    margin-bottom:40px;
-    font-size: 18px;
-    font-weight: bold;
+div.space > span {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 40px;
+  font-size: 18px;
+  font-weight: bold;
 }
-div.fill{
+div.fill {
   height: 260px;
 }
-div.fill>img.img {
-    display:flex;
-    margin-left: auto;
-    margin-right:auto;
-    max-width: 200px;
-    max-height: 200px;
-    min-height: 200px;
-    min-width: 200px;
-    margin-bottom: 10px;
+div.fill > img.img {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 200px;
+  max-height: 200px;
+  min-height: 200px;
+  min-width: 200px;
+  margin-bottom: 10px;
 }
-div.fill>input{
-    margin-left: 25px;
+div.fill > input {
+  margin-left: 25px;
 }
-div.button-container{
-    display: flex;
-    margin-top:50px;
+div.button-container {
+  display: flex;
+  margin-top: 50px;
 }
-div.button-container>button{
-    margin-left: auto;
-    margin-right:auto;
+div.button-container > button {
+  margin-left: auto;
+  margin-right: auto;
 }
-div.button-container>button:hover{
-    font-weight: bold;
+div.button-container > button:hover {
+  font-weight: bold;
 }
 </style>
