@@ -93,6 +93,7 @@ public class GroupThemeMapController {
 	    ) {
 	        try {
 	            GroupThememapDTO groupThememap = groupthememapservice.getGroupThememapDetail(groupThememapId);
+	            System.out.println(groupThememap.getColor());
 	            return new ResponseEntity<>(groupThememap, HttpStatus.OK);
 	        } catch (FindException e) {
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
