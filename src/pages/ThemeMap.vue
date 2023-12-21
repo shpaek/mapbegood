@@ -238,84 +238,28 @@
                             />
                           </div>
 
-                          <div class="mb-4">
-                            <label class="form-label text-black"
-                              >테마 색상</label
+                          <!-- 색상 선택 드롭다운 -->
+                          <div class="mb-3">
+                            <label
+                              for="colorSelector"
+                              class="form-label text-black"
+                              >테마 색상 선택</label
                             >
-                            <div class="flex space-x-2">
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'red',
-                                }"
-                                @click="selectColor('red')"
-                                class="bg-red-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'yellow',
-                                }"
-                                @click="selectColor('yellow')"
-                                class="bg-yellow-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'green',
-                                }"
-                                @click="selectColor('green')"
-                                class="bg-green-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'blue',
-                                }"
-                                @click="selectColor('blue')"
-                                class="bg-blue-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'indigo',
-                                }"
-                                @click="selectColor('indigo')"
-                                class="bg-indigo-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'purple',
-                                }"
-                                @click="selectColor('purple')"
-                                class="bg-purple-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'pink',
-                                }"
-                                @click="selectColor('pink')"
-                                class="bg-pink-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'gray',
-                                }"
-                                @click="selectColor('gray')"
-                                class="bg-gray-500"
-                              ></button>
-                              <button
-                                :class="{
-                                  'color-button': true,
-                                  selected: selectedColor === 'black',
-                                }"
-                                @click="selectColor('black')"
-                                class="bg-black"
-                              ></button>
-                            </div>
+                            <select
+                              v-model="thememap.themeMapDto.color"
+                              id="themeMapDto.color"
+                              name="themeMapDto.color"
+                              class="form-select"
+                              ref="themeMapDto.color"
+                            >
+                              <option
+                                v-for="color in colors"
+                                :key="color"
+                                :value="color"
+                              >
+                                {{ color }}
+                              </option>
+                            </select>
                           </div>
 
                           <!-- 테마 메모 입력 -->
@@ -414,16 +358,29 @@ export default {
   data() {
     return {
       favoriteList: [],
-      themeMapId: null,
-      themeMapAddDialog: true,
+      themeMapId: null, // 초기값 추가
+
+      themeMapAddDialog: false,
+
+      colors: [
+        "red",
+        "yellow",
+        "green",
+        "blue",
+        "indigo",
+        "purple",
+        "pink",
+        "gray",
+        "black",
+      ],
       themeName: "",
-      // selectedColor: "",
+      selectedColor: "",
       themeMemo: "",
       isThemePublic: false,
-      selectedColor: "",
       isMainMap: false,
-      markerImage: "",
-      themeMapAddDialog: false,
+
+      // themeMapEditDialog: false,
+
       themeMapDto: {
         themeMapEditDialog: false,
         id: null,
@@ -544,9 +501,7 @@ export default {
     createThemeMap() {
       if (this.themeName == "") {
         Swal.fire({ text: "테마지도 이름을 입력해주세요.", icon: "warning" });
-        this.$nextTick(() => {
-      this.$refs.themeName.focus();
-    });
+        this.$refs.themeName.focus();
         return;
       }
       if (this.selectedColor == "") {
@@ -580,7 +535,7 @@ export default {
           });
           // Thememap.vue로 자동으로 이동
           this.themeMapAddDialog = false;
-          // this.cancelThemeMapAdd();
+          this.cancleThemeMapAdd();
           this.loadMymapList();
         })
         .catch((error) => {
@@ -588,9 +543,14 @@ export default {
         });
     },
 
-    cancelThemeMapAdd() {
+    cancleThemeMapAdd() {
       this.themeMapAddDialog = false;
-      this.cancelCreateThemeMap();
+
+      this.themeName = "";
+      this.selectedColor = "";
+      this.themeMemo = "";
+      this.isThemePublic = false;
+      this.isMainMap = false;
     },
 
     loadThemeMapDetails(themeMapId) {
@@ -623,7 +583,7 @@ export default {
       const updatedThemeMapDto = {
         id: themeMapDto.id,
         name: themeMapDto.name,
-        color: this.selectedColor,
+        color: themeMapDto.color,
         memo: themeMapDto.memo,
         show: themeMapDto.show,
         mainmap: themeMapDto.mainmap,
@@ -631,7 +591,7 @@ export default {
 
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
-      console.log(updatedThemeMapDto);
+
       axios
         .put(url, updatedThemeMapDto)
         .then((response) => {
@@ -640,73 +600,19 @@ export default {
             text: "테마맵이 성공적으로 수정되었습니다.",
             icon: "success",
           });
-          this.cancelThemeMapEdit(themeMapDto);
+          this.cancleThemeMapEdit(themeMapDto);
           this.loadMymapList();
         })
         .catch((error) => {
           console.error(error);
           Swal.fire({ text: "테마맵 수정에 실패했습니다.", icon: "error" });
-          this.cancelThemeMapEdit(themeMapDto);
+          this.cancleThemeMapEdit(themeMapDto);
         });
     },
 
-    cancelThemeMapEdit(themeMapDto) {
+    cancleThemeMapEdit(themeMapDto) {
       themeMapDto.themeMapEditDialog = false;
     },
-
-    openCreateThemeMapDialog() {
-      this.themeMapAddDialog = true;
-    },
-
-    selectColor(color) {
-      this.selectedColor = color;
-      switch (color) {
-        case "red":
-          // this.markerImage = "/public/images/";
-          this.themeMapDto.color = "red";
-          break;
-        case "yellow":
-          this.themeMapDto.color = "yellow";
-          break;
-        case "green":
-          this.themeMapDto.color = "green";
-          break;
-        case "blue":
-          this.themeMapDto.color = "blue";
-          break;
-        case "indigo":
-          this.themeMapDto.color = "indigo";
-          break;
-        case "purple":
-          this.themeMapDto.color = "purple";
-          break;
-        case "pink":
-          this.themeMapDto.color = "pink";
-          break;
-        case "gray":
-          this.themeMapDto.color = "gray";
-          break;
-        case "black":
-          this.themeMapDto.color = "black";
-          break;
-        default:
-          this.themeMapDto.color = "default"; // 기본값 설정
-      }
-    },
-
-    cancelCreateThemeMap() {
-      this.themeMapAddDialog = false;
-  this.themeName = "";
-  this.selectedColor = "";
-  this.themeMemo = "";
-  this.isThemePublic = false;
-  this.isMainMap = false;
-    },
-
-    // cancelThemeMapEdit() {
-    //   // 취소 버튼 클릭 시 다이얼로그를 닫습니다.
-    //   this.themeMapEditDialog = false;
-    // },
   },
 };
 </script>
@@ -715,14 +621,12 @@ export default {
   font-family: "Noto Sans KR", sans-serif;
 }
 
-
 .m-part {
   position: absolute;
   left: 454px; 
   right: 0; 
   height: 100%;
 }
-
 .color-button {
   display: inline-flex;
   width: 32px;

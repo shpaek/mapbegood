@@ -1,4 +1,11 @@
 <template>
+      <!-- 전체화면에 맵 표시 -->
+      <DetailMap
+    ref="detailMap"
+    :mymapdetail="thememap"
+    :places="thememap.ourplaceList"
+    :color="thememap.color"
+  />
   <div class="container mt-5">
     <h5 class="display-4" style="font-size: 2rem; font-weight: bold">
       <svg
@@ -106,8 +113,11 @@
 
 <script>
 import axios from "axios";
-
+import DetailMap from "./Detailmap.vue";
 export default {
+  components: {
+    DetailMap,
+  },
   name: "DetailGroupMap",
   data() {
     return {
