@@ -862,12 +862,12 @@ li.thememap > div.info > div.memo {
   max-width: 250px;
   overflow-x: hidden;
 }
-.dropdown-menu {
+.dropdown {
   min-width: 45px;
   min-height: 50px;
 }
 
-.dropdown-menu li {
+.dropdown li {
   font-size: 12px;
   text-align: center;
 }
