@@ -75,8 +75,11 @@ public class GroupsController {
 			GroupsDTO groupDto = new GroupsDTO();
 			groupDto.setName(name); //그룹명을 그룹에 세팅
 			memberGroupDto.setGroups(groupDto); //그룹멤버에 그룹세팅
+			log.error("image.toString(): " + image.toString());
+			log.error("image.getSize()" + image.getSize());
 			if(image==null&&image.getSize()<0) {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
+//				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
+				return new ResponseEntity<>(HttpStatus.OK); //올바르지 않은 이미지 첨부
 			}else {
 				gs.createGroup(memberGroupDto, image); //그룹생성, 그룹멤버의 멤버로 그룹장 자동 추가			
 				return new ResponseEntity<>(HttpStatus.OK); //그룹생성성공			
