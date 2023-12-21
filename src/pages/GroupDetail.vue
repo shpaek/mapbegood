@@ -132,8 +132,7 @@
                   <label for="themeMemo" class="form-label text-black"
                     >테마 메모</label
                   >
-                  <textarea
-                    v-model="groupThemeMapMemo"
+                  <textarea v-model="groupThemeMapMemo"
                     id="groupThemeMapMemo"
                     name="groupThemeMapMemo"
                     rows="4"
@@ -616,7 +615,6 @@ div.group-thememap-list {
   margin-right: 30px;
 
   position: absolute;
-  width: 390px;
   height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
@@ -692,25 +690,11 @@ div.group-detail > div.group-info > ul > li.img > div.combobox > div.dropdown {
   white-space: nowrap;
 }
 
-div.group-detail
-  > div.group-info
-  > ul
-  > li.img
-  > div.combobox
-  > div.dropdown
-  > ul
-  > li {
+div.group-detail> div.group-info> ul> li.img> div.combobox> div.dropdown> ul> li {
   color: rgb(80, 80, 80);
 }
 
-div.group-detail
-  > div.group-info
-  > ul
-  > li.img
-  > div.combobox
-  > div.dropdown
-  > ul
-  > li:hover {
+div.group-detail> div.group-info> ul> li.img> div.combobox> div.dropdown> ul> li:hover {
   cursor: pointer;
   background-color: rgb(211, 211, 211);
 }
