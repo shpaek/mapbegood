@@ -5,9 +5,8 @@
         <div class="header-container">
           <!-- <h2 class="theme-list">나의 테마지도 리스트</h2> -->
           <a href="/thememap" style="color: #000; text-decoration: none">
-            <h2 class="theme-list" style="margin-left: 10px">나의 테마지도</h2>
-          </a>
-
+       <h2 class="theme-list" style="margin-left: 10px; font-size: 24px; font-weight: bold;">나의 테마지도</h2>
+        </a>
           <v-dialog v-model="themeMapAddDialog" persistent width="500">
             <template v-slot:activator="{ props }">
               <button

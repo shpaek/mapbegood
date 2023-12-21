@@ -4,7 +4,7 @@
   <!-- <router-link to="/favoriteadd" class="addfavorite">즐찾목록 추가</router-link> -->
   <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
     <a href="/favoriteList" style="color: #000; text-decoration: none">
-      <h2 class="theme-list" style="margin-left: 10px">즐겨찾기 목록</h2></a
+      <h2 class="theme-list" style="margin-left: 10px; font-size: 24px; font-weight: bold;">즐겨찾기 목록</h2></a
     >
 
     <v-divider color="warningss"></v-divider>

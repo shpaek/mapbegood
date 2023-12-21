@@ -1,6 +1,6 @@
 <template>
-  <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-    <h2 class="mt-3">추천 테마지도</h2>
+  <div class="search-wrapper" style="max-width: 600px; margin: auto">
+    <h2 class="mt-3" style="margin-left: 10px; font-size: 24px; font-weight: bold;">추천 테마지도</h2>
     <div class="input-group mb-3">
       <input
         v-model="searchTerm"
