@@ -30,7 +30,7 @@ export default {
 
   methods: {
     loadFavoriteList() {
-      const url = "api.mapbegood.site/mymap/list";
+      const url = "https://api.mapbegood.site/mymap/list";
 
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;

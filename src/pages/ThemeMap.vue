@@ -466,13 +466,11 @@ export default {
 
   methods: {
     loadMymapList() {
-      const url = "api.mapbegood.site/mymap/list";
-
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
       axios
-        .get(url, { withCredentials: true })
+        .get("https://api.mapbegood.site/mymap/list", { withCredentials: true })
         .then((response) => {
           console.log(response.data);
           const themeMapList = response.data;
