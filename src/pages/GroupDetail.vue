@@ -40,7 +40,7 @@
             </li>
             <li class="group-member">
               <span class="group-member" @click="groupmemberClickHandler">
-                {{ leaderNickname }}({{ memCnt }})
+                {{ leaderNickname }}
               </span>
               <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
               <svg
@@ -92,8 +92,8 @@
           </template>
 
           <v-card>
-            <v-card-title>
-              <h1 class="text-primary mb-4">그룹 테마지도 생성</h1>
+            <v-card-title style="display:flex;">
+              <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">그룹 테마지도 생성</span>
             </v-card-title>
 
             <v-card-text>
@@ -146,65 +146,33 @@
                 </div>
               </v-container>
             </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
+            <div class="btn-create-thememap">
               <!-- 테마맵 생성 버튼 -->
-              <button @click="CreateGroupThemeMap" class="btn btn-dark">
-                생성</button
-              >&nbsp;&nbsp;&nbsp;
-              <button
-                data-v-fce5df64=""
-                class="btn btn-light"
-                @click="cancelCreateGroupMap"
-              >
-                취소
-              </button>
-              <v-spacer></v-spacer>
-            </v-card-actions>
+              <span @click="CreateGroupThemeMap" class="create-thememap">생성</span>
+              <span @click="cancelCreateGroupMap" class="cancel-thememap">취소</span>
+            </div>
             <br />
           </v-card>
         </v-dialog>
 
         <ul class="list-group">
-          <li
-            v-for="thememap in groupThememaps"
-            :key="thememap.themeMapDto.id"
-            class="thememap"
-          >
-            <div
-              class="info"
-              @click="goToDetailGroupMap(thememap.themeMapDto.id)"
-            >
+          <li v-for="thememap in groupThememaps" :key="thememap.themeMapDto.id"
+            class="thememap">
+            <div class="info"
+              @click="goToDetailGroupMap(thememap.themeMapDto.id)">
               <div class="name">{{ thememap.themeMapDto.name }}</div>
               <div class="memo">{{ thememap.themeMapDto.memo }}</div>
             </div>
             <!-- 더보기 버튼 -->
             <div class="btn-group" role="group">
-              <button
-                type="button"
-                class="more"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  fill="currentColor"
-                  class="bi bi-three-dots"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"
-                  />
+              <button type="button" class="more" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                  <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
                 </svg>
               </button>
               <ul class="dropdown-menu">
-                <v-dialog
-                  v-model="thememap.themeMapDto.themeMapEditDialog"
-                  persistent
-                  width="500"
-                >
+                <v-dialog v-model="thememap.themeMapDto.themeMapEditDialog" persistent width="500">
                   <template v-slot:activator="{ props }">
                     <li v-bind="props">
                       <!-- @click="editGroupmap(thememap.themeMapDto.id)" -->
@@ -213,8 +181,8 @@
                   </template>
 
                   <v-card>
-                    <v-card-title>
-                      <h1 class="text-primary mb-4">그룹 테마지도 수정</h1>
+                    <v-card-title style="display:flex;">
+                      <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">그룹 테마지도 수정</span>
                     </v-card-title>
 
                     <v-card-text>
@@ -273,24 +241,14 @@
                         </div>
                       </v-container>
                     </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
+                    <div class="btn-update-thememap">
                       <!-- 테마맵 생성 버튼 -->
-                      <button
-                        @click="updateGroupMap(thememap.themeMapDto)"
-                        class="btn btn-dark"
-                      >
-                        수정</button
-                      >&nbsp;&nbsp;
-                      <button
-                        data-v-fce5df64=""
-                        class="btn btn-light"
-                        @click="cancleThemeMapEdit(thememap.themeMapDto)"
-                      >
+                      <span @click="updateGroupMap(thememap.themeMapDto)" class="update-thememap">
+                        수정</span>&nbsp;&nbsp;
+                      <span class="cancel-thememap" @click="cancleThemeMapEdit(thememap.themeMapDto)">
                         취소
-                      </button>
-                      <v-spacer></v-spacer>
-                    </v-card-actions>
+                      </span>
+                    </div>
                     <br />
                   </v-card>
                 </v-dialog>
@@ -682,12 +640,7 @@ div.group-thememap-list > ul.list-group > li {
   margin-top: 15px;
 }
 div.group-thememap-list > ul.list-group > li:hover {
-  background-color: rgba(
-    0,
-    112,
-    192,
-    0.329
-  ); /* 좋을지도 로고 파란색, 투명도 적용 */
+  background-color: rgba(0,112,192,0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
 }
 li.thememap {
   display: flex;
@@ -787,4 +740,23 @@ div.modal-container {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
+div.btn-create-thememap>span.create-thememap{
+  margin-left:200px;
+}
+div.btn-create-thememap>span.cancel-thememap{
+  margin-left:50px;
+}
+div.btn-create-thememap>span:hover{
+  font-weight: bold;
+}
+div.btn-update-thememap>span.update-thememap{
+  margin-left:200px;
+}
+div.btn-update-thememap>span.cancel-thememap{
+  margin-left:50px;
+}
+div.btn-update-thememap>span:hover{
+  font-weight: bold;
+}
+
 </style>

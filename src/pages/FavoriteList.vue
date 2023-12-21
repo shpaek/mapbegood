@@ -57,6 +57,24 @@
         </li>
       </ul>
     </div>
+ 
+     
+    <ul class="list-group">
+      <li v-for="favorite in favoriteList" :key="favorite.themeMapDto.id"
+          class="thememap">
+        <div class="info">  
+          <div class="name">{{ favorite.themeMapDto.name }}</div>
+          <div class="memo">{{ favorite.themeMapDto.memo }}</div>
+          <!-- <div v-show="favorite.themeMapDto.memo == null"></div> -->
+        </div>
+          <span @click="deleteFavorite(favorite.themeMapDto.id)" class="star">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+              <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+          </span>
+      </li>
+    </ul>
+    
   </div>
   <div class="m-part">
     <Detailmap />
@@ -109,8 +127,8 @@ export default {
           });
         });
     },
-
     deleteFavorite(themeMapId) {
+      console.log("즐찾취소")
       const url = `${this.backURL}/favorite/delete/${themeMapId}`;
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
@@ -126,7 +144,6 @@ export default {
         denyButtonText: "취소",
       }).then((result) => {
         if (result.isConfirmed) {
-          const backURL = this.$root.backURL;
           axios
             .delete(url, { withCredentials: true })
             .then((response) => {
@@ -151,20 +168,84 @@ export default {
 </script>
 
 <style scoped>
-/* 기존 스타일 */
-h2 {
-  margin: 12px 0px 8px;
+* {
+  font-family: "Noto Sans KR", sans-serif;
+}
+div.g-part {
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.m-part {
+  position: absolute;
+  left: 454px;
+  right: 0;
+  height: 100vh;
 }
 
 ul {
   list-style-type: none;
   padding: 0;
+  margin-top:30px;
+}
+li.thememap {
+  display:flex;
+  margin-left:auto;
+  margin-right:auto;
+  border: 1px solid grey;
+  border-radius: 5px;
+  height: 60px;
+  width: 330px;
+  vertical-align: baseline;
+}
+li.thememap > div.info {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 13px;
+  width: 260px;
+}
+li.thememap > div.info > div.name {
+  font-size: 18px;
+  font-weight: bold;
+}
+li.thememap > div.info > div.memo {
+  font-size: 13px;
+  color: grey;
+  overflow-x: hidden;
+  white-space: nowrap;
+  max-width: 230px;
 }
 
+ul.list-group > li {
+  margin-top: 15px;
+}
+ul.list-group > li:hover {
+  background-color: rgba(0,112,192,0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
+}
+span.star{
+  margin-left:20px;
+  margin-top: 13px;
+}
+span.star>svg{
+  fill:rgba(250, 206, 60, 0.767);
+}
+span.star>svg :hover{
+  fill:white;
+}
+/* 
+.search-wrapper {
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+}
+h2 {
+  margin: 12px 0px 8px;
+}
 li {
   border: 1px solid #ccc;
   padding: 1rem;
-  /* margin-bottom: 0.5rem; */
 }
 
 h3 {
@@ -178,39 +259,17 @@ p {
   font-size: 1rem;
   margin-bottom: 0;
 }
-
-.search-wrapper {
-  /* position: absolute; */
-  /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
-  /* right: 0; 오른쪽에 닿도록 */
-  /* height: 100%; */
-
-  position: absolute;
-  width: 390px;
-  height: 100vh;
-  /* overflow-x: hidden;
-  overflow-y: auto; */
-}
-
-.m-part {
-  position: absolute;
-  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
-  right: 0; /* 오른쪽에 닿도록 */
-  height: 100%;
-}
-
 ul.elevated-list {
   list-style-type: none;
   padding: 0;
   border: 2px solid #4e4e52;
   border-radius: 10px;
   margin: 20px 0;
-  background-color: #f8f9fa; /* Background color for the ul element */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for elevation */
+  background-color: #f8f9fa; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   max-width: 400px;
 }
 .sidebar {
-  /*사이드바에서 사용하는 것이고 위치 설정해두기*/
   position: fixed;
   top: 50%;
   left: 10px;
@@ -222,6 +281,6 @@ ul.elevated-list {
 }
 
 .content {
-  margin-left: 20px; /* 사이드바 너비에 따라 조정 */
-}
+  margin-left: 20px;
+} */
 </style>

@@ -30,7 +30,7 @@
               >
               <select
                 v-model="selectedColor"
-                id="colorSelector"
+                id="colorSelector"location.href='/groups'";
                 name="colorSelector"
                 class="form-select"
                 ref="colorSelector"
