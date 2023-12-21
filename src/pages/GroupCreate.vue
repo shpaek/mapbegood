@@ -8,7 +8,7 @@
             <a href="#">
               <img
                 class="img"
-                :src="image"
+                :src="groupProfileImage"
                 alt="그룹이미지"
                 @click="groupImage"
               />
@@ -71,7 +71,7 @@ export default {
   },
   data() {
     return {
-      image: "../../public/images/defaultGroupProfile.png",
+      groupProfileImage: "../../public/images/defaultGroupProfile.png",
       name: "",
       fileErrorMsg: "",
       isDupchkOk: false,
@@ -124,7 +124,7 @@ export default {
     },
     imageChangeHandler(e) {
       const url = URL.createObjectURL(e.target.files[0]); //<input type="file">선택된 파일자원
-      this.image = url; //$('form.signup img.profile').attr('src', url)
+      this.groupProfileImage = url; //$('form.signup img.profile').attr('src', url)
 
       const fileInput = e.target;
       const file = fileInput.files[0];
