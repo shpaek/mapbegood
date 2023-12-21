@@ -208,7 +208,6 @@ export default {
     },
 
     switchChat() {
-      console.log(this.chatOnOff);
       this.chatOnOff = !this.chatOnOff;
     },
   },

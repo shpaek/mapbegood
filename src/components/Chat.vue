@@ -78,6 +78,7 @@
 <script>
 import { mapState } from "vuex";
 import * as StompJS from "@stomp/stompjs";
+import axios from "axios";
 
 export default {
   name: "Chat",
@@ -98,7 +99,6 @@ export default {
   },
   methods: {
     sendChat() {
-      console.log(this.chat.length);
       if (this.nickname !== "" && this.chat !== "") {
         this.send();
         this.chat = "";
@@ -107,7 +107,7 @@ export default {
 
     send() {
       const msg = {
-        groupId: 1,
+        groupId: this.groupId,
         profileImage: this.profileImage,
         sender: this.nickName,
         message: this.chat,
@@ -129,6 +129,7 @@ export default {
       this.stompClient.activate();
       this.stompClient.onConnect = (frame) => {
         console.log("Frame: " + frame);
+        console.log("/topic/" + this.groupId);
         this.stompClient.subscribe("/topic/" + this.groupId, (res) => {
           this.chats.push(JSON.parse(res.body));
           console.log(res);
@@ -137,22 +138,35 @@ export default {
     },
   },
   async created() {
+    await this.$store.dispatch("getUserInfo");
+    this.profileImage = this.userInfo.profileImage;
+    this.nickName = this.userInfo.nickName;
+    this.connect();
+
     const groupInfo = location.pathname.split("/");
+    console.log(groupInfo);
     if (groupInfo[1] == "group") {
       this.groupId = groupInfo[2];
       this.groupName = decodeURI(groupInfo[3]);
     }
 
-    await this.$store.dispatch("getUserInfo");
-    console.log("open");
-    this.profileImage = this.userInfo.profileImage;
-    this.nickName = this.userInfo.nickName;
-    this.connect();
+    axios
+      .get("https://chat.mapbegood.site:8443/msg-all/" + this.groupId)
+      .then((res) => {
+        console.log(res);
+        this.chats = res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   updated() {
-    console.log(this.chats);
     const chatbox = document.querySelector("#chats");
     chatbox.scrollTop = chatbox.scrollHeight;
+  },
+  unmounted() {
+    this.stompClient.deactivate();
+    this.stompClient = null;
   },
 };
 </script>
