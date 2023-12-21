@@ -77,7 +77,7 @@ public class GroupsController {
 			memberGroupDto.setGroups(groupDto); //그룹멤버에 그룹세팅
 			log.error("image.toString(): " + image.toString());
 			log.error("image.getSize()" + image.getSize());
-			if(image==null&&image.getSize()<0) {
+			if(image==null || image.getSize()<0) {
 //				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
 				return new ResponseEntity<>(HttpStatus.OK); //올바르지 않은 이미지 첨부
 			}else {
@@ -106,7 +106,7 @@ public class GroupsController {
 	@PutMapping(value="/{id}/group-image", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> updateGroupImage(Authentication authentication, @PathVariable Long id, @RequestPart MultipartFile image) {
 		try {
-			if(image==null&&image.getSize()<0) {				
+			if(image==null || image.getSize()<0) {
 				throw new ModifyException("올바른 파일을 올려주세요");
 			}else {
 				gs.updateGroupImage(id, image);
