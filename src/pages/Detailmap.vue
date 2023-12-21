@@ -6,14 +6,15 @@
         <chat />
       </div>
 
-      <a href="#"
-        ><img
-          src="../../public/images/chat1.png"
-          alt="chat"
-          v-if="$route.name == '/group'"
-          @click="switchChat"
-          style="border-radius: 20px 20px 20px 20px"
-      /></a>
+      <a href="#" style="text-decoration: none;">
+        <!-- <img src="../../public/images/chat1.png" alt="chat" v-if="$route.name == '/group'" @click="switchChat"
+          style="border-radius: 20px 20px 20px 20px" /> -->
+        <span v-if="$route.name=='/group'" @click="switchChat" class="chat">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+            <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+          </svg>
+        </span>
+      </a>
     </div>
   </div>
 </template>
@@ -49,6 +50,11 @@ export default {
   },
   mounted() {
     this.loadScript();
+  },
+  watch: {
+    color(newColor) {
+      this.updateColor(newColor);
+    },
   },
 
   methods: {
@@ -142,28 +148,32 @@ export default {
       // Remove existing markers
       this.removeMarkers();
 
-      // Check if myplaces is an array and not empty
-      if (
-        Array.isArray(this.mymapdetail.myplaces) &&
-        this.mymapdetail.myplaces.length > 0
-      ) {
-        // Display markers on the map
-        const markerPromises = this.mymapdetail.myplaces.map((place) => {
-          return new Promise(async (resolve) => {
-            if (place.placeId && place.placeId.x && place.placeId.y) {
-              const placePosition = new window.kakao.maps.LatLng(
-                place.placeId.y,
-                place.placeId.x
-              );
-              const markerColor = await this.getMarkerColor(place.category);
-              const imageSrc = `/images/location-${markerColor}.svg`;
-              const imageSize = new kakao.maps.Size(64, 69);
-              const imageOption = { offset: new kakao.maps.Point(27, 69) };
-              const markerImage = new kakao.maps.MarkerImage(
-                imageSrc,
-                imageSize,
-                imageOption
-              );
+  // Check if myplaces is an array and not empty
+  if (
+    Array.isArray(this.mymapdetail.myplaces) &&
+    this.mymapdetail.myplaces.length > 0
+  ) {
+    // Display markers on the map
+    const markerPromises = this.mymapdetail.myplaces.map((place) => {
+      return new Promise(async (resolve) => {
+        if (place.placeId && place.placeId.x && place.placeId.y) {
+          const placePosition = new window.kakao.maps.LatLng(
+            place.placeId.y,
+            place.placeId.x
+          );
+          const markerColor = await this.getMarkerColor(place.category);
+          const imageSrc = `/images/location-${markerColor}.svg`;
+
+          // Make sure the image source is correctly constructed
+          console.log("Image Source:", imageSrc);
+
+          const imageSize = new kakao.maps.Size(34, 39);
+          const imageOption = { offset: new kakao.maps.Point(27, 69) };
+          const markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imageOption
+          );
 
               // Creating the marker
               const marker = new kakao.maps.Marker({
@@ -194,6 +204,7 @@ export default {
       }
     },
 
+
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {
         this.markers.forEach((marker) => {
@@ -204,9 +215,12 @@ export default {
     },
 
     getMarkerColor(category) {
-      return this.color || "default";
+      return this.color || "blue";
     },
-
+    updateColor(newColor) {
+      // Update markers with the new color
+      this.displayPlacesOnMap();
+    },
     switchChat() {
       this.chatOnOff = !this.chatOnOff;
     },
@@ -222,6 +236,7 @@ export default {
   overflow: hidden;
   z-index: 1;
 }
+
 .chat-container1 {
   display: none;
 }
@@ -245,5 +260,14 @@ img {
   margin-left: 140vh; */
   margin-top: 870px;
   margin-left: 1360px;
+}
+span.chat {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  z-index: 20;
+  margin-top: 870px;
+  margin-left: 1360px;
+  fill:rgb(169, 178, 255);
 }
 </style>

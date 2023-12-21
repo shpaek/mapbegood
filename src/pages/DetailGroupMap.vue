@@ -139,6 +139,7 @@ export default {
           // API로부터 받은 데이터를 컴포넌트의 데이터에 저장
           this.thememap = response.data;
           console.log(response.data);
+          this.$refs.detailMap.displayPlacesOnMap(response.data);
         })
         .catch((error) => {
           console.error("Error fetching theme map data:", error);

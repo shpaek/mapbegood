@@ -151,6 +151,18 @@
                           <label for="themeMemo" class="form-label text-black">테마 메모</label>
                           <textarea v-model="thememap.themeMapDto.memo" id="themeMapDto.memo" name="themeMapDto.memo" rows="4" class="form-control"></textarea>
                         </div>
+
+                         <!-- 테마 공개 여부 체크박스 -->
+                        <div class="mb-3 form-check">
+                          <input v-model="isThemePublic" type="checkbox" class="form-check-input" id="showCheckbox"/>
+                          <label class="form-check-label text-black" for="showCheckbox">테마 공개 여부</label>
+                        </div>
+
+                        <!-- 메인맵 여부 체크박스 -->
+                        <div class="mb-3 form-check">
+                          <input v-model="isMainMap" type="checkbox" class="form-check-input" id="mainmapCheckbox"/>
+                          <label class="form-check-label text-black" for="mainmapCheckbox">메인맵으로 설정</label>
+                        </div>
                       </v-container>
                     </v-card-text>
                     <div class="btn-update-thememap">

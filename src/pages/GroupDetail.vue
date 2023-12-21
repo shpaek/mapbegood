@@ -1,6 +1,8 @@
 <!--GroupDetail.vue-->
 <template lang="">
-  <div class="section-container">
+ 
+   <div class="section-container">
+     
     <div class="g-part">
       <div class="group-detail">
         <div class="group-info">
@@ -52,12 +54,12 @@
               </div>
             </li>
             <li>
-              <span class="group-name" @click="groupnameClickHandler">
-                {{ groupName }}({{ listCnt }})
+              <span class="group-name" @click="groupnameClickHandler" style="font-weight:bold;font-size:18px;">
+                {{ groupName }}
               </span>
             </li>
             <li class="group-member">
-              <span class="group-member" @click="groupmemberClickHandler">
+              <span class="group-member" @click="groupmemberClickHandler" style="font-size:15px;">
                 {{ leaderNickname }}
               </span>
               <!-- groupmemberClickHandler: 그룹멤버수정페이지로 이동 -->
@@ -80,6 +82,8 @@
       </div>
       <hr />
 
+    
+      <div class="group-theme-map-heading" style="font-size:18px;padding-left:130px;font-weight:bold;padding-bottom:20px;">그룹테마지도({{ listCnt }})</div>
       <div class="group-thememap-list">
         <v-dialog v-model="groupThemeMapAddDialog" persistent width="500">
           <template v-slot:activator="{ props }">
@@ -156,8 +160,7 @@
                   <label for="themeMemo" class="form-label text-black"
                     >테마 메모</label
                   >
-                  <textarea
-                    v-model="groupThemeMapMemo"
+                  <textarea v-model="groupThemeMapMemo"
                     id="groupThemeMapMemo"
                     name="groupThemeMapMemo"
                     rows="4"
@@ -324,17 +327,17 @@
     <div class="m-part">
       <Detailmap />
     </div>
-
-    <GroupImageChange
-      :isImageChangeOpen="isImageChangeOpen"
-      :groupId="groupId"
-      @close-Image="closeImageChange"
-    />
-    <GroupNameChange
-      :isNameChangeOpen="isNameChangeOpen"
-      :groupId="groupId"
-      @close-Name="closeNameChange"
-    />
+      <!-- 모달창 -->
+      <GroupImageChange
+        :isImageChangeOpen="isImageChangeOpen"
+        :groupId="groupId"
+        @close-Image="closeImageChange"
+      />
+      <GroupNameChange
+        :isNameChangeOpen="isNameChangeOpen"
+        :groupId="groupId"
+        @close-Name="closeNameChange"
+      />
   </div>
 </template>
 <script>
@@ -632,7 +635,7 @@ li.img {
   width: 150px;
 }
 li.img > img {
-  border-radius: 5px;
+  border-radius: 10px;
   min-height: 150px;
   max-height: 150px;
   min-width: 150px;
@@ -680,7 +683,6 @@ div.group-thememap-list {
   margin-right: 30px;
 
   position: absolute;
-  width: 390px;
   height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
@@ -761,25 +763,11 @@ div.group-detail > div.group-info > ul > li.img > div.combobox > div.dropdown {
   white-space: nowrap;
 }
 
-div.group-detail
-  > div.group-info
-  > ul
-  > li.img
-  > div.combobox
-  > div.dropdown
-  > ul
-  > li {
+div.group-detail> div.group-info> ul> li.img> div.combobox> div.dropdown> ul> li {
   color: rgb(80, 80, 80);
 }
 
-div.group-detail
-  > div.group-info
-  > ul
-  > li.img
-  > div.combobox
-  > div.dropdown
-  > ul
-  > li:hover {
+div.group-detail> div.group-info> ul> li.img> div.combobox> div.dropdown> ul> li:hover {
   cursor: pointer;
   background-color: rgb(211, 211, 211);
 }
@@ -792,7 +780,11 @@ div.group-detail > div.group-info > ul > li.img > div.combobox > div.triangle {
   border-right: 7px solid transparent;
   border-bottom: 12px solid rgb(240, 240, 240);
 }
-
+h1.group-theme-map-heading {
+  text-align: center; /* Center the heading */
+  font-size: 24px; /* Adjust the font size as needed */
+  margin-top: 10px; /* Adjust the top margin as needed */
+}
 div.modal-container {
   position: fixed;
   top: 50%;
