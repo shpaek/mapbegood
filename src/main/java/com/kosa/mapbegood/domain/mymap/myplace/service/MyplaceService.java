@@ -93,9 +93,9 @@ public class MyplaceService {
 
 		if (existingmyplace.isPresent()) {
 			Myplace myplace = existingmyplace.get();
-			Date sqlDate = new Date(myplaceDto.getVisitedAt().getTime());
-			myplace.setVisitedAt(sqlDate);
-
+//			Date sqlDate = new Date(.getTime());
+			myplace.setVisitedAt(myplaceDto.getVisitedAt());
+			
 			mpr.save(myplace);
 		}else {
 			throw new ModifyException("해당 ID에 대한 our 플레이스를 찾을 수 없습니다.");

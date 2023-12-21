@@ -84,7 +84,7 @@ public class GroupsService {
 		member.setEmail(memberEmail);
 		try {
 			List<MemberGroup> memberGroups = mgr.findByMemberEmail(member);//이메일 사용자가 속해있는 멤버그룹들
-			if(memberGroups==null) {
+			if(memberGroups.size() == 0) {
 				throw new FindException("소속된 그룹이 없습니다");
 			}
 			List<GroupsDTO> resultGroupDTO = new ArrayList<>();//이메일 사용자가 속한 그룹들
@@ -139,6 +139,7 @@ public class GroupsService {
 				log.error("groupDTO.getId={}, groupDTO.getName={},leaderNickname={} ", groupDTO.getId(), groupDTO.getName(), groupDTO.getMemberGroupList().get(0).getMember().getNickname());
 				resultGroupDTO.add(groupDTO);
 			}
+			log.error("그룹 size: " +  resultGroupDTO.size());
 			return resultGroupDTO;
 		}catch(Exception e) {
 			new FindException(e.getMessage());
@@ -245,7 +246,8 @@ public class GroupsService {
 			int height=150;
 			String thumbFileName = groupId+"_groupImage.jpg"; //+  groupImage.getOriginalFilename() + extName; //그룹이미지 파일명
 //			png파일을 업로드 해도 jpg로 저장이 됨!
-			File thumbFile = new File("C:\\Users\\Public", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
+//			File thumbFile = new File("C:\\Users\\Public", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
+			File thumbFile = new File("/home/ubuntu/mapbegood-image/group", thumbFileName);  //실제: groupImageUploadPath, thumbFileName
 			FileOutputStream thumbnailOS = new FileOutputStream(thumbFile);//출력스트림
 			URL url = new URL(imageUrl);
 			InputStream thumbnailIS =  url.openStream();//imageUrl);

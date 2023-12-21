@@ -29,6 +29,7 @@ public class EmitterRepository {
      * 주어진 아이디의 Emitter를 제거
      * @param userEmail - 사용자 이메일.
      */
+    
     public void deleteById(String userEmail) {
         emitters.remove(userEmail);
     }
@@ -38,6 +39,7 @@ public class EmitterRepository {
      * @param userEmail - 사용자 이메일.
      * @return SseEmitter - 이벤트 Emitter.
      */
+    
     public SseEmitter get(String userEmail) {
         return emitters.get(userEmail);
     }

@@ -31,8 +31,8 @@ public class FavoriteCustomRepositoryImpl implements FavoriteCustomRepository {
                 .join(qm).on(qtm.memberEmail.eq(qm))
                 .groupBy(qtm.id, qtm.name, qtm.memo, qm.nickname)
                 .orderBy(qf.count().desc())
-                .offset((pageNum * 10) - 10)
-                .limit(10)
+                .offset((pageNum * 15) - 15)
+                .limit(15)
                 .fetch();
     }
 }

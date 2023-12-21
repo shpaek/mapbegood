@@ -44,23 +44,25 @@ public class GroupsController {
 	
 	//사용자가 속한 그룹 전체보기
 	@GetMapping(value="", produces="application/json;charset=UTF-8")
-	public List<GroupsDTO> findAllGroupsByMemberNickname(Authentication authentication) throws FindException{
+	public ResponseEntity findAllGroupsByMemberNickname(Authentication authentication) throws FindException{
 		//ㄴRequestBody로 보내야 응답결과를 json으로 반환이 가능함
 		//ㄴㄴRequestBody -> "memberEmail":"사용자의 이메일값"이라는 객체가 받아지기 때문에 Map<>으로 받음
 		//ㄴㄴㄴ따라서 메서드에 변수를 넣어줄 때 아래와 같이 넣어줘야함
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			log.error("email={}", email);
-			return gs.findAllGroupsByMemberEmail(email);
+			return new ResponseEntity<>(gs.findAllGroupsByMemberEmail(email), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ArrayList<>();
+			log.error("/group 조회 Err: " + e.getMessage());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	//그룹생성
-	@PostMapping(value="", produces="application/json;charset=UTF-8")
+	@PostMapping(value="")
 	public ResponseEntity<?> createGroup(Authentication authentication, 
-			String name, @RequestPart MultipartFile image) { //그룹이미지도 받아야 해서 formdata로 받음
+										 String name,
+										 @RequestPart MultipartFile image) { //그룹이미지도 받아야 해서 formdata로 받음
 		//파일은 요청요청바디로만 보낼 수 있어서 GET방식을 못 쓰고 POST방식으로만 보낼 수 있다
 		//프론트에서 파일테이터를 back으로 보내면 formdata형태로 보내게 된다
 		//formdata를 받을때는 @RequestBody를 못쓰고(아니니까) 위의 메서드처럼 데이터를 하나씩 받아야 한다
@@ -74,7 +76,9 @@ public class GroupsController {
 			GroupsDTO groupDto = new GroupsDTO();
 			groupDto.setName(name); //그룹명을 그룹에 세팅
 			memberGroupDto.setGroups(groupDto); //그룹멤버에 그룹세팅
-			if(image==null&&image.getSize()<0) {
+			log.error("image.toString(): " + image.toString());
+			log.error("image.getSize()" + image.getSize());
+			if(image==null || image.getSize()<0) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
 			}else {
 				gs.createGroup(memberGroupDto, image); //그룹생성, 그룹멤버의 멤버로 그룹장 자동 추가			
@@ -102,7 +106,7 @@ public class GroupsController {
 	@PutMapping(value="/{id}/group-image", produces="application/json;charset=UTF-8")
 	public ResponseEntity<?> updateGroupImage(Authentication authentication, @PathVariable Long id, @RequestPart MultipartFile image) {
 		try {
-			if(image==null&&image.getSize()<0) {				
+			if(image==null || image.getSize()<0) {
 				throw new ModifyException("올바른 파일을 올려주세요");
 			}else {
 				gs.updateGroupImage(id, image);
