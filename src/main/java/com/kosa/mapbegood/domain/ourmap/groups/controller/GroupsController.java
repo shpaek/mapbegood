@@ -59,9 +59,10 @@ public class GroupsController {
 	}
 	
 	//그룹생성
-	@PostMapping(value="", produces="application/json;charset=UTF-8")
+	@PostMapping(value="")
 	public ResponseEntity<?> createGroup(Authentication authentication, 
-			String name, @RequestPart MultipartFile image) { //그룹이미지도 받아야 해서 formdata로 받음
+										 String name,
+										 @RequestPart MultipartFile image) { //그룹이미지도 받아야 해서 formdata로 받음
 		//파일은 요청요청바디로만 보낼 수 있어서 GET방식을 못 쓰고 POST방식으로만 보낼 수 있다
 		//프론트에서 파일테이터를 back으로 보내면 formdata형태로 보내게 된다
 		//formdata를 받을때는 @RequestBody를 못쓰고(아니니까) 위의 메서드처럼 데이터를 하나씩 받아야 한다
@@ -78,8 +79,7 @@ public class GroupsController {
 			log.error("image.toString(): " + image.toString());
 			log.error("image.getSize()" + image.getSize());
 			if(image==null || image.getSize()<0) {
-//				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
-				return new ResponseEntity<>(HttpStatus.OK); //올바르지 않은 이미지 첨부
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //올바르지 않은 이미지 첨부
 			}else {
 				gs.createGroup(memberGroupDto, image); //그룹생성, 그룹멤버의 멤버로 그룹장 자동 추가			
 				return new ResponseEntity<>(HttpStatus.OK); //그룹생성성공			
