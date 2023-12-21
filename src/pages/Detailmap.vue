@@ -146,8 +146,8 @@ export default {
       const bounds = new window.kakao.maps.LatLngBounds();
       // Remove existing markers
       this.removeMarkers();
-      console.log("myplaces:", this.mymapdetail.myplaces);
-  console.log("myplaces type:", typeof this.mymapdetail.myplaces);
+      // console.log("myplaces:", this.mymapdetail.myplaces);
+  // console.log("myplaces type:", typeof this.mymapdetail.myplaces);
   // Check if myplaces is an array and not empty
   if (
     Array.isArray(this.mymapdetail.myplaces) &&
@@ -203,7 +203,15 @@ export default {
         console.warn("No places to display on the map.");
       }
     },
+    centerMap(placePosition) {
+  console.log("Centering map at:", placePosition);
 
+  // You can adjust the zoom level based on your requirement
+  const zoomLevel = 7;
+
+  this.map.setLevel(zoomLevel, { anchor: placePosition });
+  this.map.setCenter(placePosition);
+},
 
     removeMarkers() {
       if (this.markers && this.markers.length > 0) {

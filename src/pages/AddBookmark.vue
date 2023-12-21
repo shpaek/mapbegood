@@ -1,11 +1,12 @@
 <template>
   <div v-show="isModalOpen && place" class="modal" @click="backClickHandler">
     <v-sheet :elevation="11" height="400" width="500" rounded @click.stop>
-      <v-app id="inspire" style="overflow: hidden">
-        <v-container fluid fill-height>
-          <v-row justify="center" align="center" style="height: 0%">
+      <v-app id="inspire">
+        <v-container fluid>
+          <v-row>
             <v-col>
-              <v-toolbar color="sky blue" dark tabs>
+              <!-- Header -->
+              <v-toolbar color="primary" dark>
                 <v-text-field
                   class="mx-3"
                   flat
@@ -14,106 +15,92 @@
                   solo-inverted
                 ></v-text-field>
 
-                <template v-slot:extension>
-                  <v-tabs
-                    v-model="tabs"
-                    centered
-                    color="black"
-                    slider-color="white"
+                <v-tabs v-model="tabs" centered color="black" slider-color="white">
+                  <v-tab
+                    key="personal"
+                    @click="setTab('personal')"
+                    :class="{ 'active-tab': tabs === 'personal' }"
                   >
-                    <v-tab
-                      key="personal"
-                      @click="setTab('personal')"
-                      :class="{ 'active-tab': tabs === 'personal' }"
-                      >개인</v-tab
-                    >
-                    <v-tab
-                      key="group"
-                      @click="setTab('group')"
-                      :class="{ 'active-tab': tabs === 'group' }"
-                      >그룹</v-tab
-                    >
-                  </v-tabs>
-                </template>
+                    개인
+                  </v-tab>
+                  <v-tab
+                    key="group"
+                    @click="setTab('group')"
+                    :class="{ 'active-tab': tabs === 'group' }"
+                  >
+                    그룹
+                  </v-tab>
+                </v-tabs>
               </v-toolbar>
 
+              <!-- Tab Content -->
               <v-tabs-items v-model="tabs">
-                <v-tab-item
-                  key="personal"
-                  :key="tabs === 'personal' ? 'personal' : 'group'"
-                >
+                <v-tab-item key="personal">
+                  <!-- Personal Tab -->
                   <v-card>
-                    <v-list
-                      two-line
-                      style="max-height: 300px; overflow-y: auto"
-                    >
-                      <div
-                        v-for="(item, index) in tabs === 'personal'
-                          ? myThememapList
-                          : groupList"
+                    <v-list two-line style="max-height: 300px; overflow-y: auto">
+                      <v-list-item
+                        v-for="(item, index) in myThememapList"
                         :key="index"
+                        @mouseenter="highlightListItem(index)"
+                        @mouseleave="resetHighlight()"
+                        @click="toggle(index)"
+                        :class="{
+                          'selected-list-item': index === selectedListItemIndex,
+                          'hovered-list-item': index === hoveredListItemIndex,
+                        }"
                       >
-                        <v-list-tile
-                          avatar
-                          ripple
-                          @mouseenter="highlightListItem(index)"
-                          @mouseleave="resetHighlight()"
-                          @click="toggle(index)"
-                          :class="{
-                            'selected-list-item':
-                              index === selectedListItemIndex,
-                            'hovered-list-item': index === hoveredListItemIndex,
-                          }"
-                        >
-                          <v-list-tile-content @click="handleItemClick(item)">
-                            <div>
-                              <v-list-tile-title v-if="tabs === 'personal'">{{
-                                item.themeMapDto.name
-                              }}</v-list-tile-title>
-                              <v-list-tile-title v-else>{{
-                                item.name
-                              }}</v-list-tile-title>
-                            </div>
-                            <div v-if="tabs === 'personal'">
-                              <v-list-tile-sub-title>{{
-                                item.themeMapDto.memo
-                              }}</v-list-tile-sub-title>
-                            </div>
-                            <div v-else>
-                              <v-list-tile-sub-title
-                                v-for="groupItem in item.groupThememapList"
-                                :key="groupItem.id"
-                                @click="addOurPlace(groupItem.id)"
-                              >
-                                <span style="display: block">{{
-                                  groupItem.name
-                                }}</span>
-                              </v-list-tile-sub-title>
-                            </div>
-                          </v-list-tile-content>
-                        </v-list-tile>
-                        <v-divider
-                          v-if="
-                            index + 1 <
-                            (tabs === 'personal' ? myThememapList : groupList)
-                              .length
-                          "
-                          :key="'divider-' + index"
-                        ></v-divider>
-                      </div>
+                        <v-list-item-content>
+                          <v-list-item-title>{{ item.themeMapDto.name }}</v-list-item-title>
+                          <v-list-item-subtitle>{{ item.themeMapDto.memo }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-divider
+                        v-if="index + 1 < myThememapList.length"
+                        :key="'divider-' + index"
+                      ></v-divider>
+                    </v-list>
+                  </v-card>
+                </v-tab-item>
+                <v-tab-item key="group">
+                  <!-- Group Tab -->
+                  <v-card>
+                    <v-list two-line style="max-height: 300px; overflow-y: auto">
+                      <v-list-item
+                        v-for="(item, index) in groupList"
+                        :key="index"
+                        @mouseenter="highlightListItem(index)"
+                        @mouseleave="resetHighlight()"
+                        @click="toggle(index)"
+                        :class="{
+                          'selected-list-item': index === selectedListItemIndex,
+                          'hovered-list-item': index === hoveredListItemIndex,
+                        }"
+                      >
+                        <v-list-item-content>
+                          <v-list-item-title>{{ item.name }}</v-list-item-title>
+                          <v-list-item-subtitle
+                            v-for="groupItem in item.groupThememapList"
+                            :key="groupItem.id"
+                            @click="addOurPlace(groupItem.id)"
+                          >
+                            <span style="display: block">{{ groupItem.name }}</span>
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-divider
+                        v-if="index + 1 < groupList.length"
+                        :key="'divider-' + index"
+                      ></v-divider>
                     </v-list>
                   </v-card>
                 </v-tab-item>
               </v-tabs-items>
 
-              <button
-                type="button"
-                class="close"
-                id="b2"
-                @click="backClickHandler"
-              >
-                닫기
-              </button>
+              <!-- Close Button -->
+              <v-btn @click="backClickHandler" class="close" icon>
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -400,6 +387,57 @@ button.close {
 .active-tab {
   background-color: #39ff8c; /* 활성화된 탭에 적용할 배경색 */
   color: #333333; /* 활성화된 탭에 적용할 텍스트 색상 */
+}
+
+.selected-list-item {
+  background-color: #3498db;
+  color: #3e65e7;
+  font-weight: bold;
+}
+
+.hovered-list-item {
+  background-color: #ecf0f1;
+  color: #333333;
+  font-weight: bold;
+}
+
+.hovered-list-item:hover {
+  background-color: #aed6f1;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.v-sheet {
+  overflow-y: auto;
+}
+
+.scrollable-list {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+button.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.active-tab {
+  background-color: #39ff8c;
+  color: #333333;
 }
 
 .selected-list-item {

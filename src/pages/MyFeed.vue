@@ -35,8 +35,8 @@
       <div class="contentSection">
         <div class="caption">{{ post.content }}</div>
         <div class="meta">
-          <span class="nickname">{{ post.memberEmail?.nickname }}</span>
-          <span class="createdAt">{{ post.createdAt }}</span>
+          <!-- <span class="nickname">{{ post.memberEmail?.nickname }}</span> -->
+          <!-- <span class="createdAt">{{ post.createdAt }}</span> -->
         </div>
 
         <div class="button-container">

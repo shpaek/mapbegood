@@ -488,7 +488,7 @@ export default {
       // 그룹 테마지도의 ID를 사용하여 상세보기 페이지로 이동
       this.$router.push({
         name: "detailgroupmap",
-        params: { groupThememapId: groupThememapId },
+        params: { groupThememapId: groupThememapId, groupId: this.groupId },
       });
     },
     deleteGroupmap(groupThememapId) {
