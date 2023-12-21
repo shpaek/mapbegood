@@ -28,7 +28,8 @@ public class FeedImageController {
 	@PostMapping("/upload")
 	@ResponseBody
 	public String upload(@RequestParam String id, @RequestParam String opt, @RequestParam List<MultipartFile> files) throws IOException {
-	    String attachesDir = "C:\\kosa202307\\attaches";
+//	    String attachesDir = "C:\\kosa202307\\attaches";
+	    String attachesDir = "/home/ubuntu/mapbegood-image/feed";
 	    String fileNamePrefix = id + "_" + opt + "_";
 
 	    List<String> uploadedFiles = new ArrayList<>();
@@ -62,7 +63,8 @@ public class FeedImageController {
     @GetMapping("/download")
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> download(@RequestParam String id, @RequestParam String opt) throws IOException {
-        String attachesDir = "C:\\KOSA202307\\attaches";
+//        String attachesDir = "C:\\KOSA202307\\attaches";
+        String attachesDir = "/home/ubuntu/mapbegood-image/feed";
         File dir = new File(attachesDir);
 
         String fileName = id + "_" + opt + "_";
@@ -100,7 +102,8 @@ public class FeedImageController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> delete(@RequestParam String id, @RequestParam String opt) {
-        String attachesDir = "C:\\KOSA202307\\attaches";
+//        String attachesDir = "C:\\KOSA202307\\attaches";
+        String attachesDir = "/home/ubuntu/mapbegood-image/feed";
         String fileName = id + "_"+ opt +"_";
 
         File[] files = new File(attachesDir).listFiles();
