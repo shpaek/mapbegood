@@ -9,7 +9,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import VueSSE from "vue-sse";
-import './assets/styles.css';
+import "./assets/styles.css";
 const vuetify = createVuetify({
   components,
   directives,
@@ -21,6 +21,7 @@ app.use(store);
 app.use(vuetify);
 // using defaults
 app.use(VueSSE);
-app.config.globalProperties.backURL = "http://localhost:8080";
+// app.config.globalProperties.backURL = "http://localhost:8080";
+app.config.globalProperties.backURL = "https://www.mapbegood.site";
 
 app.mount("#app");
