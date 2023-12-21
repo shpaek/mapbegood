@@ -1,6 +1,7 @@
 package com.kosa.mapbegood.domain.mymap.myplace.entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -43,7 +44,7 @@ public class Myplace {
 	@JoinColumn(name = "place_id")
 	private Place placeId;
 
-	private Date visitedAt;
+	private LocalDate visitedAt;
 
 //	private String placeName;
 	

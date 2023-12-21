@@ -91,11 +91,15 @@ public class MyplaceController {
 	}
 	
 	@PutMapping("/{myplaceId}")
-	ResponseEntity<?> updateMyplace(@RequestBody MyplaceDTO myplaceDto){
+	ResponseEntity<?> updateMyplace(
+			@RequestBody 
+			MyplaceDTO myplaceDto){
+//		System.out.println("test::::" + myplaceDto.getId() + ":" + myplaceDto.getVisitedAt()); 
 		try {
 			mps.updateMyplace(myplaceDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch(Exception e){
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
