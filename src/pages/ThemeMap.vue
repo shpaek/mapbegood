@@ -4,20 +4,16 @@
       <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
         <div class="header-container">
           <a href="/thememap" style="color: #000; text-decoration: none">
-            <h2 class="theme-list" style="margin-left: 10px">
-              나의 테마지도
-            </h2></a
-          >
+            <h2 class="theme-list" style="margin-left: 10px">나의 테마지도</h2>
+          </a>
 
           <v-dialog v-model="themeMapAddDialog" persistent width="500">
             <template v-slot:activator="{ props }">
-              <!-- "테마맵 추가" 버튼 -->
-              <!-- @click="addNewThememap" -->
-
               <button
                 class="btn btn-outline-secondary"
                 v-bind="props"
                 style="display: block; margin-left: 80%"
+                @click="openCreateThemeMapDialog"
               >
                 추가
               </button>
@@ -29,73 +25,103 @@
                 <h1 class="text-primary mb-4">테마지도 생성</h1>
               </v-card-title>
 
-              <v-card-text>
-                <v-container>
-                  <!-- 테마 이름 입력 -->
-                  <div class="mb-3">
-                    <label for="themeName" class="form-label text-black"
-                      >테마 이름</label
-                    >
-                    <input
-                      v-model="themeName"
-                      id="themeName"
-                      name="themeName"
-                      type="text"
-                      class="form-control"
-                      ref="themeName"
-                    />
+            <v-card-text>
+              <v-container>
+                <!-- 테마 이름 입력 -->
+                <div class="mb-3">
+                  <label for="themeName" class="form-label text-black">테마 이름</label>
+                  <input v-model="themeName" id="themeName" name="themeName" type="text" class="form-control" ref="themeName"/>
+                </div>
+
+                  <div class="mb-4">
+                    <label class="form-label text-black">테마 색상</label>
+                    <div class="flex space-x-2">
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'red',
+                        }"
+                        @click="selectColor('red')"
+                        class="bg-red-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'yellow',
+                        }"
+                        @click="selectColor('yellow')"
+                        class="bg-yellow-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'green',
+                        }"
+                        @click="selectColor('green')"
+                        class="bg-green-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'blue',
+                        }"
+                        @click="selectColor('blue')"
+                        class="bg-blue-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'indigo',
+                        }"
+                        @click="selectColor('indigo')"
+                        class="bg-indigo-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'purple',
+                        }"
+                        @click="selectColor('purple')"
+                        class="bg-purple-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'pink',
+                        }"
+                        @click="selectColor('pink')"
+                        class="bg-pink-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'gray',
+                        }"
+                        @click="selectColor('gray')"
+                        class="bg-gray-500"
+                      ></button>
+                      <button
+                        :class="{
+                          'color-button': true,
+                          selected: selectedColor === 'black',
+                        }"
+                        @click="selectColor('black')"
+                        class="bg-black"
+                      ></button>
+                    </div>
                   </div>
 
-                  <!-- 색상 선택 드롭다운 -->
-                  <div class="mb-3">
-                    <label for="colorSelector" class="form-label text-black"
-                      >테마 색상 선택</label
-                    >
-                    <select
-                      v-model="selectedColor"
-                      id="colorSelector"
-                      name="colorSelector"
-                      class="form-select"
-                      ref="colorSelector"
-                    >
-                      <option
-                        v-for="color in colors"
-                        :key="color"
-                        :value="color"
-                      >
-                        {{ color }}
-                      </option>
-                    </select>
-                  </div>
+                <!-- 테마 메모 입력 -->
+                <div class="mb-3">
+                  <label for="themeMemo" class="form-label text-black">테마 메모</label>
+                  <textarea v-model="themeMemo" id="themeMemo" name="themeMemo" rows="4" class="form-control"></textarea>
+                </div>
 
-                  <!-- 테마 메모 입력 -->
-                  <div class="mb-3">
-                    <label for="themeMemo" class="form-label text-black"
-                      >테마 메모</label
-                    >
-                    <textarea
-                      v-model="themeMemo"
-                      id="themeMemo"
-                      name="themeMemo"
-                      rows="4"
-                      class="form-control"
-                    ></textarea>
-                  </div>
-
-                  <!-- 테마 공개 여부 체크박스 -->
-                  <div class="mb-3 form-check">
-                    <input
-                      v-model="isThemePublic"
-                      type="checkbox"
-                      class="form-check-input"
-                      id="showCheckbox"
-                    />
-                    <label
-                      class="form-check-label text-black"
-                      for="showCheckbox"
-                      >테마 공개 여부</label
-                    >
-                  </div>
+                <!-- 테마 공개 여부 체크박스 -->
+                <div class="mb-3 form-check">
+                  <input v-model="isThemePublic" type="checkbox" class="form-check-input" id="showCheckbox"/>
+                  <label class="form-check-label text-black" for="showCheckbox">테마 공개 여부</label>
+                </div>
 
                   <!-- 메인맵 여부 체크박스 -->
                   <div class="mb-3 form-check">
@@ -122,7 +148,7 @@
                 <button
                   data-v-fce5df64=""
                   class="btn btn-light"
-                  @click="cancleThemeMapAdd"
+                  @click="cancelThemeMapAdd"
                 >
                   취소
                 </button>
@@ -134,107 +160,135 @@
         </div>
 
         <!-- 각 테마맵에 대한 반복문 -->
-        <div
-          style="
-            position: absolute;
-            width: 390px;
-            height: 85vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-          "
-        >
-          <div v-for="thememap in favoriteList" :key="thememap.themeMapDto.id">
-            <ul
-              class="elevated-list mb-4"
-              style="margin-left: 10px; margin-right: 10px"
-            >
-              <li>
-                <div style="display: inline-block; width: 240px">
-                  <h5 @click="detailThememap(thememap.themeMapDto.id)">
-                    <b>{{ thememap.themeMapDto.name }}</b>
-                  </h5>
-                  <p>{{ thememap.themeMapDto.memo }}</p>
-                  <p v-show="thememap.themeMapDto.memo == null">&nbsp;</p>
-                </div>
-                <h5>
-                  <!-- 공개 여부에 따라 다른 아이콘 표시 -->
-                  <span v-if="thememap.themeMapDto.show">
-                    <!-- ... -->
-                  </span>
-                  <span v-else>
-                    <!-- ... -->
-                  </span>
-                </h5>
+          <ul class="list-group">
+            <li v-for="thememap in favoriteList" :key="thememap.themeMapDto.id" 
+              class="thememap">
+              <div class="info" @click="detailThememap(thememap.themeMapDto.id)">
+                <div class="name">{{ thememap.themeMapDto.name }}</div>
+                <div class="memo">{{ thememap.themeMapDto.memo }}</div>
+                <!-- <div v-show="thememap.themeMapDto.memo == null"></div> -->
+              </div>
+              <!-- 공개 여부에 따라 다른 아이콘 표시 -->
+              <h5>
+                <span v-if="thememap.themeMapDto.show">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
+                    <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"/>
+                  </svg>
+                </span>
+                <span v-else>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                  </svg>
+                </span>
+              </h5>
+              <!-- 더보기 버튼 -->
+            <div class="btn-group" role="group">
+              <button type="button" class="more" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                  <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+                </svg>
+              </button>
+              <ul class="dropdown-menu">
+                <v-dialog v-model="thememap.themeMapDto.themeMapEditDialog" persistent width="500">
+                  <template v-slot:activator="{ props }">
+                    <li v-bind="props">
+                      <!-- @click="editGroupmap(thememap.themeMapDto.id)" -->
+                      수정
+                    </li>
+                  </template>
 
-                <div class="text-right">
-                  <!-- "상세보기" 버튼 -->
-                  <!-- <button            
-                  @click="detailThememap(thememap.themeMapDto.id)"
-                  class="btn btn-outline-secondary"
-                >
-                  상세보기
-                </button> -->
+                  <v-card>
+                    <v-card-title style="display:flex;">
+                      <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">테마지도 수정</span>
+                    </v-card-title>
 
-                  <!-- 리스트 수정 버튼 -->
-                  <v-dialog
-                    v-model="thememap.themeMapDto.themeMapEditDialog"
-                    persistent
-                    width="500"
-                  >
-                    <template v-slot:activator="{ props }">
-                      <button
-                        class="btn btn-outline-secondary"
-                        v-bind="props"
-                        @click="loadThemeMapDetails(thememap.themeMapDto.id)"
-                      >
-                        수정
-                      </button>
-                    </template>
+                    <v-card-text>
+                      <v-container>
+                        <!-- 테마 이름 입력 -->
+                        <div class="mb-3">
+                          <label for="themeName" class="form-label text-black">테마 이름</label>
+                          <input v-model="thememap.themeMapDto.name" id="themeMapDto.name" name="themeMapDto.name" type="text" class="form-control" ref="themeMapDto.name"/>
+                        </div>
 
-                    <v-card>
-                      <v-card-title>
-                        <h1 class="text-primary mb-4">테마지도 수정</h1>
-                      </v-card-title>
-
-                      <v-card-text>
-                        <v-container>
-                          <!-- 테마 이름 입력 -->
-                          <div class="mb-3">
-                            <label for="themeName" class="form-label text-black"
-                              >테마 이름</label
+                          <div class="mb-4">
+                            <label class="form-label text-black"
+                              >테마 색상</label
                             >
-                            <input
-                              v-model="thememap.themeMapDto.name"
-                              id="themeMapDto.name"
-                              name="themeMapDto.name"
-                              type="text"
-                              class="form-control"
-                              ref="themeMapDto.name"
-                            />
-                          </div>
-
-                          <!-- 색상 선택 드롭다운 -->
-                          <div class="mb-3">
-                            <label
-                              for="colorSelector"
-                              class="form-label text-black"
-                              >테마 색상 선택</label
-                            >
-                            <select
-                              v-model="thememap.themeMapDto.color"
-                              id="themeMapDto.color"
-                              name="themeMapDto.color"
-                              class="form-select"
-                              ref="themeMapDto.color"
-                            >
-                              <option
-                                v-for="color in colors"
-                                :key="color"
-                                :value="color"
-                              >
-                                {{ color }}
-                              </option>
-                            </select>
+                            <div class="flex space-x-2">
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'red',
+                                }"
+                                @click="selectColor('red')"
+                                class="bg-red-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'yellow',
+                                }"
+                                @click="selectColor('yellow')"
+                                class="bg-yellow-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'green',
+                                }"
+                                @click="selectColor('green')"
+                                class="bg-green-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'blue',
+                                }"
+                                @click="selectColor('blue')"
+                                class="bg-blue-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'indigo',
+                                }"
+                                @click="selectColor('indigo')"
+                                class="bg-indigo-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'purple',
+                                }"
+                                @click="selectColor('purple')"
+                                class="bg-purple-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'pink',
+                                }"
+                                @click="selectColor('pink')"
+                                class="bg-pink-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'gray',
+                                }"
+                                @click="selectColor('gray')"
+                                class="bg-gray-500"
+                              ></button>
+                              <button
+                                :class="{
+                                  'color-button': true,
+                                  selected: selectedColor === 'black',
+                                }"
+                                @click="selectColor('black')"
+                                class="bg-black"
+                              ></button>
+                            </div>
                           </div>
 
                           <!-- 테마 메모 입력 -->
@@ -284,17 +338,14 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <!-- 테마맵 생성 버튼 -->
-                        <button
-                          @click="updateThemeMap(thememap.themeMapDto)"
-                          class="btn btn-dark"
-                        >
+                        <!-- 테마맵 수정 버튼 -->
+                        <button @click="updateThemeMap(thememap.themeMapDto)" class="btn btn-dark">
                           수정
                         </button>
                         <button
                           data-v-fce5df64=""
                           class="btn btn-light"
-                          @click="cancleThemeMapEdit(thememap.themeMapDto)"
+                          @click="cancelThemeMapEdit(thememap.themeMapDto)"
                         >
                           취소
                         </button>
@@ -304,26 +355,15 @@
                     </v-card>
                   </v-dialog>
 
-                  <!-- 리스트 삭제 버튼 -->
-                  <button
-                    @click="deleteThememap(thememap.themeMapDto.id)"
-                    class="btn btn-outline-danger"
-                  >
-                    삭제
-                  </button>
-
-                  <!-- 리스트 복사 버튼 -->
-                  <!-- <button
-                    @click="copyThememap(thememap.themeMapDto.id)"
-                    class="btn btn-outline-secondary"
-                  >
-                    복사
-                  </button> -->
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
+                <li @click="deleteThememap(thememap.themeMapDto.id)">삭제</li>
+                <!-- 리스트 복사 버튼 -->
+                <!-- <button @click="copyThememap(thememap.themeMapDto.id)" class="btn btn-outline-secondary">
+                  복사
+                </button> -->
+              </ul>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="m-part">
@@ -532,12 +572,7 @@ export default {
 
     cancleThemeMapAdd() {
       this.themeMapAddDialog = false;
-
-      this.themeName = "";
-      this.selectedColor = "";
-      this.themeMemo = "";
-      this.isThemePublic = false;
-      this.isMainMap = false;
+      this.cancelCreateThemeMap();
     },
 
     loadThemeMapDetails(themeMapId) {
@@ -604,6 +639,9 @@ export default {
 };
 </script>
 <style scoped>
+body {
+  font-family: "Open+Sans", sans-serif;
+}
 .search-wrapper {
   /* position: absolute; */
   /* left: 454px; 왼쪽 영역의 너비 만큼 이동 */
@@ -619,8 +657,8 @@ export default {
 
 .m-part {
   position: absolute;
-  left: 454px; /* 왼쪽 영역의 너비 만큼 이동 */
-  right: 0; /* 오른쪽에 닿도록 */
+  left: 454px; 
+  right: 0; 
   height: 100%;
 }
 
@@ -657,7 +695,7 @@ ul.theme-list {
   border: 1px solid #000000; /* Border for the sticker */
   padding: 0.75rem 1.5rem; /* Adjust padding for the sticker */
   font-size: 1rem;
-  border-radius: 8px; /* Border radius for rounded corners */
+  border-radius: 20px; /* Border radius for rounded corners */
   cursor: pointer;
   transition: background-color 0.3s ease; /* Add a smooth transition effect */
   position: fixed;
@@ -665,8 +703,8 @@ ul.theme-list {
   right: 20px;
   z-index: 1000; /* Set a higher z-index to ensure it's above other elements */
   position: relative;
-  top: 0; /* Adjust as needed */
-  right: 0; /* Adjust as needed */
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .sticker-btn:hover {
@@ -727,5 +765,43 @@ p {
 
 .content {
   margin-left: 100px;
+}
+
+.color-button {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  margin-right: 0.1rem;
+  cursor: pointer;
+  font-weight: bold;
+  position: relative;
+}
+
+.color-button:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.color-button::after {
+  content: "✓";
+  color: white;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.color-button.selected::after {
+  opacity: 1; /* 선택된 경우에만 표시되도록 설정 */
 }
 </style>
