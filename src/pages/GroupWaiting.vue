@@ -16,7 +16,7 @@
                         <div class="info">
                             <span class="member" @click="memberdetailClickHandler(waiting.nickname)">
                                 <img :src="waiting.profileImage" alt="프로필이미지" class="profileImage">
-                                {{waiting.nickname}}
+                                <span class="nickname">{{waiting.nickname}}</span>
                             </span>
                         </div>
                     </div>
@@ -154,5 +154,11 @@ div.m-part {
   left: 454px;
   right: 0;
   height: 100%;
+}
+div.member{
+  margin-bottom: 10px;
+}
+div.member>div.info>span.member>span.nickname{
+  padding-left: 5px;
 }
 </style>

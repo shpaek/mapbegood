@@ -9,7 +9,7 @@
   />
   <!-- <Map /> -->
   <div class="theme-map-details">
-    <h2 class="display-4" style="font-size: 2rem; fonr-weight: bold">
+    <h2 class="display-4" style="font-size: 2rem; font-weight: bold">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -27,8 +27,9 @@
 
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title" text-warning>
+        <h5 class="card-title text-warning">
           <svg
+          
             xmlns="http://www.w3.org/2000/svg"
             width="14"
             height="14"
@@ -59,8 +60,10 @@
         >
           <div class="myplace-info">
             <h5>{{ myplace.placeId.placeName }}</h5>
-            <p>방문 일자: {{ myplace.visitedAt }}</p>
+            <!-- 방문일자가 null이 아닌 경우에만 표시 -->
+            <p v-if="myplace.visitedAt">방문 일자: {{ myplace.visitedAt }}</p>
             <p>주소: {{ myplace.placeId.address }}</p>
+                    
             <!-- 추가적인 Myplace 정보 표시 -->
           </div>
           <button class="add-bookmark-btn" @click="cancelBookmark(myplace.id)">
@@ -101,8 +104,11 @@
               },
             }"
           >
-            <button>피드생성</button>
-          </router-link>
+          <button>피드생성</button>
+        </router-link>
+
+        <span>방문일자</span>
+        <input type="date" @input="updateVisitedAt(myplace.id)" v-model="selectedVisitedDate">
         </li>
       </ul>
     </div>
@@ -129,6 +135,8 @@ export default {
         },
         myplaces: [],
       },
+      selectedVisitedDate: null, // 이 부분을 추가
+      themeMapId:null,
     };
   },
   mounted() {
@@ -138,6 +146,7 @@ export default {
   },
   methods: {
     async loadThemeMapDetail(themeMapId) {
+      this.themeMapId=themeMapId;
       const url = `${this.backURL}/mymap/${themeMapId}`;
       try {
         const response = await axios.get(url, {
@@ -196,6 +205,80 @@ export default {
       // This method will be called when the color changes in the child component
       this.firstPlace.thememapId.color = newColor;
     },
+
+   
+    // 방문일자를 선택한 경우, selectedVisitedDate에 값이 들어감
+    // 이 값을 서버로 전송하거나 다른 처리를 수행할 수 있음
+    updateVisitedAt(myplaceId) {
+      this.myplaceId=myplaceId;
+  if (  myplaceId && this.selectedVisitedDate) {
+    // 서버로 전송하기 전에 형식을 변경
+    // const formattedDate = new Date(this.selectedVisitedDate)
+    // console.log("Updating visited date:", this.selectedVisitedDate);
+    this.addVisitedAt(myplaceId,  this.selectedVisitedDate); // 수정된 부분
+  }
+},
+
+async addVisitedAt(myplaceId, visitedAt) {
+  const url = `${this.backURL}/myplace/${myplaceId}`;
+  try {
+    await axios.put(
+      url,
+      {
+        // thememapId: this.themeMapId , // 숫자를 문자열로 변환
+        // placeId: myplaceId,
+        id :  myplaceId,
+        visitedAt: visitedAt, // 수정된 부분
+      },
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    // 성공적으로 업데이트한 후에 Myplaces를 다시 불러올 수 있도록 처리
+    this.findAllMyPlace(this.mymapdetail.themeMapDto.id);
+  } catch (error) {
+    console.log(error.response.data);
+    alert(error.response.data.message || "생성일자 추가하지 못했습니다.");
+  }
+},
+  },
+  async checkAndDisplayFeed(myplaceId) {
+    const url = `${this.backURL}/myfeed/${myplaceId}`;
+    try {
+      const response = await axios.get(url, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("mapbegoodToken")}`,
+        },
+      });
+      const feedExists = response.data && response.data.length > 0;
+
+      if (feedExists) {
+        // 피드가 있는 경우 피드 보기 페이지로 이동
+        this.$router.push({
+          name: "myfeed",
+          params: {
+            myplaceId: myplaceId,
+            id: this.mymapdetail.themeMapDto.id,
+          },
+          query: {
+            placeName: this.myplace.placeId.placeName,
+            address: this.myplace.placeId.address,
+            visitedAt: this.myplace.visitedAt,
+          },
+        });
+      } else {
+        // 피드가 없는 경우 알림 표시
+        alert("저장된 피드가 없습니다!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("피드를 확인하지 못했습니다.");
+    }
   },
 };
 </script>
@@ -221,7 +304,7 @@ export default {
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
   border-radius: 20px;
-  max-width: 330px;
+  max-width: 540px;
   width: 100%;
   margin: 20px;
   box-sizing: border-box;
@@ -256,7 +339,6 @@ export default {
 }
 
 .add-bookmark-btn {
-  
   color: #fff;
   border: none;
   padding: 8px 16px;
@@ -286,6 +368,48 @@ export default {
   position: relative;
   width: calc(100% - 40px);
   margin: 0 auto 10px;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 120%; /* Adjust as needed */
+  right: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 5rem;
+  padding: .5rem 0;
+  margin: .125rem 0 0;
+  font-size: 1rem; /* Corrected from "rem" to "1rem" */
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff; /* Background color of the dropdown */
+  border: 2px solid rgba(0, 0, 0, 0.125);
+  border-radius: 1.25rem;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.175); /* Box shadow for the dropdown */
+  transform-origin: top right; /* Adjust as needed */
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu button {
+  width: 100%;
+  text-align: left;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.dropdown-menu button:hover,
+.dropdown-menu button:focus {
+  background-color: #f8f9fa; /* Hover color */
 }
 
 .search input {
@@ -323,6 +447,4 @@ export default {
   outline: none;
   border-color: #555;
 }
-
-  
 </style>

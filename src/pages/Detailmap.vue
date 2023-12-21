@@ -1,11 +1,27 @@
 <template>
   <div>
-    <div id="map"></div>
+    <div id="map">
+      <!-- <div class="chat-container"> -->
+      <div :class="chatOnOff ? chatStyle2 : hidden">
+        <chat />
+      </div>
+
+      <a href="#" style="text-decoration: none;">
+        <!-- <img src="../../public/images/chat1.png" alt="chat" v-if="$route.name == '/group'" @click="switchChat"
+          style="border-radius: 20px 20px 20px 20px" /> -->
+        <span v-if="$route.name=='/group'" @click="switchChat" class="chat">
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+            <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+          </svg>
+        </span>
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import chat from "../components/Chat.vue";
 
 export default {
   name: "DetailMap",
@@ -19,10 +35,17 @@ export default {
       required: true,
     },
   },
+  components: {
+    chat,
+  },
   data() {
     return {
       map: null,
       markers: [],
+
+      chatOnOff: false,
+      hidden: "chat-container1",
+      chatStyle2: "chat-container2",
     };
   },
   mounted() {
@@ -120,10 +143,10 @@ export default {
     // },
 
     displayPlacesOnMap() {
-  const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-  // Remove existing markers
-  this.removeMarkers();
+      // Remove existing markers
+      this.removeMarkers();
 
   // Check if myplaces is an array and not empty
   if (
@@ -144,7 +167,7 @@ export default {
           // Make sure the image source is correctly constructed
           console.log("Image Source:", imageSrc);
 
-          const imageSize = new kakao.maps.Size(64, 69);
+          const imageSize = new kakao.maps.Size(34, 39);
           const imageOption = { offset: new kakao.maps.Point(27, 69) };
           const markerImage = new kakao.maps.MarkerImage(
             imageSrc,
@@ -152,34 +175,34 @@ export default {
             imageOption
           );
 
-          // Creating the marker
-          const marker = new kakao.maps.Marker({
-            position: placePosition,
-            image: markerImage,
+              // Creating the marker
+              const marker = new kakao.maps.Marker({
+                position: placePosition,
+                image: markerImage,
+              });
+
+              marker.setMap(this.map);
+
+              window.kakao.maps.event.addListener(marker, "click", () => {
+                this.centerMap(placePosition);
+              });
+
+              bounds.extend(placePosition);
+              this.markers.push(marker);
+              resolve();
+            }
           });
+        });
 
-          marker.setMap(this.map);
-
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            this.centerMap(placePosition);
-          });
-
-          bounds.extend(placePosition);
-          this.markers.push(marker);
-          resolve();
-        }
-      });
-    });
-
-    // Wait for all markers to be created before setting the map bounds
-    Promise.all(markerPromises).then(() => {
-      // Set the map bounds even if there are no markers
-      this.map.setBounds(bounds);
-    });
-  } else {
-    console.warn("No places to display on the map.");
-  }
-},
+        // Wait for all markers to be created before setting the map bounds
+        Promise.all(markerPromises).then(() => {
+          // Set the map bounds even if there are no markers
+          this.map.setBounds(bounds);
+        });
+      } else {
+        console.warn("No places to display on the map.");
+      }
+    },
 
 
     removeMarkers() {
@@ -198,7 +221,9 @@ export default {
       // Update markers with the new color
       this.displayPlacesOnMap();
     },
-
+    switchChat() {
+      this.chatOnOff = !this.chatOnOff;
+    },
   },
 };
 </script>
@@ -210,5 +235,39 @@ export default {
   position: relative;
   overflow: hidden;
   z-index: 1;
+}
+
+.chat-container1 {
+  display: none;
+}
+
+.chat-container2 {
+  position: fixed;
+  z-index: 2;
+  /* margin-top: 15vh; */
+  /* margin-left: 115vh; */
+  /* margin-left: 111vh; */
+  margin-top: 360px;
+  margin-left: 1066px;
+}
+
+img {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  z-index: 20;
+  /* margin-top: 88vh;
+  margin-left: 140vh; */
+  margin-top: 870px;
+  margin-left: 1360px;
+}
+span.chat {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  z-index: 20;
+  margin-top: 870px;
+  margin-left: 1360px;
+  fill:rgb(169, 178, 255);
 }
 </style>

@@ -7,7 +7,6 @@ import GroupCreate from "../pages/GroupCreate.vue";
 import GroupDetail from "../pages/GroupDetail.vue";
 // import GroupThemeMapList from "../pages/GroupThemeMapList.vue";
 import GroupThemeMap from "../pages/GroupThemeMap.vue";
-import ThemeMapList from "../pages/ThemeMapList.vue";
 import ThemeMap from "../pages/ThemeMap.vue";
 import FavoriteList from "../pages/FavoriteList.vue";
 import FavoriteAdd from "../pages/FavoriteAdd.vue";
@@ -28,13 +27,10 @@ import GroupWaiting from "../pages/GroupWaiting.vue";
 import DetailGroupMap from "../pages/DetailGroupMap.vue"; // DetailGroupMap 컴포넌트 추가
 import test from "../pages/test.vue";
 import DetailMap from "../pages/Detailmap.vue";
-import chat from "../pages/chat_tmp.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/chat", component: chat },
-
     { path: "/", component: OthersThemeMap }, // /일때 뭘 보여줄지 고민, 로그인 전-추천리스트 로그인 후-대표지도
     { name: "login", path: "/login", component: Login },
     { path: "/oauth", component: Oauth },
@@ -55,7 +51,6 @@ const router = createRouter({
       component: OthersThemeMapDetail,
     },
     { path: "/groupthememap", component: GroupThemeMap },
-    { path: "/thememaplist", component: ThemeMapList },
     { name: "thememap", path: "/thememap", component: ThemeMap },
 
     { path: "/favoritelist", component: FavoriteList },

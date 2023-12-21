@@ -17,8 +17,12 @@
               d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
             />
           </svg>
-          <span class="invite"> 
-          <!-- v-show="isleader"> -->
+          <span class="out" v-if="this.isleader == false" @click="outofGroupClickHandler">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+              </svg>
+          </span>
+          <span class="invite" v-show="isleader">
             <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +47,8 @@
           <div class="member" v-for="gm in memberList">
             <div class="info">
               <span class="member" @click="memberdetailClickHandler(gm.member.nickname)">
-                <img :src="gm.member.profileImage" alt="프로필이미지" class="profileImage"/>{{ gm.member.nickname }}
+                <img :src="gm.member.profileImage" alt="프로필이미지" class="profileImage"/>
+                <span class="nickname">{{ gm.member.nickname }}</span>
                 <!-- 리더용 아이콘 -->
                 <svg v-show="gm.leader === 1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
@@ -51,7 +56,6 @@
                 </svg>
               </span>
               <span class="delete">
-                <!-- v-if="isleader" > -->
                 <svg v-show="gm.leader === 0 && isleader" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"
                   @click="memberdeleteClickHandler(gm)">
                   <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
@@ -60,17 +64,9 @@
               </span>
             </div>
           </div>
-          <br><br>
-          <!-- css다시 넣어주기 -->
-          <div class="out-group cursor-pointer btn btn-outline-dark" v-if="this.isleader == false"
-              @click="outofGroupClickHandler">
-            <span class="out">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
-                <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
-              </svg>
-            </span>&nbsp;&nbsp;
-            <span class="text">그룹 탈퇴</span>
-          </div>
+         
+            
+            
         </div>
       </div>
     </div>
@@ -92,11 +88,15 @@ import axios from "axios";
 import SearchMember from "../pages/SearchMember.vue";
 import Swal from "sweetalert2";
 import Detailmap from './Detailmap.vue';
+import { mapState, mapActions } from "vuex";
 export default {
   name: "GroupMember",
   components: {
     SearchMember,
     Detailmap
+  },
+  computed: {
+    ...mapState(["userInfo"]),
   },
   data() {
     return {
@@ -113,6 +113,7 @@ export default {
     };
   },
   async created() {
+    await this.$store.dispatch("getUserInfo");
     //$router.parmas를 통해 전달된 파라미터 확인
     const groupId = this.$route.params.groupId;
     const groupName = this.$route.params.groupName;
@@ -125,7 +126,7 @@ export default {
     console.log(groupId, groupName, leaderNickname);
 
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
-    if (this.$store.state.userInfo.nickName == this.leaderNickname) {
+    if (this.userInfo.nickName  == this.leaderNickname) {
       this.isleader = true;
     }
     // axios로 back에 그룹 멤버 명단 요청
@@ -306,5 +307,15 @@ div.m-part {
   left: 454px;
   right: 0;
   height: 100%;
+}
+
+span.out:hover svg{
+  fill:rgb(255, 41, 41);
+}
+div.member{
+  margin-bottom: 10px;
+}
+div.member>div.info>span.member>span.nickname{
+  padding-left: 5px;
 }
 </style>
