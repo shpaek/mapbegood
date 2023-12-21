@@ -184,7 +184,7 @@ export default {
     },
 
     loadMymapList() {
-      const url = `${this.backURL}/mymap/list`;
+      const url = "https://api.mapbegood.site/mymap/list";
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 

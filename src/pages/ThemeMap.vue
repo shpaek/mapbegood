@@ -2,120 +2,274 @@
   <div class="section-container">
     <div class="g-part">
       <div class="search-wrapper" style="max-width: 600px; margin: 0 auto">
-        <div class="header-container" style="display:flex;">
-          <a href="/thememap" 
-            style="color:#000;text-decoration:none;margin-top:25px;">
-            <span class="theme-list" style="font-weight:bold;font-size:25px;margin-left:30px;padding-top:15px;">나의 테마지도</span>
+        <div class="header-container" style="display: flex">
+          <a
+            href="/thememap"
+            style="color: #000; text-decoration: none; margin-top: 25px"
+          >
+            <span
+              class="theme-list"
+              style="
+                font-weight: bold;
+                font-size: 25px;
+                margin-left: 30px;
+                padding-top: 15px;
+              "
+              >나의 테마지도</span
+            >
           </a>
         </div>
         <v-dialog v-model="themeMapAddDialog" persistent width="500">
           <template v-slot:activator="{ props }">
-            <div class="new-thememap cursor-pointer btn btn-outline-dark" v-bind="props">
+            <div
+              class="new-thememap cursor-pointer btn btn-outline-dark"
+              v-bind="props"
+            >
               <span class="new">
-                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                </svg>&nbsp;&nbsp;
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="19"
+                  height="19"
+                  fill="currentColor"
+                  class="bi bi-plus-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"
+                  /></svg
+                >&nbsp;&nbsp;
               </span>
               <span class="text">테마지도 추가</span>
             </div>
           </template>
           <v-card>
-            <v-card-title style="display:flex;">
-              <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">테마지도 생성</span>
+            <v-card-title style="display: flex">
+              <span
+                class="text-create-thememap"
+                style="font-weight: bold; margin-left: auto; margin-right: auto"
+                >테마지도 생성</span
+              >
             </v-card-title>
 
             <v-card-text>
               <v-container>
                 <!-- 테마 이름 입력 -->
                 <div class="mb-3">
-                  <label for="themeName" class="form-label text-black">테마 이름</label>
-                  <input v-model="themeName" id="themeName" name="themeName" type="text" class="form-control" ref="themeName"/>
+                  <label for="themeName" class="form-label text-black"
+                    >테마 이름</label
+                  >
+                  <input
+                    v-model="themeName"
+                    id="themeName"
+                    name="themeName"
+                    type="text"
+                    class="form-control"
+                    ref="themeName"
+                  />
                 </div>
 
                 <div class="mb-4">
                   <label class="form-label text-black">테마 색상</label>
                   <div class="flex space-x-2">
-                    <button :class="{'color-button': true, selected: selectedColor === 'red',}"
-                      @click="selectColor('red')" class="bg-red-500"></button>
-                    <button :class="{'color-button': true, selected: selectedColor === 'yellow',}"
-                      @click="selectColor('yellow')" class="bg-yellow-500"></button>
-                    <button :class="{'color-button': true,selected: selectedColor === 'green',}"
-                      @click="selectColor('green')" class="bg-green-500"></button>
-                    <button :class="{'color-button': true,selected: selectedColor === 'blue',}"
-                      @click="selectColor('blue')" class="bg-blue-500"></button>
-                    <button :class="{'color-button': true,selected: selectedColor === 'indigo',}"
-                      @click="selectColor('indigo')" class="bg-indigo-500"></button>
-                    <button :class="{'color-button': true,selected: selectedColor === 'purple',}"
-                      @click="selectColor('purple')" class="bg-purple-500"></button>
-                    <button :class="{ 'color-button': true,selected: selectedColor === 'pink',}"
-                      @click="selectColor('pink')" class="bg-pink-500"></button>
-                    <button :class="{'color-button': true,selected: selectedColor === 'gray',}"
-                      @click="selectColor('gray')" class="bg-gray-500"></button>
-                    <button :class="{ 'color-button': true, selected: selectedColor === 'black',}"
-                      @click="selectColor('black')" class="bg-black"></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'red',
+                      }"
+                      @click="selectColor('red')"
+                      class="bg-red-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'yellow',
+                      }"
+                      @click="selectColor('yellow')"
+                      class="bg-yellow-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'green',
+                      }"
+                      @click="selectColor('green')"
+                      class="bg-green-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'blue',
+                      }"
+                      @click="selectColor('blue')"
+                      class="bg-blue-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'indigo',
+                      }"
+                      @click="selectColor('indigo')"
+                      class="bg-indigo-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'purple',
+                      }"
+                      @click="selectColor('purple')"
+                      class="bg-purple-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'pink',
+                      }"
+                      @click="selectColor('pink')"
+                      class="bg-pink-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'gray',
+                      }"
+                      @click="selectColor('gray')"
+                      class="bg-gray-500"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'black',
+                      }"
+                      @click="selectColor('black')"
+                      class="bg-black"
+                    ></button>
                   </div>
                 </div>
 
                 <!-- 테마 메모 입력 -->
                 <div class="mb-3">
-                  <label for="themeMemo" class="form-label text-black">테마 메모</label>
-                  <textarea v-model="themeMemo" id="themeMemo" name="themeMemo" rows="4" class="form-control"></textarea>
+                  <label for="themeMemo" class="form-label text-black"
+                    >테마 메모</label
+                  >
+                  <textarea
+                    v-model="themeMemo"
+                    id="themeMemo"
+                    name="themeMemo"
+                    rows="4"
+                    class="form-control"
+                  ></textarea>
                 </div>
 
                 <!-- 테마 공개 여부 체크박스 -->
                 <div class="mb-3 form-check">
-                  <input v-model="isThemePublic" type="checkbox" class="form-check-input" id="showCheckbox"/>
-                  <label class="form-check-label text-black" for="showCheckbox">테마 공개 여부</label>
+                  <input
+                    v-model="isThemePublic"
+                    type="checkbox"
+                    class="form-check-input"
+                    id="showCheckbox"
+                  />
+                  <label class="form-check-label text-black" for="showCheckbox"
+                    >테마 공개 여부</label
+                  >
                 </div>
 
                 <!-- 메인맵 여부 체크박스 -->
                 <div class="mb-3 form-check">
-                  <input v-model="isMainMap" type="checkbox" class="form-check-input" id="mainmapCheckbox"/>
-                  <label class="form-check-label text-black" for="mainmapCheckbox">메인맵으로 설정</label>
+                  <input
+                    v-model="isMainMap"
+                    type="checkbox"
+                    class="form-check-input"
+                    id="mainmapCheckbox"
+                  />
+                  <label
+                    class="form-check-label text-black"
+                    for="mainmapCheckbox"
+                    >메인맵으로 설정</label
+                  >
                 </div>
               </v-container>
             </v-card-text>
-            <div class="btn-create-thememap" style="display:flex;">
+            <div class="btn-create-thememap" style="display: flex">
               <!-- 테마맵 생성 버튼 -->
               <span @click="createThemeMap" class="create-thememap">생성</span>
-              <span  @click="cancleThemeMapAdd" class="cancel-thememap">취소</span>
+              <span @click="cancleThemeMapAdd" class="cancel-thememap"
+                >취소</span
+              >
             </div>
             <br />
           </v-card>
         </v-dialog>
 
         <!-- 각 테마맵에 대한 반복문 -->
-          <ul class="list-group">
-            <li v-for="thememap in favoriteList" :key="thememap.themeMapDto.id" 
-              class="thememap">
-              <div class="info" @click="detailThememap(thememap.themeMapDto.id)">
-                <div class="name">{{ thememap.themeMapDto.name }}</div>
-                <div class="memo">{{ thememap.themeMapDto.memo }}</div>
-                <!-- <div v-show="thememap.themeMapDto.memo == null"></div> -->
-              </div>
-              <!-- 공개 여부에 따라 다른 아이콘 표시 -->
-              <h5>
-                <span v-if="thememap.themeMapDto.show">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
-                    <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"/>
-                  </svg>
-                </span>
-                <span v-else>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
-                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                  </svg>
-                </span>
-              </h5>
-              <!-- 더보기 버튼 -->
+        <ul class="list-group">
+          <li
+            v-for="thememap in favoriteList"
+            :key="thememap.themeMapDto.id"
+            class="thememap"
+          >
+            <div class="info" @click="detailThememap(thememap.themeMapDto.id)">
+              <div class="name">{{ thememap.themeMapDto.name }}</div>
+              <div class="memo">{{ thememap.themeMapDto.memo }}</div>
+              <!-- <div v-show="thememap.themeMapDto.memo == null"></div> -->
+            </div>
+            <!-- 공개 여부에 따라 다른 아이콘 표시 -->
+            <h5>
+              <span v-if="thememap.themeMapDto.show">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  class="bi bi-unlock-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"
+                  />
+                </svg>
+              </span>
+              <span v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  class="bi bi-lock-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"
+                  />
+                </svg>
+              </span>
+            </h5>
+            <!-- 더보기 버튼 -->
             <div class="btn-group" role="group">
-              <button type="button" class="more" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
-                  <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+              <button
+                type="button"
+                class="more"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  fill="currentColor"
+                  class="bi bi-three-dots"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"
+                  />
                 </svg>
               </button>
               <ul class="dropdown-menu">
-                <v-dialog v-model="thememap.themeMapDto.themeMapEditDialog" persistent width="500">
+                <v-dialog
+                  v-model="thememap.themeMapDto.themeMapEditDialog"
+                  persistent
+                  width="500"
+                >
                   <template v-slot:activator="{ props }">
                     <li v-bind="props">
                       <!-- @click="editGroupmap(thememap.themeMapDto.id)" -->
@@ -124,23 +278,54 @@
                   </template>
 
                   <v-card>
-                    <v-card-title style="display:flex;">
-                      <span class="text-create-thememap" style="font-weight:bold;margin-left:auto;margin-right:auto;">테마지도 수정</span>
+                    <v-card-title style="display: flex">
+                      <span
+                        class="text-create-thememap"
+                        style="
+                          font-weight: bold;
+                          margin-left: auto;
+                          margin-right: auto;
+                        "
+                        >테마지도 수정</span
+                      >
                     </v-card-title>
 
                     <v-card-text>
                       <v-container>
                         <!-- 테마 이름 입력 -->
                         <div class="mb-3">
-                          <label for="themeName" class="form-label text-black">테마 이름</label>
-                          <input v-model="thememap.themeMapDto.name" id="themeMapDto.name" name="themeMapDto.name" type="text" class="form-control" ref="themeMapDto.name"/>
+                          <label for="themeName" class="form-label text-black"
+                            >테마 이름</label
+                          >
+                          <input
+                            v-model="thememap.themeMapDto.name"
+                            id="themeMapDto.name"
+                            name="themeMapDto.name"
+                            type="text"
+                            class="form-control"
+                            ref="themeMapDto.name"
+                          />
                         </div>
 
                         <!-- 색상 선택 드롭다운 -->
                         <div class="mb-3">
-                          <label for="colorSelector" class="form-label text-black">테마 색상 선택</label>
-                          <select v-model="thememap.themeMapDto.color" id="themeMapDto.color" name="themeMapDto.color" class="form-select" ref="themeMapDto.color">
-                            <option v-for="color in colors" :key="color" :value="color">
+                          <label
+                            for="colorSelector"
+                            class="form-label text-black"
+                            >테마 색상 선택</label
+                          >
+                          <select
+                            v-model="thememap.themeMapDto.color"
+                            id="themeMapDto.color"
+                            name="themeMapDto.color"
+                            class="form-select"
+                            ref="themeMapDto.color"
+                          >
+                            <option
+                              v-for="color in colors"
+                              :key="color"
+                              :value="color"
+                            >
                               {{ color }}
                             </option>
                           </select>
@@ -148,28 +333,61 @@
 
                         <!-- 테마 메모 입력 -->
                         <div class="mb-3">
-                          <label for="themeMemo" class="form-label text-black">테마 메모</label>
-                          <textarea v-model="thememap.themeMapDto.memo" id="themeMapDto.memo" name="themeMapDto.memo" rows="4" class="form-control"></textarea>
+                          <label for="themeMemo" class="form-label text-black"
+                            >테마 메모</label
+                          >
+                          <textarea
+                            v-model="thememap.themeMapDto.memo"
+                            id="themeMapDto.memo"
+                            name="themeMapDto.memo"
+                            rows="4"
+                            class="form-control"
+                          ></textarea>
                         </div>
 
-                         <!-- 테마 공개 여부 체크박스 -->
+                        <!-- 테마 공개 여부 체크박스 -->
                         <div class="mb-3 form-check">
-                          <input v-model="isThemePublic" type="checkbox" class="form-check-input" id="showCheckbox"/>
-                          <label class="form-check-label text-black" for="showCheckbox">테마 공개 여부</label>
+                          <input
+                            v-model="isThemePublic"
+                            type="checkbox"
+                            class="form-check-input"
+                            id="showCheckbox"
+                          />
+                          <label
+                            class="form-check-label text-black"
+                            for="showCheckbox"
+                            >테마 공개 여부</label
+                          >
                         </div>
 
                         <!-- 메인맵 여부 체크박스 -->
                         <div class="mb-3 form-check">
-                          <input v-model="isMainMap" type="checkbox" class="form-check-input" id="mainmapCheckbox"/>
-                          <label class="form-check-label text-black" for="mainmapCheckbox">메인맵으로 설정</label>
+                          <input
+                            v-model="isMainMap"
+                            type="checkbox"
+                            class="form-check-input"
+                            id="mainmapCheckbox"
+                          />
+                          <label
+                            class="form-check-label text-black"
+                            for="mainmapCheckbox"
+                            >메인맵으로 설정</label
+                          >
                         </div>
                       </v-container>
                     </v-card-text>
                     <div class="btn-update-thememap">
                       <!-- 테마맵 생성 버튼 -->
-                      <span @click="updateThemeMap(thememap.themeMapDto)" class="update-thememap">
-                        수정</span>&nbsp;&nbsp;
-                      <span class="cancel-thememap" @click="cancleThemeMapEdit(thememap.themeMapDto)">
+                      <span
+                        @click="updateThemeMap(thememap.themeMapDto)"
+                        class="update-thememap"
+                      >
+                        수정</span
+                      >&nbsp;&nbsp;
+                      <span
+                        class="cancel-thememap"
+                        @click="cancleThemeMapEdit(thememap.themeMapDto)"
+                      >
                         취소
                       </span>
                     </div>
@@ -248,7 +466,7 @@ export default {
 
   methods: {
     loadMymapList() {
-      const url = `${this.backURL}/mymap/list`;
+      const url = "https://api.mapbegood.site/mymap/list";
 
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
@@ -470,8 +688,8 @@ export default {
 }
 .m-part {
   position: absolute;
-  left: 454px; 
-  right: 0; 
+  left: 454px;
+  right: 0;
   height: 100%;
 }
 
@@ -510,24 +728,24 @@ export default {
 }
 
 .color-button.selected::after {
-  opacity: 1; 
+  opacity: 1;
 }
-div.btn-create-thememap>span.create-thememap{
-  margin-left:200px;
+div.btn-create-thememap > span.create-thememap {
+  margin-left: 200px;
 }
-div.btn-create-thememap>span.cancel-thememap{
-  margin-left:50px;
+div.btn-create-thememap > span.cancel-thememap {
+  margin-left: 50px;
 }
-div.btn-create-thememap>span:hover{
+div.btn-create-thememap > span:hover {
   font-weight: bold;
 }
-div.btn-update-thememap>span.update-thememap{
-  margin-left:200px;
+div.btn-update-thememap > span.update-thememap {
+  margin-left: 200px;
 }
-div.btn-update-thememap>span.cancel-thememap{
-  margin-left:50px;
+div.btn-update-thememap > span.cancel-thememap {
+  margin-left: 50px;
 }
-div.btn-update-thememap>span:hover{
+div.btn-update-thememap > span:hover {
   font-weight: bold;
 }
 
@@ -554,9 +772,9 @@ ul {
   padding-left: 0px;
 }
 li.thememap {
-  display:flex;
-  margin-left:auto;
-  margin-right:auto;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
   border: 1px solid grey;
   border-radius: 5px;
   height: 60px;
@@ -580,10 +798,10 @@ li.thememap > div.info > div.memo {
   white-space: nowrap;
   max-width: 230px;
 }
-li.thememap>h5{
-  margin-top:auto;
-  margin-bottom:auto;
-  margin-right:5px;
+li.thememap > h5 {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 5px;
 }
 .dropdown-menu {
   min-width: 45px;
@@ -604,7 +822,12 @@ ul.list-group > li {
   margin-top: 15px;
 }
 ul.list-group > li:hover {
-  background-color: rgba(0,112,192,0.329); /* 좋을지도 로고 파란색, 투명도 적용 */
+  background-color: rgba(
+    0,
+    112,
+    192,
+    0.329
+  ); /* 좋을지도 로고 파란색, 투명도 적용 */
 }
 
 /*
