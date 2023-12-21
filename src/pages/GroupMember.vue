@@ -5,7 +5,9 @@
       <div class="group-member-container">
         <div class="icons">
           <!-- 아이콘들 -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="30"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
             height="30"
             fill="currentColor"
             class="bi bi-list"
@@ -17,10 +19,23 @@
               d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
             />
           </svg>
-          <span class="out" v-if="this.isleader == false" @click="outofGroupClickHandler">
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
-                <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
-              </svg>
+          <span
+            class="out"
+            v-if="this.isleader == false"
+            @click="outofGroupClickHandler"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              fill="currentColor"
+              class="bi bi-door-open-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"
+              />
+            </svg>
           </span>
           <span class="invite" v-show="isleader">
             <!-- 그룹에 초대하고 싶은 사용자를 검색해서 그룹에 초대 요청하기(waiting에 추가) -->
@@ -46,27 +61,56 @@
           <hr />
           <div class="member" v-for="gm in memberList">
             <div class="info">
-              <span class="member" @click="memberdetailClickHandler(gm.member.nickname)">
-                <img :src="gm.member.profileImage" alt="프로필이미지" class="profileImage"/>
+              <span
+                class="member"
+                @click="memberdetailClickHandler(gm.member.nickname)"
+              >
+                <img
+                  :src="gm.member.profileImage"
+                  alt="프로필이미지"
+                  class="profileImage"
+                />
                 <span class="nickname">{{ gm.member.nickname }}</span>
                 <!-- 리더용 아이콘 -->
-                <svg v-show="gm.leader === 1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
+                <svg
+                  v-show="gm.leader === 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-patch-check"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"
+                  />
+                  <path
+                    d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"
+                  />
                 </svg>
               </span>
               <span class="delete">
-                <svg v-show="gm.leader === 0 && isleader" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"
-                  @click="memberdeleteClickHandler(gm)">
-                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                  <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/>
+                <svg
+                  v-show="gm.leader === 0 && isleader"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-dash-square"
+                  viewBox="0 0 16 16"
+                  @click="memberdeleteClickHandler(gm)"
+                >
+                  <path
+                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
+                  />
+                  <path
+                    d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"
+                  />
                 </svg>
               </span>
             </div>
           </div>
-         
-            
-            
         </div>
       </div>
     </div>
@@ -87,13 +131,13 @@
 import axios from "axios";
 import SearchMember from "../pages/SearchMember.vue";
 import Swal from "sweetalert2";
-import Detailmap from './Detailmap.vue';
+import Detailmap from "./Detailmap.vue";
 import { mapState, mapActions } from "vuex";
 export default {
   name: "GroupMember",
   components: {
     SearchMember,
-    Detailmap
+    Detailmap,
   },
   computed: {
     ...mapState(["userInfo"]),
@@ -126,7 +170,7 @@ export default {
     console.log(groupId, groupName, leaderNickname);
 
     //로그인한 멤버가 그룹장인 경우 isleader를 true로 주기
-    if (this.userInfo.nickName  == this.leaderNickname) {
+    if (this.userInfo.nickName == this.leaderNickname) {
       this.isleader = true;
     }
     // axios로 back에 그룹 멤버 명단 요청
@@ -152,38 +196,56 @@ export default {
       });
   },
   methods: {
-    outofGroupClickHandler(){
-      console.log("그룹나가기 클릭")
-      const url = `${this.backURL}/groupmember`;
-      const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
-      axios.defaults.headers.common["Authorization"] = accessToken;
+    outofGroupClickHandler() {
+      console.log("그룹나가기 클릭");
 
-      //DTO에 데이터 세팅
-      const memberDTO = {
-        email: this.$store.state.userInfo.email
-      };
-      const groupsDTO = {
-        id: this.groupId,
-      };
+      Swal.fire({
+        title: "그룹에서 나가기",
+        text: this.groupName + " 그룹에서 나가시겠니까?",
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "확인",
+        denyButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const url = `${this.backURL}/groupmember`;
+          const accessToken =
+            "Bearer " + localStorage.getItem("mapbegoodToken");
+          axios.defaults.headers.common["Authorization"] = accessToken;
 
-      // MemberGroupDTO 생성
-      const memberGroupDTO = {
-        member: memberDTO,
-        groups: groupsDTO,
-        leader: this.selectedLeader,
-      };
+          //DTO에 데이터 세팅
+          const memberDTO = {
+            email: this.$store.state.userInfo.email,
+          };
+          const groupsDTO = {
+            id: this.groupId,
+          };
 
-      const requestBody = memberGroupDTO;
-      axios
-        .delete(url, { data: requestBody, withCredentials: true })
-        .then((response) => {
-          Swal.fire({ text: "그룹을 탈퇴했습니다", icon: "success" });
-          location.href = "/groups";
-        })
-        .catch((error) => {
-          console.log(error);
-          Swal.fire({ text: "그룹에서 탈퇴하지 못했습니다", icon: "error" });
-        });
+          // MemberGroupDTO 생성
+          const memberGroupDTO = {
+            member: memberDTO,
+            groups: groupsDTO,
+            leader: this.selectedLeader,
+          };
+
+          const requestBody = memberGroupDTO;
+          axios
+            .delete(url, { data: requestBody, withCredentials: true })
+            .then((response) => {
+              Swal.fire({ text: "그룹을 탈퇴했습니다", icon: "success" });
+              location.href = "/groups";
+            })
+            .catch((error) => {
+              console.log(error);
+              Swal.fire({
+                text: "그룹에서 탈퇴하지 못했습니다",
+                icon: "error",
+              });
+            });
+        } else if (result.isDenied) {
+          Swal.fire({ text: "취소 되었습니다.", icon: "warning" });
+        }
+      });
     },
     memberdeleteClickHandler(gm) {
       //그룹장이 멤버를 방출하는 경우
@@ -309,13 +371,13 @@ div.m-part {
   height: 100%;
 }
 
-span.out:hover svg{
-  fill:rgb(255, 41, 41);
+span.out:hover svg {
+  fill: rgb(255, 41, 41);
 }
-div.member{
+div.member {
   margin-bottom: 10px;
 }
-div.member>div.info>span.member>span.nickname{
+div.member > div.info > span.member > span.nickname {
   padding-left: 5px;
 }
 </style>

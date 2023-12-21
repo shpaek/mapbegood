@@ -71,7 +71,8 @@ export default {
   },
   data() {
     return {
-      groupProfileImage: "../../public/images/defaultGroupProfile.png",
+      groupProfileImage:
+        "https://mapbegood-image.s3.ap-northeast-2.amazonaws.com/image/logo2.png",
       name: "",
       fileErrorMsg: "",
       isDupchkOk: false,
