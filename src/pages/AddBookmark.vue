@@ -184,8 +184,7 @@ export default {
     },
 
     loadMymapList() {
-      const url =
-        "http://ec2-15-164-213-115.ap-northeast-2.compute.amazonaws.com:8080/mymap/list";
+      const url = "https://api.mapbegood.site/mymap/list";
       const accessToken = "Bearer " + localStorage.getItem("mapbegoodToken");
       axios.defaults.headers.common["Authorization"] = accessToken;
 
