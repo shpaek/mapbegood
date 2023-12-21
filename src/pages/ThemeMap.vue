@@ -719,11 +719,11 @@ ul.list-group > li:hover {
   width: 390px;
   height: 100vh;
 }
-.sticker-btn {
-  background-color: #4e4e52; 
-  border: 1px solid #000000; 
-  padding: 0.75rem 1.5rem; 
-  font-size: 1rem;
+<<<<<<< HEAD
+=======
+.list-button-container {
+  display: flex;
+  justify-content: space-between; 
   border-radius: 8px; 
   cursor: pointer;
   transition: background-color 0.3s ease; 
@@ -801,7 +801,11 @@ p {
   position: fixed;
   top: 50%;
   left: 10px;
+<<<<<<< HEAD
   transform: translateY(-50%);butt
+=======
+  transform: translateY(-50%);
+>>>>>>> 7f295cbc871f14c2ef291635675ea5ecf83fb976
   background-color: #f8f9fa;
   padding: 1rem;
   border: 1px solid #ccc;
