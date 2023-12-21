@@ -85,6 +85,7 @@ import Detailmap from "./Detailmap.vue";
 import GroupInvite from "./GroupInvite.vue";
 import GroupCreate from "./GroupCreate.vue";
 import Swal from "sweetalert2";
+
 export default {
   name: "GroupsView",
   components: {

@@ -5,7 +5,7 @@
       <span class="chat__header__greetings">{{ this.groupName }}</span>
     </div>
 
-    <v-list id="chats">
+    <v-list id="chats" ref="chats">
       <template v-for="(item, idx) in chats" :key="idx">
         <div class="chat__body" id="chat__body">
           <div v-if="item.sender == nickName" class="chat__mymessage">
@@ -133,6 +133,8 @@ export default {
         this.stompClient.subscribe("/topic/" + this.groupId, (res) => {
           this.chats.push(JSON.parse(res.body));
           console.log(res);
+          // const chatbox = document.querySelector("#chats");
+          // chatbox.scrollTop = chatbox.scrollHeight;
         });
       };
     },
@@ -184,7 +186,7 @@ export default {
 }
 
 .chat__header {
-  background: #d6dbf8;
+  background: #6ca6fd;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
   border-radius: 24px 24px 0px 0px;
   padding: 0.8rem;
@@ -200,8 +202,7 @@ export default {
   display: flex;
   justify-content: right;
   align-items: flex-end;
-  margin: 0;
-  margin-right: 10px;
+  margin: 10px 10px 10px 0px;
   min-height: 40px;
   line-break: anywhere;
 }
@@ -210,7 +211,7 @@ export default {
   margin: 0.3rem 0 0 1rem;
   border-radius: 20px 20px 0px 20px;
   max-width: 180px;
-  background-color: #bbc4ef;
+  background-color: #387eff;
   color: #ffffff;
   padding: 0.8rem;
   font-size: 14px;
@@ -218,6 +219,7 @@ export default {
 
 .chat__yourmessage {
   display: flex;
+  margin: 10px 0px 10px 0px;
 }
 
 .chat__yourmessage__avartar {
@@ -272,7 +274,7 @@ export default {
 }
 
 .form {
-  border: #bbc4ef 1px solid;
+  border: #3d5cf7 1px solid;
   display: flex;
   justify-content: space-between;
   padding: 0.5rem;

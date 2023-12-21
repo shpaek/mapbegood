@@ -88,10 +88,10 @@
         <router-link
           to="/othersthememap"
           class="menu-item"
-          :class="{ active: isMenuActive('/othersthememap') }"
           title="othersthememap"
           data-bs-toggle="tooltip"
           data-bs-placement="right"
+          :class="{ active: $route.path.startsWith('/other') }"
         >
           <svg
             class="bi pe-none"
@@ -109,10 +109,10 @@
         <router-link
           to="/thememap"
           class="menu-item"
-          :class="{ active: isMenuActive('/thememap') }"
           title="thememap"
           data-bs-toggle="tooltip"
           data-bs-placement="right"
+          :class="{ active: $route.path.startsWith('/thememap') }"
         >
           <svg
             class="bi pe-none"
@@ -151,10 +151,15 @@
         <router-link
           to="/groups"
           class="menu-item"
-          :class="{ active: isMenuActive('/groups') }"
           title="group"
           data-bs-toggle="tooltip"
           data-bs-placement="right"
+          :class="{
+            active:
+              $route.path.startsWith('/groups') ||
+              $route.path.startsWith('/group') ||
+              $route.path.startsWith('/detailgroupmap'),
+          }"
         >
           <svg
             class="bi pe-none"

@@ -1,7 +1,10 @@
 <template>
   <div class="main-container">
     <!-- <Menubar v-show="this.menu" /> -->
-    <Menubar v-if="$route.name !== 'login'" />
+    <Menubar
+      v-if="$route.name !== 'login'"
+      style="position: fixed; z-index: 2"
+    />
     <Section />
   </div>
 </template>
