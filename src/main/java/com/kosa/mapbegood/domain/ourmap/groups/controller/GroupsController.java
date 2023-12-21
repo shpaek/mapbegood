@@ -44,17 +44,17 @@ public class GroupsController {
 	
 	//사용자가 속한 그룹 전체보기
 	@GetMapping(value="", produces="application/json;charset=UTF-8")
-	public List<GroupsDTO> findAllGroupsByMemberNickname(Authentication authentication) throws FindException{
+	public ResponseEntity findAllGroupsByMemberNickname(Authentication authentication) throws FindException{
 		//ㄴRequestBody로 보내야 응답결과를 json으로 반환이 가능함
 		//ㄴㄴRequestBody -> "memberEmail":"사용자의 이메일값"이라는 객체가 받아지기 때문에 Map<>으로 받음
 		//ㄴㄴㄴ따라서 메서드에 변수를 넣어줄 때 아래와 같이 넣어줘야함
 		try {
 			String email = authenticationUtil.getUserEmail(authentication);
 			log.error("email={}", email);
-			return gs.findAllGroupsByMemberEmail(email);
+			return new ResponseEntity<>(gs.findAllGroupsByMemberEmail(email), HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("/group 조회 Err: " + e.getMessage());
-			return new ArrayList<>();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
