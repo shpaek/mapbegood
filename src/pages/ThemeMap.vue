@@ -156,41 +156,39 @@
                 </div>
                 
               
-                
-                <span class="show-info"  v-if="thememap.themeMapDto.show">
-                  <!-- <p>공개여부: {{ thememap.themeMapDto.show }}</p> -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-unlock-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"
-                    ></path>
-                  </svg>
-                </span>
-                <span class="show-info" v-else>
-                  <!-- <p>공개여부: {{ thememap.themeMapDto.show }}</p> -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-lock-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"
-                    ></path>
-                  </svg>
-                </span>
-                
-
-
-
+                      
+                      <!-- 공개 여부 아이콘 및 텍스트 -->
+                  <div class="show-info">
+                    <span v-if="thememap.themeMapDto.show">
+                  
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-unlock-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2z"
+                        />
+                      </svg>
+                    </span>
+                    <span v-else>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-lock-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
                 <div class="text-right">
                   <!-- "상세보기" 버튼 -->
                   <!-- <button            
