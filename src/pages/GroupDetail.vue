@@ -152,23 +152,7 @@
                   />
                 </div>
 
-                <!-- 색상 선택 드롭다운 -->
-                <div class="mb-3">
-                  <label for="colorSelector" class="form-label text-black"
-                    >테마 색상 선택</label
-                  >
-                  <select
-                    v-model="themeMapColor"
-                    id="themeMapColor"
-                    name="themeMapColor"
-                    class="form-select"
-                    ref="themeMapColor"
-                  >
-                    <option v-for="color in colors" :key="color" :value="color">
-                      {{ color }}
-                    </option>
-                  </select>
-                </div>
+              
                 <div class="mb-4">
                   <label class="form-label text-black">테마 색상</label>
                   <div class="flex space-x-2">
@@ -353,28 +337,83 @@
                         </div>
 
                         <!-- 색상 선택 드롭다운 -->
-                        <div class="mb-3">
-                          <label
-                            for="colorSelector"
-                            class="form-label text-black"
-                            >테마 색상 선택</label
-                          >
-                          <select
-                            v-model="thememap.themeMapDto.color"
-                            id="themeMapDto.color"
-                            name="themeMapDto.color"
-                            class="form-select"
-                            ref="themeMapDto.color"
-                          >
-                            <option
-                              v-for="color in colors"
-                              :key="color"
-                              :value="color"
-                            >
-                              {{ color }}
-                            </option>
-                          </select>
-                        </div>
+                        <div class="mb-4">
+                  <label class="form-label text-black">테마 색상</label>
+                  <div class="flex space-x-2">
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'red',
+                      }"
+                      @click="selectColor('red')"
+                      style="background-color: #eb3232"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'yellow',
+                      }"
+                      @click="selectColor('yellow')"
+                      style="background-color: #f3f335"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'green',
+                      }"
+                      @click="selectColor('green')"
+                      style="background-color: #34f834"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'blue',
+                      }"
+                      @click="selectColor('blue')"
+                      style="background-color: #4141e6"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'indigo',
+                      }"
+                      @click="selectColor('indigo')"
+                      style="background-color: #4b0082"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'purple',
+                      }"
+                      @click="selectColor('purple')"
+                      style="background-color: #800080"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'pink',
+                      }"
+                      @click="selectColor('pink')"
+                      style="background-color: #ff69b4"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'gray',
+                      }"
+                      @click="selectColor('gray')"
+                      style="background-color: #808080"
+                    ></button>
+                    <button
+                      :class="{
+                        'color-button': true,
+                        selected: selectedColor === 'black',
+                      }"
+                      @click="selectColor('black')"
+                      style="background-color: #000000"
+                    ></button>
+                  </div>
+                </div>
 
                         <!-- 테마 메모 입력 -->
                         <div class="mb-3">
@@ -967,4 +1006,214 @@ div.btn-update-thememap > span.cancel-thememap {
 div.btn-update-thememap > span:hover {
   font-weight: bold;
 }
+
+
+.m-part {
+  position: absolute;
+  left: 454px;
+  right: 0;
+  height: 100%;
+}
+
+.color-button {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  margin-right: 10px; /* 조절된 간격 */
+  cursor: pointer;
+  font-weight: bold;
+  position: relative;
+}
+
+.color-button:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.color-button::after {
+  content: "✓";
+  color: white;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.color-button.selected::after {
+  opacity: 1;
+}
+div.btn-create-thememap > span.create-thememap {
+  margin-left: 200px;
+}
+div.btn-create-thememap > span.cancel-thememap {
+  margin-left: 50px;
+}
+div.btn-create-thememap > span:hover {
+  font-weight: bold;
+}
+div.btn-update-thememap > span.update-thememap {
+  margin-left: 200px;
+}
+div.btn-update-thememap > span.cancel-thememap {
+  margin-left: 50px;
+}
+div.btn-update-thememap > span:hover {
+  font-weight: bold;
+}
+
+div.g-part > div.empty-msg {
+  padding: 70px;
+}
+div.new-thememap {
+  margin-top: 32px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 330px;
+  height: 50px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  display: flex;
+}
+div.new-thememap > span {
+  line-height: 33px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0px;
+}
+li.thememap {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid grey;
+  border-radius: 5px;
+  height: 60px;
+  width: 330px;
+  vertical-align: baseline;
+}
+li.thememap > div.info {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 13px;
+  width: 260px;
+}
+li.thememap > div.info > div.name {
+  font-size: 18px;
+  font-weight: bold;
+}
+li.thememap > div.info > div.memo {
+  font-size: 13px;
+  color: grey;
+  overflow-x: hidden;
+  white-space: nowrap;
+  max-width: 230px;
+}
+li.thememap > h5 {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 5px;
+}
+.dropdown-menu {
+  min-width: 45px;
+  min-height: 50px;
+}
+
+.dropdown-menu li {
+  font-size: 12px;
+  text-align: center;
+}
+
+.dropdown-menu li:hover {
+  background-color: rgb(211, 211, 211);
+  /* color:white; */
+  cursor: pointer;
+}
+ul.list-group > li {
+  margin-top: 15px;
+}
+ul.list-group > li:hover {
+  background-color: rgba(
+    0,
+    112,
+    192,
+    0.329
+  ); /* 좋을지도 로고 파란색, 투명도 적용 */
+}
+.search-wrapper {
+  position: absolute;
+  width: 390px;
+  height: 100vh;
+}
+.list-button-container {
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  position: relative;
+  top: 0;
+  right: 0;
+}
+.sticker-btn:hover {
+  background-color: #e2e6e8;
+}
+
+.button {
+  margin-right: 10px;
+  margin-bottom: 0;
+}
+
+
+.list-button-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+}
+h1.list-heading {
+  color: #004080;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+ul.theme-list {
+  list-style-type: none;
+  padding: 0;
+  border: 2px solid #4e4e52; 
+  border-radius: 10px; 
+  margin: 20px 0;
+}
+ul.elevated-list {
+  list-style-type: none;
+  padding: 0;
+  border: 2px solid #4e4e52;
+  border-radius: 10px;
+  margin: 5px 0;
+  background-color: #f8f9fa; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+}
+
+
+
+.content {
+  margin-left: 100px;
+}
+
+
 </style>

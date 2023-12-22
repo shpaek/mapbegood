@@ -921,7 +921,7 @@ ul.list-group > li:hover {
   width: 390px;
   height: 100vh;
 }
-<<<<<<< HEAD ======= .list-button-container {
+.list-button-container {
   display: flex;
   justify-content: space-between;
   border-radius: 8px;
@@ -1001,11 +1001,7 @@ p {
   position: fixed;
   top: 50%;
   left: 10px;
-<<<<<<< HEAD
   transform: translateY(-50%);butt
-=======
-  transform: translateY(-50%);
->>>>>>> 7f295cbc871f14c2ef291635675ea5ecf83fb976
   background-color: #f8f9fa;
   padding: 1rem;
   border: 1px solid #ccc;

@@ -70,25 +70,24 @@
             <img src="/public/images/bookmark.png" class="bookmark-icon" />          
           </button>
           <router-link
-            v-if="myplace.feed"
-            :to="{
-              name: 'myfeed',
-              params: {
-                myplaceId: myplace.id,
-                id: themeMapId,
-              },
-              query: {
-                placeName: myplace.placeId.placeName,
-                address: myplace.placeId.address,
-                visitedAt: myplace.visitedAt
-              },
-            }"
-          >
-            <button class = "feed=btn">
-              <img src ="/public/images/feed.png" class = "feed-icon"/>
-
-            </button>
-          </router-link>
+    v-if="myplace.feed"
+    :to="{
+      name: 'myfeed',
+      params: {
+        myplaceId: myplace.id,
+        id: themeMapId,
+      },
+      query: {
+        placeName: myplace.placeId.placeName,
+        address: myplace.placeId.address,
+        visitedAt: myplace.visitedAt
+      },
+    }"
+  >
+    <button class="feed-btn">
+      <img src="/public/images/feed.png" class="feed-icon" />
+    </button>
+  </router-link>
           <router-link
             v-else
             :to="{
@@ -104,11 +103,15 @@
               },
             }"
           >
-          <button>피드생성</button>
-        </router-link>
 
+          <button>
+            <img src ="/public/images/feedmake.png" class = "feed-icon"/>
+          </button>
+        </router-link>
+ <!-- <div class="visitdate">
         <span>방문일자</span>
         <input type="date" @input="updateVisitedAt(myplace.id)" v-model="selectedVisitedDate">
+      </div> -->
         </li>
       </ul>
     </div>
@@ -304,7 +307,7 @@ async addVisitedAt(myplaceId, visitedAt) {
   background: rgba(255, 255, 255, 0.8);
   padding: 10px;
   border-radius: 20px;
-  max-width: 540px;
+  max-width: 350px;
   width: 100%;
   margin: 20px;
   box-sizing: border-box;
@@ -446,5 +449,23 @@ async addVisitedAt(myplaceId, visitedAt) {
 .search input:focus {
   outline: none;
   border-color: #555;
+}
+
+.visitdate {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px; /* 원하는 간격으로 조정 */
+}
+
+.visitdate span {
+  margin-bottom: 5px; /* 원하는 간격으로 조정 */
+}
+
+.visitdate input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 </style>
