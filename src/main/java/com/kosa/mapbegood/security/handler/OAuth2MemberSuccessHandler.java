@@ -109,9 +109,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port("5173")
+                .scheme("https")
+                .host("www.mapbegood.site")
+                .port("443")
                 .path("/oauth")
                 .queryParams(queryParams)
                 .build()
